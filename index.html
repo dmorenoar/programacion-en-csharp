@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Programación en C# · Curso</title>
+  <meta name="description" content="Curso de programación en C# con vídeos, teoría y actividades resueltas.">
+  <!-- PWA: manifiesto (nombre, iconos, colores) + iconos para navegador e iOS -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Prog. C#">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!--
+    El HTML solo define el ESQUELETO (cabecera, menú lateral y zona de contenido).
+    Todo lo demás se genera con JavaScript a partir de data/course.js.
+    Ventaja: añadir una lección = editar un archivo de datos, no maquetar HTML.
+  -->
+  <header class="topbar">
+    <button class="icon-btn" id="menuBtn" type="button" aria-label="Abrir índice del curso" aria-expanded="false">☰</button>
+    <div class="brand">
+      <div class="brand-logo" aria-hidden="true">C#</div>
+      <div class="brand-title" id="brandTitle">Curso</div>
+    </div>
+    <div class="topbar-spacer"></div>
+    <div class="progress-wrap" title="Progreso del curso">
+      <span class="progress-label" id="progressLabel">0 / 0</span>
+      <div class="progress" role="progressbar" aria-label="Progreso del curso" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar"><span id="progressFill"></span></div>
+    </div>
+    <button class="btn install-btn" id="installBtn" type="button" hidden>⬇ Instalar app</button>
+    <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
+  </header>
+
+  <div class="layout">
+    <nav class="sidebar" id="sidebar" aria-label="Índice del curso">
+      <div class="sidebar-head"><h2>Contenido del curso</h2><p class="course-sub" id="courseSub"></p></div>
+      <div id="modules"></div>
+      <div class="sidebar-foot">
+        <button class="link-btn" id="resetBtn" type="button">Reiniciar mi progreso</button>
+      </div>
+    </nav>
+    <div class="backdrop" id="backdrop"></div>
+
+    <main class="content" id="content" tabindex="-1">
+      <div class="content-inner" id="lesson">
+        <noscript>Esta web necesita JavaScript para mostrar el curso.</noscript>
+      </div>
+    </main>
+  </div>
+
+  <!-- Orden importante: primero los datos (COURSE) y después la lógica que los usa -->
+  <script src="data/course.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
