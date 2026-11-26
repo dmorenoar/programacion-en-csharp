@@ -14,3 +14,5 @@ La vía rápida (Mono) tarda ~1 s; la de .NET, ~5 s. Si un ejemplo puede escribi
 4. Revisar también el rendimiento del propio código: sin bucles innecesarios, `StringBuilder` si se concatena en bucle, `List<T>` frente a arrays redimensionados a mano, sin `while (true)`.
 5. Subir a producción y pasar `diagnostico.html` con el servidor real para confirmar que Mono da la misma salida.
 6. Subir versión en `sw.js` y empujar a GitHub.
+
+**En cada commit:** repasar los ejercicios (paso 1) y recordar pasar `diagnostico.html`. La página lee `data/course.js`, así que los ejercicios nuevos entran solos en el informe.
