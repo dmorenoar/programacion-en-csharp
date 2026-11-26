@@ -24,6 +24,16 @@ const COURSE = {
   subtitulo: "Aprende los conceptos fundamentales paso a paso: mira el vídeo, repasa la teoría y practica con las actividades.",
   autor: "Daniel Moreno",
 
+  // ---- Compilador del panel "Practicar" (ver js/playground.js) ----
+  // Usa la API pública de Judge0 (extra-ce) con C# en .NET 8 (language_id 30).
+  // Si algún día se satura, puedes apuntar "url" a tu propio servidor Judge0.
+  compilador: {
+    url: "https://extra-ce.judge0.com",
+    languageId: 30,                 // C# (.NET SDK 8.0)
+    headers: {},                    // p. ej. { "X-Auth-Token": "..." } si tu servidor lo exige
+    timeoutMs: 30000,
+  },
+
   // ---- Datos de la PÁGINA DE INICIO del curso (editables) ----
   actualizado: "Noviembre 2026",
   idioma: "Español",

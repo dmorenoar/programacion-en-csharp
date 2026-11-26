@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/theme.css">
   <link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="css/playground.css">
 </head>
 <body>
   <!--
@@ -34,6 +35,7 @@
       <span class="progress-label" id="progressLabel">0 / 0</span>
       <div class="progress" role="progressbar" aria-label="Progreso del curso" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar"><span id="progressFill"></span></div>
     </div>
+    <button class="btn practice-btn" id="practiceBtn" type="button" aria-expanded="false" aria-controls="playground">⌨ Practicar</button>
     <button class="btn install-btn" id="installBtn" type="button" hidden>⬇ Instalar app</button>
     <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
   </header>
@@ -56,10 +58,33 @@
         <noscript>Esta web necesita JavaScript para mostrar el curso.</noscript>
       </div>
     </main>
+
+    <!-- Panel "Practicar": editor + consola de C# en el lateral derecho (js/playground.js) -->
+    <aside class="playground" id="playground" aria-label="Editor de C#" hidden>
+      <div class="pg-resize" id="pgResize" role="separator" aria-orientation="vertical" aria-label="Cambiar ancho del panel"></div>
+      <div class="pg-head">
+        <strong>⌨ Practicar en C#</strong>
+        <span class="pg-spacer"></span>
+        <button class="btn primary pg-run" id="pgRun" type="button" title="Ejecutar (Ctrl+Intro)">▶ Ejecutar</button>
+        <button class="icon-btn pg-x" id="pgClose" type="button" aria-label="Cerrar el editor">✕</button>
+      </div>
+      <div class="pg-editor">
+        <pre class="pg-hl" id="pgHl" aria-hidden="true"></pre>
+        <textarea id="pgCode" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Código C#"></textarea>
+      </div>
+      <details class="pg-stdin" id="pgStdinBox">
+        <summary>Entrada del programa (para <code>Console.ReadLine</code>)</summary>
+        <textarea id="pgStdin" rows="3" spellcheck="false" placeholder="Una línea por cada ReadLine()…"></textarea>
+      </details>
+      <div class="pg-out-head"><span>Salida</span><span id="pgMeta"></span><button class="link-btn" id="pgReset" type="button">Borrar código</button></div>
+      <pre class="pg-out" id="pgOut" aria-live="polite">Pulsa «Ejecutar» (o Ctrl+Intro) para compilar y ejecutar tu código.</pre>
+      <div class="pg-foot">El código se envía a un servicio externo (Judge0) para compilarse. No escribas datos personales.</div>
+    </aside>
   </div>
 
   <!-- Orden importante: primero los datos (COURSE) y después la lógica que los usa -->
   <script src="data/course.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/playground.js"></script>
 </body>
 </html>

@@ -174,3 +174,12 @@ El `id` de cada lección debe ser único y estable: es el que enlaza la URL y el
 Al abrir la web se muestra una ficha de curso (estilo Udemy) con el resumen, el temario y el botón «Empezar / Continuar».
 Sus textos se editan en `data/course.js`: `aprenderas`, `requisitos`, `descripcion`, `profesor`, `actualizado`, `idioma` y `nivel`.
 Los totales (lecciones, actividades y duración) se calculan solos a partir de los módulos. Los estilos están en `css/home.css`.
+
+## Panel «Practicar» (editor de C# en el lateral derecho)
+
+- Botón **⌨ Practicar** en la cabecera (o **▶ Probar** en cualquier bloque de código) abre un editor con consola.
+- **Ctrl + Intro** ejecuta. El ancho del panel se ajusta arrastrando su borde; el código se guarda en el navegador.
+- Un navegador no puede compilar C#, así que el código se envía a **Judge0** (servicio gratuito, C# en .NET 8). Configuración en `data/course.js` → `compilador` (`url`, `languageId`, `headers`).
+- Si el servicio público se satura en clase, puedes alojar tu propio Judge0 y cambiar solo `url`.
+- La entrada no es interactiva: lo que se escribe en «Entrada del programa» se entrega a `Console.ReadLine()` línea a línea.
+- Para ejecutar hace falta Internet; el resto del curso sigue funcionando sin conexión.

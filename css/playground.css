@@ -1,0 +1,87 @@
+/* =====================================================================
+   css/playground.css · Panel lateral "Practicar" (editor + consola)
+   ---------------------------------------------------------------------
+   Escritorio: tercera columna del grid .layout (a la derecha), fija al hacer scroll.
+   Móvil: se abre como hoja que ocupa la parte inferior de la pantalla.
+   ===================================================================== */
+
+:root { --play-w: 480px; }
+
+.playground[hidden] { display: none; }
+.practice-btn { background: transparent; color: #fff; border-color: #6a6f73; }
+.practice-btn:hover, .practice-btn[aria-expanded="true"] { background: #7c3aed; border-color: #7c3aed; }
+body.view-home .practice-btn { display: none; }      /* en la portada no hace falta */
+body.view-home .playground { display: none; }
+
+.playground {
+  position: sticky; top: var(--header-h); align-self: start;
+  height: calc(100vh - var(--header-h));
+  display: flex; flex-direction: column;
+  background: #1e1e2e; color: #e4e6f0; border-left: 1px solid #000; min-width: 0;
+}
+
+/* Asa para cambiar el ancho */
+.pg-resize { position: absolute; left: -4px; top: 0; bottom: 0; width: 8px; cursor: col-resize; z-index: 3; touch-action: none; }
+.pg-resize:hover, .pg-resize:active { background: rgba(124, 58, 237, .6); }
+
+.pg-head { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: #151521; border-bottom: 1px solid #2d2d44; font-size: 14px; }
+.pg-spacer { flex: 1; }
+.pg-run { padding: 6px 14px; }
+.pg-run:disabled { opacity: .7; cursor: wait; }
+.pg-x { color: #e4e6f0; }
+
+/* --- Editor: textarea transparente sobre un <pre> coloreado ---
+   Ambos DEBEN compartir exactamente fuente, tamaño, interlineado y padding,
+   si no el texto no coincidiría con los colores. */
+.pg-editor { position: relative; flex: 1 1 55%; min-height: 120px; overflow: hidden; background: #1e1e2e; }
+.pg-hl, #pgCode {
+  position: absolute; inset: 0; margin: 0; padding: 12px 14px; border: 0;
+  font: 13.5px/1.55 ui-monospace, "Cascadia Code", Consolas, Menlo, monospace;
+  tab-size: 4; white-space: pre; overflow: auto; letter-spacing: 0; word-spacing: 0;
+}
+.pg-hl { color: #e4e6f0; pointer-events: none; overflow: hidden; }
+#pgCode { background: transparent; color: transparent; caret-color: #fff; resize: none; outline: none; z-index: 1; -webkit-text-fill-color: transparent; }
+#pgCode::selection { background: rgba(124, 58, 237, .45); -webkit-text-fill-color: transparent; }
+
+/* Colores del resaltado dentro del panel (fondo oscuro siempre) */
+.pg-hl .tok-kw { color: #c792ea; } .pg-hl .tok-t { color: #4ec9b0; } .pg-hl .tok-s { color: #ecc48d; }
+.pg-hl .tok-n { color: #f78c6c; } .pg-hl .tok-c { color: #6a7a9a; font-style: italic; } .pg-hl .tok-f { color: #82aaff; }
+
+.pg-stdin { background: #151521; border-top: 1px solid #2d2d44; font-size: 13px; }
+.pg-stdin summary { cursor: pointer; padding: 8px 12px; color: #aab; }
+.pg-stdin code { background: #2d2d44; color: #e4e6f0; padding: 1px 5px; border-radius: 3px; }
+.pg-stdin textarea { display: block; width: 100%; box-sizing: border-box; background: #1e1e2e; color: #e4e6f0; border: 0; border-top: 1px solid #2d2d44; padding: 8px 12px; font: 13px/1.5 ui-monospace, Consolas, monospace; resize: vertical; }
+
+.pg-out-head { display: flex; align-items: center; gap: 10px; padding: 6px 12px; background: #151521; border-top: 1px solid #2d2d44; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: #aab; }
+.pg-out-head #pgMeta { flex: 1; text-transform: none; letter-spacing: 0; opacity: .8; }
+.pg-out-head .link-btn { color: #c4b5fd; font-size: 12px; text-transform: none; letter-spacing: 0; }
+
+.pg-out { flex: 1 1 35%; min-height: 90px; margin: 0; padding: 12px 14px; overflow: auto; background: #0e0e18; color: #e4e6f0; font: 13.5px/1.5 ui-monospace, Consolas, Menlo, monospace; white-space: pre-wrap; word-break: break-word; }
+.pg-out.ok { color: #9ef0b6; }
+.pg-out.err { color: #ff9aa2; }
+.pg-out.warn { color: #ffd479; }
+.pg-out.wait { color: #aab; }
+.pg-foot { padding: 6px 12px; font-size: 11px; color: #8a8fa8; background: #151521; border-top: 1px solid #2d2d44; }
+
+/* Botón «▶ Probar» junto a «Copiar» en los bloques de código */
+.code-actions { display: inline-flex; gap: 6px; }
+.try { cursor: pointer; font: inherit; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 4px; border: 1px solid #7c3aed; background: #7c3aed; color: #fff; }
+.try:hover { filter: brightness(1.1); }
+
+/* Escritorio: tercera columna */
+@media (min-width: 901px) {
+  body.play-open .layout { grid-template-columns: var(--sidebar-w) minmax(0, 1fr) var(--play-w); }
+  body.play-open.sidebar-collapsed .layout { grid-template-columns: minmax(0, 1fr) var(--play-w); }
+  /* con el panel abierto, los márgenes laterales "centrados" del texto sobran */
+  body.play-open .content-inner > *:not(.crumbs):not(.video-box):not(.video-tools) { margin-left: 24px; margin-right: 24px; }
+}
+
+/* Móvil: hoja inferior a pantalla casi completa */
+@media (max-width: 900px) {
+  .practice-btn { padding: 6px 10px; font-size: 13px; white-space: nowrap; }
+  .playground {
+    position: fixed; z-index: 45; left: 0; right: 0; bottom: 0; top: calc(var(--header-h) + 8vh);
+    height: calc(100dvh - var(--header-h) - 8vh); align-self: auto; border-left: 0; border-radius: 12px 12px 0 0; box-shadow: 0 -10px 30px rgba(0, 0, 0, .45);
+  }
+  .pg-resize { display: none; }
+}

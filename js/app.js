@@ -102,7 +102,7 @@ function highlight(code) {
 function codeBlock(code) {
   return `
     <div class="code">
-      <div class="code-bar"><span>C#</span><button class="copy" type="button">Copiar</button></div>
+      <div class="code-bar"><span>C#</span><span class="code-actions"><button class="try" type="button" title="Abrir este código en el editor">▶ Probar</button><button class="copy" type="button">Copiar</button></span></div>
       <pre><code>${highlight(code)}</code></pre>
     </div>`;
 }
@@ -461,6 +461,13 @@ document.addEventListener("click", async (event) => {
     const openAll = [...secs].some((d) => !d.open);       // si alguna está cerrada → abrir todas; si no, cerrar
     secs.forEach((d) => (d.open = openAll));
     expand.textContent = openAll ? "Contraer todas las secciones" : "Expandir todas las secciones";
+    return;
+  }
+
+  const tryBtn = event.target.closest(".try");
+  if (tryBtn) {
+    // Lleva el código del bloque al editor del lateral (lo define js/playground.js)
+    if (typeof Playground !== "undefined") Playground.load(tryBtn.closest(".code").querySelector("code").textContent);
     return;
   }
 
