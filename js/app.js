@@ -240,6 +240,7 @@ function renderLesson(id, tab = "teoria") {
   currentId = id;
   currentTab = tab;
   $("#home").hidden = true;
+  CodeView.hide();
   document.body.classList.remove("view-home");
   state.last = id;
   saveState();
@@ -419,6 +420,7 @@ function homeHTML() {
 
 function showHome() {
   currentId = null;
+  CodeView.hide();
   $("#home").innerHTML = homeHTML();
   $("#home").hidden = false;
   document.body.classList.add("view-home");
@@ -430,6 +432,7 @@ function showHome() {
 }
 
 function route() {
+  if (location.hash === "#codificar") { CodeView.show(); return; }   // editor a pantalla completa
   const id = idFromHash();
   if (id && lessonById.has(id)) renderLesson(id);
   else showHome();          // sin hash (#) o #inicio: página de presentación del curso

@@ -175,11 +175,12 @@ Al abrir la web se muestra una ficha de curso (estilo Udemy) con el resumen, el 
 Sus textos se editan en `data/course.js`: `aprenderas`, `requisitos`, `descripcion`, `profesor`, `actualizado`, `idioma` y `nivel`.
 Los totales (lecciones, actividades y duración) se calculan solos a partir de los módulos. Los estilos están en `css/home.css`.
 
-## Panel «Practicar» (editor de C# en el lateral derecho)
+## Editor de C#: dos formas de practicar
 
-- Botón **⌨ Practicar** en la cabecera (o **▶ Probar** en cualquier bloque de código) abre un editor con consola.
-- **Ctrl + Intro** ejecuta. El ancho del panel se ajusta arrastrando su borde; el código se guarda en el navegador.
-- Un navegador no puede compilar C#, así que el código se envía a **Judge0** (servicio gratuito, C# en .NET 8). Configuración en `data/course.js` → `compilador` (`url`, `languageId`, `headers`).
-- Si el servicio público se satura en clase, puedes alojar tu propio Judge0 y cambiar solo `url`.
+- **▶ Probar** (en cada bloque de código de la teoría): abre un panel lateral derecho con el ejemplo para ejecutarlo y modificarlo mientras lees. Su botón **↗ Codificar** lo lleva al editor grande.
+- **</> Codificar** (cabecera, `#codificar`): editor a pantalla completa, al estilo dotnetfiddle. Números de línea, resaltado, errores marcados en rojo, ejemplos del curso y plantillas, guardar/abrir `.cs`, tamaño de letra y disposición (lado a lado o apilado).
+- **Atajos:** Ctrl+Intro ejecuta · Tab / Shift+Tab sangra · Ctrl+/ comenta · Ctrl+S descarga `Program.cs` · cierre automático de `()`, `{}`, `[]` y comillas.
+- El código se guarda en el navegador. Un navegador no puede compilar C#, así que se envía a **Judge0** (C# en .NET 8). Configuración en `data/course.js` → `compilador` (`url`, `languageId`, `headers`). Si el servicio público se satura en clase, puedes alojar tu propio Judge0 y cambiar solo `url`.
 - La entrada no es interactiva: lo que se escribe en «Entrada del programa» se entrega a `Console.ReadLine()` línea a línea.
 - Para ejecutar hace falta Internet; el resto del curso sigue funcionando sin conexión.
+- Código: `js/editor-kit.js` (piezas comunes), `js/playground.js` (panel), `js/codeview.js` + `css/codeview.css` (vista Codificar).

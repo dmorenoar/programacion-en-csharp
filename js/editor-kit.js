@@ -1,0 +1,199 @@
+/* =====================================================================
+   js/editor-kit.js · PIEZAS COMUNES DE LOS EDITORES (panel «Probar» y vista «Codificar»)
+   ---------------------------------------------------------------------
+   Para no escribir dos veces lo mismo, aquí viven:
+     · EditorKit.attach()   comportamiento de editor (Tab, sangría, pares de llaves…)
+     · EditorKit.execute()  envío del código al compilador (Judge0) y lectura del resultado
+   Se carga ANTES que app.js; usa COURSE y highlight() solo cuando se llaman (más tarde).
+   ===================================================================== */
+
+const EditorKit = (() => {
+
+  /* ---------- Comportamiento del editor ---------- */
+
+  // Inserta texto en el cursor. execCommand conserva el «deshacer» (Ctrl+Z); si el
+  // navegador no lo permite, usamos setRangeText.
+  function insert(area, text) {
+    area.focus();
+    if (!document.execCommand || !document.execCommand("insertText", false, text)) {
+      area.setRangeText(text, area.selectionStart, area.selectionEnd, "end");
+      area.dispatchEvent(new Event("input"));
+    }
+  }
+
+  // Pares que se cierran solos: al escribir "(" aparece "()" con el cursor dentro.
+  const PAIRS = { "(": ")", "[": "]", "{": "}", '"': '"', "'": "'" };
+
+  // Devuelve [inicio, fin] del bloque de líneas completas que toca la selección.
+  function lineRange(area) {
+    const v = area.value;
+    const start = v.lastIndexOf("\n", area.selectionStart - 1) + 1;
+    let end = v.indexOf("\n", area.selectionEnd);
+    if (end === -1) end = v.length;
+    return [start, end];
+  }
+
+  // Aplica una función a cada línea seleccionada (sirve para sangrar y para comentar)
+  function mapLines(area, fn) {
+    const [s, e] = lineRange(area);
+    const block = area.value.slice(s, e).split("\n").map(fn).join("\n");
+    area.setRangeText(block, s, e, "select");
+    area.dispatchEvent(new Event("input"));
+  }
+
+  /**
+   * Convierte un <textarea> en un editor «amable» para programar.
+   * opciones: { onRun: () => ... }  (se llama con Ctrl/Cmd + Intro)
+   */
+  function attach(area, { onRun } = {}) {
+    area.addEventListener("keydown", (e) => {
+      const mod = e.ctrlKey || e.metaKey;
+      const v = area.value, s = area.selectionStart, end = area.selectionEnd;
+
+      // Ctrl + Intro → ejecutar
+      if (mod && e.key === "Enter") { e.preventDefault(); if (onRun) onRun(); return; }
+
+      // Ctrl + / → comentar / descomentar las líneas seleccionadas
+      if (mod && e.key === "/") {
+        e.preventDefault();
+        const [a, b] = lineRange(area);
+        const lines = v.slice(a, b).split("\n").filter((l) => l.trim());
+        const allCommented = lines.length && lines.every((l) => /^\s*\/\//.test(l));
+        mapLines(area, (l) => (!l.trim() ? l : allCommented ? l.replace(/^(\s*)\/\/ ?/, "$1") : l.replace(/^(\s*)/, "$1// ")));
+        return;
+      }
+
+      // Tab / Shift+Tab → sangrar o des-sangrar (varias líneas si hay selección)
+      if (e.key === "Tab") {
+        e.preventDefault();
+        if (s !== end && v.slice(s, end).includes("\n") || e.shiftKey) {
+          mapLines(area, (l) => (e.shiftKey ? l.replace(/^( {1,4}|\t)/, "") : "    " + l));
+        } else insert(area, "    ");
+        return;
+      }
+
+      // Intro → conserva la sangría; tras "{" la aumenta; entre "{" y "}" abre el bloque
+      if (e.key === "Enter" && !mod) {
+        e.preventDefault();
+        const lineStart = v.lastIndexOf("\n", s - 1) + 1;
+        const indent = (v.slice(lineStart, s).match(/^\s*/) || [""])[0];
+        if (v[s - 1] === "{" && v[end] === "}") {
+          insert(area, "\n" + indent + "    \n" + indent);
+          const pos = s + 1 + indent.length + 4;      // cursor en la línea del medio
+          area.setSelectionRange(pos, pos);
+        } else insert(area, "\n" + indent + (v[s - 1] === "{" ? "    " : ""));
+        return;
+      }
+
+      // Cierre automático de pares y «saltar» sobre el cierre ya escrito
+      if (!mod && !e.altKey && e.key.length === 1) {
+        const closing = Object.values(PAIRS).includes(e.key);
+        if (s === end && closing && v[s] === e.key) { e.preventDefault(); area.setSelectionRange(s + 1, s + 1); return; }
+        if (PAIRS[e.key]) {
+          const next = v[end] || "\n";
+          const prev = v[s - 1] || " ";
+          // Comillas: no autocerrar si va pegada a una palabra (p. ej. al escribir un apóstrofo)
+          const quote = e.key === '"' || e.key === "'";
+          if (!(quote && /\w/.test(prev)) && /[\s)\]};,]|^$/.test(next)) {
+            e.preventDefault();
+            const sel = v.slice(s, end);
+            insert(area, e.key + sel + PAIRS[e.key]);
+            area.setSelectionRange(s + 1, s + 1 + sel.length);
+            return;
+          }
+        }
+        // Al escribir "}" al principio de una línea sangrada, quitamos un nivel de sangría
+        if (e.key === "}" && s === end && /^ +$/.test(v.slice(v.lastIndexOf("\n", s - 1) + 1, s))) {
+          e.preventDefault();
+          const ls = v.lastIndexOf("\n", s - 1) + 1;
+          area.setRangeText("}", Math.max(s - 4, ls), end, "end");
+          area.dispatchEvent(new Event("input"));
+        }
+      }
+    });
+  }
+
+  /* ---------- Compilador (Judge0) ---------- */
+
+  // btoa/atob solo entienden Latin-1; para tildes, ñ y € pasamos por UTF-8.
+  const toB64 = (text) => {
+    let bin = "";
+    new TextEncoder().encode(text).forEach((b) => (bin += String.fromCharCode(b)));
+    return btoa(bin);
+  };
+  const fromB64 = (b64) => {
+    if (!b64) return "";
+    return new TextDecoder().decode(Uint8Array.from(atob(b64), (c) => c.charCodeAt(0)));
+  };
+
+  // Añadimos los using habituales EN LA MISMA LÍNEA 1 (así los números de línea de los
+  // errores siguen coincidiendo con los del editor).
+  function prepare(source) {
+    const usings = ["System", "System.Collections.Generic", "System.Linq", "System.Text"]
+      .filter((ns) => !new RegExp(`using\\s+${ns.replace(/\./g, "\\.")}\\s*;`).test(source))
+      .map((ns) => `using ${ns};`)
+      .join(" ");
+    return usings ? usings + " " + source : source;
+  }
+
+  // Quita las rutas internas del servidor para que el error sea legible
+  const tidy = (t) => t.replace(/\/[\w./-]*\/(\w+\.cs)/g, "$1").replace(/\[\/[^\]]*\]/g, "").trim();
+
+  // ¿El programa lee datos del teclado?
+  const needsInput = (source) => /Console\.(ReadLine|Read|ReadKey)\s*\(/.test(source);
+
+  /**
+   * Compila y ejecuta. Devuelve SIEMPRE un objeto (nunca lanza):
+   *   { text, kind: "ok" | "err" | "warn", title?, meta?, errorLines: [nº de línea…] }
+   */
+  async function execute(source, stdin) {
+    const cfg = COURSE.compilador || {};
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), cfg.timeoutMs || 30000);
+    try {
+      const res = await fetch(`${cfg.url}/submissions?base64_encoded=true&wait=true`, {
+        method: "POST",
+        headers: Object.assign({ "Content-Type": "application/json" }, cfg.headers || {}),
+        body: JSON.stringify({
+          language_id: cfg.languageId,
+          source_code: toB64(prepare(source)),
+          stdin: toB64((stdin || "").replace(/\r?\n?$/, "\n")),   // cada ReadLine consume una línea
+        }),
+        signal: ctl.signal,
+      });
+      if (res.status === 429) return { kind: "err", errorLines: [], text: "Demasiadas ejecuciones seguidas en el servicio gratuito. Espera un minuto y vuelve a probar." };
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return interpret(await res.json());
+    } catch (err) {
+      let text;
+      if (err.name === "AbortError") text = "El servidor tardó demasiado. Inténtalo de nuevo en un momento.";
+      else if (!navigator.onLine) text = "Sin conexión: para ejecutar código necesitas Internet (el resto del curso sí funciona offline).";
+      else text = "No se pudo contactar con el compilador (" + err.message + "). Comprueba tu conexión o inténtalo más tarde.";
+      return { kind: "err", errorLines: [], text };
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  // Judge0: status.id → 3 = OK, 5 = tiempo agotado, 6 = error de compilación, >6 = error en ejecución
+  function interpret(r) {
+    const stdout = fromB64(r.stdout), stderr = fromB64(r.stderr);
+    const compile = fromB64(r.compile_output), message = fromB64(r.message);
+    const id = r.status && r.status.id;
+    const meta = r.time ? `${r.time} s · ${Math.round((r.memory || 0) / 1024)} MB` : "";
+
+    if (id === 6) {
+      const text = tidy(compile) || "Error de compilación.";
+      // "Program.cs(3,5): error CS1002" → línea 3
+      const errorLines = [...text.matchAll(/\((\d+),\d+\):\s*error/g)].map((m) => +m[1]);
+      return { kind: "err", title: "Error de compilación", text, meta, errorLines };
+    }
+    if (id === 5) return { kind: "err", text: (stdout ? stdout + "\n" : "") + "⏱ Tiempo límite superado (¿bucle infinito?).", meta, errorLines: [] };
+
+    let text = stdout;
+    if (stderr || (id && id > 6)) text += (text && !text.endsWith("\n") ? "\n" : "") + tidy(stderr || message || (r.status && r.status.description) || "");
+    return { kind: id === 3 ? "ok" : "err", text: text || "(El programa terminó sin mostrar nada)", meta, errorLines: [] };
+  }
+
+  return { attach, insert, execute, needsInput, prepare };
+})();

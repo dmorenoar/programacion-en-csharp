@@ -8,9 +8,8 @@
 :root { --play-w: 480px; }
 
 .playground[hidden] { display: none; }
-.practice-btn { background: transparent; color: #fff; border-color: #6a6f73; }
-.practice-btn:hover, .practice-btn[aria-expanded="true"] { background: #7c3aed; border-color: #7c3aed; }
-body.view-home .practice-btn { display: none; }      /* en la portada no hace falta */
+.pg-expand { padding: 6px 10px; font-size: 13px; background: #2d2d44; color: #e4e6f0; border-color: #3a3a58; }
+.pg-expand:hover { background: #3a3a58; }
 body.view-home .playground { display: none; }
 
 .playground {
@@ -78,7 +77,6 @@ body.view-home .playground { display: none; }
 
 /* Móvil: hoja inferior a pantalla casi completa */
 @media (max-width: 900px) {
-  .practice-btn { padding: 6px 10px; font-size: 13px; white-space: nowrap; }
   .playground {
     position: fixed; z-index: 45; left: 0; right: 0; bottom: 0; top: calc(var(--header-h) + 8vh);
     height: calc(100dvh - var(--header-h) - 8vh); align-self: auto; border-left: 0; border-radius: 12px 12px 0 0; box-shadow: 0 -10px 30px rgba(0, 0, 0, .45);
