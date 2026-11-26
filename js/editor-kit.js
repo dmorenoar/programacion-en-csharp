@@ -146,8 +146,27 @@ const EditorKit = (() => {
    * Compila y ejecuta. Devuelve SIEMPRE un objeto (nunca lanza):
    *   { text, kind: "ok" | "err" | "warn", title?, meta?, errorLines: [nº de línea…] }
    */
+  // Trucos para que se note más rápido (el grueso del tiempo es compilar en el servidor):
+  //  1) «preconnect»: abrimos la conexión segura con el compilador nada más cargar la página
+  //  2) memoria de resultados: ejecutar EXACTAMENTE el mismo código y entrada es instantáneo
+  const cache = new Map();
+  (function preconnect() {
+    try {
+      const cfg = COURSE.compilador || {};
+      if (!cfg.url) return;
+      const l = document.createElement("link");
+      l.rel = "preconnect"; l.href = new URL(cfg.url).origin; l.crossOrigin = "";
+      document.head.appendChild(l);
+    } catch { /* URL no válida: no pasa nada */ }
+  })();
+
   async function execute(source, stdin) {
     const cfg = COURSE.compilador || {};
+    const key = cfg.url + "\u0000" + source + "\u0000" + (stdin || "");
+    if (cache.has(key)) {
+      const hit = cache.get(key);
+      return Object.assign({}, hit, { meta: (hit.meta ? hit.meta + " · " : "") + "resultado guardado (instantáneo)" });
+    }
     const ctl = new AbortController();
     const timer = setTimeout(() => ctl.abort(), cfg.timeoutMs || 30000);
     try {
@@ -163,7 +182,10 @@ const EditorKit = (() => {
       });
       if (res.status === 429) return { kind: "err", errorLines: [], text: "Demasiadas ejecuciones seguidas en el servicio gratuito. Espera un minuto y vuelve a probar." };
       if (!res.ok) throw new Error("HTTP " + res.status);
-      return interpret(await res.json());
+      const result = interpret(await res.json());
+      if (cache.size >= 40) cache.delete(cache.keys().next().value);   // memoria acotada
+      cache.set(key, result);
+      return result;
     } catch (err) {
       let text;
       if (err.name === "AbortError") text = "El servidor tardó demasiado. Inténtalo de nuevo en un momento.";

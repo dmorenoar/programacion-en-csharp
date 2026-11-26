@@ -105,16 +105,22 @@ const EditorPane = (() => {
 
       running = true;
       if (onRunState) onRunState(true);
-      show("Compilando y ejecutando…", "wait");
+      // Cronómetro visible: ver avanzar el tiempo hace la espera más llevadera
+      const t0 = performance.now();
+      const tick = () => show(`Compilando y ejecutando… ${((performance.now() - t0) / 1000).toFixed(1)} s`, "wait");
+      tick();
+      const timer = setInterval(tick, 100);
       meta.textContent = "";
       errorLines = [];
       refresh();
 
       const r = await EditorKit.execute(source, stdin.value);
+      clearInterval(timer);
+      const total = ((performance.now() - t0) / 1000).toFixed(1);
       errorLines = r.errorLines;          // las líneas con error se marcan en rojo en el margen
       refresh();
       show(r.text, r.kind, r.title);
-      meta.textContent = r.meta || "";
+      meta.textContent = (r.meta ? r.meta + " · " : "") + `total ${total} s`;
 
       running = false;
       if (onRunState) onRunState(false);
