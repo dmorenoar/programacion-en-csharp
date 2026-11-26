@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diagnóstico de la vía rápida (Mono)</title>
+  <style>
+    body { font: 15px/1.5 system-ui, sans-serif; margin: 0; padding: 20px; background: #12131c; color: #e4e6f0; }
+    h1 { margin: 0 0 6px; font-size: 22px; } p { color: #aab; max-width: 820px; }
+    button { font: inherit; font-weight: 700; padding: 8px 16px; border-radius: 6px; border: 0; background: #7c3aed; color: #fff; cursor: pointer; }
+    button:disabled { opacity: .6; cursor: wait; } button.sec { background: #2d2d44; }
+    table { border-collapse: collapse; width: 100%; margin-top: 16px; font-size: 13px; }
+    th, td { border-bottom: 1px solid #2d2d44; padding: 6px 8px; text-align: left; vertical-align: top; }
+    th { color: #aab; font-size: 12px; text-transform: uppercase; }
+    .ok { color: #7ee2a0; } .bad { color: #ff9aa2; } .warn { color: #ffd479; } .mut { color: #8a8fa8; }
+    code { background: #24243a; padding: 1px 5px; border-radius: 3px; word-break: break-word; }
+    #bar { height: 8px; background: #2d2d44; border-radius: 4px; margin-top: 12px; overflow: hidden; } #bar span { display: block; height: 100%; width: 0; background: #22c55e; }
+  </style>
+</head>
+<body>
+  <h1>Diagnóstico de la vía rápida (Mono)</h1>
+  <p>Ejecuta <b>todos los ejemplos y soluciones del curso</b> dos veces (Mono y .NET), con la misma entrada, y compara. Sirve para ver qué bloques se pueden ejecutar con Mono con el mismo resultado y ajustar el filtro. Tarda unos minutos (usa el servidor público, sin prisa para no saturarlo). Después pulsa «Copiar informe» y pégamelo.</p>
+  <p><button id="go">▶ Empezar</button> <button id="copy" class="sec" disabled>Copiar informe</button> <span id="status" class="mut"></span></p>
+  <div id="bar"><span></span></div>
+  <div id="summary"></div>
+  <table id="t" hidden><thead><tr><th>Bloque</th><th>¿Por Mono hoy?</th><th>Mono</th><th>.NET</th><th>Resultado</th></tr></thead><tbody></tbody></table>
+
+  <script src="data/course.js"></script>
+  <script src="js/editor-kit.js"></script>
+  <script>
+    const STDIN = "7\n3\n+\n5\nHola\nZelda\n4\n2\n1\n0\n";
+    const items = [];
+    COURSE.modulos.flatMap((m) => m.lecciones).forEach((l) => {
+      (l.ejemplos || []).forEach((e, i) => items.push({ name: `${l.id} · ejemplo ${i + 1}: ${e.titulo}`, code: e.codigo }));
+      (l.actividades || []).forEach((a, i) => a.soluciones.forEach((s, j) => items.push({ name: `${l.id} · act ${i + 1} sol ${j + 1}: ${s.titulo}`, code: s.codigo })));
+    });
+    const $ = (q) => document.querySelector(q);
+    const esc = (t) => String(t).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+    const b64 = (r, k) => (r && r[k] ? EditorKit.fromB64(r[k]) : "");
+    const short = (t) => (t.length > 70 ? t.slice(0, 70) + "…" : t).replace(/\n/g, "⏎");
+    const results = [];
+
+    function describe(r) {
+      if (!r) return { st: "sin respuesta", out: "" };
+      if (r.limited) return { st: "límite de peticiones", out: "" };
+      const id = r.status && r.status.id, out = b64(r, "stdout");
+      if (id === 3) return { st: "OK", out };
+      if (id === 6) return { st: "no compila", out: b64(r, "compile_output").split("\n")[0] };
+      return { st: "error de ejecución (" + (r.status && r.status.description) + ")", out: out + b64(r, "stderr").split("\n")[0] };
+    }
+
+    async function one(item) {
+      const monoId = await EditorKit.fastLanguageId();
+      const wrapped = EditorKit.monoSource(item.code, { force: true });
+      const today = EditorKit.monoSource(item.code) !== null;
+      let mono, net;
+      try {
+        [mono, net] = await Promise.all([
+          monoId ? EditorKit.runRaw(monoId, wrapped, STDIN) : null,
+          EditorKit.runRaw(COURSE.compilador.languageId, EditorKit.prepare(item.code), STDIN),
+        ]);
+      } catch (e) { mono = net = null; }
+      const m = describe(mono), n = describe(net);
+      let verdict, cls;
+      if (!monoId) { verdict = "Este servidor no tiene Mono"; cls = "bad"; }
+      else if (m.st === "límite de peticiones" || n.st === "límite de peticiones") { verdict = "límite de peticiones: repetir"; cls = "warn"; }
+      else if (m.st === "OK" && n.st === "OK") { if (m.out === n.out) { verdict = "✅ igual"; cls = "ok"; } else { verdict = "⚠️ DISTINTO"; cls = "warn"; } }
+      else if (m.st === "no compila" && n.st === "OK") { verdict = "❌ Mono no compila"; cls = "bad"; }
+      else if (m.st !== "OK" && n.st !== "OK") { verdict = "ambos fallan (revisar entrada de prueba)"; cls = "mut"; }
+      else { verdict = "⚠️ Mono: " + m.st; cls = "warn"; }
+      return { name: item.name, today, mono: m, net: n, verdict, cls };
+    }
+
+    async function run() {
+      $("#go").disabled = true; $("#t").hidden = false;
+      const tb = $("#t tbody"); tb.innerHTML = "";
+      let done = 0, next = 0;
+      const worker = async () => {
+        while (next < items.length) {
+          const item = items[next++];
+          const r = await one(item);
+          results.push(r); done++;
+          const detail = r.cls === "warn" || r.cls === "bad" ? `<br><span class="mut">Mono: <code>${esc(short(r.mono.out || r.mono.st))}</code><br>.NET: <code>${esc(short(r.net.out || r.net.st))}</code></span>` : "";
+          tb.insertAdjacentHTML("beforeend", `<tr><td>${esc(r.name)}</td><td>${r.today ? "sí ⚡" : "no"}</td><td>${esc(r.mono.st)}</td><td>${esc(r.net.st)}</td><td class="${r.cls}">${r.verdict}${detail}</td></tr>`);
+          $("#bar span").style.width = (done / items.length) * 100 + "%";
+          $("#status").textContent = `${done} / ${items.length}`;
+        }
+      };
+      await Promise.all([worker(), worker()]);     // 2 a la vez, para no saturar el servidor público
+      const count = (f) => results.filter(f).length;
+      const risky = results.filter((r) => r.today && r.cls !== "ok");
+      const missed = results.filter((r) => !r.today && r.cls === "ok");
+      $("#summary").innerHTML = `<p><b>${count((r) => r.cls === "ok")}</b> de ${results.length} salen igual en Mono. · Hoy van por Mono: <b>${count((r) => r.today)}</b>.<br>
+        <span class="bad">Van por Mono pero NO salen igual / no compilan: ${risky.length}</span> · <span class="ok">Podrían ir por Mono y hoy no van: ${missed.length}</span></p>`;
+      $("#status").textContent = "Terminado"; $("#copy").disabled = false; $("#go").disabled = false;
+    }
+
+    $("#go").addEventListener("click", run);
+    $("#copy").addEventListener("click", () => {
+      const txt = results.map((r) => `${r.cls === "ok" ? "OK " : "!! "} | mono-hoy=${r.today ? "sí" : "no"} | ${r.name} | ${r.verdict} | Mono: ${short(r.mono.out || r.mono.st)} | NET: ${short(r.net.out || r.net.st)}`).join("\n");
+      navigator.clipboard.writeText(txt).then(() => ($("#status").textContent = "Informe copiado"), () => ($("#status").textContent = "No se pudo copiar"));
+    });
+  </script>
+</body>
+</html>

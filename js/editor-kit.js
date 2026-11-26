@@ -205,19 +205,28 @@ const EditorKit = (() => {
     return fast.idPromise;
   }
 
-  // ¿Algún valor decimal (double/float/Math…) acaba convertido a TEXTO? Solo entonces Mono podría
-  // mostrar algo distinto de .NET (p. ej. 0.1+0.2). Si el decimal solo se compara o se calcula, no importa.
+  // ¿Algún valor decimal (double/float/Math…) acaba convertido a TEXTO sin formato fijo?
+  // Mono y .NET escriben distinto los decimales «crudos» (p. ej. 0.1+0.2, o Math.PI * 2.5 * 2.5).
+  // En cambio NO hay diferencia si el decimal solo se compara o se calcula, si se convierte a entero
+  // con un cast ((int)x) o si se muestra con formato de decimales fijos (:F2, ToString("F2")).
   // Análisis conservador y aproximado: ante la duda, devuelve true (→ se usa .NET).
-  function decimalReachesText(src) {
+  function decimalReachesText(src0) {
+    // 0) Lo que es seguro se sustituye por un 0 para que no cuente como decimal
+    const PRIM = String.raw`(?:Math\s*\.\s*\w+\s*\((?:[^()]|\([^()]*\))*\)|\((?:[^()]|\([^()]*\))*\)|[\w.\[\]]+)`;
+    const src = src0
+      .replace(new RegExp(String.raw`\(\s*(?:int|long|short|byte|uint)\s*\)\s*` + PRIM, "g"), "0")         // (int)x, (int)Math.Round(x)
+      .replace(/([\w.\[\]]+)\s*\.\s*ToString\s*\(\s*"[Ff]\d+"\s*\)/g, "0");                                 // x.ToString("F2")
     const prints = [];                                   // fragmentos de código donde un valor se convierte a texto
     // 1) Cadenas: las normales se vacían; de las interpoladas ($"…{x}…") nos quedamos con los huecos {…}
     const code = src.replace(/\$@?"(?:[^"\\]|\\.)*"|@"(?:[^"]|"")*"|"(?:[^"\\]|\\.)*"/g, (m) => {
       if (m[0] !== "$") return '""';
-      const holes = [...m.matchAll(/\{([^{}]*)\}/g)].map((h) => h[1]);
-      prints.push(...holes);
+      for (const h of m.matchAll(/\{([^{}]*)\}/g)) {
+        if (/:\s*[Ff]\d+\s*$/.test(h[1])) continue;     // {x:F2} → decimales fijos: igual en ambos
+        prints.push(h[1]);
+      }
       return '""';
     });
-    const DEC = /\b(double|float)\b|\bMath\.|\d\.\d|\b\d+[dDfF]\b/;
+    const DEC = /\b(double|float)\b|\bMath\s*\.\s*(?:Sqrt|Pow|Round|Floor|Ceiling|Truncate|Sin|Cos|Tan|Atan2?|Log10?|Exp|PI|E)\b|\d\.\d|\b\d+[dDfF]\b/;
     const tainted = new Set();
     // 2) Nombres «decimales»: declarados como double/float (variables, parámetros, funciones, arrays, listas)
     for (const m of code.matchAll(/\b(?:double|float)\b(?:\s*\[[,\s]*\]|\s*\?)*(?:\s*>)?\s+(\w+)/g)) tainted.add(m[1]);
@@ -244,19 +253,26 @@ const EditorKit = (() => {
     return prints.some(hasDec);
   }
 
-  // Devuelve el código listo para Mono o null si el programa NO es apto para la vía rápida
-  function monoSource(source) {
+  // Devuelve el código listo para Mono o null si el programa NO es apto para la vía rápida.
+  // opts.force = true (solo para la página de diagnóstico) se salta los filtros.
+  function monoSource(source, opts) {
+    const force = !!(opts && opts.force);
     const noComments = source.replace(/\/\/.*$/gm, "").replace(/\/\*[\s\S]*?\*\//g, "");
-    const modern = [
-      /\bRandom\b/,                                       // sin sentido comparar salidas aleatorias
-      /^\s*(public\s+|internal\s+|static\s+|abstract\s+|sealed\s+)*(class|struct|enum|interface|record|namespace)\b/m,   // tipos propios
-      /\bswitch\s*\{|\bis\s+not\b|\bnew\s*\(\s*\)|\bwith\s*\{|\binit\s*;|\busing\s+var\b|\bawait\b|\basync\b/,   // C# 8+
-      /\b(string|int|bool|char|object|long)\?\s*\w|\^\s*\d|\.\.\s*\w|\w\s*\.\.|\brecord\b|\bargs\b/,              // nullables, rangos, args
-      /static\s+(void|int)\s+Main\b/,                                                                              // ya trae su Main
-      /Console\.(ReadKey|Clear|SetCursor)/,
-    ];
-    if (modern.some((re) => re.test(noComments))) return null;
-    if (decimalReachesText(noComments)) return null;
+    const hasMain = /static\s+(?:void|int)\s+Main\b/.test(noComments);   // programa «clásico» con class + Main
+    if (!force) {
+      const text = hasMain ? noComments.replace(/string\s*\[\]\s*args/g, "") : noComments;
+      const modern = [
+        /\bRandom\s*\.\s*Shared\b/,                       // solo existe en .NET 6+
+        /\bswitch\s*\{|\bis\s+not\b|\bnew\s*\(\s*\)|\bwith\s*\{|\binit\s*;|\busing\s+var\b|\bawait\b|\basync\b/,   // C# 8+
+        /\b(string|int|bool|char|object|long)\?\s*\w|\^\s*\d|\.\.\s*\w|\w\s*\.\.|\brecord\b|\bargs\b/,              // nullables, rangos, args
+        /Console\.(ReadKey|Clear|SetCursor)/,
+        /:\s*[CcNnPpEeGgXxDd]\d*\s*[}"]|ToString\s*\(\s*"[CcNnPpEeGgXxDd]\d*"\s*\)/,   // formatos que dependen de la cultura
+      ];
+      if (!hasMain) modern.push(/^\s*(public\s+|internal\s+|static\s+|abstract\s+|sealed\s+)*(class|struct|enum|interface|record|namespace)\b/m);   // tipos propios sin Main
+      if (modern.some((re) => re.test(text))) return null;
+      if (decimalReachesText(noComments)) return null;
+    }
+    if (hasMain) return prepare(source);                  // ya es un programa completo: no hay que envolverlo
 
     // Las líneas «using …;» de arriba se quedan fuera de la clase; el resto va dentro de Main
     const lines = source.split("\n"), head = [], body = [];
@@ -294,6 +310,14 @@ const EditorKit = (() => {
     if (res.status === 429) return { limited: true };
     if (!res.ok) throw new Error("HTTP " + res.status);
     return { json: await res.json() };
+  }
+
+  // Para la página de diagnóstico: ejecuta en un lenguaje concreto y devuelve la respuesta cruda de Judge0
+  async function runRaw(languageId, code, stdin) {
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), (COURSE.compilador || {}).timeoutMs || 30000);
+    try { const r = await submit(languageId, code, stdin, ctl); return r.limited ? { limited: true } : r.json; }
+    finally { clearTimeout(timer); }
   }
 
   async function execute(source, stdin) {
@@ -444,5 +468,5 @@ const EditorKit = (() => {
     });
   }
 
-  return { attach, insert, execute, needsInput, prepare, menu, warm, monoSource, fast: { get enabled() { return fast.enabled; }, set: setFast, onChange: (f) => fast.listeners.push(f) } };
+  return { attach, insert, execute, needsInput, prepare, menu, warm, monoSource, runRaw, fastLanguageId, fromB64, fast: { get enabled() { return fast.enabled; }, set: setFast, onChange: (f) => fast.listeners.push(f) } };
 })();
