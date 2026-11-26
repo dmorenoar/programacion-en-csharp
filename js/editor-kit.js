@@ -205,12 +205,50 @@ const EditorKit = (() => {
     return fast.idPromise;
   }
 
+  // ¿Algún valor decimal (double/float/Math…) acaba convertido a TEXTO? Solo entonces Mono podría
+  // mostrar algo distinto de .NET (p. ej. 0.1+0.2). Si el decimal solo se compara o se calcula, no importa.
+  // Análisis conservador y aproximado: ante la duda, devuelve true (→ se usa .NET).
+  function decimalReachesText(src) {
+    const prints = [];                                   // fragmentos de código donde un valor se convierte a texto
+    // 1) Cadenas: las normales se vacían; de las interpoladas ($"…{x}…") nos quedamos con los huecos {…}
+    const code = src.replace(/\$@?"(?:[^"\\]|\\.)*"|@"(?:[^"]|"")*"|"(?:[^"\\]|\\.)*"/g, (m) => {
+      if (m[0] !== "$") return '""';
+      const holes = [...m.matchAll(/\{([^{}]*)\}/g)].map((h) => h[1]);
+      prints.push(...holes);
+      return '""';
+    });
+    const DEC = /\b(double|float)\b|\bMath\.|\d\.\d|\b\d+[dDfF]\b/;
+    const tainted = new Set();
+    // 2) Nombres «decimales»: declarados como double/float (variables, parámetros, funciones, arrays, listas)
+    for (const m of code.matchAll(/\b(?:double|float)\b(?:\s*\[[,\s]*\]|\s*\?)*(?:\s*>)?\s+(\w+)/g)) tainted.add(m[1]);
+    // 3) Contagio: lo que se asigna desde una expresión decimal (var y = x * 2;) o se recorre (foreach … in arr)
+    const hasDec = (t) => DEC.test(t) || [...tainted].some((n) => new RegExp(`\\b${n}\\b`).test(t));
+    for (let k = 0; k < 6; k++) {
+      const before = tainted.size;
+      for (const m of code.matchAll(/(\w+)\s*(?:[-+*\/]?=)\s*([^;=][^;]*);/g)) if (hasDec(m[2])) tainted.add(m[1]);
+      for (const m of code.matchAll(/(\w+)\s+in\s+(\w+)/g)) if (hasDec(m[2])) tainted.add(m[1]);
+      if (tainted.size === before) break;
+    }
+    // 4) Sitios donde algo se convierte a texto
+    const args = (from) => {                              // contenido entre paréntesis balanceados
+      let depth = 0;
+      for (let q = from; q < code.length; q++) {
+        if (code[q] === "(") depth++;
+        else if (code[q] === ")" && --depth === 0) return code.slice(from + 1, q);
+      }
+      return code.slice(from);
+    };
+    for (const m of code.matchAll(/Console\s*\.\s*Write(?:Line)?\s*\(|(?:string|String)\s*\.\s*Format\s*\(|Convert\s*\.\s*ToString\s*\(/g)) prints.push(args(m.index + m[0].length - 1));
+    for (const m of code.matchAll(/([\w\])]+)\s*\.\s*ToString\s*\(/g)) prints.push(m[1]);
+    for (const m of code.matchAll(/[^;{}]*""[^;{}]*\+[^;{}]*|[^;{}]*\+[^;{}]*""[^;{}]*/g)) prints.push(m[0]);   // concatenación con texto
+    return prints.some(hasDec);
+  }
+
   // Devuelve el código listo para Mono o null si el programa NO es apto para la vía rápida
   function monoSource(source) {
     const noComments = source.replace(/\/\/.*$/gm, "").replace(/\/\*[\s\S]*?\*\//g, "");
     const modern = [
-      /\b(double|float|Math\.|Random)\b|\bMath\./,        // decimales: Mono formatea distinto
-      /\d\.\d/, /\b\d+[dDfF]\b/,                         // literales con decimales
+      /\bRandom\b/,                                       // sin sentido comparar salidas aleatorias
       /^\s*(public\s+|internal\s+|static\s+|abstract\s+|sealed\s+)*(class|struct|enum|interface|record|namespace)\b/m,   // tipos propios
       /\bswitch\s*\{|\bis\s+not\b|\bnew\s*\(\s*\)|\bwith\s*\{|\binit\s*;|\busing\s+var\b|\bawait\b|\basync\b/,   // C# 8+
       /\b(string|int|bool|char|object|long)\?\s*\w|\^\s*\d|\.\.\s*\w|\w\s*\.\.|\brecord\b|\bargs\b/,              // nullables, rangos, args
@@ -218,6 +256,7 @@ const EditorKit = (() => {
       /Console\.(ReadKey|Clear|SetCursor)/,
     ];
     if (modern.some((re) => re.test(noComments))) return null;
+    if (decimalReachesText(noComments)) return null;
 
     // Las líneas «using …;» de arriba se quedan fuera de la clase; el resto va dentro de Main
     const lines = source.split("\n"), head = [], body = [];
