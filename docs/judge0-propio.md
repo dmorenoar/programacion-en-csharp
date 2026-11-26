@@ -30,6 +30,16 @@ compilador: {
 },
 ```
 
+## Pasar a .NET 10 LTS
+
+El servidor público (`extra-ce.judge0.com`) lista C# hasta **.NET SDK 8.0.302** (id 30) y no tiene .NET 10.
+.NET 8 y .NET 9 terminan su soporte el **10 de noviembre de 2026**; .NET 10 (C# 14) es la LTS vigente (hasta noviembre de 2028).
+El código del curso funciona igual en las dos versiones. Para ejecutar con .NET 10 hace falta un Judge0 propio:
+1. Añade un lenguaje nuevo en la configuración de Judge0 con una imagen que incluya el SDK 10 (`dotnet --version` → 10.x) y los comandos `dotnet build` / `dotnet run`.
+2. Mira su id en `https://TU-SERVIDOR/languages`.
+3. Cambia `url` y `languageId` en `data/course.js`. El resto de la web no cambia.
+4. Pasa `diagnostico.html` para confirmar que todos los ejemplos siguen funcionando.
+
 ## Consejos
 - Limita el uso (por IP o con un proxy) en lugar de poner un token secreto en el JS: se vería en el navegador.
 - Más *workers* = más ejecuciones simultáneas (por ejemplo, la tarde antes de una entrega).

@@ -25,11 +25,13 @@ const COURSE = {
   autor: "Daniel Moreno",
 
   // ---- Compilador del panel "Practicar" (ver js/playground.js) ----
-  // Usa la API pública de Judge0 (extra-ce) con C# en .NET 8 (language_id 30).
-  // Si algún día se satura, puedes apuntar "url" a tu propio servidor Judge0.
+  // Usa la API pública de Judge0 (extra-ce). El curso está escrito para .NET 10 LTS (C# 14),
+  // pero el servidor público solo ofrece hasta .NET SDK 8.0 (language_id 30): todo el código del
+  // curso es compatible con C# 12, así que se ejecuta igual. Cuando exista .NET 10 en tu Judge0
+  // (ver docs/judge0-propio.md), cambia solo "url" y "languageId".
   compilador: {
     url: "https://extra-ce.judge0.com",
-    languageId: 30,                 // C# (.NET SDK 8.0)
+    languageId: 30,                 // C# (.NET SDK 8.0 en el público; pon el id de .NET 10 en tu servidor)
     headers: {},                    // p. ej. { "X-Auth-Token": "..." } si tu servidor lo exige
     timeoutMs: 30000,
   },
@@ -260,11 +262,12 @@ href="https://dotnet.microsoft.com/download">https://dotnet.microsoft.com/downlo
 <div class="callout">
 <p><strong>Versiones.</strong> .NET publica una versión nueva cada
 noviembre. Las versiones <strong>pares</strong> (.NET 8, .NET 10…) son
-de <strong>soporte a largo plazo (LTS, 3 años)</strong> y las
-<strong>impares</strong> (.NET 9…) son de soporte estándar (STS, 2
-años). Cada versión viene con una versión de C#: .NET 8 → C# 12; .NET 10
-→ C# 14. En estos apuntes usamos características que funcionan desde
-<strong>C# 12</strong>.</p>
+de <strong>soporte a largo plazo (LTS)</strong> y las
+<strong>impares</strong> (.NET 9…) son de soporte estándar (STS).
+<strong>.NET 10 es la versión LTS actual</strong> (soporte hasta noviembre de
+2028); .NET 8 y .NET 9 terminan su soporte el 10 de noviembre de 2026. Cada versión viene con una versión de C#: .NET 8 → C# 12; .NET 10
+→ C# 14. Instala <strong>.NET 10</strong>. En estos apuntes usamos características que funcionan desde
+<strong>C# 12</strong>, así que también se ejecutan en el editor de la web (.NET 8).</p>
 </div>`,
           ejemplos: [
           ],
