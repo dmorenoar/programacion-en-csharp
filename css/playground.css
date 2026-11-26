@@ -25,8 +25,10 @@ body.view-home .playground { display: none; }
 .pg-lesson { color: #9aa0c0; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .pg-spacer { flex: 1; }
 .pg-x { color: #e4e6f0; }
-.pg-tools { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 12px; background: #1a1a2b; border-bottom: 1px solid #2d2d44; }
-.playground .btn { padding: 6px 12px; font-size: 13px; }
+.pg-grow { flex: 1; }
+.pg-tools2 { padding-top: 0; }
+.pg-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 8px 12px; background: #1a1a2b; border-bottom: 1px solid #2d2d44; }
+.playground .btn { padding: 6px 10px; font-size: 13px; }
 .playground .ed-tool { background: #24243a; color: #e4e6f0; border-color: #3a3a58; cursor: pointer; }
 .playground .ed-tool:hover { background: #30304d; }
 .playground .btn.primary:disabled { opacity: .7; cursor: wait; }

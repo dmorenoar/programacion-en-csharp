@@ -51,16 +51,25 @@ const Playground = (() => {
         <button class="icon-btn pg-x" id="pgClose" type="button" aria-label="Cerrar el editor">✕</button>
       </div>
       <div class="pg-tools">
-        <button class="btn primary" id="pgRun" type="button" title="Ejecutar (Ctrl+Intro)">▶ Ejecutar</button>
         <button class="btn ed-tool" id="pgExamples" type="button">📚 Ejemplos ▾</button>
         <button class="btn ed-tool" id="pgTemplates" type="button">🧱 Plantillas ▾</button>
-        <button class="btn ed-tool" id="pgMore" type="button" aria-label="Más opciones" title="Más opciones">⋯</button>
+        <span class="pg-grow"></span>
+        <button class="btn primary" id="pgRun" type="button" title="Ejecutar (Ctrl+Intro)">▶ Ejecutar</button>
+      </div>
+      <div class="pg-tools pg-tools2">
+        <button class="btn ed-tool" id="pgSave" type="button" title="Guardar como Program.cs (Ctrl+S)">⬇ Guardar</button>
+        <button class="btn ed-tool" id="pgOpenBtn" type="button" title="Abrir un archivo .cs">📂 Abrir</button>
+        <button class="btn ed-tool" id="pgCopy" type="button" title="Copiar el código">⎘ Copiar</button>
+        <span class="pg-grow"></span>
+        <button class="btn ed-tool" id="pgFontDn" type="button" title="Letra más pequeña" aria-label="Letra más pequeña">A−</button>
+        <button class="btn ed-tool" id="pgFontUp" type="button" title="Letra más grande" aria-label="Letra más grande">A+</button>
+        <button class="btn ed-tool" id="pgReset" type="button" title="Borrar el código de esta lección (se puede deshacer)">🗑 Borrar</button>
         <input id="pgOpen" type="file" accept=".cs,.txt,text/plain" hidden>
       </div>
       <div class="pg-body" id="pgBody"></div>`);
 
     const $ = (id) => document.getElementById(id);
-    ["Lesson", "Run", "Examples", "Templates", "More", "Open", "Body", "Close", "Side"].forEach((k) => (ui[k] = $("pg" + k)));
+    ["Lesson", "Run", "Examples", "Templates", "Open", "Body", "Close", "Side"].forEach((k) => (ui[k] = $("pg" + k)));
 
     pane = EditorPane.create({
       onChange: persist,
@@ -83,14 +92,13 @@ const Playground = (() => {
       ];
     });
     EditorKit.menu(ui.Templates, () => TEMPLATES.map((t) => ({ text: t.text, onSelect: () => { pane.load(t.code, "", `Plantilla «${t.text}» cargada.`); pane.focus(); } })));
-    EditorKit.menu(ui.More, () => [
-      { text: "⬇ Guardar como Program.cs", onSelect: () => pane.save() },
-      { text: "📂 Abrir un archivo .cs…", onSelect: () => ui.Open.click() },
-      { text: "⎘ Copiar el código", onSelect: () => pane.copy(ui.More) },
-      { text: "A+  Letra más grande", keep: true, onSelect: () => setFont(+1) },
-      { text: "A−  Letra más pequeña", keep: true, onSelect: () => setFont(-1) },
-      { text: "🗑 Borrar el código de esta lección", onSelect: () => pane.load(startCode(lessonById.get(lessonId)), "", "Código borrado.") },
-    ]);
+    const $b = (id) => document.getElementById(id);
+    $b("pgSave").addEventListener("click", () => pane.save());
+    $b("pgOpenBtn").addEventListener("click", () => ui.Open.click());
+    $b("pgCopy").addEventListener("click", () => pane.copy($b("pgCopy")));
+    $b("pgFontUp").addEventListener("click", () => setFont(+1));
+    $b("pgFontDn").addEventListener("click", () => setFont(-1));
+    $b("pgReset").addEventListener("click", () => pane.load(startCode(lessonById.get(lessonId)), "", "Código borrado."));
     ui.Open.addEventListener("change", (e) => {
       const f = e.target.files[0];
       e.target.value = "";

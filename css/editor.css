@@ -74,7 +74,7 @@ body.view-train #trainBtn { background: #7c3aed; border-color: #7c3aed; }
   body.view-train { overflow: auto; }
   .editor-view { height: auto; min-height: calc(100vh - var(--header-h)); }
   .ed-bar { padding: 8px 10px; }
-  .ed-group, .ep-hints, #trLayout { display: none; }
+  .ep-hints { display: none; }
   .ed-select { max-width: 60vw; }
   .code-btn { padding: 6px 9px; font-size: 13px; }
   .code-btn .lbl { display: none; }                 /* en móvil solo el icono, para que quepan los dos botones */

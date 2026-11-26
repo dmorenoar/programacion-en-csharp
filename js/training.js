@@ -60,9 +60,17 @@ const Training = (() => {
       <div class="ed-bar">
         <a class="btn ed-tool" id="trBack" href="#inicio">← Curso</a>
         <span class="tr-title" id="trTitle"></span>
-        <button class="btn primary" id="trRun" type="button" title="Ejecutar (Ctrl+Intro)">▶ Ejecutar</button>
         <span class="ed-spacer"></span>
-        <button class="btn ed-tool" id="trMore" type="button" aria-label="Más opciones" title="Más opciones">⋯</button>
+        <button class="btn ed-tool" id="trSave" type="button" title="Guardar como Program.cs (Ctrl+S)">⬇ Guardar</button>
+        <button class="btn ed-tool" id="trOpenBtn" type="button" title="Abrir un archivo .cs">📂 Abrir</button>
+        <button class="btn ed-tool" id="trCopy" type="button" title="Copiar el código">⎘ Copiar</button>
+        <span class="ed-group">
+          <button class="btn ed-tool" id="trFontDn" type="button" title="Letra más pequeña" aria-label="Letra más pequeña">A−</button>
+          <button class="btn ed-tool" id="trFontUp" type="button" title="Letra más grande" aria-label="Letra más grande">A+</button>
+        </span>
+        <button class="btn ed-tool" id="trLayout" type="button" title="Cambiar la disposición de editor y salida (lado a lado / uno encima de otro)">⇆ Disposición</button>
+        <button class="btn ed-tool" id="trReset" type="button" title="Empezar de cero esta actividad (se puede deshacer)">🗑 Reiniciar</button>
+        <button class="btn primary" id="trRun" type="button" title="Ejecutar (Ctrl+Intro)">▶ Ejecutar</button>
         <input id="trOpen" type="file" accept=".cs,.txt,text/plain" hidden>
       </div>
 
@@ -77,7 +85,7 @@ const Training = (() => {
       </div>`;
 
     const $ = (id) => document.getElementById(id);
-    ["Back", "Title", "Run", "Browser", "Problem", "Work", "More", "Open"].forEach((k) => (ui[k] = $("tr" + k)));
+    ["Back", "Title", "Run", "Browser", "Problem", "Work", "Open"].forEach((k) => (ui[k] = $("tr" + k)));
 
     pane = EditorPane.create({
       onChange: persist,
@@ -130,15 +138,13 @@ const Training = (() => {
       const g = e.target.closest("[data-grip]");
       if (g) { widths()[g.dataset.grip] = setW(g.dataset.grip, DEFAULTS[g.dataset.grip]); saveState(); }
     });
-    EditorKit.menu(ui.More, () => [
-      { text: "⬇ Guardar como Program.cs", onSelect: () => pane.save() },
-      { text: "📂 Abrir un archivo .cs…", onSelect: () => ui.Open.click() },
-      { text: "⎘ Copiar el código", onSelect: () => pane.copy(ui.More) },
-      { text: "A+  Letra más grande", keep: true, onSelect: () => setFont(+1) },
-      { text: "A−  Letra más pequeña", keep: true, onSelect: () => setFont(-1) },
-      { text: "⇆ Editor y salida: cambiar disposición", onSelect: () => { trState().layout = trState().layout === "stack" ? "side" : "stack"; applyPrefs(); saveState(); } },
-      { text: "🗑 Empezar de cero esta actividad", onSelect: () => pane.load(startCode(byKey.get(currentKey)), "", "Actividad reiniciada.") },
-    ]);
+    $("trSave").addEventListener("click", () => pane.save());
+    $("trOpenBtn").addEventListener("click", () => ui.Open.click());
+    $("trCopy").addEventListener("click", () => pane.copy($("trCopy")));
+    $("trFontUp").addEventListener("click", () => setFont(+1));
+    $("trFontDn").addEventListener("click", () => setFont(-1));
+    $("trLayout").addEventListener("click", () => { trState().layout = trState().layout === "stack" ? "side" : "stack"; applyPrefs(); saveState(); });
+    $("trReset").addEventListener("click", () => pane.load(startCode(byKey.get(currentKey)), "", "Actividad reiniciada."));
     ui.Open.addEventListener("change", (e) => {
       const f = e.target.files[0];
       e.target.value = "";
