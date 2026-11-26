@@ -184,3 +184,7 @@ Los totales (lecciones, actividades y duración) se calculan solos a partir de l
 - La entrada no es interactiva: lo que se escribe en «Entrada del programa» se entrega a `Console.ReadLine()` línea a línea.
 - Para ejecutar hace falta Internet; el resto del curso sigue funcionando sin conexión.
 - Código: `js/editor-kit.js` (piezas comunes), `js/playground.js` (panel), `js/codeview.js` + `css/codeview.css` (vista Codificar).
+
+## Perfil «arcade» del profesor
+
+Al pulsar el nombre o el avatar del profesor en la portada se abre una ventana de perfil con Mario (salta al pulsarlo), sonido de moneda (`audio/coin.mp3`, con interruptor que se recuerda) y barras de estadísticas que se llenan a bloques. Los textos y porcentajes se editan en `data/course.js` → `profesor` (`insignia`, `estadisticas`, `habilidades`, `lema`…). Con «reducir movimiento» activado en el sistema no hay animaciones. Código: `js/profile.js` y `css/profile.css`.

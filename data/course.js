@@ -61,6 +61,21 @@ const COURSE = {
     nombre: "Daniel Moreno",
     rol: "Profesor de Desarrollo de Aplicaciones Multiplataforma · Institut Tecnològic de Barcelona",
     bio: "Docente de programación en ciclos formativos de grado superior, con orientación a videojuegos y ocio digital.",
+
+    // ---- Ventana de perfil «arcade» (js/profile.js). Todo editable ----
+    insignia: "Super Creator",
+    version: "v2.3",
+    presentacion: "Apasionado de los 8 bits y profesor de ciclos formativos.",
+    estadisticas: [
+      { nombre: "Mana",    desc: "Nivel de cafeína en sangre",                  valor: 95, color: "#00b7e6" },
+      { nombre: "Suerte",  desc: "Probabilidad de que el código compile a la primera", valor: 73, color: "#d946ef" },
+      { nombre: "Aguante", desc: "Paciencia ante un problema",                  valor: 98, color: "#22c55e" },
+    ],
+    habilidades: [
+      { nombre: "Telepatía de depuración", desc: "Detectar el error en el código del alumno sin mirarlo", valor: 82, color: "#eab308" },
+      { nombre: "Transferencia de conocimiento", desc: "Ritual de canalización de datos de mi cerebro al de los alumnos", valor: 67, color: "#f97316" },
+    ],
+    lema: "It's-a me, the Teacher!",
   },
 
   modulos: [

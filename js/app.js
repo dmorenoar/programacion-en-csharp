@@ -351,7 +351,7 @@ function homeHTML() {
         <p class="sub">${esc(COURSE.subtitulo)}</p>
         <div class="hero-meta">
           <span class="badge-free">Gratis</span>
-          <span>Creado por <strong>${esc(COURSE.autor)}</strong></span>
+          <span>Creado por <button type="button" class="author-link" data-profile>${esc(COURSE.autor)}</button></span>
         </div>
         <div class="hero-meta">
           <span>🕒 Actualizado: ${esc(COURSE.actualizado || "")}</span>
@@ -406,9 +406,9 @@ function homeHTML() {
         <section class="block instructor">
           <h2>Profesor</h2>
           <div class="inst-card">
-            <div class="avatar" aria-hidden="true">${esc(p.nombre.trim().charAt(0).toUpperCase())}</div>
+            <button type="button" class="inst-avatar" data-profile aria-label="Ver el perfil de ${esc(p.nombre)}" title="Pulsa para ver el perfil">${typeof MARIO_SVG !== "undefined" ? MARIO_SVG : esc(p.nombre.trim().charAt(0))}</button>
             <div>
-              <div class="inst-name">${esc(p.nombre)}</div>
+              <button type="button" class="inst-name" data-profile>${esc(p.nombre)}</button>
               <div class="inst-role">${esc(p.rol || "")}</div>
               <p>${esc(p.bio || "")}</p>
             </div>
