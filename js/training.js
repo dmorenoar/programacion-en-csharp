@@ -151,14 +151,27 @@ const Training = (() => {
       if (f) pane.readFile(f, (text) => pane.load(text, "", `Archivo «${f.name}» abierto.`));
     });
 
-    // Botón «Marcar como resuelta» (vive dentro del enunciado)
-    ui.Problem.addEventListener("click", (e) => {
-      if (!e.target.closest(".tr-solved-btn")) return;
+    // Marcar/desmarcar una actividad como resuelta (botón del enunciado o círculo de la lista)
+    const toggleSolved = (key) => {
       const s = sub("solved");
-      if (s[currentKey]) delete s[currentKey]; else s[currentKey] = true;
+      if (s[key]) delete s[key]; else s[key] = true;
       saveState();
-      renderProblem();
+      if (key === currentKey) renderProblem();
       renderBrowser();
+    };
+    ui.Problem.addEventListener("click", (e) => { if (e.target.closest(".tr-solved-btn")) toggleSolved(currentKey); });
+    ui.Browser.addEventListener("click", (e) => {
+      const t = e.target.closest(".tick[data-act]");
+      if (!t) return;
+      e.preventDefault();                 // está dentro de un enlace: no cambiar de actividad
+      const key = t.dataset.act;
+      toggleSolved(key);
+      const again = ui.Browser.querySelector(`.tick[data-act="${key}"]`);
+      if (again) again.focus();
+    });
+    ui.Browser.addEventListener("keydown", (e) => {
+      const t = e.target.closest && e.target.closest(".tick[data-act]");
+      if (t && (e.key === " " || e.key === "Enter")) { e.preventDefault(); t.click(); }
     });
 
     built = true;
@@ -182,7 +195,7 @@ const Training = (() => {
         <div class="tr-lesson">${esc(l.titulo)}</div>
         ${items.filter((it) => it.lesson.id === l.id).map((it) => `
           <a class="tr-act${it.key === currentKey ? " active" : ""}${solved[it.key] ? " done" : ""}" href="#entrenamiento-${it.key}" ${it.key === currentKey ? 'aria-current="true"' : ""}>
-            <span class="tick" aria-hidden="true">${solved[it.key] ? "✓" : ""}</span>
+            <span class="tick" role="checkbox" tabindex="0" data-act="${it.key}" aria-checked="${!!solved[it.key]}" aria-label="Marcar como resuelta: ${esc(it.act.titulo)}" title="${solved[it.key] ? "Desmarcar como resuelta" : "Marcar como resuelta"}">${solved[it.key] ? "✓" : ""}</span>
             <span class="t">${it.index + 1}. ${esc(it.act.titulo)}</span>
             <span class="lv" title="${esc((LEVELS[it.act.nivel] || LEVELS[1]).label)}">${stars(it)}</span>
           </a>`).join("")}`).join("");

@@ -203,6 +203,8 @@ function updateProgress() {
 }
 
 function renderSidebar() {
+  // Recordamos qué módulos estaban abiertos para no cerrarlos al repintar (p. ej. al marcar un check)
+  const wasOpen = new Map([...document.querySelectorAll("#modules details.module")].map((d) => [d.dataset.mod, d.open]));
   $("#modules").innerHTML = COURSE.modulos
     .map((modulo, i) => {
       const done = modulo.lecciones.filter((l) => isDone(l.id)).length;
@@ -212,20 +214,31 @@ function renderSidebar() {
           (l) => `
           <a class="lesson-link ${l.id === currentId ? "active" : ""} ${isDone(l.id) ? "done" : ""}"
              href="#leccion-${esc(l.id)}" ${l.id === currentId ? 'aria-current="page"' : ""}>
-            <span class="tick" aria-hidden="true">✓</span>
+            <span class="tick" role="checkbox" tabindex="0" data-lesson="${esc(l.id)}" aria-checked="${isDone(l.id)}" aria-label="Marcar «${esc(l.titulo)}» como completada" title="${isDone(l.id) ? "Desmarcar como completada" : "Marcar como completada"}">✓</span>
             <span class="info"><span class="name">${esc(l.titulo)}</span><span class="meta">▶ ${esc(l.duracion || "")}</span></span>
           </a>`
         )
         .join("");
       // <details open> mantiene abierto el módulo de la lección actual (y el primero por defecto)
-      const open = containsActive || (!currentId && i === 0) ? "open" : "";
+      const open = (wasOpen.has(String(i)) ? wasOpen.get(String(i)) : containsActive || (!currentId && i === 0)) || containsActive ? "open" : "";
       return `
-        <details class="module" ${open}>
+        <details class="module" data-mod="${i}" ${open}>
           <summary>Módulo ${i + 1}: ${esc(modulo.titulo)}<span class="count">${done}/${modulo.lecciones.length}</span></summary>
           ${items}
         </details>`;
     })
     .join("");
+}
+
+// Marca o desmarca una lección y refresca todo lo que lo muestra (botón, índice, progreso)
+function toggleDone(id) {
+  if (isDone(id)) delete state.done[id]; else state.done[id] = true;
+  saveState();
+  const btn = $("#completeBtn");
+  if (btn && id === currentId) setCompleteButton(btn, id);
+  renderSidebar();
+  updateProgress();
+  if (typeof renderHome === "function" && !$("#home").hidden) renderHome();
 }
 
 function setCompleteButton(btn, id) {
@@ -460,18 +473,26 @@ window.addEventListener("hashchange", route);
 // --- Delegación de eventos: UN solo listener en el contenedor en lugar de uno por botón.
 // Como el contenido se vuelve a generar al cambiar de lección, esto evita tener que
 // volver a conectar los eventos cada vez.
+document.addEventListener("keydown", (e) => {
+  const t = e.target.closest && e.target.closest(".tick[data-lesson]");
+  if (t && (e.key === " " || e.key === "Enter")) { e.preventDefault(); t.click(); setTimeout(() => { const n = document.querySelector(`.tick[data-lesson="${t.dataset.lesson}"]`); if (n) n.focus(); }); }
+});
+
 document.addEventListener("click", async (event) => {
   const tab = event.target.closest(".tab");
   if (tab) return selectTab(tab.dataset.tab);
 
+  // Check de cada lección en el índice: marca/desmarca sin entrar en la lección
+  const tick = event.target.closest(".tick[data-lesson]");
+  if (tick) {
+    event.preventDefault();                 // el check está dentro de un enlace: no navegar
+    toggleDone(tick.dataset.lesson);
+    return;
+  }
+
   const complete = event.target.closest("#completeBtn");
   if (complete) {
-    state.done[currentId] = !isDone(currentId);
-    if (!state.done[currentId]) delete state.done[currentId];
-    saveState();
-    setCompleteButton(complete, currentId);
-    renderSidebar();
-    updateProgress();
+    toggleDone(currentId);
     return;
   }
 
