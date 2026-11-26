@@ -126,12 +126,11 @@ function videoHTML(video, title) {
 }
 
 function videoLink(video, lessonId) {
-  const code = `<a class="code-link" href="#codificar-${esc(lessonId)}">&lt;/&gt; Programar mientras ves el vídeo</a>`;
-  if (!video || !video.id) return `<p class="video-tools">${code}</p>`;
+  if (!video || !video.id) return "";
   const id = encodeURIComponent(video.id);
   const url =
     video.provider === "youtube" ? `https://www.youtube.com/watch?v=${id}` : `https://drive.google.com/file/d/${id}/view`;
-  return `<p class="video-tools">¿No se ve el vídeo? <a href="${url}" target="_blank" rel="noopener">Ábrelo en una pestaña nueva</a>. · ${code}</p>`;
+  return `<p class="video-tools">¿No se ve el vídeo? <a href="${url}" target="_blank" rel="noopener">Ábrelo en una pestaña nueva</a>.</p>`;
 }
 
 const LEVELS = {
@@ -256,9 +255,11 @@ function renderLesson(id, tab = "teoria") {
     : "";
 
   $("#lesson").innerHTML = `
-    <div class="crumbs">${esc(lesson.modulo.titulo)} · Lección ${index + 1} de ${lessons.length}</div>
-    <div class="video-box">${videoHTML(lesson.video, lesson.titulo)}</div>
-    ${videoLink(lesson.video, lesson.id)}
+    <div class="lesson-media">
+      <div class="crumbs"><span>${esc(lesson.modulo.titulo)} · Lección ${index + 1} de ${lessons.length}</span><button type="button" class="btn pg-reopen" id="pgReopen">&lt;/&gt; Editor</button></div>
+      <div class="video-box">${videoHTML(lesson.video, lesson.titulo)}</div>
+      ${videoLink(lesson.video, lesson.id)}
+    </div>
 
     <div class="lesson-head">
       <h1>${esc(lesson.titulo)}</h1>
@@ -287,6 +288,7 @@ function renderLesson(id, tab = "teoria") {
   document.title = `${lesson.titulo} · ${COURSE.titulo}`;
   if (typeof Playground !== "undefined") Playground.sync(id);   // cuaderno de esta lección y panel abierto/cerrado
   window.scrollTo({ top: 0 });
+  $("#content").scrollTop = 0;                                   // en escritorio la que se desplaza es la columna central
   document.body.classList.remove("menu-open");
   syncMenuButton();
 }
@@ -620,10 +622,9 @@ if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   });
 }
 
-// «</> Codificar»: dentro de una lección abre o cierra el panel; desde otra pantalla lleva a la lección con el panel abierto
-$("#codeBtn").addEventListener("click", (e) => {
-  const inLesson = !document.body.classList.contains("view-home") && !document.body.classList.contains("view-train") && currentId;
-  if (inLesson && typeof Playground !== "undefined") { e.preventDefault(); Playground.toggle(); }
+// «</> Editor» (aparece en la lección cuando el panel está cerrado)
+document.addEventListener("click", (e) => {
+  if (e.target.closest(".pg-reopen") && typeof Playground !== "undefined") Playground.open();
 });
 
 /* ============================== ARRANQUE ============================== */

@@ -69,8 +69,8 @@ const Playground = (() => {
     ui.Body.append(pane.editorEl, pane.ioEl);
 
     ui.Run.addEventListener("click", () => pane.run());
-    ui.Close.addEventListener("click", close);
-    ui.Side.addEventListener("click", () => { state.playSide = state.playSide === "left" ? "right" : "left"; applyPrefs(); saveState(); });
+    ui.Close.addEventListener("click", () => setOpen(false));
+    ui.Side.addEventListener("click", () => { state.playSide = state.playSide === "right" ? "left" : "right"; applyPrefs(); saveState(); });
 
     // Menús propios (sin <select> ni confirm: ver EditorKit.menu)
     EditorKit.menu(ui.Examples, () => {
@@ -103,7 +103,7 @@ const Playground = (() => {
       grip.setPointerCapture(e.pointerId);
       const move = (ev) => {
         const r = panel.getBoundingClientRect();
-        setWidth(state.playSide === "left" ? ev.clientX - r.left : r.right - ev.clientX);
+        setWidth(state.playSide === "right" ? r.right - ev.clientX : ev.clientX - r.left);
       };
       const up = () => {
         grip.removeEventListener("pointermove", move);
@@ -123,7 +123,7 @@ const Playground = (() => {
   }
   function applyPrefs() {
     panel.style.setProperty("--ep-fs", (state.editorFs || 14) + "px");
-    document.body.classList.toggle("play-left", state.playSide === "left");
+    document.body.classList.toggle("play-right", state.playSide === "right");   // por defecto: editor a la izquierda
     if (state.playW) setWidth(state.playW);
   }
 
@@ -152,7 +152,8 @@ const Playground = (() => {
   // La llama app.js cada vez que se muestra una lección: la visibilidad sigue al estado guardado
   function sync(id) {
     setLesson(id);
-    setOpen(!!state.playOpen);
+    // Primera visita: abierto en escritorio (editor + vídeo a la vez), cerrado en móvil
+    setOpen(state.playOpen === undefined ? matchMedia("(min-width: 901px)").matches : !!state.playOpen);
   }
 
   // «▶ Probar» (bloques de código de la teoría y de las soluciones)

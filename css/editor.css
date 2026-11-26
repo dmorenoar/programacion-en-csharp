@@ -16,7 +16,7 @@ body.view-train { overflow: hidden; }
 /* Botones «Codificar» y «Entrenamiento» de la cabecera */
 .code-btn { background: transparent; color: #fff; border-color: #6a6f73; text-decoration: none; white-space: nowrap; }
 .code-btn:hover { background: #3e4143; }
-body.play-open #codeBtn, body.view-train #trainBtn { background: #7c3aed; border-color: #7c3aed; }
+body.view-train #trainBtn { background: #7c3aed; border-color: #7c3aed; }
 
 .editor-view[hidden] { display: none; }
 .editor-view {

@@ -40,13 +40,21 @@ body.view-home .playground { display: none; }
 .try { cursor: pointer; font: inherit; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 4px; border: 1px solid #7c3aed; background: #7c3aed; color: #fff; }
 .try:hover { filter: brightness(1.1); }
 
-/* Escritorio: tercera columna */
+/* Escritorio: [editor | vídeo + teoría | índice del curso]. El índice va a la derecha. */
 @media (min-width: 901px) {
-  body.play-open .layout { grid-template-columns: var(--sidebar-w) minmax(0, 1fr) var(--play-w); }
-  body.play-open.sidebar-collapsed .layout { grid-template-columns: minmax(0, 1fr) var(--play-w); }
-  /* con el panel abierto, los márgenes laterales "centrados" del texto sobran */
-  body.play-open .content-inner > *:not(.crumbs):not(.video-box):not(.video-tools) { margin-left: 24px; margin-right: 24px; }
+  body.play-open .layout { grid-template-columns: var(--play-w) minmax(0, 1fr) var(--sidebar-w); }
+  body.play-open.sidebar-collapsed .layout { grid-template-columns: var(--play-w) minmax(0, 1fr); }
+  .playground { order: 1; }
+  /* ⇄: editor al otro lado del vídeo */
+  body.play-right .playground { order: 3; border-left: 1px solid #000; border-right: 0; }
+  body.play-right .sidebar { order: 4; }
+  body.play-right.play-open .layout { grid-template-columns: minmax(0, 1fr) var(--play-w) var(--sidebar-w); }
+  body.play-right.play-open.sidebar-collapsed .layout { grid-template-columns: minmax(0, 1fr) var(--play-w); }
+  body:not(.play-right) .playground { border-left: 0; border-right: 1px solid #000; }
+  body:not(.play-right) .pg-resize { left: auto; right: -4px; }
 }
+.pg-reopen { display: none; padding: 4px 10px; font-size: 13px; }
+body:not(.play-open) .pg-reopen { display: inline-flex; }
 
 /* Móvil: hoja inferior a pantalla casi completa */
 @media (max-width: 900px) {
