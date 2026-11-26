@@ -374,7 +374,7 @@ document.addEventListener("keydown", (e) => {
 function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
   const meta = document.querySelector('meta[name="theme-color"]');   // color de la barra del navegador/app
-  if (meta) meta.content = theme === "dark" ? "#181b30" : "#4f46e5";
+  if (meta) meta.content = "#1c1d1f";   // la cabecera es oscura en ambos temas
   $("#themeBtn").textContent = theme === "dark" ? "☀️" : "🌙";
 }
 $("#themeBtn").addEventListener("click", () => {

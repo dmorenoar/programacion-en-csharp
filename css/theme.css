@@ -1,0 +1,62 @@
+/* =====================================================================
+   css/theme.css · DISEÑO "PLATAFORMA DE CURSOS" (tipo Udemy/Coursera)
+   ---------------------------------------------------------------------
+   Se carga DESPUÉS de styles.css y sobrescribe lo que haga falta:
+   styles.css = estructura y componentes · theme.css = aspecto.
+   Para cambiar de diseño en el futuro basta con sustituir este archivo.
+   ===================================================================== */
+
+:root {
+  --bg: #f7f9fa; --surface: #ffffff; --surface-2: #f0f2f5; --text: #1c1d1f; --muted: #6a6f73;
+  --border: #d1d7dc; --accent: #7c3aed; --accent-soft: #efe7fd; --ok: #1e7a4c; --ok-soft: #dff3e8;
+  --radius: 4px; --shadow: none; --header-h: 56px; --sidebar-w: 380px;
+}
+[data-theme="dark"] {
+  --bg: #121214; --surface: #1c1d1f; --surface-2: #2d2f31; --text: #f4f4f5; --muted: #a1a6ab;
+  --border: #3e4143; --accent: #b794f6; --accent-soft: #2c2342;
+}
+.topbar { background: #1c1d1f; color: #fff; border-bottom: 0; }
+.brand-logo { border-radius: 4px; background: #a78bfa; color: #1c1d1f; }
+.progress-wrap { color: #d1d7dc; }
+.progress { background: #3e4143; border-radius: 2px; }
+.progress > span { background: #a78bfa; }
+.icon-btn { background: transparent; border-color: #6a6f73; color: #fff; border-radius: 4px; }
+.icon-btn:hover { background: #3e4143; }
+h1, h2, h3, h4 { letter-spacing: -.01em; }
+.lesson-head h1 { font-size: 30px; font-weight: 800; }
+.btn { border-radius: 4px; border-color: #1c1d1f; font-weight: 700; }
+[data-theme="dark"] .btn { border-color: #d1d7dc; }
+.btn.primary { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+.btn.ok { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+.video-box { border-radius: 0; box-shadow: none; }
+.goals { border-radius: 4px; border: 1px solid var(--border); }
+.tab { text-transform: none; font-size: 16px; }
+.activity { box-shadow: none; border-radius: 4px; }
+.code { border-radius: 4px; box-shadow: none; }
+.module summary { background: var(--surface-2); font-size: 15px; }
+.lesson-link.active { background: var(--accent-soft); border-left-color: var(--accent); }
+.lesson-link .tick { border-radius: 3px; }
+@media (min-width: 901px) {
+  .layout { grid-template-columns: minmax(0, 1fr) var(--sidebar-w); }
+  .content { grid-column: 1; grid-row: 1; padding: 0 0 40px; }
+  .sidebar { grid-column: 2; grid-row: 1; border-right: 0; border-left: 1px solid var(--border); }
+  .content-inner { max-width: none; }
+  /* Franja oscura detrás del vídeo, como en Udemy */
+  .content-inner > .crumbs { background: #1c1d1f; color: #d1d7dc; margin: 0; padding: 18px 32px 0; }
+  .content-inner > .video-box { margin: 0; width: 100%; max-height: 62vh; aspect-ratio: 16 / 9; }
+  .content-inner > .video-tools { margin: 0; padding: 8px 32px; background: #1c1d1f; color: #d1d7dc; }
+  .content-inner > .video-tools a { color: #c4b5fd; }
+  .content-inner > *:not(.crumbs):not(.video-box):not(.video-tools) { margin-left: 32px; margin-right: 32px; max-width: 880px; }
+}
+
+
+/* Botón "Instalar app" sobre la cabecera oscura */
+.install-btn { background: transparent; color: #fff; border-color: #6a6f73; }
+.install-btn:hover { background: #3e4143; }
+[data-theme="dark"] .install-btn { border-color: #6a6f73; }
+
+/* Móvil: el marcador de vídeo es pequeño; ocultamos el texto largo y reducimos el icono */
+@media (max-width: 600px) {
+  .video-placeholder small { display: none; }
+  .video-placeholder .play { width: 52px; height: 52px; font-size: 22px; }
+}

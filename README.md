@@ -5,7 +5,8 @@ Web estática estilo "curso online" (barra lateral con módulos y lecciones, ví
 ```
 curso-csharp/
 ├── index.html        ← esqueleto de la página (cabecera, menú, zona de contenido)
-├── css/styles.css    ← estilos (colores como variables CSS, modo claro/oscuro)
+├── css/styles.css    ← estructura y componentes (colores como variables CSS, modo claro/oscuro)
+├── css/theme.css     ← aspecto "Plataforma de cursos" (se carga después y sobrescribe a styles.css)
 ├── js/app.js         ← lógica: menú, rutas, pestañas, progreso, resaltado de C#, registro PWA
 ├── data/course.js    ← ⭐ TODO EL CONTENIDO (módulos, lecciones, vídeos, actividades)
 ├── manifest.webmanifest ← PWA: nombre, colores e iconos de la app instalable
