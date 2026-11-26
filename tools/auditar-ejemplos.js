@@ -15,9 +15,9 @@ vm.runInContext(code, ctx);
 const { COURSE, EditorKit } = ctx.__R;
 
 const motivos = [
-  [/\bRandom\.Shared\b/, "Random.Shared (usa new Random())"],
-  [/\bswitch\s*\{|\bis\s+not\b|\bnew\s*\(\s*\)|\bwith\s*\{|\binit\s*;|\busing\s+var\b|\bawait\b|\basync\b/, "sintaxis C# 8+ (switch expresión, is not, new(), using var…)"],
-  [/:[CNPEGXD]\d*\}|ToString\("[CNPEGXD]/, "formato dependiente de cultura (:C :N :P…) → usa :F2 o formatea a mano"],
+  [/\bRandom\.Shared\b/, "Random.Shared (es moderno: se queda en .NET)"],
+  [/\bswitch\s*\{|\bis\s+not\b|\bnew\s*\(\s*\)|\bwith\s*\{|\binit\s*;|\busing\s+var\b|\bawait\b|\basync\b/, "sintaxis C# 8+ (moderna: se queda en .NET, NO rebajarla)"],
+  [/:[CNPEGXD]\d*\}|ToString\("[CNPEGXD]/, "formato dependiente de cultura (:C :N :P…) → moderno y válido: se queda en .NET"],
   [/Console\.(ReadKey|Clear|SetCursor)/, "Console.ReadKey/Clear/SetCursor"],
   [/\b(string|int|bool|char|object|long)\?\s*\w|\^\s*\d|\bargs\b/, "nullable / índice ^ / args"],
   [/\b(double|float)\b|\d\.\d|Math\.(Sqrt|Pow|PI)/, "decimal que se imprime «crudo» → usa (int), :F2 o ToString(\"F2\")"],
