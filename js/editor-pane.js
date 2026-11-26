@@ -72,7 +72,8 @@ const EditorPane = (() => {
       q(editorEl, ".ep-pos").textContent = `Ln ${before.length}, Col ${before[before.length - 1].length + 1}`;
     }
 
-    ta.addEventListener("input", () => { errorLines = []; refresh(); if (onChange) onChange(); });
+    ta.addEventListener("input", () => { errorLines = []; refresh(); if (onChange) onChange(); EditorKit.warm(); });
+    ta.addEventListener("focus", () => EditorKit.warm());
     stdin.addEventListener("input", () => { if (onChange) onChange(); });
     ta.addEventListener("scroll", sync);
     ["keyup", "click", "select", "focus"].forEach((ev) => ta.addEventListener(ev, status));

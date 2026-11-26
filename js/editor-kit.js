@@ -150,6 +150,7 @@ const EditorKit = (() => {
   //  1) «preconnect»: abrimos la conexión segura con el compilador nada más cargar la página
   //  2) memoria de resultados: ejecutar EXACTAMENTE el mismo código y entrada es instantáneo
   const cache = new Map();
+  let useJson = false;          // pasa a true si el servidor rechaza el formulario
   (function preconnect() {
     try {
       const cfg = COURSE.compilador || {};
@@ -159,6 +160,16 @@ const EditorKit = (() => {
       document.head.appendChild(l);
     } catch { /* URL no válida: no pasa nada */ }
   })();
+
+  // Mantiene «caliente» la conexión con el compilador: si llevas un rato sin ejecutar, la conexión
+  // se cierra y la siguiente ejecución pagaría de nuevo el arranque. Se llama al enfocar/escribir.
+  let lastWarm = 0;
+  function warm() {
+    const cfg = COURSE.compilador || {};
+    if (!cfg.url || Date.now() - lastWarm < 25000) return;
+    lastWarm = Date.now();
+    fetch(`${cfg.url}/about`, { mode: "cors", cache: "no-store" }).catch(() => {});
+  }
 
   async function execute(source, stdin) {
     const cfg = COURSE.compilador || {};
@@ -170,16 +181,24 @@ const EditorKit = (() => {
     const ctl = new AbortController();
     const timer = setTimeout(() => ctl.abort(), cfg.timeoutMs || 30000);
     try {
-      const res = await fetch(`${cfg.url}/submissions?base64_encoded=true&wait=true`, {
+      const payload = { language_id: cfg.languageId, source_code: toB64(prepare(source)), stdin: toB64((stdin || "").replace(/\r?\n?$/, "\n")) };   // cada ReadLine consume una línea
+      const endpoint = `${cfg.url}/submissions?base64_encoded=true&wait=true`;
+      const custom = cfg.headers && Object.keys(cfg.headers).length > 0;
+
+      // Petición «simple» (formulario): el navegador NO hace la consulta previa (preflight OPTIONS)
+      // y nos ahorramos una ida y vuelta completa. Si el servidor no la acepta, caemos a JSON.
+      const asJson = () => fetch(endpoint, {
         method: "POST",
         headers: Object.assign({ "Content-Type": "application/json" }, cfg.headers || {}),
-        body: JSON.stringify({
-          language_id: cfg.languageId,
-          source_code: toB64(prepare(source)),
-          stdin: toB64((stdin || "").replace(/\r?\n?$/, "\n")),   // cada ReadLine consume una línea
-        }),
+        body: JSON.stringify(payload),
         signal: ctl.signal,
       });
+      let res;
+      if (useJson || custom) res = await asJson();
+      else {
+        res = await fetch(endpoint, { method: "POST", body: new URLSearchParams(payload), signal: ctl.signal });
+        if (!res.ok && res.status !== 429) { useJson = true; res = await asJson(); }
+      }
       if (res.status === 429) return { kind: "err", errorLines: [], text: "Demasiadas ejecuciones seguidas en el servicio gratuito. Espera un minuto y vuelve a probar." };
       if (!res.ok) throw new Error("HTTP " + res.status);
       const result = interpret(await res.json());
@@ -297,5 +316,5 @@ const EditorKit = (() => {
     });
   }
 
-  return { attach, insert, execute, needsInput, prepare, menu };
+  return { attach, insert, execute, needsInput, prepare, menu, warm };
 })();
