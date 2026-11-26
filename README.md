@@ -197,3 +197,5 @@ El tiempo casi siempre es **compilar en el servidor** (Judge0 público, comparti
 Los programas **sencillos** (sin clases propias ni sintaxis moderna; los decimales solo valen si nunca se muestran como texto, porque Mono los formatea distinto) se compilan primero con Mono, que es más rápido que .NET en el servidor. Solo se da por buena si termina bien; si hay cualquier error se repite con .NET (la referencia). Se activa/desactiva con el botón **⚡ Rápido** del editor. El id de Mono se busca solo en `GET /languages` del servidor; también puede fijarse en `COURSE.compilador.rapido = { languageId: 51, activo: true }`. La salida indica «⚡ vía rápida (Mono)» cuando se ha usado.
 
 **Diagnóstico:** abre `diagnostico.html` (junto a la web) para ejecutar todos los ejemplos y soluciones en Mono y en .NET, comparar las salidas y ver qué bloques salen igual. Sirve para ajustar el filtro de la vía rápida con datos reales.
+
+**Nuevos módulos:** sigue `docs/checklist-nuevos-modulos.md` y ejecuta `node tools/auditar-ejemplos.js` para que los ejemplos vayan por la vía rápida siempre que sea posible.
