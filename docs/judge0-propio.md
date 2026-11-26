@@ -34,3 +34,11 @@ compilador: {
 - Limita el uso (por IP o con un proxy) en lugar de poner un token secreto en el JS: se vería en el navegador.
 - Más *workers* = más ejecuciones simultáneas (por ejemplo, la tarde antes de una entrega).
 - La web ya abre la conexión por adelantado y recuerda resultados repetidos; no hace falta tocar nada más.
+
+## Vía rápida: qué hace el envoltorio para Mono
+
+Mono (`mcs`) solo entiende hasta ~C# 7. Para que el código «moderno» del curso siga igual en pantalla pero compile en Mono, el envoltorio:
+- mete las sentencias de nivel superior dentro de `Main`;
+- **saca a la clase las funciones/procedimientos declarados al nivel superior** (los convierte en métodos `static`; Mono no admite funciones locales);
+- respeta `using` con comentario al final.
+Informe real del servidor (27/11): 41/62 bloques idénticos; los fallos eran justo funciones locales y un `using` con comentario. Ya corregidos; si algún bloque no compila en Mono, se ejecuta en .NET sin que el alumno lo note.

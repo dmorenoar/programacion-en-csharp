@@ -250,7 +250,25 @@ const EditorKit = (() => {
     for (const m of code.matchAll(/Console\s*\.\s*Write(?:Line)?\s*\(|(?:string|String)\s*\.\s*Format\s*\(|Convert\s*\.\s*ToString\s*\(/g)) prints.push(args(m.index + m[0].length - 1));
     for (const m of code.matchAll(/([\w\])]+)\s*\.\s*ToString\s*\(/g)) prints.push(m[1]);
     for (const m of code.matchAll(/[^;{}]*""[^;{}]*\+[^;{}]*|[^;{}]*\+[^;{}]*""[^;{}]*/g)) prints.push(m[0]);   // concatenación con texto
-    return prints.some(hasDec);
+    // 5) Excepción: un double inicializado con un literal corto (≤ 15 cifras) que nunca se modifica se escribe
+    //    igual en Mono y en .NET (85.5 → 85.5) siempre que se muestre SOLO (sin operar con él).
+    const safe = new Set();
+    for (const m of code.matchAll(/\b(?:double|float)\s+(\w+)\s*=\s*-?(\d+(?:\.\d+)?)[fFdD]?\s*;/g)) {
+      const name = m[1];
+      if (m[2].replace(".", "").replace(/^0+/, "").length > 15) continue;
+      const writes = [...code.matchAll(new RegExp(`\\b${name}\\s*(?:[-+*\\/%]?=(?!=)|\\+\\+|--)|(?:\\+\\+|--)\\s*${name}\\b|\\b(?:ref|out)\\s+${name}\\b`, "g"))];
+      if (writes.length === 1) safe.add(name);          // solo la propia declaración
+    }
+    const bare = (t) => {                                 // ¿el fragmento solo muestra variables seguras, sin operar?
+      const rest = t.replace(/""/g, "").replace(/Console\s*\.\s*Write(?:Line)?|(?:string|String)\s*\.\s*Format/g, "")
+        .replace(new RegExp(`\\b(?:${[...safe].join("|") || "$^"})\\b`, "g"), "").replace(/[\s+,()]/g, "");
+      return rest === "";
+    };
+    const decimalIn = (t) => {
+      if (safe.size && bare(t) ) return false;
+      return hasDec(t);
+    };
+    return prints.some(decimalIn);
   }
 
   // Devuelve el código listo para Mono o null si el programa NO es apto para la vía rápida.
@@ -274,16 +292,40 @@ const EditorKit = (() => {
     }
     if (hasMain) return prepare(source);                  // ya es un programa completo: no hay que envolverlo
 
-    // Las líneas «using …;» de arriba se quedan fuera de la clase; el resto va dentro de Main
-    const lines = source.split("\n"), head = [], body = [];
+    // Las líneas «using …;» de arriba se quedan fuera de la clase (puede llevar un comentario al final)
+    const lines = source.split("\n"), head = [], rest = [];
     let inHead = true;
     lines.forEach((ln) => {
-      if (inHead && /^\s*using\s+[\w.]+\s*;\s*$/.test(ln)) head.push(ln);
-      else { if (ln.trim() && !/^\s*\/\//.test(ln)) inHead = false; body.push(ln); }
+      if (inHead && /^\s*using\s+[\w.]+\s*;\s*(\/\/.*)?$/.test(ln)) head.push(ln.replace(/\/\/.*$/, ""));
+      else { if (ln.trim() && !/^\s*\/\//.test(ln)) inHead = false; rest.push(ln); }
     });
+    // Mono (mcs) no entiende las funciones locales de C# 7+: las que están al nivel superior
+    // (columna 0) se sacan de Main y pasan a ser métodos static de la clase. El resultado es el mismo.
+    const members = [], body = [];
+    for (let i = 0; i < rest.length; i++) {
+      const sig = /^(?!(?:if|for|foreach|while|switch|return|using|lock|new|else|do|var|throw|await|yield|goto|break|continue)\b)(?:static\s+)?(?:void|[A-Za-z_][\w<>\[\],.?]*)\s+[A-Za-z_]\w*\s*\(/.test(rest[i]);
+      const plain = rest[i].replace(/\/\/.*$/, "").trimEnd();
+      if (sig && /\)\s*(?:\{)?$/.test(plain) && !/;\s*$/.test(plain)) {           // método con bloque { … }
+        let j = i, depth = 0, opened = false;
+        for (; j < rest.length; j++) {
+          const t = rest[j].replace(/\/\/.*$/, "").replace(/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/g, "");
+          for (const ch of t) { if (ch === "{") { depth++; opened = true; } else if (ch === "}") depth--; }
+          if (opened && depth === 0) break;
+        }
+        if (j >= rest.length) return null;                // llaves sin cerrar: mejor .NET
+        const block = rest.slice(i, j + 1);
+        block[0] = (/^static\b/.test(block[0]) ? "" : "static ") + block[0];
+        members.push(...block); i = j; continue;
+      }
+      if (sig && /=>/.test(plain)) {                      // método con cuerpo de expresión: debe acabar en la misma línea
+        if (!/;\s*$/.test(plain)) return null;
+        members.push((/^static\b/.test(rest[i]) ? "" : "static ") + rest[i]); continue;
+      }
+      body.push(rest[i]);
+    }
     const usings = ["System", "System.Collections.Generic", "System.Linq", "System.Text"]
       .filter((ns) => !head.some((h) => h.includes(`using ${ns};`))).map((ns) => `using ${ns};`);
-    return usings.join(" ") + " " + head.join(" ") + " class Program { static void Main() { " + body.join("\n") + "\n} }";
+    return usings.join(" ") + " " + head.join(" ") + " class Program { " + members.join("\n") + "\nstatic void Main() { " + body.join("\n") + "\n} }";
   }
 
   /* ---------- Envío a Judge0 ---------- */
