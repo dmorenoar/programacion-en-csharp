@@ -125,12 +125,13 @@ function videoHTML(video, title) {
   return `<iframe src="${src}" title="Vídeo: ${esc(title)}" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>`;
 }
 
-function videoLink(video) {
-  if (!video || !video.id) return "";
+function videoLink(video, lessonId) {
+  const code = `<a class="code-link" href="#codificar-${esc(lessonId)}">&lt;/&gt; Programar mientras ves el vídeo</a>`;
+  if (!video || !video.id) return `<p class="video-tools">${code}</p>`;
   const id = encodeURIComponent(video.id);
   const url =
     video.provider === "youtube" ? `https://www.youtube.com/watch?v=${id}` : `https://drive.google.com/file/d/${id}/view`;
-  return `<p class="video-tools">¿No se ve el vídeo? <a href="${url}" target="_blank" rel="noopener">Ábrelo en una pestaña nueva</a>.</p>`;
+  return `<p class="video-tools">¿No se ve el vídeo? <a href="${url}" target="_blank" rel="noopener">Ábrelo en una pestaña nueva</a>. · ${code}</p>`;
 }
 
 const LEVELS = {
@@ -139,7 +140,7 @@ const LEVELS = {
   3: { cls: "l3", label: "★★★ Reto" },
 };
 
-function activityHTML(act, index) {
+function activityHTML(act, index, lessonId) {
   const level = LEVELS[act.nivel] || LEVELS[1];
   const hint = act.pista
     ? `<details class="fold"><summary>💡 Pista</summary><div class="fold-body"><p>${esc(act.pista)}</p></div></details>`
@@ -168,6 +169,7 @@ function activityHTML(act, index) {
       </div>
       <div class="statement">${act.enunciado}</div>
       ${expected}
+      <p class="train-link"><a class="btn" href="#entrenamiento-${esc(lessonId)}.${index}">🎯 Resolverla en el editor</a></p>
       ${hint}
       <details class="fold solution"><summary>${solutionLabel}</summary><div class="fold-body">${variants}</div></details>
     </article>`;
@@ -240,7 +242,7 @@ function renderLesson(id, tab = "teoria") {
   currentId = id;
   currentTab = tab;
   $("#home").hidden = true;
-  CodeView.hide();
+  CodeView.hide(); Training.hide();
   document.body.classList.remove("view-home");
   state.last = id;
   saveState();
@@ -256,7 +258,7 @@ function renderLesson(id, tab = "teoria") {
   $("#lesson").innerHTML = `
     <div class="crumbs">${esc(lesson.modulo.titulo)} · Lección ${index + 1} de ${lessons.length}</div>
     <div class="video-box">${videoHTML(lesson.video, lesson.titulo)}</div>
-    ${videoLink(lesson.video)}
+    ${videoLink(lesson.video, lesson.id)}
 
     <div class="lesson-head">
       <h1>${esc(lesson.titulo)}</h1>
@@ -270,7 +272,7 @@ function renderLesson(id, tab = "teoria") {
     </div>
     <section class="panel" id="panel-teoria" role="tabpanel" aria-labelledby="tab-teoria">${theoryHTML(lesson)}</section>
     <section class="panel" id="panel-actividades" role="tabpanel" aria-labelledby="tab-actividades" hidden>
-      ${nActs ? lesson.actividades.map(activityHTML).join("") : '<p class="empty">Esta lección no tiene actividades todavía.</p>'}
+      ${nActs ? lesson.actividades.map((a, i) => activityHTML(a, i, lesson.id)).join("") : '<p class="empty">Esta lección no tiene actividades todavía.</p>'}
     </section>
 
     <nav class="lesson-nav" aria-label="Navegación entre lecciones">
@@ -420,7 +422,7 @@ function homeHTML() {
 
 function showHome() {
   currentId = null;
-  CodeView.hide();
+  CodeView.hide(); Training.hide();
   $("#home").innerHTML = homeHTML();
   $("#home").hidden = false;
   document.body.classList.add("view-home");
@@ -432,7 +434,10 @@ function showHome() {
 }
 
 function route() {
-  if (location.hash === "#codificar") { CodeView.show(); return; }   // editor a pantalla completa
+  // Vistas de editor: #codificar[-lección] (vídeo + editor) y #entrenamiento[-lección.n] (actividades)
+  const h = location.hash;
+  if (/^#codificar(-|$)/.test(h)) { CodeView.show(h.slice(11)); return; }
+  if (/^#entrenamiento(-|$)/.test(h)) { Training.show(h.slice(15)); return; }
   const id = idFromHash();
   if (id && lessonById.has(id)) renderLesson(id);
   else showHome();          // sin hash (#) o #inicio: página de presentación del curso

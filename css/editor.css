@@ -1,0 +1,82 @@
+/* =====================================================================
+   css/editor.css · Piezas comunes de las vistas «Codificar» y «Entrenamiento»
+   ---------------------------------------------------------------------
+   · .ed-*  barra de herramientas
+   · .ep-*  editor (EditorPane): números de línea + <pre> coloreado + <textarea>
+   El <textarea> es TRANSPARENTE y va encima del <pre> con el código coloreado.
+   Gutter, <pre> y <textarea> comparten fuente, interlineado y padding vertical
+   para que todo quede alineado línea a línea.
+   ===================================================================== */
+
+/* Mientras una vista de editor está abierta, ocultamos el curso y el panel lateral */
+body.view-code .layout, body.view-code #home, body.view-code .playground,
+body.view-train .layout, body.view-train #home, body.view-train .playground { display: none !important; }
+body.view-code #menuBtn, body.view-train #menuBtn { display: none; }
+body.view-code, body.view-train { overflow: hidden; }
+
+/* Botones «Codificar» y «Entrenamiento» de la cabecera */
+.code-btn { background: transparent; color: #fff; border-color: #6a6f73; text-decoration: none; white-space: nowrap; }
+.code-btn:hover { background: #3e4143; }
+body.view-code #codeBtn, body.view-train #trainBtn { background: #7c3aed; border-color: #7c3aed; }
+
+.editor-view[hidden] { display: none; }
+.editor-view {
+  --ep-fs: 14px; --ep-lh: 1.6;
+  display: flex; flex-direction: column; height: calc(100vh - var(--header-h)); background: #1e1e2e; color: #e4e6f0;
+}
+
+/* ---------- Barra de herramientas ---------- */
+.ed-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 14px; background: #151521; border-bottom: 1px solid #2d2d44; }
+.ed-spacer { flex: 1; }
+.ed-bar .btn { padding: 6px 12px; font-size: 13px; text-decoration: none; }
+.ed-bar .ed-tool { background: #24243a; color: #e4e6f0; border-color: #3a3a58; cursor: pointer; }
+.ed-bar .ed-tool:hover { background: #30304d; }
+.ed-bar .btn.primary { padding: 6px 18px; font-size: 14px; }
+.ed-bar .btn:disabled { opacity: .7; cursor: wait; }
+.ed-group { display: inline-flex; gap: 2px; }
+.ed-select { max-width: 280px; background: #24243a; color: #e4e6f0; border: 1px solid #3a3a58; border-radius: 4px; padding: 6px 8px; font: inherit; font-size: 13px; cursor: pointer; }
+.ed-select[hidden] { display: none; }
+
+/* ---------- Editor ---------- */
+.ep-editor { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.ep-code { flex: 1; min-height: 0; display: flex; }
+.ep-gutter, .ep-hl, .ep-ta {
+  margin: 0; padding: 12px 0; border: 0; box-sizing: border-box;
+  font: var(--ep-fs)/var(--ep-lh) ui-monospace, "Cascadia Code", Consolas, Menlo, monospace;
+  tab-size: 4; letter-spacing: 0; word-spacing: 0;
+}
+.ep-gutter { flex: none; min-width: 52px; padding-left: 10px; padding-right: 12px; text-align: right; color: #5b6385; background: #181826; overflow: hidden; user-select: none; white-space: pre; }
+.ep-gutter span.bad { color: #fff; background: #dc2626; }
+.ep-stack { position: relative; flex: 1; min-width: 0; }
+.ep-hl, .ep-ta { position: absolute; inset: 0; padding-left: 14px; padding-right: 14px; white-space: pre; overflow: auto; }
+.ep-hl { color: #e4e6f0; pointer-events: none; overflow: hidden; }
+.ep-ta { background: transparent; color: transparent; -webkit-text-fill-color: transparent; caret-color: #fff; resize: none; outline: none; z-index: 1; }
+.ep-ta::selection { background: rgba(124, 58, 237, .45); -webkit-text-fill-color: transparent; }
+.ep-hl .tok-kw { color: #c792ea; } .ep-hl .tok-t { color: #4ec9b0; } .ep-hl .tok-s { color: #ecc48d; }
+.ep-hl .tok-n { color: #f78c6c; } .ep-hl .tok-c { color: #6a7a9a; font-style: italic; } .ep-hl .tok-f { color: #82aaff; }
+.ep-status { display: flex; gap: 18px; padding: 4px 14px; font-size: 12px; background: #7c3aed; color: #fff; }
+.ep-hints { margin-left: auto; opacity: .85; }
+
+/* ---------- Entrada y salida ---------- */
+.ep-io { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: #151521; }
+.ep-stdin { border-bottom: 1px solid #2d2d44; font-size: 13px; }
+.ep-stdin summary { cursor: pointer; padding: 9px 14px; color: #c4c8e0; }
+.ep-stdin small { color: #8a8fa8; }
+.ep-stdin code { background: #2d2d44; padding: 1px 5px; border-radius: 3px; }
+.ep-stdin textarea { display: block; width: 100%; box-sizing: border-box; background: #1e1e2e; color: #e4e6f0; border: 0; border-top: 1px solid #2d2d44; padding: 8px 14px; font: 13px/1.5 ui-monospace, Consolas, monospace; resize: vertical; }
+.ep-out-head { display: flex; align-items: center; gap: 12px; padding: 7px 14px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: #aab; border-bottom: 1px solid #2d2d44; }
+.ep-meta { flex: 1; text-transform: none; letter-spacing: 0; opacity: .8; }
+.ep-out-head .link-btn { color: #c4b5fd; font-size: 12px; text-transform: none; letter-spacing: 0; }
+.ep-out { flex: 1; min-height: 0; margin: 0; padding: 14px; overflow: auto; background: #0e0e18; font: 14px/1.5 ui-monospace, Consolas, Menlo, monospace; white-space: pre-wrap; word-break: break-word; }
+.ep-out.ok { color: #9ef0b6; } .ep-out.err { color: #ff9aa2; } .ep-out.warn { color: #ffd479; } .ep-out.wait { color: #aab; }
+.ep-foot { padding: 6px 14px; font-size: 11px; color: #8a8fa8; border-top: 1px solid #2d2d44; }
+
+@media (max-width: 900px) {
+  body.view-code, body.view-train { overflow: auto; }
+  .editor-view { height: auto; min-height: calc(100vh - var(--header-h)); }
+  .ed-bar { padding: 8px 10px; }
+  .ed-group, .ep-hints, #trLayout { display: none; }
+  .ed-select { max-width: 60vw; }
+  .code-btn { padding: 6px 9px; font-size: 13px; }
+  .code-btn .lbl { display: none; }                 /* en móvil solo el icono, para que quepan los dos botones */
+}

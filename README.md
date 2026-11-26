@@ -175,15 +175,16 @@ Al abrir la web se muestra una ficha de curso (estilo Udemy) con el resumen, el 
 Sus textos se editan en `data/course.js`: `aprenderas`, `requisitos`, `descripcion`, `profesor`, `actualizado`, `idioma` y `nivel`.
 Los totales (lecciones, actividades y duración) se calculan solos a partir de los módulos. Los estilos están en `css/home.css`.
 
-## Editor de C#: dos formas de practicar
+## Editor de C#: Codificar, Entrenamiento y Probar
 
-- **▶ Probar** (en cada bloque de código de la teoría): abre un panel lateral derecho con el ejemplo para ejecutarlo y modificarlo mientras lees. Su botón **↗ Codificar** lo lleva al editor grande.
-- **</> Codificar** (cabecera, `#codificar`): editor a pantalla completa, al estilo dotnetfiddle. Números de línea, resaltado, errores marcados en rojo, ejemplos del curso y plantillas, guardar/abrir `.cs`, tamaño de letra y disposición (lado a lado o apilado).
-- **Atajos:** Ctrl+Intro ejecuta · Tab / Shift+Tab sangra · Ctrl+/ comenta · Ctrl+S descarga `Program.cs` · cierre automático de `()`, `{}`, `[]` y comillas.
-- El código se guarda en el navegador. Un navegador no puede compilar C#, así que se envía a **Judge0** (C# en .NET 8). Configuración en `data/course.js` → `compilador` (`url`, `languageId`, `headers`). Si el servicio público se satura en clase, puedes alojar tu propio Judge0 y cambiar solo `url`.
+Un navegador no puede compilar C#, así que el código se envía a **Judge0** (C# en .NET 8). Configuración en `data/course.js` → `compilador` (`url`, `languageId`, `headers`). Si el servicio público se satura en clase, puedes alojar tu propio Judge0 y cambiar solo `url`. Para ejecutar hace falta Internet; el resto del curso funciona sin conexión.
+
+- **`</> Codificar`** (`#codificar` o `#codificar-<lección>`): editor a la **izquierda** y el **vídeo** de la lección a la derecha, para programar lo que explica el profesor. Cada lección tiene su propio cuaderno de código (se guarda en el navegador), selector de lección, ejemplos de la lección y separador arrastrable.
+- **`🎯 Entrenamiento`** (`#entrenamiento` o `#entrenamiento-<lección>.<n>`): desplegable con todas las actividades del curso. Muestra el enunciado, el ejemplo de salida, la pista y la solución (plegadas) y un editor para resolverla. Cada actividad guarda su código y se puede marcar como resuelta (✓).
+- **`▶ Probar`** (en cada bloque de código de la teoría): panel lateral derecho para ejecutar un ejemplo mientras lees. Su botón **↗ Codificar** lo lleva al cuaderno de la lección actual.
+- **Atajos del editor:** Ctrl+Intro ejecuta · Tab / Shift+Tab sangra · Ctrl+/ comenta · Ctrl+S descarga `Program.cs` · cierre automático de `()`, `{}`, `[]` y comillas. Los errores de compilación marcan en rojo la línea.
 - La entrada no es interactiva: lo que se escribe en «Entrada del programa» se entrega a `Console.ReadLine()` línea a línea.
-- Para ejecutar hace falta Internet; el resto del curso sigue funcionando sin conexión.
-- Código: `js/editor-kit.js` (piezas comunes), `js/playground.js` (panel), `js/codeview.js` + `css/codeview.css` (vista Codificar).
+- **Código:** `js/editor-kit.js` (atajos y envío al compilador), `js/editor-pane.js` (editor + salida reutilizable), `js/codeview.js` (Codificar), `js/training.js` (Entrenamiento), `js/playground.js` (panel Probar) y `css/editor.css`, `css/codeview.css`, `css/training.css`.
 
 ## Perfil «arcade» del profesor
 

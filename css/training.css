@@ -1,0 +1,42 @@
+/* =====================================================================
+   css/training.css · «Entrenamiento»: enunciado a la izquierda + editor y salida
+   ===================================================================== */
+
+.tr-main { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(300px, 400px) minmax(0, 1fr); }
+.editor-view.no-problem .tr-main { grid-template-columns: minmax(0, 1fr); }
+.editor-view.no-problem .tr-problem { display: none; }
+
+/* Enunciado: aquí SÍ usamos los colores del tema del curso (claro u oscuro) */
+.tr-problem { overflow-y: auto; padding: 18px 20px 28px; background: var(--surface); color: var(--text); border-right: 1px solid #000; }
+.tr-crumb { font-size: 13px; color: var(--muted); font-weight: 600; }
+.tr-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 10px 0 4px; }
+.tr-head .num { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--accent); }
+.tr-problem h2 { margin: 4px 0 10px; font-size: 22px; line-height: 1.25; }
+.tr-problem .try { display: none; }                            /* aquí no hace falta «Probar»: ya estás en el editor */
+.tr-problem .solution .code { margin-top: 8px; }
+.tr-solved-btn { width: 100%; margin-top: 16px; justify-content: center; }
+.tr-nav { display: flex; gap: 8px; margin-top: 10px; }
+.tr-nav .btn { flex: 1; justify-content: center; text-align: center; }
+.tr-nav .btn[aria-disabled="true"] { opacity: .45; pointer-events: none; }
+.tr-lesson-link { display: block; margin-top: 14px; font-weight: 700; font-size: 14px; }
+
+/* Zona de trabajo: editor | entrada y salida */
+.tr-work { min-width: 0; min-height: 0; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr); }
+.tr-work .ep-editor { border-right: 1px solid #000; }
+.editor-view.stacked .tr-work { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1.4fr) minmax(0, 1fr); }
+.editor-view.stacked .tr-work .ep-editor { border-right: 0; border-bottom: 1px solid #000; }
+
+@media (max-width: 1200px) and (min-width: 901px) {
+  /* en pantallas medianas, editor y salida apilados para que el código tenga ancho */
+  .tr-work { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1.4fr) minmax(0, 1fr); }
+  .tr-work .ep-editor { border-right: 0; border-bottom: 1px solid #000; }
+}
+@media (max-width: 900px) {
+  .tr-main, .editor-view.no-problem .tr-main { display: flex; flex-direction: column; }
+  .tr-problem { overflow: visible; border-right: 0; border-bottom: 1px solid #000; }
+  .tr-work, .editor-view.stacked .tr-work { display: flex; flex-direction: column; }
+  .tr-work .ep-editor { height: 55vh; flex: none; border: 0; }
+  .tr-work .ep-io { min-height: 220px; }
+}
+.train-link { margin: 12px 0 0; }
+.train-link .btn { text-decoration: none; }
