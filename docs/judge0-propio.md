@@ -2,8 +2,10 @@
 
 El botón **▶ Ejecutar** envía el código a un servidor Judge0. Por defecto usa el público y gratuito
 (`https://extra-ce.judge0.com`), que es compartido: en una prueba real tardó ~1,4 s en total, casi todo
-compilando en el servidor. Un Judge0 **propio** evita la cola compartida y el límite de peticiones por IP
-(importante si toda una clase ejecuta a la vez desde la misma red del centro).
+compilando en el servidor. Un Judge0 **propio** evita la cola compartida con otros usuarios del servicio
+público y te da control sobre la disponibilidad. Como cada alumno ejecuta desde su casa (IP distinta),
+el límite de peticiones por IP del servicio público no suele ser un problema: la ventaja real es la
+velocidad y la fiabilidad, no ese límite.
 
 > Esta guía es orientativa: revisa siempre la documentación oficial de Judge0 (https://github.com/judge0/judge0)
 > porque los detalles cambian entre versiones.
@@ -30,5 +32,5 @@ compilador: {
 
 ## Consejos
 - Limita el uso (por IP o con un proxy) en lugar de poner un token secreto en el JS: se vería en el navegador.
-- Más *workers* = más ejecuciones simultáneas (un aula entera a la vez).
+- Más *workers* = más ejecuciones simultáneas (por ejemplo, la tarde antes de una entrega).
 - La web ya abre la conexión por adelantado y recuerda resultados repetidos; no hace falta tocar nada más.
