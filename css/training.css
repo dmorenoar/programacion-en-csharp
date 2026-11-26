@@ -26,9 +26,11 @@
 .tr-collapse { cursor: pointer; border: 1px solid #3a3a58; background: #24243a; color: #e4e6f0; border-radius: 4px; width: 28px; height: 24px; font-size: 15px; line-height: 1; }
 .tr-problem .tr-collapse { background: var(--surface-2, #eee); color: var(--text); border-color: var(--border, #ccc); }
 .tr-collapse:hover { background: #7c3aed; color: #fff; border-color: #7c3aed; }
-.tr-strip { display: none; flex: none; width: 34px; border: 0; border-right: 1px solid #000; background: #1f1f33; color: #e4e6f0; cursor: pointer; font: inherit; font-size: 13px; font-weight: 700; padding: 10px 0; flex-direction: column; align-items: center; gap: 10px; }
-.tr-strip span { writing-mode: vertical-rl; }
-.tr-strip:hover { background: #7c3aed; color: #fff; }
+.tr-strip { display: none; flex: none; width: 40px; flex-direction: column; align-items: center; gap: 14px; padding: 12px 0; border: 0; border-right: 1px solid #2d2d44; background: #181826; color: #c4c8e0; cursor: pointer; font: inherit; font-size: 13px; font-weight: 700; letter-spacing: .04em; }
+.tr-strip .arrow { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #7c3aed; color: #fff; font-size: 15px; line-height: 1; }
+.tr-strip span { writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; }
+.tr-strip:hover { background: #24243a; color: #fff; }
+.tr-strip:hover .arrow { background: #9061f9; }
 .editor-view.show-browser .tr-strip-browser, .editor-view:not(.no-problem) .tr-strip-problem { display: none; }
 .editor-view:not(.show-browser) .tr-strip-browser, .editor-view.no-problem .tr-strip-problem { display: flex; }
 .editor-view:not(.show-browser) .tr-browser, .editor-view:not(.show-browser) .tr-grip-browser,
@@ -73,8 +75,9 @@
   .tr-browser { max-height: 45vh; border-right: 0; border-bottom: 1px solid #000; }
   .tr-problem { overflow: visible; border-right: 0; border-bottom: 1px solid #000; }
   .tr-grip { display: none; }
-  .tr-strip { width: auto; flex-direction: row; justify-content: flex-start; padding: 8px 14px; border: 0; border-bottom: 1px solid #000; }
-  .tr-strip span { writing-mode: horizontal-tb; }
+  .tr-strip { width: auto; flex-direction: row; justify-content: flex-start; padding: 8px 14px; border: 0; border-bottom: 1px solid #2d2d44; }
+  .tr-strip span { writing-mode: horizontal-tb; transform: none; }
+  .tr-strip .arrow { order: 2; margin-left: auto; transform: rotate(90deg); }
   .tr-title { display: none; }
   .tr-work, .editor-view.stacked .tr-work { flex-direction: column; }
   .tr-work .ep-editor { height: 55vh; flex: none; }

@@ -300,9 +300,11 @@ details.fold.solution[open] > summary { border-bottom-left-radius: 0; border-bot
 .pg-hide { position: absolute; top: 12px; right: 12px; width: 28px; height: 26px; cursor: pointer; border: 1px solid var(--border); background: var(--surface-2, transparent); color: var(--text); border-radius: 4px; font-size: 15px; line-height: 1; }
 .pg-hide:hover { background: #7c3aed; color: #fff; border-color: #7c3aed; }
 /* Tiras laterales (solo escritorio) */
-.side-strip { display: none; flex: none; width: 34px; flex-direction: column; align-items: center; gap: 10px; padding: 10px 0; border: 0; border-right: 1px solid #000; background: #1f1f33; color: #e4e6f0; cursor: pointer; font: inherit; font-size: 13px; font-weight: 700; }
-.side-strip span { writing-mode: vertical-rl; }
-.side-strip:hover { background: #7c3aed; color: #fff; }
+.side-strip { display: none; flex: none; width: 40px; flex-direction: column; align-items: center; gap: 14px; padding: 12px 0; border: 0; border-right: 1px solid #2d2d44; background: #181826; color: #c4c8e0; cursor: pointer; font: inherit; font-size: 13px; font-weight: 700; letter-spacing: .04em; }
+.side-strip .arrow { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #7c3aed; color: #fff; font-size: 15px; line-height: 1; }
+.side-strip span { writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; }
+.side-strip:hover { background: #24243a; color: #fff; }
+.side-strip:hover .arrow { background: #9061f9; }
 @media (min-width: 901px) {
   .strip-index { order: 5; }
   .strip-code { order: 25; }

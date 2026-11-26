@@ -75,10 +75,10 @@ const Training = (() => {
       </div>
 
       <div class="tr-main">
-        <button class="tr-strip tr-strip-browser" type="button" data-expand="browser" title="Mostrar la lista de actividades"><span>☰ Actividades</span> »</button>
+        <button class="tr-strip tr-strip-browser" type="button" data-expand="browser" title="Mostrar la lista de actividades"><b class="arrow" aria-hidden="true">»</b><span>☰ Actividades</span></button>
         <nav class="tr-browser" id="trBrowser" aria-label="Lista de actividades"></nav>
         <div class="tr-grip tr-grip-browser" data-grip="browser" role="separator" aria-orientation="vertical" title="Arrastra para cambiar el ancho"></div>
-        <button class="tr-strip tr-strip-problem" type="button" data-expand="problem" title="Mostrar el enunciado"><span>📄 Enunciado</span> »</button>
+        <button class="tr-strip tr-strip-problem" type="button" data-expand="problem" title="Mostrar el enunciado"><b class="arrow" aria-hidden="true">»</b><span>📄 Enunciado</span></button>
         <aside class="tr-problem" id="trProblem" aria-label="Enunciado de la actividad"></aside>
         <div class="tr-grip tr-grip-problem" data-grip="problem" role="separator" aria-orientation="vertical" title="Arrastra para cambiar el ancho"></div>
         <div class="tr-work" id="trWork"></div>
