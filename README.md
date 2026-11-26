@@ -168,3 +168,9 @@ El `id` de cada lección debe ser único y estable: es el que enlaza la URL y el
 - **El progreso se guarda en el navegador de cada alumno** (`localStorage`): no se sincroniza entre dispositivos y tú no lo ves. Para eso haría falta un backend (Firebase, Supabase…) o un formulario de Google que reciba los resultados.
 - Los **vídeos de Drive** tienen cuotas de visualización y el alumnado debe tener acceso al archivo. Si un vídeo se "satura", YouTube no listado es la alternativa.
 - Ideas para ampliar: buscador de lecciones, marcar actividades como hechas, botón "Probar en línea" (por ejemplo, enlazando a [dotnetfiddle.net](https://dotnetfiddle.net)), cuestionarios con Google Forms, descarga de los `.cs` de las soluciones, o migrar a un generador estático (Astro, Eleventy) si el curso crece mucho.
+
+## Página de inicio del curso
+
+Al abrir la web se muestra una ficha de curso (estilo Udemy) con el resumen, el temario y el botón «Empezar / Continuar».
+Sus textos se editan en `data/course.js`: `aprenderas`, `requisitos`, `descripcion`, `profesor`, `actualizado`, `idioma` y `nivel`.
+Los totales (lecciones, actividades y duración) se calculan solos a partir de los módulos. Los estilos están en `css/home.css`.

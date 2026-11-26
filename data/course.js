@@ -22,7 +22,36 @@ const r = String.raw;
 const COURSE = {
   titulo: "Programación en C#",
   subtitulo: "Aprende los conceptos fundamentales paso a paso: mira el vídeo, repasa la teoría y practica con las actividades.",
-  autor: "Tu nombre · Tu centro",
+  autor: "Daniel Moreno",
+
+  // ---- Datos de la PÁGINA DE INICIO del curso (editables) ----
+  actualizado: "Noviembre 2026",
+  idioma: "Español",
+  nivel: "Principiante",
+  aprenderas: [
+    "Declarar y usar variables, constantes y los tipos de datos básicos",
+    "Leer y escribir información por consola con formato",
+    "Convertir tipos con seguridad usando Parse y TryParse",
+    "Tomar decisiones con if, switch y operadores lógicos",
+    "Repetir tareas con while, do-while y for",
+    "Trabajar con arrays, matrices y jagged arrays",
+    "Crear funciones y procedimientos reutilizables",
+    "Practicar con actividades resueltas de varias formas, de la más básica a la más profesional",
+  ],
+  requisitos: [
+    "Un ordenador con Visual Studio, VS Code o Rider (o un compilador de C# en línea)",
+    "No hacen falta conocimientos previos de programación",
+    "Ganas de practicar: cada lección incluye actividades para hacer tú mismo",
+  ],
+  descripcion: r`<p>Un curso paso a paso para aprender los <strong>fundamentos de la programación con C#</strong>. Cada lección combina un vídeo explicativo, la teoría por escrito con ejemplos comentados y actividades con solución desplegable.</p>
+<p>Empezamos por las variables y la lectura de datos, avanzamos por las estructuras de control y repetición, trabajamos con colecciones (arrays, matrices y jagged arrays) y terminamos organizando el código en funciones y procedimientos.</p>
+<p>Las soluciones se muestran en varios enfoques, de la más sencilla a la más profesional, para que entiendas <em>por qué</em> se hace cada cosa y no solo cómo.</p>
+<p>El curso irá creciendo con nuevos temas.</p>`,
+  profesor: {
+    nombre: "Daniel Moreno",
+    rol: "Profesor de Desarrollo de Aplicaciones Multiplataforma · Institut Tecnològic de Barcelona",
+    bio: "Docente de programación en ciclos formativos de grado superior, con orientación a videojuegos y ocio digital.",
+  },
 
   modulos: [
     /* ================================================================

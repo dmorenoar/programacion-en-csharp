@@ -239,6 +239,8 @@ function renderLesson(id, tab = "teoria") {
   if (!lesson) return;
   currentId = id;
   currentTab = tab;
+  $("#home").hidden = true;
+  document.body.classList.remove("view-home");
   state.last = id;
   saveState();
 
@@ -301,10 +303,136 @@ function idFromHash() {
   return hash.startsWith("leccion-") ? hash.slice("leccion-".length) : null;
 }
 
+
+/* ===================== PÁGINA DE INICIO DEL CURSO ===================== */
+/* Todo se calcula a partir de COURSE: si añades lecciones, los totales
+   (nº de lecciones, actividades y duración) se actualizan solos. */
+
+const minutesOf = (lesson) => parseInt(lesson.duracion, 10) || 0;
+const formatMinutes = (m) => (m >= 60 ? `${Math.floor(m / 60)} h${m % 60 ? " " + (m % 60) + " min" : ""}` : `${m} min`);
+const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+
+function homeHTML() {
+  const totalMin = lessons.reduce((s, l) => s + minutesOf(l), 0);
+  const nActs = lessons.reduce((s, l) => s + l.actividades.length, 0);
+  const doneCount = lessons.filter((l) => isDone(l.id)).length;
+  const pct = Math.round((doneCount / lessons.length) * 100);
+  const resume = lessonById.get(state.last) || lessons[0];
+  const started = doneCount > 0 || lessonById.has(state.last);
+  const p = COURSE.profesor || {};
+
+  const syllabus = COURSE.modulos
+    .map((m, i) => {
+      const min = m.lecciones.reduce((s, l) => s + minutesOf(l), 0);
+      const rows = m.lecciones
+        .map(
+          (l) => `
+          <a class="syl-lesson ${isDone(l.id) ? "done" : ""}" href="#leccion-${esc(l.id)}">
+            <span class="ico" aria-hidden="true">${isDone(l.id) ? "✓" : "▶"}</span>
+            <span class="t">${esc(l.titulo)}</span>
+            <span class="d">${esc(l.duracion || "")}</span>
+          </a>`
+        )
+        .join("");
+      return `
+        <details class="syl-sec" ${i === 0 ? "open" : ""}>
+          <summary><span class="n">Módulo ${i + 1}: ${esc(m.titulo)}</span><span class="c">${plural(m.lecciones.length, "clase", "clases")} • ${formatMinutes(min)}</span></summary>
+          ${rows}
+        </details>`;
+    })
+    .join("");
+
+  return `
+    <section class="hero">
+      <div class="wrap hero-inner">
+        <div class="hero-crumbs">Cursos <span aria-hidden="true">›</span> Programación <span aria-hidden="true">›</span> C#</div>
+        <h1>${esc(COURSE.titulo)}</h1>
+        <p class="sub">${esc(COURSE.subtitulo)}</p>
+        <div class="hero-meta">
+          <span class="badge-free">Gratis</span>
+          <span>Creado por <strong>${esc(COURSE.autor)}</strong></span>
+        </div>
+        <div class="hero-meta">
+          <span>🕒 Actualizado: ${esc(COURSE.actualizado || "")}</span>
+          <span>🌐 ${esc(COURSE.idioma || "")}</span>
+          <span>📶 Nivel: ${esc(COURSE.nivel || "")}</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap home-grid">
+      <aside class="buy-card" aria-label="Resumen y acceso al curso">
+        <a class="preview" href="#leccion-${esc(lessons[0].id)}" aria-label="Ver la primera lección">
+          <span class="play" aria-hidden="true">▶</span>
+          <span class="preview-label">Vista previa del curso</span>
+        </a>
+        <div class="buy-body">
+          <div class="free">Gratis</div>
+          ${started ? `<div class="mini-progress" aria-label="Progreso ${pct}%"><span style="width:${pct}%"></span></div><div class="mini-label">${doneCount} de ${lessons.length} lecciones completadas</div>` : ""}
+          <a class="btn primary big" href="#leccion-${esc(resume.id)}">${started ? "Continuar: " + esc(resume.titulo) : "Empezar el curso"}</a>
+          <h3>Este curso incluye:</h3>
+          <ul class="includes">
+            <li>🎬 ${formatMinutes(totalMin)} de vídeo bajo demanda</li>
+            <li>🧩 ${plural(nActs, "actividad", "actividades")} con solución</li>
+            <li>📖 Teoría y ejemplos de código comentados</li>
+            <li>📱 Instalable como app en el móvil</li>
+            <li>📴 Se puede consultar sin conexión</li>
+            <li>✅ Progreso guardado en tu dispositivo</li>
+          </ul>
+        </div>
+      </aside>
+
+      <div class="home-main">
+        <section class="learn">
+          <h2>Lo que aprenderás</h2>
+          <ul>${(COURSE.aprenderas || []).map((t) => `<li>${esc(t)}</li>`).join("")}</ul>
+        </section>
+
+        <section class="syllabus">
+          <h2>Contenido del curso</h2>
+          <div class="syl-head">
+            <span>${plural(COURSE.modulos.length, "módulo", "módulos")} • ${plural(lessons.length, "clase", "clases")} • ${formatMinutes(totalMin)} de duración total</span>
+            <button type="button" class="link-btn expand-all">Expandir todas las secciones</button>
+          </div>
+          <div class="syl-list">${syllabus}</div>
+        </section>
+
+        ${COURSE.requisitos && COURSE.requisitos.length ? `<section class="block"><h2>Requisitos</h2><ul class="plain">${COURSE.requisitos.map((t) => `<li>${esc(t)}</li>`).join("")}</ul></section>` : ""}
+
+        ${COURSE.descripcion ? `<section class="block description"><h2>Descripción</h2>${COURSE.descripcion}</section>` : ""}
+
+        ${p.nombre ? `
+        <section class="block instructor">
+          <h2>Profesor</h2>
+          <div class="inst-card">
+            <div class="avatar" aria-hidden="true">${esc(p.nombre.trim().charAt(0).toUpperCase())}</div>
+            <div>
+              <div class="inst-name">${esc(p.nombre)}</div>
+              <div class="inst-role">${esc(p.rol || "")}</div>
+              <p>${esc(p.bio || "")}</p>
+            </div>
+          </div>
+        </section>` : ""}
+      </div>
+    </div>`;
+}
+
+function showHome() {
+  currentId = null;
+  $("#home").innerHTML = homeHTML();
+  $("#home").hidden = false;
+  document.body.classList.add("view-home");
+  document.body.classList.remove("menu-open");
+  document.title = COURSE.titulo;
+  updateProgress();
+  window.scrollTo({ top: 0 });
+  syncMenuButton();
+}
+
 function route() {
   const id = idFromHash();
-  const target = lessonById.has(id) ? id : lessonById.has(state.last) ? state.last : lessons[0].id;
-  renderLesson(target);
+  if (id && lessonById.has(id)) renderLesson(id);
+  else showHome();          // sin hash (#) o #inicio: página de presentación del curso
 }
 
 window.addEventListener("hashchange", route);
@@ -324,6 +452,15 @@ document.addEventListener("click", async (event) => {
     setCompleteButton(complete, currentId);
     renderSidebar();
     updateProgress();
+    return;
+  }
+
+  const expand = event.target.closest(".expand-all");
+  if (expand) {
+    const secs = document.querySelectorAll(".syl-sec");
+    const openAll = [...secs].some((d) => !d.open);       // si alguna está cerrada → abrir todas; si no, cerrar
+    secs.forEach((d) => (d.open = openAll));
+    expand.textContent = openAll ? "Contraer todas las secciones" : "Expandir todas las secciones";
     return;
   }
 
