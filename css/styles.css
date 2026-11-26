@@ -92,7 +92,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
   display: grid; place-items: center; font-size: 18px;
 }
 .icon-btn:hover { background: var(--surface-2); }
-#menuBtn { display: none; }
 .install-btn { padding: 7px 12px; font-size: 14px; }
 .install-btn[hidden] { display: none; }
 
@@ -282,7 +281,6 @@ details.fold.solution[open] > summary { border-bottom-left-radius: 0; border-bot
 
 /* ---------------------------- Móvil ---------------------------- */
 @media (max-width: 900px) {
-  #menuBtn { display: grid; }
   .layout { grid-template-columns: 1fr; }
   .sidebar {
     position: fixed; z-index: 40; left: 0; top: var(--header-h); bottom: 0; height: auto;

@@ -52,7 +52,7 @@ const lessons = COURSE.modulos.flatMap((modulo) =>
 const lessonById = new Map(lessons.map((l) => [l.id, l]));
 
 const STORAGE_KEY = "curso-csharp:v1";   // si cambias la estructura, sube la versión
-const state = Object.assign({ done: {}, last: null, theme: null }, store.get(STORAGE_KEY, {}));
+const state = Object.assign({ done: {}, last: null, theme: null, sidebarHidden: false }, store.get(STORAGE_KEY, {}));
 const saveState = () => store.set(STORAGE_KEY, state);
 
 let currentId = null;
@@ -282,7 +282,7 @@ function renderLesson(id, tab = "teoria") {
   document.title = `${lesson.titulo} · ${COURSE.titulo}`;
   window.scrollTo({ top: 0 });
   document.body.classList.remove("menu-open");
-  $("#menuBtn").setAttribute("aria-expanded", "false");
+  syncMenuButton();
 }
 
 function selectTab(tab) {
@@ -357,17 +357,45 @@ async function copyText(text) {
   }
 }
 
-// --- Menú lateral en móvil ---
+// --- Índice del curso: izquierda, y se puede ocultar ---
+// Dos comportamientos con UN solo botón (☰):
+//   · Escritorio (>900px): muestra/oculta la columna y recuerda la decisión (localStorage).
+//   · Móvil: abre/cierra el panel superpuesto (clase menu-open).
+const desktopQuery = matchMedia("(min-width: 901px)");
+
+function syncMenuButton() {
+  const btn = $("#menuBtn");
+  const open = desktopQuery.matches ? !document.body.classList.contains("sidebar-collapsed") : document.body.classList.contains("menu-open");
+  btn.setAttribute("aria-expanded", String(open));
+  btn.setAttribute("aria-label", open ? "Ocultar índice del curso" : "Mostrar índice del curso");
+  btn.title = btn.getAttribute("aria-label");
+}
+
 $("#menuBtn").addEventListener("click", () => {
-  const open = document.body.classList.toggle("menu-open");
-  $("#menuBtn").setAttribute("aria-expanded", String(open));
+  if (desktopQuery.matches) {
+    state.sidebarHidden = document.body.classList.toggle("sidebar-collapsed");
+    saveState();
+  } else {
+    document.body.classList.toggle("menu-open");
+  }
+  syncMenuButton();
 });
 $("#backdrop").addEventListener("click", () => {
   document.body.classList.remove("menu-open");
-  $("#menuBtn").setAttribute("aria-expanded", "false");
+  syncMenuButton();
 });
+function onViewportChange() {
+  document.body.classList.remove("menu-open");
+  syncMenuButton();
+}
+// Safari antiguo solo conoce addListener; el resto usa addEventListener
+if (desktopQuery.addEventListener) desktopQuery.addEventListener("change", onViewportChange);
+else if (desktopQuery.addListener) desktopQuery.addListener(onViewportChange);
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") document.body.classList.remove("menu-open");
+  if (e.key === "Escape") {
+    document.body.classList.remove("menu-open");
+    syncMenuButton();
+  }
 });
 
 // --- Tema claro/oscuro ---
@@ -434,4 +462,6 @@ if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
 $("#brandTitle").textContent = COURSE.titulo;
 $("#courseSub").textContent = COURSE.subtitulo;
 applyTheme(state.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+document.body.classList.toggle("sidebar-collapsed", !!state.sidebarHidden);
 route();
+syncMenuButton();
