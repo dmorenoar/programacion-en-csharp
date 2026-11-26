@@ -221,7 +221,7 @@ const EditorKit = (() => {
     const stdout = fromB64(r.stdout), stderr = fromB64(r.stderr);
     const compile = fromB64(r.compile_output), message = fromB64(r.message);
     const id = r.status && r.status.id;
-    const meta = r.time ? `${r.time} s · ${Math.round((r.memory || 0) / 1024)} MB` : "";
+    const meta = r.time ? `programa ${r.time} s · ${Math.round((r.memory || 0) / 1024)} MB` : "";
 
     if (id === 6) {
       const text = tidy(compile) || "Error de compilación.";
