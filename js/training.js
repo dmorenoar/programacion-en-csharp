@@ -59,18 +59,20 @@ const Training = (() => {
     root().innerHTML = `
       <div class="ed-bar">
         <a class="btn ed-tool" id="trBack" href="#inicio">← Curso</a>
-        <button class="btn ed-tool" id="trListBtn" type="button" title="Mostrar u ocultar la lista de actividades">☰ Actividades</button>
         <span class="tr-title" id="trTitle"></span>
         <button class="btn primary" id="trRun" type="button" title="Ejecutar (Ctrl+Intro)">▶ Ejecutar</button>
         <span class="ed-spacer"></span>
-        <button class="btn ed-tool" id="trProblemBtn" type="button" title="Mostrar u ocultar el enunciado">📄 Enunciado</button>
         <button class="btn ed-tool" id="trMore" type="button" aria-label="Más opciones" title="Más opciones">⋯</button>
         <input id="trOpen" type="file" accept=".cs,.txt,text/plain" hidden>
       </div>
 
       <div class="tr-main">
+        <button class="tr-strip tr-strip-browser" type="button" data-expand="browser" title="Mostrar la lista de actividades"><span>☰ Actividades</span> »</button>
         <nav class="tr-browser" id="trBrowser" aria-label="Lista de actividades"></nav>
+        <div class="tr-grip tr-grip-browser" data-grip="browser" role="separator" aria-orientation="vertical" title="Arrastra para cambiar el ancho"></div>
+        <button class="tr-strip tr-strip-problem" type="button" data-expand="problem" title="Mostrar el enunciado"><span>📄 Enunciado</span> »</button>
         <aside class="tr-problem" id="trProblem" aria-label="Enunciado de la actividad"></aside>
+        <div class="tr-grip tr-grip-problem" data-grip="problem" role="separator" aria-orientation="vertical" title="Arrastra para cambiar el ancho"></div>
         <div class="tr-work" id="trWork"></div>
       </div>`;
 
@@ -81,11 +83,53 @@ const Training = (() => {
       onChange: persist,
       onRunState: (r) => { ui.Run.disabled = r; ui.Run.textContent = r ? "⏳ Compilando…" : "▶ Ejecutar"; },
     });
-    ui.Work.append(pane.editorEl, pane.ioEl);
+    const gripIo = document.createElement("div");
+    gripIo.className = "tr-grip tr-grip-io";
+    gripIo.dataset.grip = "io";
+    gripIo.setAttribute("role", "separator");
+    gripIo.title = "Arrastra para cambiar el ancho";
+    ui.Work.append(pane.editorEl, gripIo, pane.ioEl);
 
     ui.Run.addEventListener("click", () => pane.run());
-    $("trListBtn").addEventListener("click", () => { const t = trState(); t.browser = !root().classList.contains("show-browser"); applyPrefs(); saveState(); });
-    $("trProblemBtn").addEventListener("click", () => { trState().hideProblem = !trState().hideProblem; applyPrefs(); saveState(); });
+
+    // Plegar y desplegar paneles: el botón « está DENTRO de cada panel y, plegado, queda una tira con su nombre
+    root().addEventListener("click", (e) => {
+      const c = e.target.closest("[data-collapse]"), x = e.target.closest("[data-expand]");
+      if (!c && !x) return;
+      const which = (c || x).dataset.collapse || (c || x).dataset.expand, show = !!x, t = trState();
+      if (which === "browser") t.browser = show; else t.hideProblem = !show;
+      applyPrefs(); saveState(); pane.refresh();
+    });
+
+    // Asas para cambiar el ancho arrastrando (se recuerda en el navegador)
+    const LIMITS = { browser: [200, 520], problem: [260, 760], io: [220, 900] };
+    const VARS = { browser: "--tr-bw", problem: "--tr-pw", io: "--tr-iw" };
+    const DEFAULTS = { browser: 290, problem: 400, io: 340 };
+    const widths = () => (trState().w = trState().w || {});
+    const setW = (k, px) => { px = Math.min(Math.max(px, LIMITS[k][0]), LIMITS[k][1]); root().style.setProperty(VARS[k], px + "px"); return px; };
+    Object.keys(DEFAULTS).forEach((k) => setW(k, widths()[k] || DEFAULTS[k]));
+    root().addEventListener("pointerdown", (e) => {
+      const g = e.target.closest("[data-grip]");
+      if (!g) return;
+      e.preventDefault();
+      const k = g.dataset.grip, startX = e.clientX, start = widths()[k] || DEFAULTS[k], dir = k === "io" ? -1 : 1;
+      g.setPointerCapture(e.pointerId);
+      g.classList.add("drag");
+      const move = (ev) => { widths()[k] = setW(k, start + (ev.clientX - startX) * dir); };
+      const up = () => {
+        g.classList.remove("drag");
+        g.removeEventListener("pointermove", move);
+        g.removeEventListener("pointerup", up);
+        saveState();
+      };
+      g.addEventListener("pointermove", move);
+      g.addEventListener("pointerup", up);
+    });
+    // Doble clic en un asa: vuelve al ancho original
+    root().addEventListener("dblclick", (e) => {
+      const g = e.target.closest("[data-grip]");
+      if (g) { widths()[g.dataset.grip] = setW(g.dataset.grip, DEFAULTS[g.dataset.grip]); saveState(); }
+    });
     EditorKit.menu(ui.More, () => [
       { text: "⬇ Guardar como Program.cs", onSelect: () => pane.save() },
       { text: "📂 Abrir un archivo .cs…", onSelect: () => ui.Open.click() },
@@ -141,6 +185,7 @@ const Training = (() => {
     }).join("");
 
     ui.Browser.innerHTML = `
+      <div class="tr-phead"><b>☰ Actividades</b><button type="button" class="tr-collapse" data-collapse="browser" title="Ocultar la lista de actividades" aria-label="Ocultar la lista de actividades">«</button></div>
       <div class="tr-prog"><span><b>${done}</b> de ${total} actividades resueltas</span><div class="bar"><span style="width:${total ? (done / total) * 100 : 0}%"></span></div></div>
       ${modules}`;
   }
@@ -162,6 +207,7 @@ const Training = (() => {
       </div>`).join("");
 
     ui.Problem.innerHTML = `
+      <div class="tr-phead"><b>📄 Enunciado</b><button type="button" class="tr-collapse" data-collapse="problem" title="Ocultar el enunciado" aria-label="Ocultar el enunciado">«</button></div>
       <div class="tr-crumb">${esc(it.lesson.modulo.titulo)} · ${esc(it.lesson.titulo)}</div>
       <div class="tr-head"><span class="num">Actividad ${it.index + 1} de ${it.lesson.actividades.length}</span><span class="level ${level.cls}">${level.label}</span></div>
       <h2>${esc(act.titulo)}</h2>

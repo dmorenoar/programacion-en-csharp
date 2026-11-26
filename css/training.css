@@ -2,15 +2,41 @@
    css/training.css · «Entrenamiento»: enunciado a la izquierda + editor y salida
    ===================================================================== */
 
-.tr-main { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(300px, 400px) minmax(0, 1fr); }
-.editor-view.show-browser .tr-main { grid-template-columns: 290px minmax(300px, 400px) minmax(0, 1fr); }
-.editor-view.no-problem .tr-main { grid-template-columns: minmax(0, 1fr); }
-.editor-view.no-problem.show-browser .tr-main { grid-template-columns: 290px minmax(0, 1fr); }
+/* Cuatro zonas en fila: lista | enunciado | editor | salida. Cada una se ajusta arrastrando el asa. */
+.editor-view { --tr-bw: 290px; --tr-pw: 400px; --tr-iw: 340px; }
+.tr-main { flex: 1; min-height: 0; display: flex; }
+.tr-browser { flex: none; width: var(--tr-bw); }
+.tr-problem { flex: none; width: var(--tr-pw); }
+.tr-work { flex: 1; min-width: 0; min-height: 0; display: flex; }
+.tr-work .ep-editor { flex: 1; min-width: 0; }
+.tr-work .ep-io { flex: none; width: var(--tr-iw); }
+.editor-view.stacked .tr-work { flex-direction: column; }
+.editor-view.stacked .tr-work .ep-editor { flex: 1.4; }
+.editor-view.stacked .tr-work .ep-io { width: auto; flex: 1; }
+.editor-view.stacked .tr-grip-io { display: none; }
+
+/* Asas de arrastre */
+.tr-grip { flex: none; width: 7px; margin: 0 -3px; z-index: 4; cursor: col-resize; background: transparent; touch-action: none; position: relative; }
+.tr-grip::after { content: ""; position: absolute; left: 3px; top: 0; bottom: 0; width: 1px; background: #000; }
+.tr-grip:hover, .tr-grip.drag { background: rgba(124, 58, 237, .55); }
+
+/* Cabecera de cada panel con su botón «  y tira que queda al plegarlo */
+.tr-phead { display: flex; align-items: center; justify-content: space-between; margin: -4px 0 8px; font-size: 13px; }
+.tr-browser .tr-phead { margin: 0; padding: 8px 10px 8px 14px; background: #1f1f33; border-bottom: 1px solid #2d2d44; color: #e4e6f0; }
+.tr-collapse { cursor: pointer; border: 1px solid #3a3a58; background: #24243a; color: #e4e6f0; border-radius: 4px; width: 28px; height: 24px; font-size: 15px; line-height: 1; }
+.tr-problem .tr-collapse { background: var(--surface-2, #eee); color: var(--text); border-color: var(--border, #ccc); }
+.tr-collapse:hover { background: #7c3aed; color: #fff; border-color: #7c3aed; }
+.tr-strip { display: none; flex: none; width: 34px; border: 0; border-right: 1px solid #000; background: #1f1f33; color: #e4e6f0; cursor: pointer; font: inherit; font-size: 13px; font-weight: 700; padding: 10px 0; flex-direction: column; align-items: center; gap: 10px; }
+.tr-strip span { writing-mode: vertical-rl; }
+.tr-strip:hover { background: #7c3aed; color: #fff; }
+.editor-view.show-browser .tr-strip-browser, .editor-view:not(.no-problem) .tr-strip-problem { display: none; }
+.editor-view:not(.show-browser) .tr-strip-browser, .editor-view.no-problem .tr-strip-problem { display: flex; }
+.editor-view:not(.show-browser) .tr-browser, .editor-view:not(.show-browser) .tr-grip-browser,
+.editor-view.no-problem .tr-problem, .editor-view.no-problem .tr-grip-problem { display: none; }
 .tr-title { font-weight: 700; font-size: 14px; max-width: 34vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* Lista de actividades por módulo */
-.tr-browser { display: none; overflow-y: auto; background: #181826; border-right: 1px solid #000; font-size: 13px; }
-.editor-view.show-browser .tr-browser { display: block; }
+.tr-browser { overflow-y: auto; background: #181826; border-right: 1px solid #000; font-size: 13px; }
 .tr-prog { padding: 12px 14px; border-bottom: 1px solid #2d2d44; color: #c4c8e0; }
 .tr-prog .bar { height: 6px; margin-top: 6px; background: #2d2d44; border-radius: 3px; overflow: hidden; }
 .tr-prog .bar span { display: block; height: 100%; background: #22c55e; }
@@ -40,25 +66,19 @@
 .tr-nav .btn[aria-disabled="true"] { opacity: .45; pointer-events: none; }
 .tr-lesson-link { display: block; margin-top: 14px; font-weight: 700; font-size: 14px; }
 
-/* Zona de trabajo: editor | entrada y salida */
-.tr-work { min-width: 0; min-height: 0; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr); }
-.tr-work .ep-editor { border-right: 1px solid #000; }
-.editor-view.stacked .tr-work { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1.4fr) minmax(0, 1fr); }
-.editor-view.stacked .tr-work .ep-editor { border-right: 0; border-bottom: 1px solid #000; }
-
-@media (max-width: 1200px) and (min-width: 901px) {
-  /* en pantallas medianas, editor y salida apilados para que el código tenga ancho */
-  .tr-work { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1.4fr) minmax(0, 1fr); }
-  .tr-work .ep-editor { border-right: 0; border-bottom: 1px solid #000; }
-}
+/* Móvil: todo apilado, sin asas; las tiras plegadas son barras horizontales */
 @media (max-width: 900px) {
+  .tr-main { flex-direction: column; }
+  .tr-browser, .tr-problem { width: auto; }
   .tr-browser { max-height: 45vh; border-right: 0; border-bottom: 1px solid #000; }
-  .tr-title { display: none; }
-  .tr-main, .editor-view.no-problem .tr-main { display: flex; flex-direction: column; }
   .tr-problem { overflow: visible; border-right: 0; border-bottom: 1px solid #000; }
-  .tr-work, .editor-view.stacked .tr-work { display: flex; flex-direction: column; }
-  .tr-work .ep-editor { height: 55vh; flex: none; border: 0; }
-  .tr-work .ep-io { min-height: 220px; }
+  .tr-grip { display: none; }
+  .tr-strip { width: auto; flex-direction: row; justify-content: flex-start; padding: 8px 14px; border: 0; border-bottom: 1px solid #000; }
+  .tr-strip span { writing-mode: horizontal-tb; }
+  .tr-title { display: none; }
+  .tr-work, .editor-view.stacked .tr-work { flex-direction: column; }
+  .tr-work .ep-editor { height: 55vh; flex: none; }
+  .tr-work .ep-io { width: auto; min-height: 220px; }
 }
 .train-link { margin: 12px 0 0; }
 .train-link .btn { text-decoration: none; }
