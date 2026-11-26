@@ -231,6 +231,18 @@ function renderSidebar() {
 }
 
 // Marca o desmarca una lección y refresca todo lo que lo muestra (botón, índice, progreso)
+// Plegar / desplegar el vídeo (para quien solo quiere leer la teoría). Se recuerda en el navegador.
+function syncVideoFold() {
+  const hidden = !!state.videoHidden;
+  document.body.classList.toggle("video-collapsed", hidden);
+  const b = $("#videoFold");
+  if (b) {
+    b.textContent = hidden ? "▼ Mostrar vídeo" : "▲ Ocultar vídeo";
+    b.setAttribute("aria-expanded", String(!hidden));
+    b.title = hidden ? "Mostrar el vídeo de la lección" : "Ocultar el vídeo y leer solo la teoría";
+  }
+}
+
 function toggleDone(id) {
   if (isDone(id)) delete state.done[id]; else state.done[id] = true;
   saveState();
@@ -272,6 +284,7 @@ function renderLesson(id, tab = "teoria") {
       <div class="crumbs"><span>${esc(lesson.modulo.titulo)} · Lección ${index + 1} de ${lessons.length}</span><button type="button" class="btn pg-reopen" id="pgReopen">&lt;/&gt; Editor</button></div>
       <div class="video-box">${videoHTML(lesson.video, lesson.titulo)}</div>
       ${videoLink(lesson.video, lesson.id)}
+      <button type="button" class="media-fold" id="videoFold"></button>
     </div>
 
     <div class="lesson-head">
@@ -295,6 +308,7 @@ function renderLesson(id, tab = "teoria") {
     </nav>`;
 
   setCompleteButton($("#completeBtn"), id);
+  syncVideoFold();
   selectTab(tab);
   renderSidebar();
   updateProgress();
@@ -487,6 +501,13 @@ document.addEventListener("click", async (event) => {
   if (tick) {
     event.preventDefault();                 // el check está dentro de un enlace: no navegar
     toggleDone(tick.dataset.lesson);
+    return;
+  }
+
+  if (event.target.closest("#videoFold")) {
+    state.videoHidden = !state.videoHidden;
+    saveState();
+    syncVideoFold();
     return;
   }
 

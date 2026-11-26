@@ -315,6 +315,10 @@ details.fold.solution[open] > summary { border-bottom-left-radius: 0; border-bot
   body.sidebar-collapsed .strip-index { display: flex; }
   body:not(.play-open) .strip-code { display: flex; }
 }
+.media-fold { display: block; margin: 8px auto 0; padding: 3px 14px; font: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--muted); }
+.media-fold:hover { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+body.video-collapsed .lesson-media .video-box, body.video-collapsed .lesson-media .video-tools { display: none; }
+body.video-collapsed .lesson-media { padding-bottom: 8px; }
 .crumbs { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 
 /* ---------------------------- Móvil ---------------------------- */
