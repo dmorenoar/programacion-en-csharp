@@ -169,6 +169,92 @@ const EditorKit = (() => {
     if (!cfg.url || Date.now() - lastWarm < 25000) return;
     lastWarm = Date.now();
     fetch(`${cfg.url}/about`, { mode: "cors", cache: "no-store" }).catch(() => {});
+    if (fast.enabled) fastLanguageId();          // buscamos el id de Mono con antelación
+  }
+
+  /* ---------- «Vía rápida» (EXPERIMENTAL): C# con Mono ----------
+     Mono compila bastante más rápido que .NET en el servidor, pero es un C# antiguo (≈ C# 7) y
+     algunas salidas difieren (p. ej. los números con decimales). Por eso:
+       · solo se usa con programas «sencillos» (sin decimales, sin sintaxis moderna, sin clases propias);
+       · SOLO se da por buena si termina bien; ante cualquier error se repite con .NET (la referencia);
+       · se puede desactivar con el botón ⚡ del editor.
+     El id del lenguaje Mono se busca solo en GET /languages (o COURSE.compilador.rapido.languageId). */
+  const FAST_KEY = "curso-csharp:fast";
+  const fast = {
+    enabled: (() => { try { return localStorage.getItem(FAST_KEY) !== "off"; } catch { return true; } })(),
+    idPromise: null,
+    listeners: [],
+  };
+  function setFast(on) {
+    fast.enabled = !!on;
+    try { localStorage.setItem(FAST_KEY, on ? "on" : "off"); } catch { /* sin almacenamiento */ }
+    fast.listeners.forEach((f) => f(fast.enabled));
+  }
+
+  function fastLanguageId() {
+    const cfg = COURSE.compilador || {};
+    if (cfg.rapido && cfg.rapido.activo === false) return Promise.resolve(null);
+    if (!fast.idPromise) {
+      fast.idPromise = (cfg.rapido && cfg.rapido.languageId
+        ? Promise.resolve(cfg.rapido.languageId)
+        : fetch(`${cfg.url}/languages`, { mode: "cors" })
+            .then((r) => (r.ok ? r.json() : []))
+            .then((list) => { const m = list.find((l) => /c#/i.test(l.name) && /mono/i.test(l.name)); return m ? m.id : null; }))
+        .catch(() => null);
+    }
+    return fast.idPromise;
+  }
+
+  // Devuelve el código listo para Mono o null si el programa NO es apto para la vía rápida
+  function monoSource(source) {
+    const noComments = source.replace(/\/\/.*$/gm, "").replace(/\/\*[\s\S]*?\*\//g, "");
+    const modern = [
+      /\b(double|float|Math\.|Random)\b|\bMath\./,        // decimales: Mono formatea distinto
+      /\d\.\d/, /\b\d+[dDfF]\b/,                         // literales con decimales
+      /^\s*(public\s+|internal\s+|static\s+|abstract\s+|sealed\s+)*(class|struct|enum|interface|record|namespace)\b/m,   // tipos propios
+      /\bswitch\s*\{|\bis\s+not\b|\bnew\s*\(\s*\)|\bwith\s*\{|\binit\s*;|\busing\s+var\b|\bawait\b|\basync\b/,   // C# 8+
+      /\b(string|int|bool|char|object|long)\?\s*\w|\^\s*\d|\.\.\s*\w|\w\s*\.\.|\brecord\b|\bargs\b/,              // nullables, rangos, args
+      /static\s+(void|int)\s+Main\b/,                                                                              // ya trae su Main
+      /Console\.(ReadKey|Clear|SetCursor)/,
+    ];
+    if (modern.some((re) => re.test(noComments))) return null;
+
+    // Las líneas «using …;» de arriba se quedan fuera de la clase; el resto va dentro de Main
+    const lines = source.split("\n"), head = [], body = [];
+    let inHead = true;
+    lines.forEach((ln) => {
+      if (inHead && /^\s*using\s+[\w.]+\s*;\s*$/.test(ln)) head.push(ln);
+      else { if (ln.trim() && !/^\s*\/\//.test(ln)) inHead = false; body.push(ln); }
+    });
+    const usings = ["System", "System.Collections.Generic", "System.Linq", "System.Text"]
+      .filter((ns) => !head.some((h) => h.includes(`using ${ns};`))).map((ns) => `using ${ns};`);
+    return usings.join(" ") + " " + head.join(" ") + " class Program { static void Main() { " + body.join("\n") + "\n} }";
+  }
+
+  /* ---------- Envío a Judge0 ---------- */
+
+  // Petición «simple» (formulario): el navegador NO hace la consulta previa (preflight OPTIONS)
+  // y nos ahorramos una ida y vuelta completa. Si el servidor no la acepta, caemos a JSON.
+  async function submit(languageId, code, stdin, ctl) {
+    const cfg = COURSE.compilador || {};
+    const payload = { language_id: languageId, source_code: toB64(code), stdin: toB64((stdin || "").replace(/\r?\n?$/, "\n")) };   // cada ReadLine consume una línea
+    const endpoint = `${cfg.url}/submissions?base64_encoded=true&wait=true`;
+    const custom = cfg.headers && Object.keys(cfg.headers).length > 0;
+    const asJson = () => fetch(endpoint, {
+      method: "POST",
+      headers: Object.assign({ "Content-Type": "application/json" }, cfg.headers || {}),
+      body: JSON.stringify(payload),
+      signal: ctl.signal,
+    });
+    let res;
+    if (useJson || custom) res = await asJson();
+    else {
+      res = await fetch(endpoint, { method: "POST", body: new URLSearchParams(payload), signal: ctl.signal });
+      if (!res.ok && res.status !== 429) { useJson = true; res = await asJson(); }
+    }
+    if (res.status === 429) return { limited: true };
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    return { json: await res.json() };
   }
 
   async function execute(source, stdin) {
@@ -181,27 +267,30 @@ const EditorKit = (() => {
     const ctl = new AbortController();
     const timer = setTimeout(() => ctl.abort(), cfg.timeoutMs || 30000);
     try {
-      const payload = { language_id: cfg.languageId, source_code: toB64(prepare(source)), stdin: toB64((stdin || "").replace(/\r?\n?$/, "\n")) };   // cada ReadLine consume una línea
-      const endpoint = `${cfg.url}/submissions?base64_encoded=true&wait=true`;
-      const custom = cfg.headers && Object.keys(cfg.headers).length > 0;
+      let result = null;
 
-      // Petición «simple» (formulario): el navegador NO hace la consulta previa (preflight OPTIONS)
-      // y nos ahorramos una ida y vuelta completa. Si el servidor no la acepta, caemos a JSON.
-      const asJson = () => fetch(endpoint, {
-        method: "POST",
-        headers: Object.assign({ "Content-Type": "application/json" }, cfg.headers || {}),
-        body: JSON.stringify(payload),
-        signal: ctl.signal,
-      });
-      let res;
-      if (useJson || custom) res = await asJson();
-      else {
-        res = await fetch(endpoint, { method: "POST", body: new URLSearchParams(payload), signal: ctl.signal });
-        if (!res.ok && res.status !== 429) { useJson = true; res = await asJson(); }
+      // 1) Vía rápida (Mono), solo si está activada y el programa es apto
+      const mono = fast.enabled ? monoSource(source) : null;
+      if (mono) {
+        const id = await fastLanguageId();
+        if (id) {
+          const r = await submit(id, mono, stdin, ctl);
+          if (r.limited) return { kind: "err", errorLines: [], text: "Demasiadas ejecuciones seguidas en el servicio gratuito. Espera un minuto y vuelve a probar." };
+          if (r.json.status && r.json.status.id === 3) {           // solo si terminó BIEN
+            result = interpret(r.json);
+            result.meta = "⚡ vía rápida (Mono) · " + result.meta;
+          }
+          // cualquier otro resultado (error de compilación o de ejecución) → lo decide .NET
+        }
       }
-      if (res.status === 429) return { kind: "err", errorLines: [], text: "Demasiadas ejecuciones seguidas en el servicio gratuito. Espera un minuto y vuelve a probar." };
-      if (!res.ok) throw new Error("HTTP " + res.status);
-      const result = interpret(await res.json());
+
+      // 2) .NET: la referencia (mensajes de error y comportamiento actuales de C#)
+      if (!result) {
+        const r = await submit(cfg.languageId, prepare(source), stdin, ctl);
+        if (r.limited) return { kind: "err", errorLines: [], text: "Demasiadas ejecuciones seguidas en el servicio gratuito. Espera un minuto y vuelve a probar." };
+        result = interpret(r.json);
+      }
+
       if (cache.size >= 40) cache.delete(cache.keys().next().value);   // memoria acotada
       cache.set(key, result);
       return result;
@@ -316,5 +405,5 @@ const EditorKit = (() => {
     });
   }
 
-  return { attach, insert, execute, needsInput, prepare, menu, warm };
+  return { attach, insert, execute, needsInput, prepare, menu, warm, monoSource, fast: { get enabled() { return fast.enabled; }, set: setFast, onChange: (f) => fast.listeners.push(f) } };
 })();

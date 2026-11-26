@@ -69,6 +69,7 @@ const Training = (() => {
           <button class="btn ed-tool" id="trFontUp" type="button" title="Letra más grande" aria-label="Letra más grande">A+</button>
         </span>
         <button class="btn ed-tool" id="trLayout" type="button" title="Cambiar la disposición de editor y salida (lado a lado / uno encima de otro)">⇆ Disposición</button>
+        <button class="btn ed-tool" id="trFast" type="button"></button>
         <button class="btn ed-tool" id="trReset" type="button" title="Empezar de cero esta actividad (se puede deshacer)">🗑 Reiniciar</button>
         <button class="btn primary" id="trRun" type="button" title="Ejecutar (Ctrl+Intro)">▶ Ejecutar</button>
         <input id="trOpen" type="file" accept=".cs,.txt,text/plain" hidden>
@@ -138,6 +139,14 @@ const Training = (() => {
       const g = e.target.closest("[data-grip]");
       if (g) { widths()[g.dataset.grip] = setW(g.dataset.grip, DEFAULTS[g.dataset.grip]); saveState(); }
     });
+    const fastBtn = $("trFast");
+    const paintFast = (on) => {
+      fastBtn.textContent = on ? "⚡ Rápido: sí" : "⚡ Rápido: no";
+      fastBtn.title = on ? "Vía rápida (experimental): programas sencillos se compilan con Mono. Pulsa para desactivarla y usar siempre .NET." : "Vía rápida desactivada: siempre se compila con .NET. Pulsa para activarla.";
+    };
+    paintFast(EditorKit.fast.enabled);
+    EditorKit.fast.onChange(paintFast);
+    fastBtn.addEventListener("click", () => EditorKit.fast.set(!EditorKit.fast.enabled));
     $("trSave").addEventListener("click", () => pane.save());
     $("trOpenBtn").addEventListener("click", () => ui.Open.click());
     $("trCopy").addEventListener("click", () => pane.copy($("trCopy")));

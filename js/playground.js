@@ -60,6 +60,7 @@ const Playground = (() => {
         <button class="btn ed-tool" id="pgSave" type="button" title="Guardar como Program.cs (Ctrl+S)">⬇ Guardar</button>
         <button class="btn ed-tool" id="pgOpenBtn" type="button" title="Abrir un archivo .cs">📂 Abrir</button>
         <button class="btn ed-tool" id="pgCopy" type="button" title="Copiar el código">⎘ Copiar</button>
+        <button class="btn ed-tool" id="pgFast" type="button"></button>
         <span class="pg-grow"></span>
         <button class="btn ed-tool" id="pgFontDn" type="button" title="Letra más pequeña" aria-label="Letra más pequeña">A−</button>
         <button class="btn ed-tool" id="pgFontUp" type="button" title="Letra más grande" aria-label="Letra más grande">A+</button>
@@ -93,6 +94,14 @@ const Playground = (() => {
     });
     EditorKit.menu(ui.Templates, () => TEMPLATES.map((t) => ({ text: t.text, onSelect: () => { pane.load(t.code, "", `Plantilla «${t.text}» cargada.`); pane.focus(); } })));
     const $b = (id) => document.getElementById(id);
+    const fastBtn = $b("pgFast");
+    const paintFast = (on) => {
+      fastBtn.textContent = on ? "⚡ Rápido: sí" : "⚡ Rápido: no";
+      fastBtn.title = on ? "Vía rápida (experimental): programas sencillos se compilan con Mono. Pulsa para desactivarla y usar siempre .NET." : "Vía rápida desactivada: siempre se compila con .NET. Pulsa para activarla.";
+    };
+    paintFast(EditorKit.fast.enabled);
+    EditorKit.fast.onChange(paintFast);
+    fastBtn.addEventListener("click", () => EditorKit.fast.set(!EditorKit.fast.enabled));
     $b("pgSave").addEventListener("click", () => pane.save());
     $b("pgOpenBtn").addEventListener("click", () => ui.Open.click());
     $b("pgCopy").addEventListener("click", () => pane.copy($b("pgCopy")));
