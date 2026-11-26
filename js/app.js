@@ -99,10 +99,10 @@ function highlight(code) {
 
 /* ========================== 4. PLANTILLAS HTML ========================== */
 
-function codeBlock(code) {
+function codeBlock(code, noRun) {
   return `
     <div class="code">
-      <div class="code-bar"><span>C#</span><span class="code-actions"><button class="try" type="button" title="Abrir este código en el editor">▶ Probar</button><button class="copy" type="button">Copiar</button></span></div>
+      <div class="code-bar"><span>C#</span><span class="code-actions">${noRun ? "" : '<button class="try" type="button" title="Abrir este código en el editor">▶ Probar</button>'}<button class="copy" type="button">Copiar</button></span></div>
       <pre><code>${highlight(code)}</code></pre>
     </div>`;
 }
@@ -175,18 +175,108 @@ function activityHTML(act, index, lessonId) {
 }
 
 function theoryHTML(lesson) {
-  const examples = lesson.ejemplos
-    .map(
-      (e) => `
+  const exampleHTML = (e) => `
       <section class="example">
         <h3>${esc(e.titulo)}</h3>
-        ${codeBlock(e.codigo)}
+        ${codeBlock(e.codigo, e.noRun)}
         ${e.explicacion ? `<p class="note">${esc(e.explicacion)}</p>` : ""}
-      </section>`
-    )
-    .join("");
-  return `<div class="theory">${lesson.teoria}</div>
-          <h2 style="margin-top:1.6em">Ejemplos de código</h2>${examples}`;
+      </section>`;
+  const list = lesson.ejemplos || [];
+  const used = new Set();
+  // Los marcadores <!--ex:N--> de la teoría se sustituyen por el ejemplo N (así el código aparece donde se explica)
+  const theory = (lesson.teoria || "").replace(/<!--ex:(\d+)-->/g, (m, n) => {
+    const e = list[Number(n)];
+    if (!e) return "";
+    used.add(Number(n));
+    return exampleHTML(e);
+  });
+  const rest = list.map((e, i) => (used.has(i) ? "" : exampleHTML(e))).join("");
+  return `<div class="theory">${theory}</div>` + (rest ? `<h2 style="margin-top:1.6em">Ejemplos de código</h2>${rest}` : "");
+}
+
+/* ============== AUTOEVALUACIÓN (tests de opción múltiple) ============== */
+/* Los tests viven en data/tests.js (TESTS[idLección] = [{ p, o:[…], c, e }]).
+   p = pregunta · o = opciones · c = índice de la correcta (0, 1, 2…) · e = explicación (opcional).
+   Las opciones se barajan en cada intento para que no se memorice la letra. */
+
+function shuffled(list) {
+  const a = list.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Test de una lección: sus preguntas. Si la lección es el «test global», se sacan al azar de todo el curso.
+function questionsFor(lesson) {
+  if (lesson.testAleatorio) {
+    const all = Object.entries(TESTS).filter(([id]) => lessonById.has(id) && !lessonById.get(id).testAleatorio)
+      .flatMap(([id, qs]) => qs.map((q) => ({ ...q, tema: lessonById.get(id).titulo })));
+    return shuffled(all).slice(0, lesson.testAleatorio);
+  }
+  return (TESTS[lesson.id] || []).map((q) => ({ ...q }));
+}
+
+function quizHTML(lesson) {
+  const qs = questionsFor(lesson);
+  if (!qs.length) return '<p class="empty">Esta lección no tiene autoevaluación todavía.</p>';
+  const prev = state.quiz && state.quiz[lesson.id];
+  const best = prev ? `<p class="quiz-best">Tu mejor resultado: <strong>${prev.best} / ${prev.total}</strong></p>` : "";
+  const items = qs.map((q, i) => {
+    // Barajamos las opciones recordando cuál es la correcta
+    const order = shuffled(q.o.map((_, k) => k));
+    const opts = order.map((k) => `<button type="button" class="quiz-opt" data-ok="${k === q.c ? 1 : 0}">${esc(q.o[k])}</button>`).join("");
+    return `<article class="quiz-q" data-i="${i}">
+      <h3><span class="qn">${i + 1}</span> ${esc(q.p)}</h3>
+      ${q.tema ? `<p class="quiz-topic">Tema: ${esc(q.tema)}</p>` : ""}
+      <div class="quiz-opts">${opts}</div>
+      <p class="quiz-fb" hidden></p>
+      ${q.e ? `<p class="quiz-exp" hidden>💡 ${esc(q.e)}</p>` : ""}
+    </article>`;
+  }).join("");
+  return `${best}
+    <p class="quiz-intro">Elige una respuesta en cada pregunta: se corrige al momento. Puedes repetir el test cuantas veces quieras.</p>
+    <div class="quiz" data-lesson="${esc(lesson.id)}" data-total="${qs.length}">
+      ${items}
+      <div class="quiz-score" hidden></div>
+      <p><button type="button" class="btn quiz-retry">🔄 Repetir el test</button></p>
+    </div>`;
+}
+
+function onQuizClick(btn) {
+  const q = btn.closest(".quiz-q");
+  if (!q || q.dataset.done) return;
+  q.dataset.done = "1";
+  const ok = btn.dataset.ok === "1";
+  q.querySelectorAll(".quiz-opt").forEach((b) => {
+    b.disabled = true;
+    if (b.dataset.ok === "1") b.classList.add("right");
+  });
+  if (!ok) btn.classList.add("wrong");
+  q.dataset.ok = ok ? "1" : "0";
+  const fb = q.querySelector(".quiz-fb");
+  fb.textContent = ok ? "✅ ¡Correcto!" : "❌ No es esa: la correcta está marcada en verde.";
+  fb.className = "quiz-fb " + (ok ? "good" : "bad");
+  fb.hidden = false;
+  const exp = q.querySelector(".quiz-exp");
+  if (exp) exp.hidden = false;
+
+  const quiz = q.closest(".quiz");
+  const answered = quiz.querySelectorAll(".quiz-q[data-done]").length;
+  const total = Number(quiz.dataset.total);
+  if (answered === total) {
+    const score = quiz.querySelectorAll('.quiz-q[data-ok="1"]').length;
+    const box = quiz.querySelector(".quiz-score");
+    const pct = Math.round((score / total) * 100);
+    box.innerHTML = `<strong>Resultado: ${score} / ${total}</strong> (${pct}%) — ${pct >= 80 ? "¡Excelente! 🎉" : pct >= 50 ? "Vas bien: repasa lo que has fallado 📚" : "Repasa la teoría y vuelve a intentarlo 💪"}`;
+    box.hidden = false;
+    state.quiz = state.quiz || {};
+    const id = quiz.dataset.lesson;
+    const prev = state.quiz[id];
+    state.quiz[id] = { best: Math.max(score, prev ? prev.best : 0), total };
+    saveState();
+  }
 }
 
 /* ============================== 5. RENDER ============================== */
@@ -275,6 +365,7 @@ function renderLesson(id, tab = "teoria") {
   const prev = lessons[index - 1];
   const next = lessons[index + 1];
   const nActs = lesson.actividades.length;
+  const nTest = lesson.testAleatorio || (TESTS[lesson.id] || []).length;
   const goals = lesson.objetivos && lesson.objetivos.length
     ? `<div class="goals"><h3>🎯 Lo que aprenderás</h3><ul>${lesson.objetivos.map((o) => `<li>${esc(o)}</li>`).join("")}</ul></div>`
     : "";
@@ -296,11 +387,14 @@ function renderLesson(id, tab = "teoria") {
     <div class="tabs" role="tablist" aria-label="Contenido de la lección">
       <button class="tab" role="tab" id="tab-teoria" aria-controls="panel-teoria" data-tab="teoria" type="button">📖 Teoría</button>
       <button class="tab" role="tab" id="tab-actividades" aria-controls="panel-actividades" data-tab="actividades" type="button">🧩 Actividades<span class="badge">${nActs}</span></button>
+      <button class="tab" role="tab" id="tab-test" aria-controls="panel-test" data-tab="test" type="button">✅ Autoevaluación<span class="badge">${nTest}</span></button>
     </div>
     <section class="panel" id="panel-teoria" role="tabpanel" aria-labelledby="tab-teoria">${theoryHTML(lesson)}</section>
     <section class="panel" id="panel-actividades" role="tabpanel" aria-labelledby="tab-actividades" hidden>
       ${nActs ? lesson.actividades.map((a, i) => activityHTML(a, i, lesson.id)).join("") : '<p class="empty">Esta lección no tiene actividades todavía.</p>'}
     </section>
+
+    <section class="panel" id="panel-test" role="tabpanel" aria-labelledby="tab-test" hidden>${quizHTML(lesson)}</section>
 
     <nav class="lesson-nav" aria-label="Navegación entre lecciones">
       <a class="btn" ${prev ? `href="#leccion-${esc(prev.id)}"` : 'aria-disabled="true"'}>← ${prev ? esc(prev.titulo) : "Anterior"}</a>
@@ -523,6 +617,15 @@ document.addEventListener("click", async (event) => {
     const openAll = [...secs].some((d) => !d.open);       // si alguna está cerrada → abrir todas; si no, cerrar
     secs.forEach((d) => (d.open = openAll));
     expand.textContent = openAll ? "Contraer todas las secciones" : "Expandir todas las secciones";
+    return;
+  }
+
+  const opt = event.target.closest(".quiz-opt");
+  if (opt) { onQuizClick(opt); return; }
+
+  if (event.target.closest(".quiz-retry")) {
+    const panel = $("#panel-test");
+    if (panel) panel.innerHTML = quizHTML(lessonById.get(currentId));
     return;
   }
 
