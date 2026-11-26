@@ -24,7 +24,7 @@ body.view-home .playground { display: none; }
 .pg-head { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: #151521; border-bottom: 1px solid #2d2d44; font-size: 14px; min-width: 0; }
 .pg-lesson { color: #9aa0c0; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .pg-spacer { flex: 1; }
-.pg-x { color: #e4e6f0; }
+.pg-x { color: #e4e6f0; font-weight: 800; }
 .pg-grow { flex: 1; }
 .pg-tools2 { padding-top: 0; }
 .pg-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 8px 12px; background: #1a1a2b; border-bottom: 1px solid #2d2d44; }
@@ -42,18 +42,13 @@ body.view-home .playground { display: none; }
 .try { cursor: pointer; font: inherit; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 4px; border: 1px solid #7c3aed; background: #7c3aed; color: #fff; }
 .try:hover { filter: brightness(1.1); }
 
-/* Escritorio: [editor | vídeo + teoría | índice del curso]. El índice va a la derecha. */
+/* Escritorio: el editor es una columna más de la fila (flex), entre el índice y la lección. */
 @media (min-width: 901px) {
-  body.play-open .layout { grid-template-columns: var(--play-w) minmax(0, 1fr) var(--sidebar-w); }
-  body.play-open.sidebar-collapsed .layout { grid-template-columns: var(--play-w) minmax(0, 1fr); }
-  .playground { order: 1; }
-  /* ⇄: editor al otro lado del vídeo */
-  body.play-right .playground { order: 3; border-left: 1px solid #000; border-right: 0; }
-  body.play-right .sidebar { order: 4; }
-  body.play-right.play-open .layout { grid-template-columns: minmax(0, 1fr) var(--play-w) var(--sidebar-w); }
-  body.play-right.play-open.sidebar-collapsed .layout { grid-template-columns: minmax(0, 1fr) var(--play-w); }
-  body:not(.play-right) .playground { border-left: 0; border-right: 1px solid #000; }
-  body:not(.play-right) .pg-resize { left: auto; right: -4px; }
+  .playground { order: 30; flex: none; width: var(--play-w); position: relative; top: auto; height: 100%; align-self: stretch; border-left: 0; border-right: 1px solid #000; }
+  .pg-resize { left: auto; right: -4px; }
+  /* ⇄: editor a la derecha de la lección */
+  body.play-right .playground { order: 50; border-right: 0; border-left: 1px solid #000; }
+  body.play-right .pg-resize { right: auto; left: -4px; }
 }
 .pg-reopen { display: none; padding: 4px 10px; font-size: 13px; }
 body:not(.play-open) .pg-reopen { display: inline-flex; }
@@ -65,12 +60,4 @@ body:not(.play-open) .pg-reopen { display: inline-flex; }
     height: calc(100dvh - var(--header-h) - 8vh); align-self: auto; border-left: 0; border-radius: 12px 12px 0 0; box-shadow: 0 -10px 30px rgba(0, 0, 0, .45);
   }
   .pg-resize { display: none; }
-}
-
-/* Editor a la izquierda (botón ⇄): el panel pasa a la primera columna */
-@media (min-width: 901px) {
-  body.play-open.play-left .layout { grid-template-columns: var(--play-w) var(--sidebar-w) minmax(0, 1fr); }
-  body.play-open.play-left.sidebar-collapsed .layout { grid-template-columns: var(--play-w) minmax(0, 1fr); }
-  body.play-left .playground { order: -1; border-left: 0; border-right: 1px solid #000; }
-  body.play-left .pg-resize { left: auto; right: -4px; }
 }

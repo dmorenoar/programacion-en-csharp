@@ -41,7 +41,6 @@ h1, h2, h3, h4 { letter-spacing: -.01em; }
   .layout { grid-template-columns: var(--sidebar-w) minmax(0, 1fr); }
   .content { padding: 0 0 40px; }
   /* Índice oculto: el contenido pasa a ocupar todo el ancho */
-  body.sidebar-collapsed .layout { grid-template-columns: minmax(0, 1fr); }
   body.sidebar-collapsed .sidebar { display: none; }
   .content-inner { max-width: none; }
   /* Franja oscura detrás del vídeo, como en Udemy */

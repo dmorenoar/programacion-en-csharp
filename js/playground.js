@@ -48,7 +48,7 @@ const Playground = (() => {
         <span class="pg-lesson" id="pgLesson"></span>
         <span class="pg-spacer"></span>
         <button class="btn ed-tool pg-side" id="pgSide" type="button" title="Poner el editor al otro lado" aria-label="Poner el editor al otro lado">⇄</button>
-        <button class="icon-btn pg-x" id="pgClose" type="button" aria-label="Cerrar el editor">✕</button>
+        <button class="icon-btn pg-x" id="pgClose" type="button" aria-label="Ocultar el editor" title="Ocultar el editor (queda una tira para volver a abrirlo)">«</button>
       </div>
       <div class="pg-tools">
         <button class="btn ed-tool" id="pgExamples" type="button">📚 Ejemplos ▾</button>
@@ -173,6 +173,7 @@ const Playground = (() => {
     pane.show("Código cargado. Pulsa «Ejecutar» para probarlo y modifícalo para experimentar.", "");
   }
 
+  document.getElementById("stripCode").addEventListener("click", () => setOpen(true));
   build();
   applyPrefs();
   panel.hidden = true;

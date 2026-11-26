@@ -51,13 +51,17 @@
   <div id="training" class="editor-view" hidden></div>
 
   <div class="layout">
+    <!-- Tiras que aparecen al esconder el índice o el editor, para volver a mostrarlos -->
+    <button class="side-strip strip-index" id="stripIndex" type="button" title="Mostrar el contenido del curso"><span>☰ Contenido del curso</span> »</button>
+    <button class="side-strip strip-code" id="stripCode" type="button" title="Mostrar el editor de código"><span>&lt;/&gt; Editor de código</span> »</button>
     <nav class="sidebar" id="sidebar" aria-label="Índice del curso">
-      <div class="sidebar-head"><a class="back-home" href="#inicio">← Página del curso</a><h2>Contenido del curso</h2><p class="course-sub" id="courseSub"></p></div>
+      <div class="sidebar-head"><button class="pg-hide" id="sbHide" type="button" title="Ocultar el contenido del curso" aria-label="Ocultar el contenido del curso">«</button><a class="back-home" href="#inicio">← Página del curso</a><h2>Contenido del curso</h2><p class="course-sub" id="courseSub"></p></div>
       <div id="modules"></div>
       <div class="sidebar-foot">
         <button class="link-btn" id="resetBtn" type="button">Reiniciar mi progreso</button>
       </div>
     </nav>
+    <div class="sb-grip" id="sbGrip" role="separator" aria-orientation="vertical" title="Arrastra para cambiar el ancho"></div>
     <div class="backdrop" id="backdrop"></div>
 
     <main class="content" id="content" tabindex="-1">

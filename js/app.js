@@ -535,6 +535,32 @@ function syncMenuButton() {
   btn.title = btn.getAttribute("aria-label");
 }
 
+$("#sbHide").addEventListener("click", () => $("#menuBtn").click());
+$("#stripIndex").addEventListener("click", () => $("#menuBtn").click());
+
+// Ancho del índice ajustable arrastrando su borde derecho (se recuerda)
+{
+  const setSb = (px) => document.body.style.setProperty("--sidebar-w", Math.min(Math.max(px, 220), 560) + "px");
+  if (state.sidebarW) setSb(state.sidebarW);
+  const grip = $("#sbGrip");
+  grip.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    grip.setPointerCapture(e.pointerId);
+    grip.classList.add("drag");
+    const left = $("#sidebar").getBoundingClientRect().left;
+    const move = (ev) => setSb(ev.clientX - left);
+    const up = () => {
+      grip.classList.remove("drag");
+      grip.removeEventListener("pointermove", move);
+      grip.removeEventListener("pointerup", up);
+      state.sidebarW = parseInt(getComputedStyle(document.body).getPropertyValue("--sidebar-w"), 10) || 340;
+      saveState();
+    };
+    grip.addEventListener("pointermove", move);
+    grip.addEventListener("pointerup", up);
+  });
+}
+
 $("#menuBtn").addEventListener("click", () => {
   if (desktopQuery.matches) {
     state.sidebarHidden = document.body.classList.toggle("sidebar-collapsed");
