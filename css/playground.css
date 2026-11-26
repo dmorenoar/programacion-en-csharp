@@ -8,8 +8,6 @@
 :root { --play-w: 480px; }
 
 .playground[hidden] { display: none; }
-.pg-expand { padding: 6px 10px; font-size: 13px; background: #2d2d44; color: #e4e6f0; border-color: #3a3a58; }
-.pg-expand:hover { background: #3a3a58; }
 body.view-home .playground { display: none; }
 
 .playground {
@@ -23,44 +21,19 @@ body.view-home .playground { display: none; }
 .pg-resize { position: absolute; left: -4px; top: 0; bottom: 0; width: 8px; cursor: col-resize; z-index: 3; touch-action: none; }
 .pg-resize:hover, .pg-resize:active { background: rgba(124, 58, 237, .6); }
 
-.pg-head { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: #151521; border-bottom: 1px solid #2d2d44; font-size: 14px; }
+.pg-head { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: #151521; border-bottom: 1px solid #2d2d44; font-size: 14px; min-width: 0; }
+.pg-lesson { color: #9aa0c0; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .pg-spacer { flex: 1; }
-.pg-run { padding: 6px 14px; }
-.pg-run:disabled { opacity: .7; cursor: wait; }
 .pg-x { color: #e4e6f0; }
-
-/* --- Editor: textarea transparente sobre un <pre> coloreado ---
-   Ambos DEBEN compartir exactamente fuente, tamaño, interlineado y padding,
-   si no el texto no coincidiría con los colores. */
-.pg-editor { position: relative; flex: 1 1 55%; min-height: 120px; overflow: hidden; background: #1e1e2e; }
-.pg-hl, #pgCode {
-  position: absolute; inset: 0; margin: 0; padding: 12px 14px; border: 0;
-  font: 13.5px/1.55 ui-monospace, "Cascadia Code", Consolas, Menlo, monospace;
-  tab-size: 4; white-space: pre; overflow: auto; letter-spacing: 0; word-spacing: 0;
-}
-.pg-hl { color: #e4e6f0; pointer-events: none; overflow: hidden; }
-#pgCode { background: transparent; color: transparent; caret-color: #fff; resize: none; outline: none; z-index: 1; -webkit-text-fill-color: transparent; }
-#pgCode::selection { background: rgba(124, 58, 237, .45); -webkit-text-fill-color: transparent; }
-
-/* Colores del resaltado dentro del panel (fondo oscuro siempre) */
-.pg-hl .tok-kw { color: #c792ea; } .pg-hl .tok-t { color: #4ec9b0; } .pg-hl .tok-s { color: #ecc48d; }
-.pg-hl .tok-n { color: #f78c6c; } .pg-hl .tok-c { color: #6a7a9a; font-style: italic; } .pg-hl .tok-f { color: #82aaff; }
-
-.pg-stdin { background: #151521; border-top: 1px solid #2d2d44; font-size: 13px; }
-.pg-stdin summary { cursor: pointer; padding: 8px 12px; color: #aab; }
-.pg-stdin code { background: #2d2d44; color: #e4e6f0; padding: 1px 5px; border-radius: 3px; }
-.pg-stdin textarea { display: block; width: 100%; box-sizing: border-box; background: #1e1e2e; color: #e4e6f0; border: 0; border-top: 1px solid #2d2d44; padding: 8px 12px; font: 13px/1.5 ui-monospace, Consolas, monospace; resize: vertical; }
-
-.pg-out-head { display: flex; align-items: center; gap: 10px; padding: 6px 12px; background: #151521; border-top: 1px solid #2d2d44; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: #aab; }
-.pg-out-head #pgMeta { flex: 1; text-transform: none; letter-spacing: 0; opacity: .8; }
-.pg-out-head .link-btn { color: #c4b5fd; font-size: 12px; text-transform: none; letter-spacing: 0; }
-
-.pg-out { flex: 1 1 35%; min-height: 90px; margin: 0; padding: 12px 14px; overflow: auto; background: #0e0e18; color: #e4e6f0; font: 13.5px/1.5 ui-monospace, Consolas, Menlo, monospace; white-space: pre-wrap; word-break: break-word; }
-.pg-out.ok { color: #9ef0b6; }
-.pg-out.err { color: #ff9aa2; }
-.pg-out.warn { color: #ffd479; }
-.pg-out.wait { color: #aab; }
-.pg-foot { padding: 6px 12px; font-size: 11px; color: #8a8fa8; background: #151521; border-top: 1px solid #2d2d44; }
+.pg-tools { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 12px; background: #1a1a2b; border-bottom: 1px solid #2d2d44; }
+.playground .btn { padding: 6px 12px; font-size: 13px; }
+.playground .ed-tool { background: #24243a; color: #e4e6f0; border-color: #3a3a58; cursor: pointer; }
+.playground .ed-tool:hover { background: #30304d; }
+.playground .btn.primary:disabled { opacity: .7; cursor: wait; }
+.pg-body { flex: 1; min-height: 0; display: grid; grid-template-rows: minmax(0, 1.5fr) minmax(0, 1fr); --ep-fs: 14px; }
+.pg-body .ep-editor { border-bottom: 1px solid #000; }
+.pg-body { font-size: var(--ep-fs); }
+.pg-body .ep-hints { display: none; }
 
 /* Botón «▶ Probar» junto a «Copiar» en los bloques de código */
 .code-actions { display: inline-flex; gap: 6px; }
@@ -82,4 +55,12 @@ body.view-home .playground { display: none; }
     height: calc(100dvh - var(--header-h) - 8vh); align-self: auto; border-left: 0; border-radius: 12px 12px 0 0; box-shadow: 0 -10px 30px rgba(0, 0, 0, .45);
   }
   .pg-resize { display: none; }
+}
+
+/* Editor a la izquierda (botón ⇄): el panel pasa a la primera columna */
+@media (min-width: 901px) {
+  body.play-open.play-left .layout { grid-template-columns: var(--play-w) var(--sidebar-w) minmax(0, 1fr); }
+  body.play-open.play-left.sidebar-collapsed .layout { grid-template-columns: var(--play-w) minmax(0, 1fr); }
+  body.play-left .playground { order: -1; border-left: 0; border-right: 1px solid #000; }
+  body.play-left .pg-resize { left: auto; right: -4px; }
 }

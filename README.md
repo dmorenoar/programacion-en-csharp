@@ -179,12 +179,12 @@ Los totales (lecciones, actividades y duración) se calculan solos a partir de l
 
 Un navegador no puede compilar C#, así que el código se envía a **Judge0** (C# en .NET 8). Configuración en `data/course.js` → `compilador` (`url`, `languageId`, `headers`). Si el servicio público se satura en clase, puedes alojar tu propio Judge0 y cambiar solo `url`. Para ejecutar hace falta Internet; el resto del curso funciona sin conexión.
 
-- **`</> Codificar`** (`#codificar` o `#codificar-<lección>`): editor a la **izquierda** y el **vídeo** de la lección a la derecha, para programar lo que explica el profesor. Cada lección tiene su propio cuaderno de código (se guarda en el navegador), selector de lección, ejemplos de la lección y separador arrastrable.
+- **`</> Codificar`** (`#codificar` o `#codificar-<lección>`): la lección (índice, vídeo y teoría) con un **entorno tipo .NET Fiddle** al lado: editor con números de línea, ▶ Ejecutar, entrada/salida, ejemplos y plantillas, guardar/abrir `.cs`, tamaño de letra y ancho ajustable. Cada lección tiene su cuaderno (se guarda en el navegador). El botón ⇄ cambia el editor de lado (izquierda/derecha). Los menús son propios (sin `<select>` ni `confirm`) y al cargar un ejemplo se puede «Deshacer».
 - **`🎯 Entrenamiento`** (`#entrenamiento` o `#entrenamiento-<lección>.<n>`): desplegable con todas las actividades del curso. Muestra el enunciado, el ejemplo de salida, la pista y la solución (plegadas) y un editor para resolverla. Cada actividad guarda su código y se puede marcar como resuelta (✓).
 - **`▶ Probar`** (en cada bloque de código de la teoría): panel lateral derecho para ejecutar un ejemplo mientras lees. Su botón **↗ Codificar** lo lleva al cuaderno de la lección actual.
 - **Atajos del editor:** Ctrl+Intro ejecuta · Tab / Shift+Tab sangra · Ctrl+/ comenta · Ctrl+S descarga `Program.cs` · cierre automático de `()`, `{}`, `[]` y comillas. Los errores de compilación marcan en rojo la línea.
 - La entrada no es interactiva: lo que se escribe en «Entrada del programa» se entrega a `Console.ReadLine()` línea a línea.
-- **Código:** `js/editor-kit.js` (atajos y envío al compilador), `js/editor-pane.js` (editor + salida reutilizable), `js/codeview.js` (Codificar), `js/training.js` (Entrenamiento), `js/playground.js` (panel Probar) y `css/editor.css`, `css/codeview.css`, `css/training.css`.
+- **Código:** `js/editor-kit.js` (atajos y envío al compilador), `js/editor-pane.js` (editor + salida reutilizable), `js/training.js` (Entrenamiento), `js/playground.js` (panel Codificar) y `css/editor.css`, `css/training.css`.
 
 ## Perfil «arcade» del profesor
 

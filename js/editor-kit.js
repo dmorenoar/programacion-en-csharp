@@ -195,5 +195,85 @@ const EditorKit = (() => {
     return { kind: id === 3 ? "ok" : "err", text: text || "(El programa terminó sin mostrar nada)", meta, errorLines: [] };
   }
 
-  return { attach, insert, execute, needsInput, prepare };
+  /* ---------- Menú desplegable propio ---------- */
+  // Los <select> nativos + diálogos (confirm) dentro de «change» dan problemas en algunos
+  // navegadores (el desplegable se queda bloqueado). Por eso usamos un menú propio:
+  // botones normales, sin ventanas modales, estilables y con el mismo aspecto en todos los sistemas.
+
+  let openMenu = null;
+
+  function closeMenu() {
+    if (!openMenu) return;
+    openMenu.el.remove();
+    openMenu.btn.setAttribute("aria-expanded", "false");
+    document.removeEventListener("pointerdown", openMenu.onOutside, true);
+    document.removeEventListener("keydown", openMenu.onKey, true);
+    window.removeEventListener("resize", closeMenu);
+    openMenu = null;
+  }
+
+  /**
+   * Convierte un botón en un menú desplegable.
+   * getEntries() devuelve una lista (se calcula al abrir, así siempre está al día) con:
+   *   { group: "Título del grupo", items: [ { text, onSelect, keep? } ] }   → grupo con encabezado
+   *   { text, onSelect, keep? }                                              → opción suelta
+   * keep: true → el menú no se cierra al elegir (útil para «A+»).
+   */
+  function menu(button, getEntries) {
+    button.setAttribute("aria-haspopup", "menu");
+    button.setAttribute("aria-expanded", "false");
+    button.addEventListener("click", () => {
+      if (openMenu && openMenu.btn === button) return closeMenu();
+      closeMenu();
+
+      const el = document.createElement("div");
+      el.className = "ed-menu";
+      el.setAttribute("role", "menu");
+      const addItem = (item) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "ed-menu-item";
+        b.setAttribute("role", "menuitem");
+        b.textContent = item.text;
+        b.addEventListener("click", () => { if (!item.keep) closeMenu(); item.onSelect(); });
+        el.appendChild(b);
+      };
+      getEntries().forEach((entry) => {
+        if (entry.items) {
+          if (!entry.items.length) return;
+          const h = document.createElement("div");
+          h.className = "ed-menu-group";
+          h.textContent = entry.group;
+          el.appendChild(h);
+          entry.items.forEach(addItem);
+        } else addItem(entry);
+      });
+      if (!el.children.length) return;
+
+      document.body.appendChild(el);
+      // Posición fija bajo el botón, sin salirse de la pantalla
+      const r = button.getBoundingClientRect();
+      el.style.top = Math.round(r.bottom + 4) + "px";
+      el.style.maxHeight = Math.max(160, window.innerHeight - r.bottom - 16) + "px";
+      el.style.left = Math.max(8, Math.min(r.left, window.innerWidth - el.offsetWidth - 8)) + "px";
+      button.setAttribute("aria-expanded", "true");
+
+      const onOutside = (e) => { if (!el.contains(e.target) && !button.contains(e.target)) closeMenu(); };
+      const onKey = (e) => {
+        if (e.key === "Escape") { e.stopPropagation(); closeMenu(); button.focus(); }
+        if (e.key === "ArrowDown" || e.key === "ArrowUp") {          // navegación con el teclado
+          e.preventDefault();
+          const items = [...el.querySelectorAll(".ed-menu-item")];
+          const i = items.indexOf(document.activeElement);
+          items[(i + (e.key === "ArrowDown" ? 1 : -1) + items.length) % items.length].focus();
+        }
+      };
+      document.addEventListener("pointerdown", onOutside, true);
+      document.addEventListener("keydown", onKey, true);
+      window.addEventListener("resize", closeMenu);
+      openMenu = { el, btn: button, onOutside, onKey };
+    });
+  }
+
+  return { attach, insert, execute, needsInput, prepare, menu };
 })();

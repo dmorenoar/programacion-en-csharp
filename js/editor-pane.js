@@ -22,6 +22,7 @@ const EditorPane = (() => {
     editorEl.className = "ep-editor";
     editorEl.setAttribute("aria-label", "Editor de código");
     editorEl.innerHTML = `
+      <div class="ep-note" hidden></div>
       <div class="ep-code">
         <pre class="ep-gutter" aria-hidden="true"></pre>
         <div class="ep-stack">
@@ -136,13 +137,48 @@ const EditorPane = (() => {
       catch { ta.select(); btn.textContent = "Selecciona y copia"; }
       setTimeout(() => (btn.textContent = "Copiar"), 1500);
     }
+    // Aviso breve con «Deshacer». Sustituye a los cuadros de diálogo (confirm): en vez de
+    // preguntar ANTES de reemplazar el código, lo reemplazamos y dejamos recuperarlo.
+    const note = q(editorEl, ".ep-note");
+    let noteTimer = null;
+    function hideNote() { note.hidden = true; clearTimeout(noteTimer); }
+    function showNote(text, undo) {
+      note.innerHTML = "";
+      const span = document.createElement("span");
+      span.textContent = text;
+      note.append(span);
+      if (undo) {
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "ep-note-btn"; b.textContent = "↶ Deshacer";
+        b.addEventListener("click", () => { undo(); hideNote(); });
+        note.append(b);
+      }
+      const x = document.createElement("button");
+      x.type = "button"; x.className = "ep-note-x"; x.setAttribute("aria-label", "Cerrar aviso"); x.textContent = "✕";
+      x.addEventListener("click", hideNote);
+      note.append(x);
+      note.hidden = false;
+      clearTimeout(noteTimer);
+      noteTimer = setTimeout(hideNote, 12000);
+    }
+
+    // Carga código nuevo (un ejemplo, una plantilla, un archivo…) conservando el anterior para «Deshacer»
+    function load(code, input, message) {
+      const prev = { code: ta.value, stdin: stdin.value };
+      const replaced = prev.code.trim() && prev.code !== code;
+      api.set(code, input);
+      if (onChange) onChange();
+      if (replaced) showNote(message, () => { api.set(prev.code, prev.stdin); if (onChange) onChange(); });
+      else hideNote();
+    }
+
     function readFile(file, cb) {
       const reader = new FileReader();
       reader.onload = () => cb(String(reader.result));
       reader.readAsText(file);
     }
 
-    return {
+    const api = {
       editorEl, ioEl,
       get code() { return ta.value; },
       get stdin() { return stdin.value; },
@@ -157,8 +193,10 @@ const EditorPane = (() => {
         ta.setSelectionRange(0, 0);
       },
       focus: () => ta.focus(),
-      refresh, run, save, copy, readFile, show,
+      refresh, run, save, copy, readFile, show, load, note: showNote,
+      // Tamaño de letra propio de cada vista: se controla con la variable CSS --ep-fs
     };
+    return api;
   }
 
   return { create };

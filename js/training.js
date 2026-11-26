@@ -1,9 +1,10 @@
 /* =====================================================================
    js/training.js · VISTA «ENTRENAMIENTO» (resolver las actividades del curso)
    ---------------------------------------------------------------------
-   El alumno elige una actividad en un desplegable, lee el enunciado a la IZQUIERDA y
-   escribe su solución en el editor. Cuando lo consigue puede marcarla como resuelta
-   y, si se atasca, abrir la pista o la solución (que están plegadas a propósito).
+   Tres zonas, de izquierda a derecha:
+     1. LISTA de actividades agrupadas por módulo y lección (con ✓ las resueltas)
+     2. ENUNCIADO de la actividad elegida (pista y solución plegadas a propósito)
+     3. EDITOR + salida para intentar resolverla
 
      · cada actividad guarda SU código en el navegador
      · enlace: #entrenamiento  o  #entrenamiento-<id-de-la-lección>.<nº de actividad>
@@ -29,6 +30,7 @@ const Training = (() => {
 
   const trState = () => (state.training = state.training || { code: {}, solved: {} });
   const sub = (name) => (trState()[name] = trState()[name] || {});
+  const stars = (it) => (LEVELS[it.act.nivel] || LEVELS[1]).label.split(" ")[0];     // ★☆☆
 
   function persist() {
     if (!pane || !currentKey) return;
@@ -36,9 +38,12 @@ const Training = (() => {
     saveState();
   }
   function applyPrefs() {
+    const t = trState();
     root().style.setProperty("--ep-fs", (state.editorFs || 14) + "px");
-    root().classList.toggle("stacked", trState().layout === "stack");
-    root().classList.toggle("no-problem", !!trState().hideProblem);
+    root().classList.toggle("stacked", t.layout === "stack");
+    root().classList.toggle("no-problem", !!t.hideProblem);
+    // La lista empieza abierta en pantallas anchas y cerrada en las estrechas (luego se recuerda la elección)
+    root().classList.toggle("show-browser", t.browser === undefined ? window.innerWidth >= 1300 : !!t.browser);
   }
   function setFont(delta) {
     state.editorFs = Math.min(24, Math.max(11, (state.editorFs || 14) + delta));
@@ -46,7 +51,6 @@ const Training = (() => {
   }
 
   const startCode = (it) => `// Actividad ${it.index + 1}: ${it.act.titulo}\n// Escribe aquí tu solución. Ctrl + Intro para ejecutar.\n`;
-  const optionLabel = (it) => `${sub("solved")[it.key] ? "✓ " : ""}Actividad ${it.index + 1} · ${it.act.titulo} (${(LEVELS[it.act.nivel] || LEVELS[1]).label.split(" ")[0]})`;
 
   /* ---------- Construcción de la interfaz (una sola vez) ---------- */
 
@@ -55,32 +59,23 @@ const Training = (() => {
     root().innerHTML = `
       <div class="ed-bar">
         <a class="btn ed-tool" id="trBack" href="#inicio">← Curso</a>
-        <select class="ed-select tr-select" id="trSelect" aria-label="Elegir actividad"></select>
+        <button class="btn ed-tool" id="trListBtn" type="button" title="Mostrar u ocultar la lista de actividades">☰ Actividades</button>
+        <span class="tr-title" id="trTitle"></span>
         <button class="btn primary" id="trRun" type="button" title="Ejecutar (Ctrl+Intro)">▶ Ejecutar</button>
         <span class="ed-spacer"></span>
         <button class="btn ed-tool" id="trProblemBtn" type="button" title="Mostrar u ocultar el enunciado">📄 Enunciado</button>
-        <button class="btn ed-tool" id="trSave" type="button" title="Descargar como Program.cs (Ctrl+S)">⬇ Guardar</button>
-        <label class="btn ed-tool" title="Abrir un archivo .cs de tu ordenador">📂 Abrir<input id="trOpen" type="file" accept=".cs,.txt,text/plain" hidden></label>
-        <button class="btn ed-tool" id="trCopy" type="button">Copiar</button>
-        <span class="ed-group" role="group" aria-label="Tamaño de letra">
-          <button class="btn ed-tool" id="trSmaller" type="button" aria-label="Letra más pequeña">A−</button>
-          <button class="btn ed-tool" id="trBigger" type="button" aria-label="Letra más grande">A+</button>
-        </span>
-        <button class="btn ed-tool" id="trLayout" type="button" title="Cambiar la disposición de editor y salida" aria-label="Cambiar disposición">⇆</button>
-        <button class="btn ed-tool" id="trReset" type="button" title="Empezar de cero esta actividad" aria-label="Empezar de cero esta actividad">🗑</button>
+        <button class="btn ed-tool" id="trMore" type="button" aria-label="Más opciones" title="Más opciones">⋯</button>
+        <input id="trOpen" type="file" accept=".cs,.txt,text/plain" hidden>
       </div>
 
       <div class="tr-main">
+        <nav class="tr-browser" id="trBrowser" aria-label="Lista de actividades"></nav>
         <aside class="tr-problem" id="trProblem" aria-label="Enunciado de la actividad"></aside>
         <div class="tr-work" id="trWork"></div>
       </div>`;
 
     const $ = (id) => document.getElementById(id);
-    ["Back", "Select", "Run", "Problem", "Work"].forEach((k) => (ui[k] = $("tr" + k)));
-
-    // Desplegable agrupado por lección
-    ui.Select.innerHTML = lessons.filter((l) => l.actividades.length).map((l) =>
-      `<optgroup label="${esc(l.titulo)}">${list.filter((it) => it.lesson === l).map((it) => `<option value="${it.key}">${esc(optionLabel(it))}</option>`).join("")}</optgroup>`).join("");
+    ["Back", "Title", "Run", "Browser", "Problem", "Work", "More", "Open"].forEach((k) => (ui[k] = $("tr" + k)));
 
     pane = EditorPane.create({
       onChange: persist,
@@ -88,40 +83,66 @@ const Training = (() => {
     });
     ui.Work.append(pane.editorEl, pane.ioEl);
 
-    ui.Select.addEventListener("change", () => { location.hash = "#entrenamiento-" + ui.Select.value; });
     ui.Run.addEventListener("click", () => pane.run());
-    $("trSave").addEventListener("click", () => pane.save());
-    $("trCopy").addEventListener("click", (e) => pane.copy(e.currentTarget));
-    $("trBigger").addEventListener("click", () => setFont(+1));
-    $("trSmaller").addEventListener("click", () => setFont(-1));
-    $("trLayout").addEventListener("click", () => { trState().layout = trState().layout === "stack" ? "side" : "stack"; applyPrefs(); saveState(); });
+    $("trListBtn").addEventListener("click", () => { const t = trState(); t.browser = !root().classList.contains("show-browser"); applyPrefs(); saveState(); });
     $("trProblemBtn").addEventListener("click", () => { trState().hideProblem = !trState().hideProblem; applyPrefs(); saveState(); });
-    $("trReset").addEventListener("click", () => {
-      if (confirm("¿Empezar de cero esta actividad? Se borrará tu código.")) { pane.set(startCode(byKey.get(currentKey)), ""); persist(); }
-    });
-    $("trOpen").addEventListener("change", (e) => {
+    EditorKit.menu(ui.More, () => [
+      { text: "⬇ Guardar como Program.cs", onSelect: () => pane.save() },
+      { text: "📂 Abrir un archivo .cs…", onSelect: () => ui.Open.click() },
+      { text: "⎘ Copiar el código", onSelect: () => pane.copy(ui.More) },
+      { text: "A+  Letra más grande", keep: true, onSelect: () => setFont(+1) },
+      { text: "A−  Letra más pequeña", keep: true, onSelect: () => setFont(-1) },
+      { text: "⇆ Editor y salida: cambiar disposición", onSelect: () => { trState().layout = trState().layout === "stack" ? "side" : "stack"; applyPrefs(); saveState(); } },
+      { text: "🗑 Empezar de cero esta actividad", onSelect: () => pane.load(startCode(byKey.get(currentKey)), "", "Actividad reiniciada.") },
+    ]);
+    ui.Open.addEventListener("change", (e) => {
       const f = e.target.files[0];
       e.target.value = "";
-      if (f) pane.readFile(f, (text) => { if (confirm("Se reemplazará el código actual. ¿Continuar?")) { pane.set(text, ""); persist(); } });
+      if (f) pane.readFile(f, (text) => pane.load(text, "", `Archivo «${f.name}» abierto.`));
     });
 
-    // Botón «Marcar como resuelta» y «Actividad anterior/siguiente» (viven dentro del enunciado)
+    // Botón «Marcar como resuelta» (vive dentro del enunciado)
     ui.Problem.addEventListener("click", (e) => {
-      if (e.target.closest(".tr-solved-btn")) {
-        const s = sub("solved");
-        if (s[currentKey]) delete s[currentKey]; else s[currentKey] = true;
-        saveState();
-        renderProblem();
-        refreshOption(currentKey);
-      }
+      if (!e.target.closest(".tr-solved-btn")) return;
+      const s = sub("solved");
+      if (s[currentKey]) delete s[currentKey]; else s[currentKey] = true;
+      saveState();
+      renderProblem();
+      renderBrowser();
     });
 
     built = true;
   }
 
-  function refreshOption(key) {
-    const opt = ui.Select.querySelector(`option[value="${key}"]`);
-    if (opt) opt.textContent = optionLabel(byKey.get(key));
+  /* ---------- Lista de actividades por módulo ---------- */
+
+  function renderBrowser() {
+    // Recordamos qué módulos estaban abiertos para no cerrarlos al repintar
+    const wasOpen = new Map([...ui.Browser.querySelectorAll("details")].map((d) => [d.dataset.mod, d.open]));
+    const currentMod = currentKey ? byKey.get(currentKey).lesson.modulo.titulo : null;
+    const solved = sub("solved");
+    const total = list.length, done = list.filter((it) => solved[it.key]).length;
+
+    const modules = COURSE.modulos.map((m, mi) => {
+      const items = list.filter((it) => it.lesson.modulo === m);
+      if (!items.length) return "";
+      const mdone = items.filter((it) => solved[it.key]).length;
+      const open = wasOpen.has(String(mi)) ? wasOpen.get(String(mi)) : m.titulo === currentMod || mi === 0;
+      const lessonsHtml = m.lecciones.filter((l) => l.actividades.length).map((l) => `
+        <div class="tr-lesson">${esc(l.titulo)}</div>
+        ${items.filter((it) => it.lesson.id === l.id).map((it) => `
+          <a class="tr-act${it.key === currentKey ? " active" : ""}${solved[it.key] ? " done" : ""}" href="#entrenamiento-${it.key}" ${it.key === currentKey ? 'aria-current="true"' : ""}>
+            <span class="tick" aria-hidden="true">${solved[it.key] ? "✓" : ""}</span>
+            <span class="t">${it.index + 1}. ${esc(it.act.titulo)}</span>
+            <span class="lv" title="${esc((LEVELS[it.act.nivel] || LEVELS[1]).label)}">${stars(it)}</span>
+          </a>`).join("")}`).join("");
+      return `<details class="tr-mod" data-mod="${mi}" ${open ? "open" : ""}>
+        <summary><span class="n">Módulo ${mi + 1}: ${esc(m.titulo)}</span><span class="c">${mdone}/${items.length}</span></summary>${lessonsHtml}</details>`;
+    }).join("");
+
+    ui.Browser.innerHTML = `
+      <div class="tr-prog"><span><b>${done}</b> de ${total} actividades resueltas</span><div class="bar"><span style="width:${total ? (done / total) * 100 : 0}%"></span></div></div>
+      ${modules}`;
   }
 
   /* ---------- Panel del enunciado ---------- */
@@ -157,6 +178,7 @@ const Training = (() => {
       </div>
       <a class="tr-lesson-link" href="#codificar-${esc(it.lesson.id)}">▶ Ver el vídeo de la lección y programar</a>`;
     ui.Problem.scrollTop = 0;
+    ui.Title.textContent = `Actividad ${it.index + 1} · ${act.titulo}`;
   }
 
   /* ---------- Cargar una actividad ---------- */
@@ -165,8 +187,8 @@ const Training = (() => {
     if (key === currentKey) return;
     persist();                                        // guardamos lo escrito en la actividad anterior
     currentKey = key;
-    ui.Select.value = key;
     renderProblem();
+    renderBrowser();
     const saved = sub("code")[key];
     pane.set(saved ? saved.code : startCode(byKey.get(key)), saved ? saved.stdin : "");
     trState().current = key;
@@ -177,12 +199,11 @@ const Training = (() => {
 
   function show(arg) {
     if (!built) build();
-    CodeView.hide();
     const key = byKey.has(arg) ? arg : byKey.has(trState().current) ? trState().current : list[0].key;
     applyPrefs();
     root().hidden = false;
     document.body.classList.add("view-train");
-    document.body.classList.remove("view-code", "view-home", "menu-open");
+    document.body.classList.remove("view-home", "menu-open");
     document.title = "Entrenamiento · " + COURSE.titulo;
     loadActivity(key);
     ui.Back.href = "#leccion-" + byKey.get(currentKey).lesson.id;

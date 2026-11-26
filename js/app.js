@@ -242,7 +242,7 @@ function renderLesson(id, tab = "teoria") {
   currentId = id;
   currentTab = tab;
   $("#home").hidden = true;
-  CodeView.hide(); Training.hide();
+  Training.hide();
   document.body.classList.remove("view-home");
   state.last = id;
   saveState();
@@ -285,6 +285,7 @@ function renderLesson(id, tab = "teoria") {
   renderSidebar();
   updateProgress();
   document.title = `${lesson.titulo} · ${COURSE.titulo}`;
+  if (typeof Playground !== "undefined") Playground.sync(id);   // cuaderno de esta lección y panel abierto/cerrado
   window.scrollTo({ top: 0 });
   document.body.classList.remove("menu-open");
   syncMenuButton();
@@ -422,7 +423,7 @@ function homeHTML() {
 
 function showHome() {
   currentId = null;
-  CodeView.hide(); Training.hide();
+  Training.hide();
   $("#home").innerHTML = homeHTML();
   $("#home").hidden = false;
   document.body.classList.add("view-home");
@@ -436,7 +437,16 @@ function showHome() {
 function route() {
   // Vistas de editor: #codificar[-lección] (vídeo + editor) y #entrenamiento[-lección.n] (actividades)
   const h = location.hash;
-  if (/^#codificar(-|$)/.test(h)) { CodeView.show(h.slice(11)); return; }
+  if (/^#codificar(-|$)/.test(h)) {
+    // «Codificar»: la lección con el panel de programación abierto a su lado
+    const wanted = h.slice(11);
+    const target = lessonById.has(wanted) ? wanted : lessonById.has(state.last) ? state.last : lessons[0].id;
+    state.playOpen = true;
+    saveState();
+    history.replaceState(null, "", "#leccion-" + target);   // la URL queda como la de una lección normal
+    renderLesson(target);
+    return;
+  }
   if (/^#entrenamiento(-|$)/.test(h)) { Training.show(h.slice(15)); return; }
   const id = idFromHash();
   if (id && lessonById.has(id)) renderLesson(id);
@@ -609,6 +619,12 @@ if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
     navigator.serviceWorker.register("sw.js").catch(() => {});
   });
 }
+
+// «</> Codificar»: dentro de una lección abre o cierra el panel; desde otra pantalla lleva a la lección con el panel abierto
+$("#codeBtn").addEventListener("click", (e) => {
+  const inLesson = !document.body.classList.contains("view-home") && !document.body.classList.contains("view-train") && currentId;
+  if (inLesson && typeof Playground !== "undefined") { e.preventDefault(); Playground.toggle(); }
+});
 
 /* ============================== ARRANQUE ============================== */
 $("#brandTitle").textContent = COURSE.titulo;

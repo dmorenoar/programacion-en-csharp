@@ -3,7 +3,27 @@
    ===================================================================== */
 
 .tr-main { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(300px, 400px) minmax(0, 1fr); }
+.editor-view.show-browser .tr-main { grid-template-columns: 290px minmax(300px, 400px) minmax(0, 1fr); }
 .editor-view.no-problem .tr-main { grid-template-columns: minmax(0, 1fr); }
+.editor-view.no-problem.show-browser .tr-main { grid-template-columns: 290px minmax(0, 1fr); }
+.tr-title { font-weight: 700; font-size: 14px; max-width: 34vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Lista de actividades por módulo */
+.tr-browser { display: none; overflow-y: auto; background: #181826; border-right: 1px solid #000; font-size: 13px; }
+.editor-view.show-browser .tr-browser { display: block; }
+.tr-prog { padding: 12px 14px; border-bottom: 1px solid #2d2d44; color: #c4c8e0; }
+.tr-prog .bar { height: 6px; margin-top: 6px; background: #2d2d44; border-radius: 3px; overflow: hidden; }
+.tr-prog .bar span { display: block; height: 100%; background: #22c55e; }
+.tr-mod summary { display: flex; justify-content: space-between; gap: 8px; padding: 10px 14px; cursor: pointer; font-weight: 700; background: #1f1f33; border-bottom: 1px solid #2d2d44; }
+.tr-mod summary .c { color: #9aa0c0; font-weight: 600; }
+.tr-lesson { padding: 8px 14px 2px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: #9aa0c0; }
+.tr-act { display: flex; align-items: center; gap: 8px; padding: 7px 14px; color: #e4e6f0; text-decoration: none; border-left: 3px solid transparent; }
+.tr-act:hover { background: #24243a; }
+.tr-act.active { background: #2b2450; border-left-color: #7c3aed; }
+.tr-act .tick { flex: none; width: 16px; height: 16px; border: 1.5px solid #5b6385; border-radius: 50%; font-size: 11px; line-height: 14px; text-align: center; }
+.tr-act.done .tick { background: #22c55e; border-color: #22c55e; color: #fff; }
+.tr-act .t { flex: 1; min-width: 0; }
+.tr-act .lv { flex: none; font-size: 11px; color: #ecc48d; }
 .editor-view.no-problem .tr-problem { display: none; }
 
 /* Enunciado: aquí SÍ usamos los colores del tema del curso (claro u oscuro) */
@@ -32,6 +52,8 @@
   .tr-work .ep-editor { border-right: 0; border-bottom: 1px solid #000; }
 }
 @media (max-width: 900px) {
+  .tr-browser { max-height: 45vh; border-right: 0; border-bottom: 1px solid #000; }
+  .tr-title { display: none; }
   .tr-main, .editor-view.no-problem .tr-main { display: flex; flex-direction: column; }
   .tr-problem { overflow: visible; border-right: 0; border-bottom: 1px solid #000; }
   .tr-work, .editor-view.stacked .tr-work { display: flex; flex-direction: column; }
