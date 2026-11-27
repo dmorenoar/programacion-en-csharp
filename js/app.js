@@ -152,7 +152,7 @@ function activityHTML(act, index, lessonId) {
       (s) => `
         <div class="variant">
           <h4>${esc(s.titulo)}</h4>
-          ${codeBlock(s.codigo)}
+          ${codeBlock(s.codigo, s.noRun)}
           ${s.nota ? `<p class="note">${esc(s.nota)}</p>` : ""}
         </div>`
     )

@@ -129,7 +129,7 @@ const EditorKit = (() => {
   // Añadimos los using habituales EN LA MISMA LÍNEA 1 (así los números de línea de los
   // errores siguen coincidiendo con los del editor).
   function prepare(source) {
-    const usings = ["System", "System.Collections.Generic", "System.Linq", "System.Text"]
+    const usings = ["System", "System.Collections.Generic", "System.Linq", "System.Text", "System.IO", "System.Threading", "System.Threading.Tasks"]
       .filter((ns) => !new RegExp(`using\\s+${ns.replace(/\./g, "\\.")}\\s*;`).test(source))
       .map((ns) => `using ${ns};`)
       .join(" ");
@@ -323,7 +323,7 @@ const EditorKit = (() => {
       }
       body.push(rest[i]);
     }
-    const usings = ["System", "System.Collections.Generic", "System.Linq", "System.Text"]
+    const usings = ["System", "System.Collections.Generic", "System.Linq", "System.Text", "System.IO", "System.Threading", "System.Threading.Tasks"]
       .filter((ns) => !head.some((h) => h.includes(`using ${ns};`))).map((ns) => `using ${ns};`);
     return usings.join(" ") + " " + head.join(" ") + " class Program { " + members.join("\n") + "\nstatic void Main() { " + body.join("\n") + "\n} }";
   }

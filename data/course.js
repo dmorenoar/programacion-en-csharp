@@ -3537,7 +3537,7 @@ string ComparaCon5(int numero)
     }
 }
 ` },
-            { titulo: "Ejemplo 3", codigo: r`string Clasifica(int n)
+            { titulo: "Ejemplo 3", noRun: true, codigo: r`string Clasifica(int n)
 {
     if (n > 0)
     {
@@ -4159,14 +4159,14 @@ las dos.</li>
 desde otras clases? Por suerte, no: decidimos cuáles con los
 <strong>modificadores de acceso</strong>.</p>`,
           ejemplos: [
-            { titulo: "Se declara al principio del archivo con la palabra clave namespace", codigo: r`namespace Utiles.Mensajes;           // declaración de ámbito de archivo: todo el archivo pertenece a este espacio
+            { titulo: "Se declara al principio del archivo con la palabra clave namespace", noRun: true, codigo: r`namespace Utiles.Mensajes;           // declaración de ámbito de archivo: todo el archivo pertenece a este espacio
 
 public static class Saludos
 {
     public static string Hola(string nombre) => $"¡Hola, {nombre}!";
 }
 ` },
-            { titulo: "Ejemplo 2", codigo: r`Console.WriteLine(Utiles.Mensajes.Saludos.Hola("Ana"));     // ¡Hola, Ana!
+            { titulo: "Ejemplo 2", noRun: true, codigo: r`Console.WriteLine(Utiles.Mensajes.Saludos.Hola("Ana"));     // ¡Hola, Ana!
 
 // ===== Saludos =====
 namespace Utiles.Mensajes;           // declaración de ámbito de archivo: todo el archivo pertenece a este espacio
@@ -4176,7 +4176,7 @@ public static class Saludos
     public static string Hola(string nombre) => $"¡Hola, {nombre}!";
 }
 ` },
-            { titulo: "Ejemplo 3", codigo: r`using Utiles.Mensajes;                       // a partir de aquí, 'Saludos' significa Utiles.Mensajes.Saludos
+            { titulo: "Ejemplo 3", noRun: true, codigo: r`using Utiles.Mensajes;                       // a partir de aquí, 'Saludos' significa Utiles.Mensajes.Saludos
 
 Console.WriteLine(Saludos.Hola("Ana"));      // ¡Hola, Ana!
 
@@ -4192,14 +4192,14 @@ public static class Saludos
 
 Console.WriteLine(Sqrt(16));                 // 4
 ` },
-            { titulo: "En este ejemplo hay una clase Despedidas en Utiles.Mensajes y otra en Utiles.Alertas", codigo: r`using Utiles.Mensajes;                                   // trae Utiles.Mensajes.Despedidas
+            { titulo: "En este ejemplo hay una clase Despedidas en Utiles.Mensajes y otra en Utiles.Alertas", noRun: true, codigo: r`using Utiles.Mensajes;                                   // trae Utiles.Mensajes.Despedidas
 using Alerta = Utiles.Alertas.Despedidas;                // alias: 'Alerta' es la otra clase Despedidas
 
 Console.WriteLine(Despedidas.Adios("Ana"));              // la de Utiles.Mensajes
 Console.WriteLine(Alerta.Adios("Ana"));                  // la de Utiles.Alertas, a través del alias
 Console.WriteLine(Utiles.Alertas.Despedidas.Adios("Ana"));   // también con el nombre completo
 ` },
-            { titulo: "Y las dos clases serían así, cada una en su archivo", codigo: r`// Archivo Utiles/Mensajes/Despedidas.cs
+            { titulo: "Y las dos clases serían así, cada una en su archivo", noRun: true, codigo: r`// Archivo Utiles/Mensajes/Despedidas.cs
 namespace Utiles.Mensajes;
 
 public static class Despedidas
@@ -4207,12 +4207,35 @@ public static class Despedidas
     public static string Adios(string nombre) => $"Hasta luego, {nombre}";
 }
 ` },
-            { titulo: "Ejemplo 7", codigo: r`// Archivo Utiles/Alertas/Despedidas.cs
+            { titulo: "Ejemplo 7", noRun: true, codigo: r`// Archivo Utiles/Alertas/Despedidas.cs
 namespace Utiles.Alertas;
 
 public static class Despedidas
 {
     public static string Adios(string nombre) => $"¡ATENCIÓN! {nombre} abandona el sistema";
+}
+` },
+            { titulo: "Ejemplo ejecutable en un solo archivo (espacios de nombres con llaves)", explicacion: "Los ejemplos anteriores muestran un archivo por clase, como se hace en un proyecto real. Para probarlo en el editor de la web, que solo admite un archivo, se usa la forma con llaves: es lo mismo, pero varios espacios de nombres caben en un archivo.", codigo: r`using Utiles.Mensajes;                        // trae Utiles.Mensajes.Despedidas
+using Alerta = Utiles.Alertas.Despedidas;      // alias: 'Alerta' es la otra clase Despedidas
+
+Console.WriteLine(Despedidas.Adios("Ana"));    // la de Utiles.Mensajes
+Console.WriteLine(Alerta.Adios("Ana"));        // la de Utiles.Alertas, mediante el alias
+Console.WriteLine(Utiles.Alertas.Despedidas.Adios("Ana"));   // o con el nombre completo
+
+namespace Utiles.Mensajes
+{
+    public static class Despedidas
+    {
+        public static string Adios(string nombre) => $"Hasta luego, {nombre}";
+    }
+}
+
+namespace Utiles.Alertas
+{
+    public static class Despedidas
+    {
+        public static string Adios(string nombre) => $"¡ATENCIÓN! {nombre} abandona el sistema";
+    }
 }
 ` },
           ],
@@ -4265,7 +4288,47 @@ ruta completa.</p>
 <code>Operaciones</code> en un espacio de nombres propio con una función
 <code>Factorial()</code> y úsala desde <code>Inicial</code>.</p>`,
               soluciones: [
-                { titulo: "Solución (1)", codigo: r`// Archivo: Inicial.cs
+                { titulo: "Solución en un solo archivo (para probar en el editor)", nota: "Es la misma solución, con los tres espacios de nombres en un archivo. Las tres versiones siguientes son la organización real en un proyecto: un archivo por clase.", codigo: r`using EjemploLibrerias.MostrarValores;      // para usar la clase Mostrar
+using EjemploLibrerias.PedirValores;        // para usar la clase PideValores
+
+int numero = PideValores.GetEnteroSuperior0();       // pedimos el número
+Console.WriteLine(Mostrar.MuestraValor(numero));     // mostramos el texto que devuelve la otra clase
+
+namespace EjemploLibrerias.MostrarValores
+{
+    public static class Mostrar
+    {
+        public static string MuestraValor(int numero)
+        {
+            return $"El número es: {numero}";
+        }
+    }
+}
+
+namespace EjemploLibrerias.PedirValores
+{
+    public static class PideValores
+    {
+        // Pide un entero hasta que el usuario escribe uno mayor que 0
+        public static int GetEnteroSuperior0()
+        {
+            int numero;
+            bool esValido;
+            do
+            {
+                Console.Write("Introduce un número > 0: ");
+                esValido = int.TryParse(Console.ReadLine(), out numero) && numero > 0;
+                if (!esValido)
+                {
+                    Console.WriteLine("Valor no válido: debe ser un número entero mayor que 0.");
+                }
+            } while (!esValido);
+            return numero;
+        }
+    }
+}
+` },
+                { titulo: "Solución (1)", noRun: true, codigo: r`// Archivo: Inicial.cs
 using EjemploLibrerias.MostrarValores;      // para usar la clase Mostrar
 using EjemploLibrerias.PedirValores;        // para usar la clase PideValores
 
@@ -4280,7 +4343,7 @@ class Inicial
     }
 }
 ` },
-                { titulo: "Solución (2)", codigo: r`// Archivo: MostrarValores/Mostrar.cs
+                { titulo: "Solución (2)", noRun: true, codigo: r`// Archivo: MostrarValores/Mostrar.cs
 namespace EjemploLibrerias.MostrarValores;
 
 public static class Mostrar
@@ -4292,7 +4355,7 @@ public static class Mostrar
     }
 }
 ` },
-                { titulo: "Solución (3)", nota: "Por qué está bien así:\n\n- Mostrar y PideValores son public static: se pueden usar desde otro espacio de nombres sin crear objetos.\n- Inicial es la única clase con Main, es decir, la única ejecutable.\n- Cada espacio de nombres coincide con su carpeta.", codigo: r`// Archivo: PedirValores/PideValores.cs
+                { titulo: "Solución (3)", nota: "Por qué está bien así:\n\n- Mostrar y PideValores son public static: se pueden usar desde otro espacio de nombres sin crear objetos.\n- Inicial es la única clase con Main, es decir, la única ejecutable.\n- Cada espacio de nombres coincide con su carpeta.", noRun: true, codigo: r`// Archivo: PedirValores/PideValores.cs
 namespace EjemploLibrerias.PedirValores;
 
 public static class PideValores
@@ -4482,7 +4545,7 @@ proyecto:</p>
 href="https://learn.microsoft.com/dotnet/api">https://learn.microsoft.com/dotnet/api</a>)
 y la comunidad en Stack Overflow.</p>`,
           ejemplos: [
-            { titulo: "En el siguiente ejemplo vemos tres funciones con distintos modificadores", codigo: r`namespace Ejemplos;
+            { titulo: "En el siguiente ejemplo vemos tres funciones con distintos modificadores", noRun: true, codigo: r`namespace Ejemplos;
 
 public static class FuncionesEjemplo
 {
@@ -4506,7 +4569,7 @@ public static class FuncionesEjemplo
     }
 }
 ` },
-            { titulo: "Y así se usan desde otra clase del mismo proyecto", codigo: r`using Ejemplos;
+            { titulo: "Y así se usan desde otra clase del mismo proyecto", noRun: true, codigo: r`using Ejemplos;
 
 FuncionesEjemplo.MuestraUnMensaje();           // ✔ es public
 FuncionesEjemplo.MuestraUnMensaje("hola");     // ✔ es internal y estamos en el mismo proyecto
@@ -4534,6 +4597,32 @@ public static class FuncionesEjemplo
     {
         int num = CalculaMensaje();                   // dentro de la clase sí podemos usar la privada
         Console.WriteLine($"El mensaje es: {texto} {num}");
+    }
+}
+` },
+            { titulo: "Ejemplo ejecutable: public, internal y private", explicacion: "Prueba a quitar el comentario de la última línea del programa: el compilador te dirá que el método privado es inaccesible (error CS0122).", codigo: r`Ejemplos.FuncionesEjemplo.MuestraUnMensaje();             // public: accesible desde cualquier sitio
+Ejemplos.FuncionesEjemplo.MuestraUnMensaje("Hola");       // internal: accesible dentro del mismo proyecto
+// Ejemplos.FuncionesEjemplo.CalculaMensaje();            // ERROR CS0122: es private
+
+namespace Ejemplos
+{
+    public static class FuncionesEjemplo
+    {
+        public static void MuestraUnMensaje()
+        {
+            Console.WriteLine("¡Vivan los espacios de nombres!");
+        }
+
+        private static int CalculaMensaje()
+        {
+            return 5;
+        }
+
+        internal static void MuestraUnMensaje(string texto)
+        {
+            int num = CalculaMensaje();       // dentro de la clase sí podemos usar la privada
+            Console.WriteLine($"El mensaje es: {texto} {num}");
+        }
     }
 }
 ` },
@@ -7131,7 +7220,7 @@ public class Dni
     }
 }
 ` },
-            { titulo: "Ejemplo 3", codigo: r`Dni dniRyu = new Dni();
+            { titulo: "Ejemplo 3", noRun: true, codigo: r`Dni dniRyu = new Dni();
 dniRyu.SetNombre("Ryu");
 dniRyu.SetEdad(54);
 dniRyu.SetNumeroDni(12345678, 'Z');
@@ -8615,7 +8704,7 @@ public interface IImprimible
     string Imprimir();                 // solo se declara: no se escribe el cuerpo ni 'public' ni 'abstract'
 }
 ` },
-            { titulo: "Ejemplo 4", codigo: r`IImprimible alimento1 = new AlimentoLiquido("limonada", 100, 25, 9);
+            { titulo: "Ejemplo 4", noRun: true, codigo: r`IImprimible alimento1 = new AlimentoLiquido("limonada", 100, 25, 9);
 
 // ===== AlimentoLiquido =====
 public class AlimentoLiquido : Alimento
@@ -8663,7 +8752,7 @@ public abstract class Alimento
     public abstract string Imprimir();
 }
 ` },
-            { titulo: "Ejemplo 5", codigo: r`AlimentoSolido bistec = new AlimentoSolido("bistec", 100, 400, 20);
+            { titulo: "Ejemplo 5", noRun: true, codigo: r`AlimentoSolido bistec = new AlimentoSolido("bistec", 100, 400, 20);
 AlimentoLiquido limonada = new AlimentoLiquido("limonada", 100, 25, 9);
 Cubierto cuchara = new Cubierto("cuchara", "comer líquidos");
 
