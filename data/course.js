@@ -275,6 +275,1219 @@ de <strong>soporte a largo plazo (LTS)</strong> y las
           ],
         },
         {
+          id: "sistemas-numeracion",
+          titulo: "Sistemas de numeración y representación de datos",
+          duracion: "20 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Convertir números entre binario, decimal y hexadecimal", "Entender por qué el ordenador trabaja en binario y para qué sirve el hexadecimal", "Usar literales binarios y hexadecimales y los operadores de bits en C#"],
+          teoria: r`<p>Un ordenador no sabe contar hasta diez. Dentro de un chip solo hay
+transistores que están <strong>encendidos o apagados</strong>, así que
+toda la información (números, texto, imágenes, música) se guarda como
+secuencias de <strong>ceros y unos</strong>. Entender esa representación
+es lo que te permitirá más adelante interpretar un color
+<code>#FF8800</code>, una máscara de red, un <em>flag</em> de permisos o
+un volcado de memoria al depurar.</p>
+<h3 id="1-por-qué-hacen-falta-varias-bases">1. ¿Por qué hacen falta
+varias bases?</h3>
+<p>Una <strong>base</strong> es la cantidad de símbolos distintos que
+usamos para escribir números. Nosotros usamos la base 10 (diez dedos,
+diez símbolos: 0-9), pero en informática conviven tres:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Base</th>
+<th>Nombre</th>
+<th>Símbolos</th>
+<th>¿Para qué se usa?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2</td>
+<td>Binario</td>
+<td>0, 1</td>
+<td>Es lo que de verdad hay en el hardware</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>Octal</td>
+<td>0-7</td>
+<td>Permisos de ficheros en Linux (<code>chmod 755</code>)</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td>Decimal</td>
+<td>0-9</td>
+<td>Las personas</td>
+</tr>
+<tr class="even">
+<td>16</td>
+<td>Hexadecimal</td>
+<td>0-9, A-F</td>
+<td>Colores, direcciones de memoria, bytes</td>
+</tr>
+</tbody>
+</table></div>
+<p>El <strong>hexadecimal</strong> es el favorito de los programadores
+por un motivo muy práctico: <strong>16 = 2⁴</strong>, así que cada
+dígito hexadecimal equivale exactamente a <strong>4 bits</strong>. Un
+byte (8 bits) se escribe siempre con <strong>dos</strong> dígitos
+hexadecimales. En lugar de leer <code>11111111</code> leemos
+<code>FF</code>, que es mucho más cómodo y no hay riesgo de perder la
+cuenta de los unos.</p>
+<h3 id="2-de-cualquier-base-a-decimal-la-suma-de-pesos">2. De cualquier
+base a decimal: la suma de pesos</h3>
+<p>Cada posición vale la base elevada a la posición, empezando por 0 a
+la derecha:</p>
+<pre><code>Binario 1 0 1 1 0 1
+Pesos  32 16  8 4 2 1      (2⁵ 2⁴ 2³ 2² 2¹ 2⁰)
+Suma   32  +  8 + 4 + 1 = 45</code></pre>
+<p>En hexadecimal igual, pero con potencias de 16:</p>
+<pre><code>Hexadecimal   2    F
+Pesos        16    1        (16¹ 16⁰)
+Suma      2·16 + 15·1 = 47</code></pre>
+<h3 id="3-de-decimal-a-otra-base-divisiones-sucesivas">3. De decimal a
+otra base: divisiones sucesivas</h3>
+<p>Se divide el número por la base, se guarda el <strong>resto</strong>
+y se repite con el cociente. Al final se leen los restos <strong>de
+abajo arriba</strong>:</p>
+<pre><code>45 : 2 = 22  resto 1   ↑
+22 : 2 = 11  resto 0   │  se lee
+11 : 2 =  5  resto 1   │  hacia
+ 5 : 2 =  2  resto 1   │  arriba
+ 2 : 2 =  1  resto 0   │
+ 1 : 2 =  0  resto 1   ↑
+Resultado: 101101</code></pre>
+<h3 id="4-el-atajo-binario--hexadecimal">4. El atajo binario ↔︎
+hexadecimal</h3>
+<p>Como cada dígito hexadecimal son 4 bits, la conversión es
+<strong>directa</strong>: se agrupan los bits de cuatro en cuatro desde
+la derecha (rellenando con ceros a la izquierda si hace falta) y se
+traduce cada grupo:</p>
+<pre><code>1011 1101   →   B D   →   0xBD
+  B    D</code></pre>
+<p>Conviene memorizar esta tabla; se usa constantemente:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Dec</th>
+<th>Bin</th>
+<th>Hex</th>
+<th></th>
+<th>Dec</th>
+<th>Bin</th>
+<th>Hex</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>0000</td>
+<td>0</td>
+<td></td>
+<td>8</td>
+<td>1000</td>
+<td>8</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>0001</td>
+<td>1</td>
+<td></td>
+<td>9</td>
+<td>1001</td>
+<td>9</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>0010</td>
+<td>2</td>
+<td></td>
+<td>10</td>
+<td>1010</td>
+<td>A</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>0011</td>
+<td>3</td>
+<td></td>
+<td>11</td>
+<td>1011</td>
+<td>B</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>0100</td>
+<td>4</td>
+<td></td>
+<td>12</td>
+<td>1100</td>
+<td>C</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>0101</td>
+<td>5</td>
+<td></td>
+<td>13</td>
+<td>1101</td>
+<td>D</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>0110</td>
+<td>6</td>
+<td></td>
+<td>14</td>
+<td>1110</td>
+<td>E</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>0111</td>
+<td>7</td>
+<td></td>
+<td>15</td>
+<td>1111</td>
+<td>F</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-bits-bytes-y-capacidad">5. Bits, bytes y capacidad</h3>
+<p>Con <strong>n</strong> bits se representan <strong>2ⁿ</strong>
+valores distintos. De ahí vienen los tamaños de los tipos de C#:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Tipo</th>
+<th>Bits</th>
+<th>Valores</th>
+<th>Rango (con signo)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>byte</code></td>
+<td>8</td>
+<td>256</td>
+<td>0 … 255 (sin signo)</td>
+</tr>
+<tr class="even">
+<td><code>short</code></td>
+<td>16</td>
+<td>65 536</td>
+<td>−32 768 … 32 767</td>
+</tr>
+<tr class="odd">
+<td><code>int</code></td>
+<td>32</td>
+<td>≈ 4 290 millones</td>
+<td>−2 147 483 648 … 2 147 483 647</td>
+</tr>
+<tr class="even">
+<td><code>long</code></td>
+<td>64</td>
+<td>≈ 1,8 · 10¹⁹</td>
+<td>± 9,2 · 10¹⁸</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p><strong>Por eso un <code>int</code> «se rompe».</strong> Si sumas 1 a
+<code>int.MaxValue</code> el resultado no cabe: los bits de más se
+pierden y el número se vuelve negativo. Es el famoso
+<strong>desbordamiento</strong> (<em>overflow</em>), y es la causa de
+errores clásicos como el del vuelo del Ariane 5 o el contador de vidas
+que se vuelve negativo en un videojuego.</p>
+</div>
+<h4 id="números-negativos-complemento-a-dos">Números negativos:
+complemento a dos</h4>
+<p>¿Cómo guarda el ordenador un −5 si solo tiene ceros y unos? Con el
+<strong>complemento a dos</strong>: el bit más a la izquierda indica el
+signo, y para obtener el negativo de un número se <strong>invierten
+todos sus bits y se suma 1</strong>.</p>
+<pre><code> 5 (byte) = 0000 0101
+ invertir = 1111 1010
+ sumar 1  = 1111 1011   →  −5</code></pre>
+<p>La ventaja es que así <strong>la resta es una suma</strong>: el
+procesador no necesita circuitos distintos para sumar y restar.</p>
+<h3 id="6-todo-esto-en-c">6. Todo esto en C#</h3>
+<p>C# permite escribir los números directamente en binario y en
+hexadecimal, y separar los dígitos con <code>_</code> para que se lean
+mejor:</p>
+<pre><code>int decimal_    = 45;
+int binario     = 0b10_1101;   // 0b… binario
+int hexadecimal = 0x2D;        // 0x… hexadecimal
+// Las tres variables valen exactamente lo mismo: 45</code></pre>
+<p>Para convertir en tiempo de ejecución existen
+<code>Convert.ToString(numero, base)</code> y
+<code>Convert.ToInt32(texto, base)</code>, válidos para las bases 2, 8,
+10 y 16.</p>
+<h3 id="7-operadores-de-bits">7. Operadores de bits</h3>
+<p>Cuando trabajas bit a bit (máscaras de permisos, estados de un
+personaje, colores) se usan estos operadores:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Operador</th>
+<th>Nombre</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>&amp;</code></td>
+<td>AND</td>
+<td>1 solo si <strong>ambos</strong> bits son 1</td>
+</tr>
+<tr class="even">
+<td><code>|</code></td>
+<td>OR</td>
+<td>1 si <strong>alguno</strong> es 1</td>
+</tr>
+<tr class="odd">
+<td><code>^</code></td>
+<td>XOR</td>
+<td>1 si son <strong>distintos</strong></td>
+</tr>
+<tr class="even">
+<td><code>~</code></td>
+<td>NOT</td>
+<td>invierte todos los bits</td>
+</tr>
+<tr class="odd">
+<td><code>&lt;&lt;</code></td>
+<td>desplazar a la izquierda</td>
+<td><code>x &lt;&lt; 1</code> equivale a <code>x * 2</code></td>
+</tr>
+<tr class="even">
+<td><code>&gt;&gt;</code></td>
+<td>desplazar a la derecha</td>
+<td><code>x &gt;&gt; 1</code> equivale a <code>x / 2</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="8-una-ojeada-al-ensamblador">8. Una ojeada al ensamblador</h3>
+<p>El <strong>ensamblador</strong> (<em>assembler</em>) es el lenguaje
+más cercano al hardware: cada instrucción se corresponde casi uno a uno
+con una instrucción del procesador. Ya no se programa en ensamblador
+salvo en casos muy concretos (<em>drivers</em>, sistemas empotrados,
+optimizaciones extremas), pero <strong>saber que existe</strong> explica
+muchas cosas: por qué una línea de C# puede convertirse en diez
+instrucciones de máquina, qué es un registro, o qué estás viendo cuando
+el depurador muestra «desensamblado».</p>
+<pre><code>MOV AX, 5      ; carga el valor 5 en el registro AX
+ADD AX, 3      ; le suma 3 → AX vale 8
+MOV total, AX  ; guarda el registro en memoria</code></pre>
+<p>Las tres líneas de arriba son el equivalente de
+<code>int total = 5 + 3;</code>. Nuestro compilador de C# hace ese
+trabajo por nosotros… y normalmente lo hace mejor que un humano.</p>`,
+          ejemplos: [
+            { titulo: "Convertir decimal a binario y a hexadecimal", explicacion: "Los dos caminos dan 101101. El manual sirve para entender el algoritmo (es lo que te pedirán en el examen); Convert es el que usarás en un programa real.", codigo: r`// Dos caminos para lo mismo: a mano (para entenderlo) y con la biblioteca (para usarlo)
+
+int numero = 45;
+
+// --- Camino 1: a mano, con divisiones sucesivas ---
+string manual = "";
+int resto = numero;
+do
+{
+    manual = (resto % 2) + manual;   // el resto se añade POR DELANTE: así ya queda al revés
+    resto = resto / 2;               // división entera: nos quedamos con el cociente
+} while (resto > 0);
+
+// --- Camino 2: con la clase Convert ---
+string conBiblioteca = Convert.ToString(numero, 2);
+
+Console.WriteLine($"Decimal:     {numero}");
+Console.WriteLine($"Binario (a mano):     {manual}");
+Console.WriteLine($"Binario (Convert):    {conBiblioteca}");
+Console.WriteLine($"Hexadecimal:          {Convert.ToString(numero, 16).ToUpper()}");
+Console.WriteLine($"Octal:                {Convert.ToString(numero, 8)}");
+
+// PadLeft rellena con ceros a la izquierda: así se ven los 8 bits de un byte
+Console.WriteLine($"Binario a 8 bits:     {Convert.ToString(numero, 2).PadLeft(8, '0')}");
+` },
+            { titulo: "De binario y hexadecimal a decimal", explicacion: "Convert lanza FormatException si el texto no corresponde a la base indicada, así que los datos que vengan del usuario hay que validarlos.", codigo: r`// Convert.ToInt32(texto, base) interpreta un texto escrito en otra base
+string binario = "101101";
+string hexadecimal = "2D";
+
+Console.WriteLine($"{binario} en binario      = {Convert.ToInt32(binario, 2)}");
+Console.WriteLine($"{hexadecimal} en hexadecimal = {Convert.ToInt32(hexadecimal, 16)}");
+
+// A mano, sumando pesos, para ver de dónde sale el número
+int valor = 0;
+for (int i = 0; i < binario.Length; i++)
+{
+    int bit = binario[i] - '0';          // el carácter '1' menos '0' da el número 1
+    valor = valor * 2 + bit;             // método de Horner: multiplicar por la base y sumar
+}
+Console.WriteLine($"Calculado a mano        = {valor}");
+
+// Si el texto puede venir del usuario, hay que protegerse:
+string dudoso = "10201";
+try
+{
+    Console.WriteLine(Convert.ToInt32(dudoso, 2));
+}
+catch (FormatException)
+{
+    Console.WriteLine($"«{dudoso}» no es un número binario válido (el 2 no existe en base 2)");
+}
+` },
+            { titulo: "Literales y separador de dígitos", explicacion: "Así se descompone un color #RRGGBB: desplazar a la derecha coloca el byte que queremos en la posición baja, y & 0xFF descarta el resto.", codigo: r`// Las cuatro formas de escribir el mismo número en el código fuente
+int enDecimal     = 255;
+int enBinario     = 0b1111_1111;    // 0b + bits, agrupados de 4 en 4 con _
+int enHexadecimal = 0xFF;           // 0x + dígitos hex
+int conSeparador  = 1_000_000;      // el _ no cambia el valor, solo ayuda a leerlo
+
+Console.WriteLine($"{enDecimal} {enBinario} {enHexadecimal} {conSeparador}");
+Console.WriteLine(enDecimal == enBinario && enBinario == enHexadecimal);   // True
+
+// Formato de salida: X = hexadecimal, X4 = hexadecimal con 4 dígitos
+int color = 0xFF8800;
+Console.WriteLine($"Color en hex: #{color:X6}");
+Console.WriteLine($"Componente rojo: {(color >> 16) & 0xFF}");   // desplazar y quedarse con 8 bits
+Console.WriteLine($"Componente verde: {(color >> 8) & 0xFF}");
+Console.WriteLine($"Componente azul: {color & 0xFF}");
+` },
+            { titulo: "Operadores de bits como interruptores", explicacion: "Este patrón de «banderas» (flags) aparece en permisos de ficheros, opciones de ventanas y motores de juego. En C# se suele escribir con un enum marcado con [Flags].", codigo: r`// Caso típico en videojuegos: guardar varios estados de un personaje en un solo número.
+// Cada estado es un bit, así que caben 32 estados en un int.
+
+const int Envenenado = 0b0001;   // 1
+const int Invisible  = 0b0010;   // 2
+const int Volando    = 0b0100;   // 4
+const int Invencible = 0b1000;   // 8
+
+int estado = 0;                                  // sin ningún estado
+
+estado = estado | Envenenado;                    // activar un bit con OR
+estado = estado | Volando;
+Console.WriteLine($"Estado: {Convert.ToString(estado, 2).PadLeft(4, '0')}");   // 0101
+
+bool estaVolando = (estado & Volando) != 0;      // comprobar un bit con AND
+Console.WriteLine($"¿Está volando? {estaVolando}");
+
+estado = estado & ~Envenenado;                   // apagar un bit con AND del inverso
+Console.WriteLine($"Tras curarlo: {Convert.ToString(estado, 2).PadLeft(4, '0')}");   // 0100
+
+estado = estado ^ Invisible;                     // XOR invierte el bit (conmutador)
+Console.WriteLine($"Pulsa invisibilidad: {Convert.ToString(estado, 2).PadLeft(4, '0')}");   // 0110
+
+Console.WriteLine($"8 << 1 = {8 << 1} (multiplicar por 2)");
+Console.WriteLine($"8 >> 2 = {8 >> 2} (dividir entre 4)");
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Conversor de bases",
+              nivel: 1,
+              pista: "La división entera en C# descarta los decimales: 45 / 2 vale 22, justo el cociente que necesitas.",
+              enunciado: r`<p>Escribe un programa con un <strong>menú</strong> que permita
+convertir números entre bases. El menú debe ofrecer: <code>1</code>
+decimal → binario, <code>2</code> binario → decimal, <code>3</code>
+decimal → hexadecimal y <code>4</code> salir.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>El menú se repite hasta que el usuario elija salir. Usa
+<code>do-while</code> con la condición en la cabecera (sin
+<code>while (true)</code> ni <code>break</code>).</li>
+<li><strong>Control de errores:</strong> valida la opción y los números
+con <code>int.TryParse</code>. Si el usuario escribe un binario no
+válido (por ejemplo <code>1021</code>), muéstrale un aviso y vuelve al
+menú.</li>
+<li>La conversión decimal → binario debes hacerla <strong>con divisiones
+sucesivas</strong>, no con <code>Convert</code>.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> para validar un binario, comprueba que todos
+sus caracteres sean <code>'0'</code> o <code>'1'</code> antes de
+convertirlo.</p>`,
+              soluciones: [
+                { titulo: "Versión con Convert para lo que se puede", nota: "La condición del do-while es «mientras no sea salir». Cuando TryParse falla ponemos opcion = 0: un valor que no es 4, así que el menú vuelve a aparecer sin necesidad de continue.", codigo: r`int opcion = 0;
+
+do
+{
+    Console.WriteLine("\n1) Decimal a binario   2) Binario a decimal");
+    Console.WriteLine("3) Decimal a hexadecimal   4) Salir");
+    Console.Write("Opción: ");
+
+    if (!int.TryParse(Console.ReadLine(), out opcion))
+    {
+        Console.WriteLine("Escribe un número del 1 al 4.");
+        opcion = 0;                        // valor neutro: no es 4, así que el bucle sigue
+    }
+    else
+    {
+        switch (opcion)
+        {
+            case 1:
+                Console.Write("Número decimal: ");
+                if (int.TryParse(Console.ReadLine(), out int d) && d >= 0)
+                {
+                    // divisiones sucesivas
+                    string bin = "";
+                    int resto = d;
+                    do
+                    {
+                        bin = (resto % 2) + bin;
+                        resto = resto / 2;
+                    } while (resto > 0);
+                    Console.WriteLine($"{d} = {bin} en binario");
+                }
+                else
+                {
+                    Console.WriteLine("Decimal no válido (debe ser 0 o positivo).");
+                }
+                break;
+
+            case 2:
+                Console.Write("Número binario: ");
+                string texto = Console.ReadLine() ?? "";
+                bool valido = texto.Length > 0;
+                foreach (char c in texto)
+                {
+                    if (c != '0' && c != '1') { valido = false; }
+                }
+                if (valido)
+                {
+                    Console.WriteLine($"{texto} = {Convert.ToInt32(texto, 2)} en decimal");
+                }
+                else
+                {
+                    Console.WriteLine("Eso no es un número binario (solo 0 y 1).");
+                }
+                break;
+
+            case 3:
+                Console.Write("Número decimal: ");
+                if (int.TryParse(Console.ReadLine(), out int h) && h >= 0)
+                {
+                    Console.WriteLine($"{h} = {Convert.ToString(h, 16).ToUpper()} en hexadecimal");
+                }
+                else
+                {
+                    Console.WriteLine("Decimal no válido.");
+                }
+                break;
+
+            case 4:
+                Console.WriteLine("Hasta luego.");
+                break;
+
+            default:
+                Console.WriteLine("Opción fuera de rango.");
+                break;
+        }
+    }
+} while (opcion != 4);
+` },
+                { titulo: "Versión profesional: funciones y validación reutilizable", nota: "Separar la lectura validada en una función (LeerEntero) elimina la repetición y deja el menú legible de un vistazo. Es el mismo patrón que usarás en todas las actividades con menú.", codigo: r`int opcion;
+
+do
+{
+    MostrarMenu();
+    opcion = LeerEntero("Opción: ", 1, 4);
+
+    switch (opcion)
+    {
+        case 1:
+            int d = LeerEntero("Número decimal: ", 0, int.MaxValue);
+            Console.WriteLine($"{d} = {ADecimalABinario(d)} en binario");
+            break;
+        case 2:
+            string bin = LeerBinario("Número binario: ");
+            Console.WriteLine($"{bin} = {Convert.ToInt32(bin, 2)} en decimal");
+            break;
+        case 3:
+            int h = LeerEntero("Número decimal: ", 0, int.MaxValue);
+            Console.WriteLine($"{h} = {Convert.ToString(h, 16).ToUpper()} en hexadecimal");
+            break;
+        case 4:
+            Console.WriteLine("Hasta luego.");
+            break;
+    }
+} while (opcion != 4);
+
+// ---------- funciones auxiliares ----------
+
+void MostrarMenu()
+{
+    Console.WriteLine("\n--- CONVERSOR DE BASES ---");
+    Console.WriteLine("1) Decimal a binario");
+    Console.WriteLine("2) Binario a decimal");
+    Console.WriteLine("3) Decimal a hexadecimal");
+    Console.WriteLine("4) Salir");
+}
+
+// Pide un entero hasta que sea válido y esté dentro del rango
+int LeerEntero(string mensaje, int min, int max)
+{
+    int valor;
+    bool correcto;
+    do
+    {
+        Console.Write(mensaje);
+        correcto = int.TryParse(Console.ReadLine(), out valor) && valor >= min && valor <= max;
+        if (!correcto)
+        {
+            Console.WriteLine($"Introduce un número entre {min} y {max}.");
+        }
+    } while (!correcto);
+    return valor;
+}
+
+string LeerBinario(string mensaje)
+{
+    string texto;
+    bool correcto;
+    do
+    {
+        Console.Write(mensaje);
+        texto = Console.ReadLine() ?? "";
+        correcto = texto.Length > 0;
+        foreach (char c in texto)
+        {
+            if (c != '0' && c != '1') { correcto = false; }
+        }
+        if (!correcto)
+        {
+            Console.WriteLine("Solo se admiten los dígitos 0 y 1.");
+        }
+    } while (!correcto);
+    return texto;
+}
+
+string ADecimalABinario(int numero)
+{
+    string bits = "";
+    int resto = numero;
+    do
+    {
+        bits = (resto % 2) + bits;
+        resto = resto / 2;
+    } while (resto > 0);
+    return bits;
+}
+` },
+              ],
+            },
+            {
+              titulo: "Analizador de bits de un byte",
+              nivel: 2,
+              pista: "x & 1 aísla el último bit; (x >> i) & 1 aísla el bit de la posición i.",
+              enunciado: r`<p>Pide al usuario un número entre <strong>0 y 255</strong> y muestra
+una pequeña ficha con: su valor en binario a 8 bits, en hexadecimal a 2
+dígitos, <strong>cuántos bits valen 1</strong> y si el número es
+<strong>par</strong> (mirando solo el último bit).</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>No uses <code>% 2</code> para saber si es par: compruébalo con el
+operador <code>&amp;</code>.</li>
+<li><strong>Control de errores:</strong> rechaza lo que no sea un entero
+entre 0 y 255.</li>
+<li>Muestra también el resultado de desplazar el número un bit a la
+izquierda y a la derecha.</li>
+</ul>
+<p>🏅 <strong>Ampliación:</strong> muestra el número invertido bit a bit
+(<code>~</code>) interpretado como <code>byte</code>.</p>`,
+              soluciones: [
+                { titulo: "Versión directa", nota: "El número es par cuando su bit menos significativo es 0, porque ese bit vale exactamente 1. El molde (byte) recorta el resultado de ~n a los 8 bits que nos interesan.", codigo: r`Console.Write("Número (0-255): ");
+
+if (!int.TryParse(Console.ReadLine(), out int n) || n < 0 || n > 255)
+{
+    Console.WriteLine("Valor no válido: debe ser un entero entre 0 y 255.");
+}
+else
+{
+    string bits = Convert.ToString(n, 2).PadLeft(8, '0');
+
+    int unos = 0;
+    for (int i = 0; i < 8; i++)
+    {
+        // Desplazamos n a la derecha i posiciones y miramos el bit más bajo
+        unos += (n >> i) & 1;
+    }
+
+    Console.WriteLine($"Decimal:     {n}");
+    Console.WriteLine($"Binario:     {bits}");
+    Console.WriteLine($"Hexadecimal: {n:X2}");
+    Console.WriteLine($"Bits a 1:    {unos}");
+    Console.WriteLine($"¿Par?        {((n & 1) == 0)}");     // el bit 0 vale 1 en los impares
+    Console.WriteLine($"n << 1 =     {n << 1}");
+    Console.WriteLine($"n >> 1 =     {n >> 1}");
+    Console.WriteLine($"~n (byte) =  {(byte)~n}  ({Convert.ToString((byte)~n, 2).PadLeft(8, '0')})");
+}
+` },
+                { titulo: "Versión con funciones y la ayuda de .NET", nota: "BitOperations (en System.Numerics) contiene operaciones de bits optimizadas. Conviene saber que existen, pero en el examen interesa que sepas contar los bits con un bucle.", codigo: r`int numero = LeerByte();
+MostrarFicha(numero);
+
+int LeerByte()
+{
+    int valor;
+    bool correcto;
+    do
+    {
+        Console.Write("Número (0-255): ");
+        correcto = int.TryParse(Console.ReadLine(), out valor) && valor >= 0 && valor <= 255;
+        if (!correcto)
+        {
+            Console.WriteLine("Debe ser un entero entre 0 y 255.");
+        }
+    } while (!correcto);
+    return valor;
+}
+
+void MostrarFicha(int n)
+{
+    Console.WriteLine($"Decimal:     {n}");
+    Console.WriteLine($"Binario:     {Convert.ToString(n, 2).PadLeft(8, '0')}");
+    Console.WriteLine($"Hexadecimal: {n:X2}");
+    // BitOperations.PopCount cuenta los bits a 1 usando una instrucción del procesador
+    Console.WriteLine($"Bits a 1:    {System.Numerics.BitOperations.PopCount((uint)n)}");
+    Console.WriteLine($"¿Par?        {((n & 1) == 0)}");
+    Console.WriteLine($"n << 1 =     {n << 1}");
+    Console.WriteLine($"n >> 1 =     {n >> 1}");
+    Console.WriteLine($"~n (byte) =  {(byte)~n}");
+}
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "algoritmos-diseno",
+          titulo: "Diseño de algoritmos: pseudocódigo, diagramas y juegos de pruebas",
+          duracion: "22 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Analizar un problema identificando entradas, salidas y proceso", "Escribir un algoritmo en pseudocódigo y dibujarlo como diagrama de flujo", "Preparar un juego de pruebas antes de programar"],
+          teoria: r`<p>Antes de escribir una sola línea de C# conviene
+<strong>pensar</strong>. Los programadores con experiencia no empiezan
+por el teclado: empiezan por entender el problema y diseñar la solución.
+Esta lección explica las tres herramientas clásicas para hacerlo: el
+<strong>análisis</strong>, el <strong>pseudocódigo</strong> (o el
+diagrama de flujo) y el <strong>juego de pruebas</strong>.</p>
+<h3 id="1-las-tres-fases">1. Las tres fases</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Fase</th>
+<th>Pregunta que responde</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Análisis</strong></td>
+<td>¿Qué hay que hacer?</td>
+<td>Entradas, salidas y restricciones</td>
+</tr>
+<tr class="even">
+<td><strong>Diseño</strong></td>
+<td>¿Cómo lo hago?</td>
+<td>Algoritmo (pseudocódigo o diagrama)</td>
+</tr>
+<tr class="odd">
+<td><strong>Codificación</strong></td>
+<td>¿Cómo lo escribo en este lenguaje?</td>
+<td>Programa en C#</td>
+</tr>
+</tbody>
+</table></div>
+<p>Saltarse el análisis es la causa número uno de programas que
+«funcionan» pero resuelven otro problema.</p>
+<h3 id="2-análisis-entradas-proceso-y-salidas">2. Análisis: entradas,
+proceso y salidas</h3>
+<p>Un algoritmo transforma unos <strong>datos de entrada</strong> en
+unos <strong>datos de salida</strong> mediante un
+<strong>proceso</strong>. Analizar es rellenar esta tabla (aquí para
+«calcular la nota final de un módulo»):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Dato</th>
+<th>Tipo</th>
+<th>Restricciones</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Entrada</td>
+<td>nota de teoría</td>
+<td>real</td>
+<td>0 … 10</td>
+</tr>
+<tr class="even">
+<td>Entrada</td>
+<td>nota de práctica</td>
+<td>real</td>
+<td>0 … 10</td>
+</tr>
+<tr class="odd">
+<td>Salida</td>
+<td>nota final</td>
+<td>real</td>
+<td>0 … 10, un decimal</td>
+</tr>
+<tr class="even">
+<td>Proceso</td>
+<td></td>
+<td></td>
+<td>40 % teoría + 60 % práctica</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="tipos-de-datos-según-su-uso">Tipos de datos según su uso</h4>
+<ul>
+<li><strong>Constantes:</strong> no cambian durante el programa
+(<code>PESO_TEORIA = 0.4</code>).</li>
+<li><strong>Variables:</strong> cambian (<code>notaTeoria</code>).</li>
+<li><strong>Datos de entrada:</strong> los proporciona el usuario o un
+fichero.</li>
+<li><strong>Datos de salida:</strong> lo que el programa comunica.</li>
+<li><strong>Datos auxiliares:</strong> cálculos intermedios (un
+acumulador, un contador).</li>
+</ul>
+<h4 id="expresiones">Expresiones</h4>
+<p>Una <strong>expresión</strong> combina valores y operadores para
+producir un resultado. Hay que tener claras dos cosas: el
+<strong>tipo</strong> del resultado (<code>7 / 2</code> es 3, no 3,5,
+porque ambos operandos son enteros) y la <strong>prioridad</strong> de
+los operadores (primero <code>*</code> y <code>/</code>, después
+<code>+</code> y <code>−</code>; los paréntesis mandan sobre todo).</p>
+<h3 id="3-diseño-pseudocódigo">3. Diseño: pseudocódigo</h3>
+<p>El <strong>pseudocódigo</strong> describe el algoritmo en un lenguaje
+intermedio entre el castellano y el código: no tiene reglas tan
+estrictas como un lenguaje de programación, pero es lo bastante preciso
+para traducirse a cualquiera de ellos.</p>
+<pre><code>INICIO
+  LEER notaTeoria
+  LEER notaPractica
+  SI notaTeoria &lt; 0 O notaTeoria &gt; 10 ENTONCES
+     ESCRIBIR &quot;Nota de teoría no válida&quot;
+  SI NO
+     notaFinal ← notaTeoria * 0.4 + notaPractica * 0.6
+     ESCRIBIR &quot;Nota final: &quot;, notaFinal
+  FIN SI
+FIN</code></pre>
+<p>Palabras habituales: <code>LEER</code>, <code>ESCRIBIR</code>,
+<code>SI… ENTONCES… SI NO… FIN SI</code>,
+<code>MIENTRAS… FIN MIENTRAS</code>, <code>REPETIR… HASTA</code>,
+<code>PARA… FIN PARA</code>. La flecha <code>←</code> indica
+asignación.</p>
+<h3 id="4-diseño-diagramas-de-flujo">4. Diseño: diagramas de flujo</h3>
+<p>Un <strong>diagrama de flujo</strong> (<em>flowchart</em>) es el
+mismo algoritmo dibujado. Cada forma tiene un significado fijo:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Forma</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Óvalo</td>
+<td>Inicio / Fin</td>
+</tr>
+<tr class="even">
+<td>Rectángulo</td>
+<td>Proceso (un cálculo, una asignación)</td>
+</tr>
+<tr class="odd">
+<td>Paralelogramo</td>
+<td>Entrada / Salida de datos</td>
+</tr>
+<tr class="even">
+<td>Rombo</td>
+<td>Decisión (tiene dos salidas: Sí / No)</td>
+</tr>
+<tr class="odd">
+<td>Flecha</td>
+<td>Orden en que se ejecuta</td>
+</tr>
+</tbody>
+</table></div>
+<pre><code>        ( INICIO )
+             |
+     /  LEER nota  /
+             |
+       &lt; nota &gt;= 5 ? &gt;---- No ----&gt; / ESCRIBIR &quot;Suspendido&quot; /
+             |                                   |
+            Sí                                    |
+             |                                    |
+   / ESCRIBIR &quot;Aprobado&quot; /                        |
+             |                                    |
+             +------------------------------------+
+             |
+          (  FIN  )</code></pre>
+<p>El diagrama es muy útil para explicar un algoritmo a otra persona y
+para detectar caminos que no llevan a ninguna parte. Para algoritmos
+largos se vuelve enorme: ahí es mejor el pseudocódigo.</p>
+<div class="callout">
+<p><strong>Herramienta recomendada.</strong> Hoy los diagramas se
+escriben como texto y se dibujan solos, con <strong>Mermaid</strong>.
+GitHub lo renderiza directamente en los <code>README.md</code>, así que
+puedes documentar tus prácticas sin instalar nada:</p>
+<pre><code>flowchart TD
+    A([Inicio]) --&gt; B[/Leer nota/]
+    B --&gt; C{nota &gt;= 5?}
+    C -- Sí --&gt; D[/Aprobado/]
+    C -- No --&gt; E[/Suspendido/]
+    D --&gt; F([Fin])
+    E --&gt; F</code></pre>
+</div>
+<h3 id="5-juego-de-pruebas">5. Juego de pruebas</h3>
+<p>Un <strong>juego de pruebas</strong> es la lista de casos con los que
+comprobarás que el programa funciona, <strong>preparada antes de
+programar</strong>. Para cada caso se anota la entrada y la salida que
+<em>debería</em> producirse:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Caso</th>
+<th>Entrada</th>
+<th>Salida esperada</th>
+<th>¿Por qué este caso?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Normal</td>
+<td>7 y 8</td>
+<td>7,6</td>
+<td>Caso típico</td>
+</tr>
+<tr class="even">
+<td>Límite inferior</td>
+<td>0 y 0</td>
+<td>0</td>
+<td>El borde del rango</td>
+</tr>
+<tr class="odd">
+<td>Límite superior</td>
+<td>10 y 10</td>
+<td>10</td>
+<td>El otro borde</td>
+</tr>
+<tr class="even">
+<td>No válido</td>
+<td>−1</td>
+<td>Mensaje de error</td>
+<td>Fuera de rango</td>
+</tr>
+<tr class="odd">
+<td>No válido</td>
+<td>«hola»</td>
+<td>Mensaje de error</td>
+<td>No es un número</td>
+</tr>
+</tbody>
+</table></div>
+<p>Las dos reglas que más errores cazan:</p>
+<ul>
+<li><strong>Clases de equivalencia:</strong> agrupa las entradas que el
+programa trata igual (válidas / no válidas / fuera de rango) y prueba
+<strong>un representante de cada grupo</strong>. No hace falta probar 1,
+2, 3, 4… si todas son «válidas».</li>
+<li><strong>Valores límite:</strong> prueba justo <strong>en el borde y
+a ambos lados</strong> (4, 5 y 6 para la condición
+<code>nota &gt;= 5</code>). Ahí se esconde la mayoría de los errores,
+porque es donde se confunde <code>&gt;</code> con
+<code>&gt;=</code>.</li>
+</ul>
+<h3 id="6-de-vuelta-al-código">6. De vuelta al código</h3>
+<p>El último paso es traducir. Fíjate en que cada línea de pseudocódigo
+tiene su equivalente casi literal en C#, y en que la validación del
+juego de pruebas aparece en el programa como <code>TryParse</code> y
+comprobación de rango. Ese es el recorrido completo: <strong>analizar →
+diseñar → probar sobre el papel → codificar</strong>.</p>`,
+          ejemplos: [
+            { titulo: "Del pseudocódigo a C#", explicacion: "Cada línea del pseudocódigo se convierte casi literalmente en C#. Lo único que añade el código es el control de errores que salió del juego de pruebas.", codigo: r`// PSEUDOCÓDIGO
+//   INICIO
+//     LEER notaTeoria, notaPractica
+//     SI alguna nota no está entre 0 y 10 ENTONCES ESCRIBIR error
+//     SI NO  notaFinal ← teoria*0.4 + practica*0.6 ; ESCRIBIR notaFinal
+//   FIN
+
+const double PesoTeoria = 0.4;      // las constantes del análisis, con nombre
+const double PesoPractica = 0.6;
+
+Console.Write("Nota de teoría (0-10): ");
+bool okTeoria = double.TryParse(Console.ReadLine(), out double teoria);
+
+Console.Write("Nota de práctica (0-10): ");
+bool okPractica = double.TryParse(Console.ReadLine(), out double practica);
+
+if (!okTeoria || !okPractica)
+{
+    Console.WriteLine("Error: alguna de las notas no es un número.");
+}
+else if (teoria < 0 || teoria > 10 || practica < 0 || practica > 10)
+{
+    Console.WriteLine("Error: las notas deben estar entre 0 y 10.");
+}
+else
+{
+    double notaFinal = teoria * PesoTeoria + practica * PesoPractica;
+    Console.WriteLine($"Nota final: {notaFinal:F1}");          // F1 = un decimal
+}
+` },
+            { titulo: "Comprobar un juego de pruebas automáticamente", explicacion: "Nunca compares dos double con ==: por cómo se guardan en binario, 0.4 + 0.6 puede no dar exactamente 1. Se compara que la diferencia sea menor que una tolerancia.", codigo: r`// En lugar de teclear los casos a mano, los metemos en un array y los comprobamos de golpe.
+// Es la semilla de lo que más adelante serán las pruebas unitarias.
+
+double[,] casos =
+{
+    //  teoría, práctica, resultado esperado
+    {  7,  8,  7.6 },
+    {  0,  0,  0.0 },
+    { 10, 10, 10.0 },
+    {  5,  5,  5.0 },
+    { 10,  0,  4.0 },
+};
+
+int correctos = 0;
+
+for (int i = 0; i < casos.GetLength(0); i++)
+{
+    double teoria = casos[i, 0];
+    double practica = casos[i, 1];
+    double esperado = casos[i, 2];
+
+    double obtenido = NotaFinal(teoria, practica);
+
+    // Los decimales no se comparan con ==: se mira que la diferencia sea minúscula
+    bool pasa = Math.Abs(obtenido - esperado) < 0.0001;
+    if (pasa) { correctos++; }
+
+    Console.WriteLine($"{(pasa ? "OK  " : "FALLA")} teoria={teoria} practica={practica} " +
+                      $"esperado={esperado} obtenido={obtenido}");
+}
+
+Console.WriteLine($"\nResultado: {correctos} de {casos.GetLength(0)} casos correctos");
+
+double NotaFinal(double teoria, double practica) => teoria * 0.4 + practica * 0.6;
+` },
+            { titulo: "Valores límite: por qué importan tanto", explicacion: "Este es el argumento para probar siempre los valores límite: con los datos «normales» un programa con el operador equivocado parece funcionar.", codigo: r`// La condición es «aprueba con 5 o más». Probamos el borde y sus dos vecinos.
+
+int[] notasDePrueba = { 4, 5, 6 };
+
+foreach (int nota in notasDePrueba)
+{
+    string conBien = nota >= 5 ? "Aprobado" : "Suspendido";    // correcto
+    string conMal  = nota >  5 ? "Aprobado" : "Suspendido";    // error típico: > en vez de >=
+
+    Console.WriteLine($"Nota {nota}: correcto = {conBien}, con el error = {conMal}");
+}
+
+Console.WriteLine("\nSolo el caso del borde (5) delata el error: con 4 y 6 los dos programas coinciden.");
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Del análisis al programa: cajero de un bazar",
+              nivel: 1,
+              pista: "Primero el papel, después el teclado: si no sabes decir qué debe salir con 50 € justos, el programa tampoco lo sabrá.",
+              enunciado: r`<p>Un bazar cobra con estas reglas: a partir de <strong>50 €</strong> de
+compra se aplica un <strong>10 % de descuento</strong>, y el
+<strong>IVA</strong> es del 21 % y se calcula <strong>después</strong>
+del descuento.</p>
+<p>Antes de programar, <strong>escribe en el README</strong> (o en un
+comentario al principio del archivo):</p>
+<ol type="1">
+<li>La tabla de <strong>análisis</strong>: entradas, salidas, constantes
+y proceso.</li>
+<li>El algoritmo en <strong>pseudocódigo</strong>.</li>
+<li>Un <strong>juego de pruebas</strong> con al menos cinco casos,
+incluyendo el valor límite de 50 € y un caso no válido.</li>
+</ol>
+<p>Después escribe el programa en C#, que debe pedir el importe y
+mostrar base, descuento, IVA y total.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li><strong>Control de errores:</strong> el importe debe ser un número
+mayor o igual que 0.</li>
+<li>Saca los porcentajes a constantes con nombre; no los escribas
+sueltos en la fórmula.</li>
+<li>Muestra los importes con dos decimales.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> el caso límite exacto es 50 €. Decide (y
+escribe en el análisis) si con 50 € justos hay descuento o no.</p>`,
+              soluciones: [
+                { titulo: "Versión básica", nota: "El {valor,8:F2} alinea los importes a la derecha en 8 caracteres: la ficha queda en columnas sin tener que contar espacios.", codigo: r`const double MinimoDescuento = 50.0;
+const double PorcentajeDescuento = 0.10;
+const double Iva = 0.21;
+
+Console.Write("Importe de la compra: ");
+
+if (!double.TryParse(Console.ReadLine(), out double importe) || importe < 0)
+{
+    Console.WriteLine("Importe no válido: debe ser un número mayor o igual que 0.");
+}
+else
+{
+    double descuento = 0;
+    if (importe >= MinimoDescuento)          // con 50 € justos SÍ hay descuento
+    {
+        descuento = importe * PorcentajeDescuento;
+    }
+
+    double baseImponible = importe - descuento;
+    double cuotaIva = baseImponible * Iva;
+    double total = baseImponible + cuotaIva;
+
+    Console.WriteLine($"Importe:     {importe,8:F2} €");
+    Console.WriteLine($"Descuento:   {descuento,8:F2} €");
+    Console.WriteLine($"Base:        {baseImponible,8:F2} €");
+    Console.WriteLine($"IVA (21 %):  {cuotaIva,8:F2} €");
+    Console.WriteLine($"TOTAL:       {total,8:F2} €");
+}
+` },
+                { titulo: "Versión con funciones y su juego de pruebas", nota: "Las funciones de una sola línea se pueden escribir con => (cuerpo de expresión). Tener las reglas en funciones permite comprobarlas sin tocar la interfaz del programa.", codigo: r`// Las reglas de negocio, en funciones puras: fáciles de probar porque solo dependen de sus parámetros
+const double MinimoDescuento = 50.0;
+const double PorcentajeDescuento = 0.10;
+const double Iva = 0.21;
+
+ComprobarJuegoDePruebas();
+
+Console.Write("\nImporte de la compra: ");
+if (!double.TryParse(Console.ReadLine(), out double importe) || importe < 0)
+{
+    Console.WriteLine("Importe no válido.");
+}
+else
+{
+    Console.WriteLine($"Descuento: {Descuento(importe):F2} €   TOTAL: {Total(importe):F2} €");
+}
+
+double Descuento(double imp) => imp >= MinimoDescuento ? imp * PorcentajeDescuento : 0;
+
+double Total(double imp)
+{
+    double baseImponible = imp - Descuento(imp);
+    return baseImponible + baseImponible * Iva;
+}
+
+void ComprobarJuegoDePruebas()
+{
+    // importe, total esperado  (calculado a mano en el análisis)
+    double[,] casos =
+    {
+        {  0.00,   0.00 },      // límite inferior
+        { 49.99,  60.49 },      // justo por debajo del descuento
+        { 50.00,  54.45 },      // valor límite: 50 - 5 = 45; 45 * 1,21 = 54,45
+        { 100.00, 108.90 },     // caso normal con descuento
+        { 10.00,  12.10 },      // caso normal sin descuento
+    };
+
+    for (int i = 0; i < casos.GetLength(0); i++)
+    {
+        double obtenido = Total(casos[i, 0]);
+        bool pasa = Math.Abs(obtenido - casos[i, 1]) < 0.005;
+        Console.WriteLine($"{(pasa ? "OK   " : "FALLA")} {casos[i, 0]:F2} € -> {obtenido:F2} € " +
+                          $"(esperado {casos[i, 1]:F2} €)");
+    }
+}
+` },
+              ],
+            },
+            {
+              titulo: "Traduce el diagrama de flujo",
+              nivel: 2,
+              pista: "El centinela nunca forma parte de los datos: se lee, se compara y se descarta.",
+              enunciado: r`<p>Te damos este diagrama de flujo en <strong>Mermaid</strong>. Escribe
+el programa en C# que hace exactamente lo mismo y, además,
+<strong>dibuja el diagrama en el README</strong> de tu práctica (GitHub
+lo renderiza solo).</p>
+<pre><code>flowchart TD
+    A([Inicio]) --&gt; B[contador = 0, suma = 0]
+    B --&gt; C[/Leer número/]
+    C --&gt; D{¿número = -1?}
+    D -- No --&gt; E[suma = suma + número&lt;br/&gt;contador = contador + 1]
+    E --&gt; C
+    D -- Sí --&gt; F{¿contador &gt; 0?}
+    F -- Sí --&gt; G[/Escribir suma / contador/]
+    F -- No --&gt; H[/Escribir &quot;Sin datos&quot;/]
+    G --&gt; I([Fin])
+    H --&gt; I</code></pre>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>El valor <code>-1</code> es un <strong>centinela</strong>: indica
+que ya no hay más datos (no se suma).</li>
+<li><strong>Control de errores:</strong> si el usuario escribe algo que
+no es un número, avísale y vuelve a pedirlo.</li>
+<li>Usa <code>do-while</code> con la condición visible en la cabecera.
+No uses <code>while (true)</code> ni <code>break</code>.</li>
+</ul>
+<p>🥉 <strong>Alternativa más sencilla:</strong> pide primero cuántos
+números se van a introducir y usa un <code>for</code>.</p>`,
+              soluciones: [
+                { titulo: "Versión con centinela y do-while", nota: "Al asignar 0 cuando la lectura falla conseguimos que el bucle continúe sin usar continue: 0 no es el centinela, y sumar 0 sin incrementar el contador no cambia la media.", codigo: r`int contador = 0;
+double suma = 0;
+double numero;
+
+do
+{
+    Console.Write("Número (-1 para terminar): ");
+
+    if (!double.TryParse(Console.ReadLine(), out numero))
+    {
+        Console.WriteLine("Eso no es un número; inténtalo otra vez.");
+        numero = 0;                 // valor neutro: no es el centinela y no altera la media
+    }
+    else if (numero != -1)
+    {
+        suma += numero;
+        contador++;
+    }
+} while (numero != -1);
+
+if (contador > 0)
+{
+    Console.WriteLine($"Media de {contador} números: {suma / contador:F2}");
+}
+else
+{
+    Console.WriteLine("Sin datos");
+}
+` },
+                { titulo: "Alternativa más sencilla: contar primero (for)", nota: "Cuando se sabe de antemano cuántas repeticiones hay, el for es más claro que el centinela. El centinela es mejor cuando no se sabe cuántos datos vendrán.", codigo: r`Console.Write("¿Cuántos números vas a introducir? ");
+int cuantos;
+bool ok;
+do
+{
+    ok = int.TryParse(Console.ReadLine(), out cuantos) && cuantos > 0;
+    if (!ok)
+    {
+        Console.Write("Escribe un entero mayor que 0: ");
+    }
+} while (!ok);
+
+double suma = 0;
+for (int i = 1; i <= cuantos; i++)
+{
+    double valor;
+    bool valido;
+    do
+    {
+        Console.Write($"Número {i} de {cuantos}: ");
+        valido = double.TryParse(Console.ReadLine(), out valor);
+        if (!valido)
+        {
+            Console.WriteLine("Eso no es un número.");
+        }
+    } while (!valido);
+    suma += valor;
+}
+
+Console.WriteLine($"Media de {cuantos} números: {suma / cuantos:F2}");
+` },
+              ],
+            },
+          ],
+        },
+        {
           id: "primer-programa",
           titulo: "Tu primer programa y el entorno de desarrollo",
           duracion: "14 min",
@@ -1266,6 +2479,853 @@ Console.WriteLine($"Truncado: {(int)dolares}");
 Console.WriteLine($"Redondeado: {(int)Math.Round(dolares)}");`,
                   nota: "Math.Round devuelve double, por eso hace falta el cast (int) para mostrar un entero.",
                 },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "m10",
+      titulo: "Herramientas: Git y metodologías",
+      lecciones: [
+        {
+          id: "git-basico",
+          titulo: "Control de versiones con Git",
+          duracion: "20 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Entender qué problema resuelve un sistema de control de versiones", "Crear un repositorio y guardar cambios con add, commit y log", "Escribir un .gitignore correcto para un proyecto de C#"],
+          teoria: r`<p>Imagina que entregas una práctica, el profesor te pide un cambio y al
+hacerlo rompes algo que antes funcionaba. ¿Cómo vuelves atrás? La
+respuesta de muchos estudiantes es tener carpetas llamadas
+<code>practica_final</code>, <code>practica_final_2</code>,
+<code>practica_final_BUENA</code>… Eso <strong>no es control de
+versiones</strong>: es desorden con nombres largos.</p>
+<p>Un <strong>sistema de control de versiones</strong> (<em>VCS</em>)
+guarda el historial completo de un proyecto: quién cambió qué, cuándo y
+por qué, y permite volver a cualquier punto anterior. El estándar de la
+industria es <strong>Git</strong>, creado en 2005 por Linus Torvalds
+para el núcleo de Linux.</p>
+<h3 id="1-qué-nos-da-git">1. ¿Qué nos da Git?</h3>
+<ul>
+<li><strong>Historial.</strong> Cada versión guardada queda registrada
+para siempre, con su autor y su mensaje.</li>
+<li><strong>Volver atrás.</strong> Si algo se rompe, se recupera la
+versión anterior en segundos.</li>
+<li><strong>Trabajo en paralelo.</strong> Varias personas (o tú mismo
+con varias ideas) pueden trabajar a la vez en <strong>ramas</strong>
+independientes.</li>
+<li><strong>Es distribuido.</strong> Cada copia del repositorio contiene
+<strong>todo</strong> el historial: no depende de que un servidor
+central esté vivo.</li>
+</ul>
+<h3 id="2-los-tres-estados-de-un-archivo">2. Los tres estados de un
+archivo</h3>
+<p>Esta es la idea que hay que entender de verdad para que Git deje de
+parecer magia:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Zona</th>
+<th>Nombre</th>
+<th>Qué contiene</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Carpeta de trabajo</td>
+<td><em>working directory</em></td>
+<td>Los archivos tal como los estás editando</td>
+</tr>
+<tr class="even">
+<td>Zona de preparación</td>
+<td><em>staging area</em> / índice</td>
+<td>Lo que has marcado para la próxima versión</td>
+</tr>
+<tr class="odd">
+<td>Repositorio</td>
+<td><em>repository</em> (<code>.git</code>)</td>
+<td>El historial de versiones ya guardadas</td>
+</tr>
+</tbody>
+</table></div>
+<pre><code>   editas             git add            git commit
+ archivo.cs  -----&gt;  preparado  ------&gt;  guardado en el historial
+ (modified)          (staged)            (committed)</code></pre>
+<p>La zona de preparación existe para que puedas <strong>elegir qué
+entra en cada versión</strong>. Si has arreglado un error y además has
+empezado otra cosa a medias, puedes guardar solo el arreglo.</p>
+<h3 id="3-los-comandos-del-día-a-día">3. Los comandos del día a día</h3>
+<pre><code>git init                      # crear un repositorio en la carpeta actual
+git status                    # ¿qué he cambiado? (el comando que más usarás)
+git add Program.cs            # preparar un archivo concreto
+git add .                     # preparar todo lo cambiado
+git commit -m &quot;Añade validación de la nota&quot;
+git log --oneline             # ver el historial resumido
+git diff                      # ver qué he cambiado y aún no he preparado
+git restore Program.cs        # descartar mis cambios en ese archivo</code></pre>
+<h4 id="cómo-escribir-un-buen-mensaje-de-commit">Cómo escribir un buen
+mensaje de commit</h4>
+<p>El mensaje explica <strong>por qué</strong> cambia el código, no qué
+líneas cambian (eso ya lo dice el <code>diff</code>). Convenciones que
+te harán quedar bien:</p>
+<ul>
+<li>En <strong>imperativo</strong> y en presente: «Añade…», «Corrige…»,
+«Elimina…».</li>
+<li>Una primera línea corta (menos de 50 caracteres) que resuma el
+cambio.</li>
+<li>Un commit = <strong>un cambio con sentido</strong>. No un commit
+gigante al final del día llamado «cambios».</li>
+</ul>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>❌ Mal</th>
+<th>✅ Bien</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>cambios</code></td>
+<td><code>Corrige el cálculo del IVA cuando hay descuento</code></td>
+</tr>
+<tr class="even">
+<td><code>asdf</code></td>
+<td><code>Añade validación con TryParse en el menú</code></td>
+</tr>
+<tr class="odd">
+<td><code>subo todo</code></td>
+<td><code>Documenta las funciones del ejercicio 2</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-el-gitignore">4. El <code>.gitignore</code></h3>
+<p>En el historial solo deben entrar los <strong>archivos
+fuente</strong>, nunca los generados al compilar: ocupan mucho, cambian
+a cada rato y se vuelven a crear solos. El archivo
+<code>.gitignore</code>, en la raíz del repositorio, indica qué
+ignorar.</p>
+<pre><code># Resultados de compilación de .NET
+bin/
+obj/
+
+# Carpetas de los editores
+.vs/
+.idea/
+.vscode/
+
+# Sistema operativo
+Thumbs.db
+.DS_Store</code></pre>
+<div class="callout">
+<p><strong>Si ya habías subido <code>bin/</code> sin querer</strong>,
+añadirlo al <code>.gitignore</code> no lo borra del historial. Hay que
+decirle a Git que lo olvide: <code>git rm -r --cached bin obj</code> y
+hacer un commit. Microsoft publica un <code>.gitignore</code> oficial
+para proyectos .NET con todas las carpetas habituales; también se genera
+con <code>dotnet new gitignore</code>.</p>
+</div>
+<h3 id="5-deshacer-cosas-sin-pánico">5. Deshacer cosas sin pánico</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Quiero…</th>
+<th>Comando</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Descartar los cambios de un archivo</td>
+<td><code>git restore Program.cs</code></td>
+</tr>
+<tr class="even">
+<td>Sacar un archivo de la zona de preparación</td>
+<td><code>git restore --staged Program.cs</code></td>
+</tr>
+<tr class="odd">
+<td>Cambiar el mensaje del último commit</td>
+<td><code>git commit --amend -m "Mensaje nuevo"</code></td>
+</tr>
+<tr class="even">
+<td>Volver a ver cómo estaba todo en un commit</td>
+<td><code>git checkout &lt;hash&gt;</code> (y <code>git switch -</code>
+para volver)</td>
+</tr>
+<tr class="odd">
+<td>Deshacer un commit ya publicado</td>
+<td><code>git revert &lt;hash&gt;</code> (crea otro commit que lo
+anula)</td>
+</tr>
+</tbody>
+</table></div>
+<p>La regla de oro: <strong>si el commit ya está publicado, no
+reescribas el historial</strong>; usa <code>git revert</code>, que es
+una operación «hacia delante» y no rompe el trabajo de los demás.</p>
+<h3 id="6-configuración-inicial-una-sola-vez-por-ordenador">6.
+Configuración inicial (una sola vez por ordenador)</h3>
+<pre><code>git config --global user.name &quot;Tu Nombre&quot;
+git config --global user.email &quot;tu.correo@itb.cat&quot;
+git config --global init.defaultBranch main</code></pre>
+<p>Sin esto, tus commits aparecerán con el autor equivocado y en la
+corrección no constará que son tuyos.</p>`,
+          ejemplos: [
+          ],
+          actividades: [
+            {
+              titulo: "Tu primer repositorio",
+              nivel: 1,
+              pista: "dotnet new gitignore te ahorra escribirlo a mano y trae todas las carpetas que .NET genera.",
+              enunciado: r`<p>Crea un repositorio local para un ejercicio de C# y haz <strong>tres
+versiones</strong> del programa, cada una con su commit. El programa
+calcula el área de un rectángulo.</p>
+<ol type="1">
+<li><strong>Commit 1:</strong> versión que pide base y altura y muestra
+el área, <strong>sin</strong> control de errores.</li>
+<li><strong>Commit 2:</strong> añade el control de errores con
+<code>double.TryParse</code> y validación de valores positivos.</li>
+<li><strong>Commit 3:</strong> añade un <code>README.md</code>
+explicando cómo se ejecuta.</li>
+</ol>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Crea el <code>.gitignore</code> <strong>antes</strong> del primer
+commit, con <code>bin/</code> y <code>obj/</code>.</li>
+<li>Los mensajes de commit deben estar en imperativo y describir el
+cambio.</li>
+<li>Al terminar, comprueba con <code>git log --oneline</code> que se ven
+los tres commits.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> <code>git status</code> antes de cada
+<code>commit</code> te evita subir lo que no querías.</p>`,
+              soluciones: [
+                { titulo: "Secuencia de comandos", nota: "Fíjate en el orden: el .gitignore va primero, para que bin/ y obj/ no entren nunca en el historial.", noRun: true, codigo: r`# --- preparar el proyecto ---
+mkdir area-rectangulo
+cd area-rectangulo
+dotnet new console
+dotnet new gitignore          # crea un .gitignore pensado para .NET
+
+git init
+git add .gitignore
+git commit -m "Anade .gitignore para proyectos .NET"
+
+# --- commit 1: version basica (edita Program.cs y despues) ---
+git status                    # comprueba que NO aparecen bin/ ni obj/
+git add Program.cs
+git commit -m "Calcula el area de un rectangulo"
+
+# --- commit 2: control de errores ---
+git add Program.cs
+git commit -m "Valida las medidas con TryParse y rechaza valores negativos"
+
+# --- commit 3: documentacion ---
+git add README.md
+git commit -m "Documenta como ejecutar el programa"
+
+# --- comprobacion final ---
+git log --oneline
+git diff HEAD~2 HEAD          # que ha cambiado entre el primer y el ultimo commit
+` },
+                { titulo: "Las tres versiones del programa", nota: "La versión 1 revienta con una excepción si el usuario escribe «hola»; la versión 2 lo trata. En el historial de Git queda registrado ese paso, que es justo lo que se valora.", noRun: true, codigo: r`// ---------- Commit 1: sin control de errores ----------
+Console.Write("Base: ");
+double baseRect = double.Parse(Console.ReadLine() ?? "0");
+Console.Write("Altura: ");
+double altura = double.Parse(Console.ReadLine() ?? "0");
+Console.WriteLine($"Área: {baseRect * altura}");
+
+// ---------- Commit 2: con control de errores ----------
+// (sustituye el contenido anterior)
+Console.Write("Base: ");
+bool okBase = double.TryParse(Console.ReadLine(), out double b) && b > 0;
+
+Console.Write("Altura: ");
+bool okAltura = double.TryParse(Console.ReadLine(), out double h) && h > 0;
+
+if (!okBase || !okAltura)
+{
+    Console.WriteLine("Las medidas deben ser números mayores que 0.");
+}
+else
+{
+    Console.WriteLine($"Área: {b * h:F2}");
+}
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "github-flujo",
+          titulo: "GitHub: ramas, pull requests, forks y projects",
+          duracion: "22 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Conectar un repositorio local con GitHub y sincronizarlo", "Trabajar con ramas y resolver un conflicto de fusión", "Usar pull requests, forks y projects como se hace en un equipo real"],
+          teoria: r`<p>Git funciona perfectamente en tu ordenador sin internet.
+<strong>GitHub</strong> es un servicio que aloja repositorios de Git en
+la nube y les añade lo que Git no tiene: una web para navegar el código,
+revisiones, incidencias, tableros de tareas y automatizaciones. Es,
+además, tu <strong>escaparate profesional</strong>: en una entrevista de
+prácticas lo primero que se mira es el perfil de GitHub.</p>
+<h3 id="1-repositorio-local-y-repositorio-remoto">1. Repositorio local y
+repositorio remoto</h3>
+<pre><code>   Tu ordenador                        GitHub
+  ┌──────────────┐    git push     ┌──────────────┐
+  │  repositorio │ ──────────────&gt; │  repositorio │
+  │    local     │ &lt;────────────── │    remoto    │
+  └──────────────┘    git pull     └──────────────┘</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Comando</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>git clone &lt;url&gt;</code></td>
+<td>Descarga un repositorio completo con su historial</td>
+</tr>
+<tr class="even">
+<td><code>git remote add origin &lt;url&gt;</code></td>
+<td>Conecta un repositorio local con uno remoto</td>
+</tr>
+<tr class="odd">
+<td><code>git push</code></td>
+<td>Envía tus commits al remoto</td>
+</tr>
+<tr class="even">
+<td><code>git pull</code></td>
+<td>Trae los commits de los demás y los fusiona con los tuyos</td>
+</tr>
+<tr class="odd">
+<td><code>git fetch</code></td>
+<td>Trae los cambios <strong>sin</strong> fusionarlos (para mirar
+antes)</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>origin</code> es simplemente el nombre por defecto del remoto
+principal.</p>
+<h3 id="2-ramas-trabajar-sin-romper-lo-que-funciona">2. Ramas: trabajar
+sin romper lo que funciona</h3>
+<p>Una <strong>rama</strong> (<em>branch</em>) es una línea de
+desarrollo independiente. La principal se llama <code>main</code>.
+Cuando quieres hacer algo nuevo, creas una rama, trabajas tranquilo y,
+cuando está terminado y probado, la fusionas.</p>
+<pre><code>main     A───B───C─────────────M
+                  \           /
+feature            D───E───F─┘</code></pre>
+<pre><code>git switch -c feature/menu     # crear una rama y cambiar a ella
+git switch main                # volver a la principal
+git branch                     # ver las ramas (la actual con *)
+git merge feature/menu         # fusionar la rama en la actual
+git branch -d feature/menu     # borrar la rama ya fusionada</code></pre>
+<div class="callout">
+<p><strong>Por qué importa en tus prácticas.</strong> En las actividades
+de ITB una de las opciones de entrega es <strong>una rama por
+ejercicio</strong>. Así el profesor ve cada ejercicio por separado y tú
+no mezclas el código de dos problemas distintos.</p>
+</div>
+<h4 id="conflictos-de-fusión">Conflictos de fusión</h4>
+<p>Si dos ramas cambian <strong>las mismas líneas</strong> del mismo
+archivo, Git no puede decidir y marca un <strong>conflicto</strong>:</p>
+<pre><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+Console.WriteLine(&quot;Hola&quot;);
+=======
+Console.WriteLine(&quot;Buenas&quot;);
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/saludo</code></pre>
+<p>No hay magia: abres el archivo, <strong>borras las marcas</strong> y
+dejas el código como debe quedar (quizá una mezcla de las dos
+versiones), y después <code>git add</code> + <code>git commit</code>. Un
+conflicto no es un error tuyo: es Git pidiéndote una decisión que solo
+tú puedes tomar.</p>
+<h3 id="3-pull-requests-la-revisión-de-código">3. Pull requests: la
+revisión de código</h3>
+<p>Una <strong>pull request</strong> (PR) es una propuesta: «he hecho
+estos cambios en mi rama, ¿los revisáis y los fusionamos en
+<code>main</code>?». En la PR se ve el <code>diff</code> completo, se
+comenta línea a línea, se ejecutan las pruebas automáticas y, cuando
+alguien la aprueba, se fusiona.</p>
+<pre><code>1. git switch -c feature/x     →  crear la rama
+2. commits                     →  trabajar
+3. git push -u origin feature/x→  publicar la rama
+4. Abrir la PR en GitHub       →  describir qué y por qué
+5. Revisión y comentarios      →  corregir si hace falta
+6. Merge                       →  entra en main
+7. Borrar la rama              →  limpieza</code></pre>
+<p>Es el mecanismo central del trabajo en equipo: <strong>nadie</strong>
+sube directamente a <code>main</code> en un proyecto serio.</p>
+<h3 id="4-forks-contribuir-a-un-proyecto-ajeno">4. Forks: contribuir a
+un proyecto ajeno</h3>
+<p>Un <strong>fork</strong> es tu copia personal de un repositorio de
+otra persona, dentro de tu cuenta. Como no tienes permiso de escritura
+en el original, el camino es: <em>fork</em> → clonar tu copia → rama →
+commits → <em>push</em> → <strong>pull request al repositorio
+original</strong>. Así se contribuye al software libre, y es exactamente
+el flujo que usarás si algún día envías una corrección a un proyecto
+público.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Rama</th>
+<th>Fork</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Dónde vive</td>
+<td>En el mismo repositorio</td>
+<td>En tu cuenta, repositorio aparte</td>
+</tr>
+<tr class="even">
+<td>Cuándo se usa</td>
+<td>Tienes permiso de escritura</td>
+<td>No tienes permiso de escritura</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-issues-y-projects-organizar-el-trabajo">5. Issues y Projects:
+organizar el trabajo</h3>
+<ul>
+<li><strong>Issues</strong> (incidencias): cada tarea, error o idea es
+una <em>issue</em> con su descripción, etiquetas y responsable. Si
+escribes <code>Closes #12</code> en el mensaje de un commit o en una PR,
+GitHub cierra la issue 12 al fusionar.</li>
+<li><strong>Projects</strong>: un tablero tipo Kanban con columnas
+(<em>Por hacer</em>, <em>En curso</em>, <em>Hecho</em>) donde arrastras
+las issues. Es la herramienta que usarás para gestionar el proyecto
+final.</li>
+<li><strong>Actions</strong>: automatizaciones. Por ejemplo, compilar y
+ejecutar las pruebas en cada PR para que nadie fusione código roto.</li>
+</ul>
+<h3 id="6-el-flujo-de-trabajo-completo">6. El flujo de trabajo
+completo</h3>
+<pre><code>git clone &lt;url&gt;                  # 1. traer el proyecto
+git switch -c feature/inventario # 2. rama para la tarea
+...editar y probar...
+git add .                        # 3. preparar
+git commit -m &quot;Añade inventario con capacidad limitada&quot;
+git pull origin main             # 4. traer lo nuevo de los demás antes de publicar
+git push -u origin feature/inventario
+# 5. abrir la pull request en GitHub, revisarla y fusionarla</code></pre>
+<p>El paso 4 es el que la gente olvida y el que evita la mayoría de los
+conflictos dolorosos: <strong>integra pronto y a menudo</strong>.</p>`,
+          ejemplos: [
+          ],
+          actividades: [
+            {
+              titulo: "Una rama por ejercicio",
+              nivel: 1,
+              pista: "git switch -c crea la rama a partir de donde estés ahora mismo: comprueba con git branch en qué rama estás antes de crearla.",
+              enunciado: r`<p>Prepara la entrega de una práctica con <strong>dos
+ejercicios</strong> usando la estrategia de <em>una rama por
+ejercicio</em>.</p>
+<ol type="1">
+<li>Crea el repositorio en GitHub y clónalo.</li>
+<li>En <code>main</code>, añade únicamente el <code>README.md</code>
+(con tu nombre, el título de la práctica y qué hace cada ejercicio) y el
+<code>.gitignore</code>.</li>
+<li>Crea la rama <code>exercise-1</code>, resuelve el primer ejercicio y
+publícala.</li>
+<li>Vuelve a <code>main</code>, crea <code>exercise-2</code>
+<strong>desde main</strong>, resuelve el segundo y publícala.</li>
+<li>Abre una <strong>pull request</strong> de cada rama hacia
+<code>main</code>, con una descripción de lo que has hecho.</li>
+</ol>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Cada rama debe salir de <code>main</code>, no de la rama anterior
+(si no, el ejercicio 2 arrastrará el código del 1).</li>
+<li>El <code>README.md</code> debe explicar cómo ejecutar cada
+ejercicio.</li>
+<li>Comprueba en GitHub que las ramas aparecen y que el
+<code>diff</code> de cada PR contiene <strong>solo</strong> su
+ejercicio.</li>
+</ul>
+<p>🏅 <strong>Ampliación:</strong> crea una <em>issue</em> por ejercicio
+y cierra cada una desde su PR escribiendo <code>Closes #1</code>.</p>`,
+              soluciones: [
+                { titulo: "Secuencia completa", nota: "El git switch main del paso 4 es la línea clave de la actividad: si se olvida, exercise-2 contiene también el código del ejercicio 1 y el diff de la PR queda ilegible.", noRun: true, codigo: r`# 1-2. repositorio y rama principal
+git clone https://github.com/tu-usuario/practica-funciones.git
+cd practica-funciones
+dotnet new gitignore
+# (escribe el README.md)
+git add .gitignore README.md
+git commit -m "Anade README y gitignore de la practica"
+git push
+
+# 3. ejercicio 1 en su rama
+git switch -c exercise-1
+mkdir exercise1 && cd exercise1 && dotnet new console && cd ..
+# (resuelve el ejercicio)
+git add .
+git commit -m "Resuelve el ejercicio 1: calculadora de notas"
+git push -u origin exercise-1
+
+# 4. ejercicio 2, SIEMPRE partiendo de main
+git switch main
+git switch -c exercise-2
+mkdir exercise2 && cd exercise2 && dotnet new console && cd ..
+git add .
+git commit -m "Resuelve el ejercicio 2: estadisticas de un array"
+git push -u origin exercise-2
+
+# 5. comprobacion
+git branch -a                 # deben verse main, exercise-1 y exercise-2
+# y en GitHub: boton «Compare & pull request» en cada rama
+` },
+              ],
+            },
+            {
+              titulo: "Provoca y resuelve un conflicto",
+              nivel: 2,
+              pista: "Un conflicto solo aparece cuando las dos ramas tocan las mismas líneas. Si cada una toca archivos distintos, Git fusiona sin preguntar.",
+              enunciado: r`<p>Vas a crear un conflicto <strong>a propósito</strong> para aprender a
+resolverlo sin miedo.</p>
+<ol type="1">
+<li>En <code>main</code>, crea <code>Program.cs</code> con una línea que
+muestre un saludo y haz commit.</li>
+<li>Crea la rama <code>saludo-formal</code>, cambia <strong>esa misma
+línea</strong> por un saludo formal y haz commit.</li>
+<li>Vuelve a <code>main</code> y cambia <strong>la misma línea</strong>
+por un saludo informal. Haz commit.</li>
+<li>Fusiona <code>saludo-formal</code> en <code>main</code>: Git marcará
+el conflicto.</li>
+<li>Resuélvelo dejando una versión que combine las dos (por ejemplo, el
+saludo formal y debajo el informal).</li>
+</ol>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Después de editar el archivo hay que borrar <strong>todas</strong>
+las marcas <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>,
+<code>=======</code> y <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>.</li>
+<li>Termina con <code>git add</code> y <code>git commit</code>; el
+commit de fusión puede dejarse con el mensaje que propone Git.</li>
+<li>Comprueba el resultado con
+<code>git log --oneline --graph</code>.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> si te pierdes,
+<code>git merge --abort</code> deshace la fusión y te devuelve al punto
+anterior.</p>`,
+              soluciones: [
+                { titulo: "Pasos y resolución", nota: "git log --oneline --graph dibuja la historia: se aprecia cómo las dos ramas se separan y vuelven a juntarse en el commit de fusión.", noRun: true, codigo: r`# 1. version inicial en main
+echo 'Console.WriteLine("Hola");' > Program.cs
+git add Program.cs
+git commit -m "Anade saludo inicial"
+
+# 2. la rama cambia la linea
+git switch -c saludo-formal
+echo 'Console.WriteLine("Buenos dias, bienvenido.");' > Program.cs
+git add Program.cs
+git commit -m "Usa un saludo formal"
+
+# 3. main cambia la MISMA linea
+git switch main
+echo 'Console.WriteLine("Que tal!");' > Program.cs
+git add Program.cs
+git commit -m "Usa un saludo informal"
+
+# 4. fusion: aqui salta el conflicto
+git merge saludo-formal
+#  CONFLICT (content): Merge conflict in Program.cs
+
+# 5. editar el archivo, dejarlo correcto, y cerrar la fusion
+git add Program.cs
+git commit                     # acepta el mensaje que propone Git
+git log --oneline --graph      # se ve la bifurcacion y el punto de union
+` },
+                { titulo: "El archivo durante y después del conflicto", nota: "Resolver un conflicto es decidir qué código debe quedar. Git no se equivoca al avisar: solo tú sabes cuál de las dos versiones (o qué mezcla) es la correcta.", codigo: r`// ----- DURANTE el conflicto, Git deja el archivo así -----
+// <<<<<<< HEAD
+// Console.WriteLine("¡Qué tal!");
+// =======
+// Console.WriteLine("Buenos días, bienvenido.");
+// >>>>>>> saludo-formal
+
+// ----- DESPUÉS de resolverlo: sin marcas y con la decisión tomada -----
+Console.WriteLine("Buenos días, bienvenido.");
+Console.WriteLine("¡Qué tal!");
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "metodologias",
+          titulo: "Metodologías de gestión de proyectos",
+          duracion: "18 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Distinguir el enfoque predictivo (waterfall) del ágil", "Conocer los papeles, eventos y artefactos de Scrum", "Elegir la metodología adecuada según el tipo de proyecto"],
+          teoria: r`<p>Saber programar no basta para terminar un proyecto. Hay que decidir
+<strong>en qué orden</strong> se hacen las cosas, <strong>quién</strong>
+hace cada una y <strong>cómo</strong> se comprueba que se avanza. De eso
+se ocupan las metodologías de gestión de proyectos. En el ciclo las
+necesitarás para el <strong>proyecto final</strong>, y en una empresa
+serán el marco de tu trabajo diario.</p>
+<h3 id="1-el-enfoque-predictivo-waterfall-cascada">1. El enfoque
+predictivo: waterfall (cascada)</h3>
+<p>El modelo <strong>en cascada</strong> divide el proyecto en fases que
+se hacen <strong>una detrás de otra</strong>, y no se pasa a la
+siguiente hasta terminar la anterior:</p>
+<pre><code>Requisitos → Análisis → Diseño → Implementación → Pruebas → Mantenimiento</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Ventajas</th>
+<th>Inconvenientes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Fácil de planificar y presupuestar</td>
+<td>El cliente no ve nada hasta el final</td>
+</tr>
+<tr class="even">
+<td>Cada fase deja documentación</td>
+<td>Un cambio tardío es carísimo</td>
+</tr>
+<tr class="odd">
+<td>Fácil de supervisar</td>
+<td>Los errores de requisitos aparecen al final</td>
+</tr>
+</tbody>
+</table></div>
+<p>Sigue teniendo sentido cuando los requisitos son <strong>estables y
+conocidos</strong> y los fallos son muy graves: software para aviones,
+dispositivos médicos, obra pública. Donde falla es en el software de
+producto, donde el cliente descubre lo que quiere
+<strong>viéndolo</strong>.</p>
+<h3 id="2-el-enfoque-ágil">2. El enfoque ágil</h3>
+<p>En 2001 un grupo de desarrolladores publicó el <strong>Manifiesto
+Ágil</strong>, con cuatro valores:</p>
+<div class="callout">
+<p>Valoramos más…</p>
+<ul>
+<li>a las <strong>personas y su interacción</strong> que a los procesos
+y las herramientas;</li>
+<li>el <strong>software que funciona</strong> que la documentación
+exhaustiva;</li>
+<li>la <strong>colaboración con el cliente</strong> que la negociación
+contractual;</li>
+<li>la <strong>respuesta al cambio</strong> que seguir un plan
+cerrado.</li>
+</ul>
+</div>
+<p>Ojo con la lectura fácil: dice «más que», no «en lugar de». Lo ágil
+<strong>no</strong> significa no documentar ni no planificar; significa
+trabajar en <strong>ciclos cortos</strong> que acaban en algo que
+funciona, enseñarlo y corregir el rumbo con lo aprendido.</p>
+<pre><code>Cascada:  ███████████████████████████████████  entrega
+Ágil:     ███ entrega  ███ entrega  ███ entrega  ███ entrega</code></pre>
+<h3 id="3-scrum">3. Scrum</h3>
+<p><strong>Scrum</strong> es el marco ágil más utilizado. Organiza el
+trabajo en <strong>sprints</strong>: ciclos de 1 a 4 semanas que
+terminan con un incremento de producto utilizable.</p>
+<h4 id="los-tres-papeles">Los tres papeles</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Papel</th>
+<th>Responsabilidad</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Product Owner</strong></td>
+<td>Decide <strong>qué</strong> se hace y en qué orden; representa al
+cliente</td>
+</tr>
+<tr class="even">
+<td><strong>Scrum Master</strong></td>
+<td>Facilita el proceso, quita obstáculos; no es un jefe</td>
+</tr>
+<tr class="odd">
+<td><strong>Equipo de desarrollo</strong></td>
+<td>Decide <strong>cómo</strong> se hace y lo construye; se
+autoorganiza</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="los-artefactos">Los artefactos</h4>
+<ul>
+<li><strong>Product backlog:</strong> lista priorizada de todo lo que
+podría hacerse.</li>
+<li><strong>Sprint backlog:</strong> lo que el equipo se compromete a
+hacer en este sprint.</li>
+<li><strong>Incremento:</strong> el producto funcionando al final del
+sprint.</li>
+</ul>
+<h4 id="los-eventos">Los eventos</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Evento</th>
+<th>Cuándo</th>
+<th>Para qué</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><em>Sprint planning</em></td>
+<td>Al empezar el sprint</td>
+<td>Elegir y estimar el trabajo</td>
+</tr>
+<tr class="even">
+<td><em>Daily</em></td>
+<td>Cada día, 15 min de pie</td>
+<td>Qué hice, qué haré, qué me bloquea</td>
+</tr>
+<tr class="odd">
+<td><em>Sprint review</em></td>
+<td>Al terminar</td>
+<td>Enseñar lo hecho y recoger comentarios</td>
+</tr>
+<tr class="even">
+<td><em>Retrospectiva</em></td>
+<td>Al terminar</td>
+<td>Mejorar <strong>cómo</strong> trabajamos</td>
+</tr>
+</tbody>
+</table></div>
+<p>Las <strong>historias de usuario</strong> son la forma habitual de
+escribir los elementos del backlog, siempre desde el punto de vista de
+quien usará el producto:</p>
+<pre><code>Como jugador
+quiero guardar mi partida
+para poder continuar al día siguiente.
+
+Criterios de aceptación:
+- La partida se guarda en un fichero local.
+- Al abrir el juego aparece la opción «Continuar» si existe partida.</code></pre>
+<h3 id="4-kanban">4. Kanban</h3>
+<p><strong>Kanban</strong> no usa sprints: el trabajo fluye de forma
+continua por un tablero con columnas, y la regla clave es
+<strong>limitar el trabajo en curso</strong> (<em>WIP</em>). Si la
+columna «En curso» admite dos tarjetas, no se empieza una tercera hasta
+terminar una.</p>
+<pre><code>┌───────────┬──────────────┬──────────┬────────┐
+│ Por hacer │ En curso (2) │ Revisión │ Hecho  │
+├───────────┼──────────────┼──────────┼────────┤
+│ Menú      │ Inventario   │ Combate  │ Login  │
+│ Sonido    │ Guardado     │          │ Mapa   │
+└───────────┴──────────────┴──────────┴────────┘</code></pre>
+<p>Suena trivial, pero es lo que arregla el problema más común de los
+equipos (y de los estudiantes): tener <strong>ocho cosas empezadas y
+ninguna terminada</strong>. Es el modelo de <em>GitHub Projects</em>, y
+el más práctico para tus prácticas en solitario.</p>
+<h3 id="5-y-además-xp-y-devops">5. Y además: XP y DevOps</h3>
+<ul>
+<li><strong>Extreme Programming (XP)</strong> aporta prácticas técnicas
+que hoy se usan en todas partes: <strong>programación por
+parejas</strong>, <strong>TDD</strong> (escribir la prueba antes del
+código), <strong>integración continua</strong> y refactorización
+constante.</li>
+<li><strong>DevOps</strong> une desarrollo y operaciones para que
+entregar una versión nueva sea rutina y no un acontecimiento:
+automatización, <em>pipelines</em> de CI/CD (<em>GitHub Actions</em>),
+monitorización.</li>
+</ul>
+<h3 id="6-cuál-elijo">6. ¿Cuál elijo?</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Situación</th>
+<th>Enfoque recomendado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Requisitos claros, cambios improbables, certificación</td>
+<td>Cascada</td>
+</tr>
+<tr class="even">
+<td>Producto que evoluciona, cliente disponible, equipo estable</td>
+<td>Scrum</td>
+</tr>
+<tr class="odd">
+<td>Flujo continuo de tareas (soporte, mantenimiento)</td>
+<td>Kanban</td>
+</tr>
+<tr class="even">
+<td>Proyecto de clase en solitario o en pareja</td>
+<td>Kanban + buenas prácticas de XP</td>
+</tr>
+</tbody>
+</table></div>
+<p>No hay metodología mágica. Lo que sí es universal: <strong>trabajar
+en trozos pequeños, enseñarlos pronto y revisar cómo lo estás
+haciendo</strong>.</p>`,
+          ejemplos: [
+          ],
+          actividades: [
+            {
+              titulo: "Planifica tu proyecto con un tablero",
+              nivel: 1,
+              pista: "Si una historia no se puede terminar en una sesión de trabajo, pártela en dos.",
+              enunciado: r`<p>Elige un proyecto pequeño (por ejemplo, un juego de consola de
+adivinar la palabra) y planifícalo como un profesional:</p>
+<ol type="1">
+<li>Escribe <strong>seis historias de usuario</strong> con el formato
+«Como… quiero… para…», cada una con <strong>dos criterios de
+aceptación</strong>.</li>
+<li>Crea una <strong>issue</strong> en GitHub por cada historia y ponles
+etiquetas (<code>feature</code>, <code>bug</code>,
+<code>docs</code>).</li>
+<li>Crea un <strong>Project</strong> con las columnas <em>Por
+hacer</em>, <em>En curso</em>, <em>Revisión</em> y <em>Hecho</em>, y
+coloca todas las issues en la primera.</li>
+<li>Fija un <strong>límite de WIP de 2</strong> en «En curso» y
+escríbelo en la descripción del tablero.</li>
+<li>Ordena el <em>backlog</em>: arriba lo que da más valor con menos
+esfuerzo.</li>
+</ol>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Las historias describen <strong>qué quiere el usuario</strong>, no
+cómo lo vas a programar. «Como jugador quiero ver mis intentos
+restantes», no «crear la variable intentos».</li>
+<li>Los criterios de aceptación deben poder comprobarse: han de decirse
+en términos de lo que se ve o se puede probar.</li>
+</ul>
+<p>🏅 <strong>Ampliación:</strong> al terminar, escribe una
+<strong>retrospectiva</strong> de cinco líneas: qué funcionó, qué no y
+qué cambiarás en el próximo proyecto.</p>`,
+              soluciones: [
+                { titulo: "Ejemplo de backlog priorizado", nota: "Fíjate en la prioridad: lo primero no es lo más vistoso, sino lo que antes permite tener algo jugable. Eso es pensar en incrementos.", noRun: true, codigo: r`# Backlog - Juego de adivinar la palabra
+
+## 1. Como jugador quiero que el juego elija una palabra al azar
+##    para que cada partida sea distinta.
+#    - La palabra se toma de una lista de al menos 20 palabras.
+#    - Dos partidas seguidas no repiten palabra.
+
+## 2. Como jugador quiero ver la palabra con guiones
+##    para saber cuantas letras tiene.
+#    - Las letras no acertadas se muestran como _.
+#    - Entre letra y letra hay un espacio para que se lean bien.
+
+## 3. Como jugador quiero introducir una letra
+##    para ir descubriendo la palabra.
+#    - Si la letra esta, aparece en todas sus posiciones.
+#    - Si ya la habia probado, se me avisa y no pierdo intento.
+
+## 4. Como jugador quiero ver los intentos que me quedan
+##    para saber en que situacion estoy.
+#    - Empiezo con 6 intentos.
+#    - Cada fallo resta uno y se muestra el numero actual.
+
+## 5. Como jugador quiero que el juego me diga si he ganado o perdido
+##    para cerrar la partida.
+#    - Al completar la palabra sale un mensaje de victoria.
+#    - Al llegar a 0 intentos se muestra la palabra correcta.
+
+## 6. Como jugador quiero jugar otra partida sin reiniciar el programa
+##    para seguir jugando.
+#    - Al acabar se pregunta si quiero otra partida.
+#    - Si respondo que no, el programa termina.
+
+# Prioridad: 2 > 3 > 4 > 1 > 5 > 6
+# (primero lo que permite jugar aunque la palabra este fija;
+#  el azar y el repetir partida se pueden anadir despues)
+` },
               ],
             },
           ],
@@ -4227,6 +6287,1196 @@ int ContarMovimientos(int discos)
             },
           ],
         },
+        {
+          id: "algoritmos-ordenacion",
+          titulo: "Algoritmos de ordenación",
+          duracion: "24 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Programar los algoritmos de ordenación sencillos (burbuja, selección e inserción)", "Entender y programar QuickSort y MergeSort con divide y vencerás", "Comparar los algoritmos por su complejidad y saber cuándo usar Array.Sort"],
+          teoria: r`<p>Ordenar es una de las operaciones más frecuentes en programación: una
+tabla de puntuaciones, una lista de contactos, los resultados de una
+búsqueda. En .NET basta con llamar a <code>Array.Sort</code>, y en un
+programa real <strong>eso es lo que se hace</strong>. Entonces, ¿por qué
+estudiar los algoritmos? Por tres razones: porque explican de dónde
+salen las diferencias de rendimiento, porque son el ejemplo canónico de
+las técnicas de diseño (<strong>divide y vencerás</strong>) y porque
+entran en el examen y en cualquier entrevista técnica.</p>
+<h3 id="1-los-tres-algoritmos-sencillos-on²">1. Los tres algoritmos
+sencillos: O(n²)</h3>
+<h4 id="burbuja-bubble-sort">Burbuja (<em>bubble sort</em>)</h4>
+<p>Compara cada pareja de elementos contiguos y los intercambia si están
+desordenados. Tras cada pasada, el mayor «burbujea» hasta el final.</p>
+<pre><code>[5 3 8 1]  compara 5-3 → intercambia  [3 5 8 1]
+           compara 5-8 → correcto     [3 5 8 1]
+           compara 8-1 → intercambia  [3 5 1 8]   ← el 8 ya está colocado</code></pre>
+<p>Es el más fácil de entender y el <strong>peor</strong> de todos en
+rendimiento. Su única virtud práctica: con la mejora de detectar que no
+ha habido intercambios, reconoce un array ya ordenado en una sola
+pasada.</p>
+<h4 id="selección-selection-sort">Selección (<em>selection
+sort</em>)</h4>
+<p>Busca el mínimo de la parte no ordenada y lo coloca al principio.
+Hace <strong>muchas comparaciones pero pocos intercambios</strong> (como
+máximo uno por posición), lo que lo hacía interesante cuando mover datos
+era caro.</p>
+<h4 id="inserción-insertion-sort">Inserción (<em>insertion
+sort</em>)</h4>
+<p>Recorre el array e inserta cada elemento en su sitio dentro de la
+parte ya ordenada, desplazando los mayores. Es como ordenar una mano de
+cartas. Es el <strong>mejor de los tres</strong> en la práctica: muy
+rápido con arrays pequeños o <strong>casi ordenados</strong>. Por eso
+los algoritmos profesionales lo usan internamente para los trozos
+pequeños.</p>
+<h3 id="2-divide-y-vencerás-on-log-n">2. Divide y vencerás: O(n log
+n)</h3>
+<p>La idea que cambia las reglas: en lugar de ordenar un problema de
+tamaño <em>n</em>, lo <strong>partimos</strong> en dos de tamaño
+<em>n/2</em>, los resolvemos (recursivamente) y
+<strong>combinamos</strong>. Esa división sucesiva es la que convierte
+el factor <em>n</em> en <em>log n</em>.</p>
+<h4 id="mergesort-ordenación-por-mezcla">MergeSort (ordenación por
+mezcla)</h4>
+<pre><code>         [5 3 8 1 9 2]
+        /             \        DIVIDIR hasta llegar a trozos de 1
+   [5 3 8]           [1 9 2]
+   /    \             /    \
+ [5]  [3 8]        [1]   [9 2]
+       /  \                /  \
+     [3]  [8]            [9]  [2]
+       \  /                \  /
+      [3 8]                [2 9]        MEZCLAR en orden
+   \     /             \      /
+   [3 5 8]            [1 2 9]
+        \             /
+         [1 2 3 5 8 9]</code></pre>
+<ul>
+<li><strong>Siempre</strong> es O(n log n), también en el peor caso: muy
+predecible.</li>
+<li>Es <strong>estable</strong>: dos elementos iguales conservan su
+orden relativo original (importa cuando ordenas por un segundo
+criterio).</li>
+<li>Necesita <strong>memoria extra</strong> para mezclar, O(n).</li>
+</ul>
+<h4 id="quicksort-ordenación-rápida">QuickSort (ordenación rápida)</h4>
+<p>Elige un elemento como <strong>pivote</strong>, coloca a su izquierda
+los menores y a su derecha los mayores (<em>partición</em>) y repite en
+cada mitad. El pivote queda ya en su posición final.</p>
+<pre><code>[5 3 8 1 9 2]   pivote = 5
+ menores: [3 1 2]   pivote: [5]   mayores: [8 9]
+   ordenar cada lado por el mismo método...
+[1 2 3] 5 [8 9]  →  [1 2 3 5 8 9]</code></pre>
+<ul>
+<li>En el caso medio es O(n log n) y, en la práctica, <strong>el más
+rápido</strong> de todos (trabaja sobre el propio array, sin memoria
+extra apreciable).</li>
+<li>En el <strong>peor caso</strong> es O(n²): ocurre cuando el pivote
+siempre resulta ser el menor o el mayor, por ejemplo al tomar el primer
+elemento de un array ya ordenado. Se evita eligiendo el pivote del
+<strong>centro</strong> o al azar.</li>
+<li><strong>No es estable</strong>.</li>
+</ul>
+<h3 id="3-tabla-comparativa">3. Tabla comparativa</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Algoritmo</th>
+<th>Mejor caso</th>
+<th>Caso medio</th>
+<th>Peor caso</th>
+<th>Memoria</th>
+<th>Estable</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Burbuja (mejorada)</td>
+<td>O(n)</td>
+<td>O(n²)</td>
+<td>O(n²)</td>
+<td>O(1)</td>
+<td>Sí</td>
+</tr>
+<tr class="even">
+<td>Selección</td>
+<td>O(n²)</td>
+<td>O(n²)</td>
+<td>O(n²)</td>
+<td>O(1)</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td>Inserción</td>
+<td>O(n)</td>
+<td>O(n²)</td>
+<td>O(n²)</td>
+<td>O(1)</td>
+<td>Sí</td>
+</tr>
+<tr class="even">
+<td><strong>MergeSort</strong></td>
+<td>O(n log n)</td>
+<td>O(n log n)</td>
+<td>O(n log n)</td>
+<td>O(n)</td>
+<td>Sí</td>
+</tr>
+<tr class="odd">
+<td><strong>QuickSort</strong></td>
+<td>O(n log n)</td>
+<td>O(n log n)</td>
+<td>O(n²)</td>
+<td>O(log n)</td>
+<td>No</td>
+</tr>
+</tbody>
+</table></div>
+<p>Para que se vea lo que significa esa diferencia, número aproximado de
+operaciones:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>n</th>
+<th>n²</th>
+<th>n log₂ n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>10</td>
+<td>100</td>
+<td>33</td>
+</tr>
+<tr class="even">
+<td>1 000</td>
+<td>1 000 000</td>
+<td>10 000</td>
+</tr>
+<tr class="odd">
+<td>1 000 000</td>
+<td>10¹²</td>
+<td>20 000 000</td>
+</tr>
+</tbody>
+</table></div>
+<p>Con un millón de elementos, la diferencia es entre <strong>unos
+segundos</strong> y <strong>unos días</strong>.</p>
+<h3 id="4-búsqueda-el-premio-de-tener-los-datos-ordenados">4. Búsqueda:
+el premio de tener los datos ordenados</h3>
+<p>Ordenar cuesta, pero se amortiza. En un array
+<strong>desordenado</strong> hay que recorrerlo entero: búsqueda lineal,
+O(n). En un array <strong>ordenado</strong> se puede usar la
+<strong>búsqueda binaria</strong>: mirar el centro, descartar media
+lista y repetir. O(log n): en un millón de elementos, <strong>20
+comparaciones</strong>.</p>
+<h3 id="5-en-la-vida-real-arraysort-y-listtsort">5. En la vida real:
+<code>Array.Sort</code> y <code>List&lt;T&gt;.Sort</code></h3>
+<p>.NET no implementa «un» algoritmo, sino un híbrido llamado
+<strong>introsort</strong>: empieza con QuickSort, cambia a ordenación
+por montículos (<em>heapsort</em>) si la recursión se hace demasiado
+profunda (para garantizar O(n log n) en el peor caso) y termina con
+inserción en los trozos pequeños. Está escrito y optimizado por los
+ingenieros de Microsoft: <strong>úsalo</strong>.</p>
+<pre><code>int[] numeros = { 5, 3, 8, 1 };
+Array.Sort(numeros);                       // O(n log n), optimizado
+int posicion = Array.BinarySearch(numeros, 8);   // requiere array ordenado</code></pre>
+<div class="callout">
+<p><strong>La regla profesional.</strong> Implementa un algoritmo de
+ordenación para <strong>aprender</strong>, no para producción. En un
+proyecto real, escribir tu propio QuickSort es casi siempre un error: el
+de la biblioteca es más rápido, está probado por millones de usuarios y
+lo entiende cualquiera que lea tu código.</p>
+</div>`,
+          ejemplos: [
+            { titulo: "Burbuja, con y sin mejora", explicacion: "El intercambio (a, b) = (b, a) con tuplas evita la variable temporal. La variable bandera huboIntercambio sustituye al típico break: la condición queda visible en la cabecera del while.", codigo: r`int[] datos = { 5, 3, 8, 1, 9, 2, 7 };
+int[] copia = (int[])datos.Clone();          // Clone hace una copia independiente
+
+// ---------- Versión básica ----------
+int comparaciones = 0;
+for (int i = 0; i < datos.Length - 1; i++)
+{
+    for (int j = 0; j < datos.Length - 1 - i; j++)   // -i: el final ya está ordenado
+    {
+        comparaciones++;
+        if (datos[j] > datos[j + 1])
+        {
+            (datos[j], datos[j + 1]) = (datos[j + 1], datos[j]);   // intercambio con tuplas
+        }
+    }
+}
+Console.WriteLine($"Básica:   [{string.Join(", ", datos)}]  ({comparaciones} comparaciones)");
+
+// ---------- Versión mejorada: se detiene si una pasada no intercambia nada ----------
+comparaciones = 0;
+bool huboIntercambio = true;
+int pasada = 0;
+while (huboIntercambio && pasada < copia.Length - 1)
+{
+    huboIntercambio = false;
+    for (int j = 0; j < copia.Length - 1 - pasada; j++)
+    {
+        comparaciones++;
+        if (copia[j] > copia[j + 1])
+        {
+            (copia[j], copia[j + 1]) = (copia[j + 1], copia[j]);
+            huboIntercambio = true;
+        }
+    }
+    pasada++;
+}
+Console.WriteLine($"Mejorada: [{string.Join(", ", copia)}]  ({comparaciones} comparaciones)");
+
+// Con un array YA ordenado se ve la ventaja de la mejora
+int[] yaOrdenado = { 1, 2, 3, 4, 5, 6, 7 };
+comparaciones = 0;
+huboIntercambio = true;
+pasada = 0;
+while (huboIntercambio && pasada < yaOrdenado.Length - 1)
+{
+    huboIntercambio = false;
+    for (int j = 0; j < yaOrdenado.Length - 1 - pasada; j++)
+    {
+        comparaciones++;
+        if (yaOrdenado[j] > yaOrdenado[j + 1]) { huboIntercambio = true; }
+    }
+    pasada++;
+}
+Console.WriteLine($"Ya ordenado con la mejora: solo {comparaciones} comparaciones (una pasada)");
+` },
+            { titulo: "Selección e inserción", explicacion: "Mira los pasos intermedios: en selección la parte izquierda ya está definitiva; en inserción la parte izquierda está ordenada pero puede cambiar al insertar un elemento menor.", codigo: r`int[] a = { 5, 3, 8, 1, 9 };
+int[] b = { 5, 3, 8, 1, 9 };
+
+// ---------- SELECCIÓN: busca el mínimo y lo trae al principio ----------
+for (int i = 0; i < a.Length - 1; i++)
+{
+    int posicionMinimo = i;
+    for (int j = i + 1; j < a.Length; j++)
+    {
+        if (a[j] < a[posicionMinimo])
+        {
+            posicionMinimo = j;
+        }
+    }
+    if (posicionMinimo != i)                 // un solo intercambio por posición
+    {
+        (a[i], a[posicionMinimo]) = (a[posicionMinimo], a[i]);
+    }
+    Console.WriteLine($"Selección, paso {i + 1}: [{string.Join(", ", a)}]");
+}
+
+Console.WriteLine();
+
+// ---------- INSERCIÓN: coloca cada elemento en su sitio, como ordenar cartas ----------
+for (int i = 1; i < b.Length; i++)
+{
+    int valor = b[i];                        // la carta que tenemos en la mano
+    int j = i - 1;
+    while (j >= 0 && b[j] > valor)           // desplazamos a la derecha los mayores
+    {
+        b[j + 1] = b[j];
+        j--;
+    }
+    b[j + 1] = valor;                        // hueco encontrado: la dejamos ahí
+    Console.WriteLine($"Inserción, paso {i}: [{string.Join(", ", b)}]");
+}
+` },
+            { titulo: "MergeSort: dividir y mezclar", explicacion: "La traza muestra la estructura en árbol: primero se baja dividiendo hasta trozos de 1 y después se sube mezclando. El <= del Mezclar es lo que hace estable el algoritmo.", codigo: r`int[] datos = { 38, 27, 43, 3, 9, 82, 10 };
+
+Console.WriteLine($"Original: [{string.Join(", ", datos)}]");
+int[] resultado = MergeSort(datos, 0);
+Console.WriteLine($"Ordenado: [{string.Join(", ", resultado)}]");
+
+// Devuelve un array NUEVO ordenado. El parámetro nivel solo sirve para la traza.
+int[] MergeSort(int[] trozo, int nivel)
+{
+    string sangria = new string(' ', nivel * 2);
+    Console.WriteLine($"{sangria}dividir [{string.Join(", ", trozo)}]");
+
+    if (trozo.Length <= 1)                   // caso base: un elemento ya está ordenado
+    {
+        return trozo;
+    }
+
+    int mitad = trozo.Length / 2;
+    int[] izquierda = new int[mitad];
+    int[] derecha = new int[trozo.Length - mitad];
+    Array.Copy(trozo, 0, izquierda, 0, mitad);
+    Array.Copy(trozo, mitad, derecha, 0, derecha.Length);
+
+    izquierda = MergeSort(izquierda, nivel + 1);   // caso recursivo
+    derecha = MergeSort(derecha, nivel + 1);
+
+    int[] mezclado = Mezclar(izquierda, derecha);
+    Console.WriteLine($"{sangria}mezclar  -> [{string.Join(", ", mezclado)}]");
+    return mezclado;
+}
+
+// Mezcla dos arrays YA ordenados en uno solo ordenado
+int[] Mezclar(int[] izq, int[] der)
+{
+    int[] salida = new int[izq.Length + der.Length];
+    int i = 0, j = 0, k = 0;
+
+    while (i < izq.Length && j < der.Length)       // mientras queden en los dos
+    {
+        if (izq[i] <= der[j])                      // <= mantiene la estabilidad
+        {
+            salida[k] = izq[i];
+            i++;
+        }
+        else
+        {
+            salida[k] = der[j];
+            j++;
+        }
+        k++;
+    }
+    while (i < izq.Length) { salida[k] = izq[i]; i++; k++; }   // lo que sobre de la izquierda
+    while (j < der.Length) { salida[k] = der[j]; j++; k++; }   // o de la derecha
+    return salida;
+}
+` },
+            { titulo: "QuickSort con pivote central", explicacion: "El pivote central es la diferencia entre un QuickSort decente y uno que degenera a O(n²): con el primer elemento como pivote, un array ya ordenado es el peor caso posible.", codigo: r`int[] datos = { 38, 27, 43, 3, 9, 82, 10 };
+
+Console.WriteLine($"Original: [{string.Join(", ", datos)}]");
+QuickSort(datos, 0, datos.Length - 1);
+Console.WriteLine($"Ordenado: [{string.Join(", ", datos)}]");
+
+// Ordena el array EN SU SITIO entre las posiciones izq y der
+void QuickSort(int[] v, int izq, int der)
+{
+    if (izq >= der)                      // caso base: 0 o 1 elementos
+    {
+        return;
+    }
+
+    int corte = Particionar(v, izq, der);
+    QuickSort(v, izq, corte);            // mitad izquierda
+    QuickSort(v, corte + 1, der);        // mitad derecha
+}
+
+// Esquema de Hoare: deja a la izquierda los <= pivote y a la derecha los >=
+int Particionar(int[] v, int izq, int der)
+{
+    int pivote = v[(izq + der) / 2];     // pivote central: evita el peor caso con datos ordenados
+    int i = izq - 1;
+    int j = der + 1;
+    bool terminado = false;
+
+    while (!terminado)
+    {
+        do { i++; } while (v[i] < pivote);    // avanza mientras sean menores
+        do { j--; } while (v[j] > pivote);    // retrocede mientras sean mayores
+
+        if (i >= j)
+        {
+            terminado = true;                 // los índices se han cruzado: fin de la partición
+        }
+        else
+        {
+            (v[i], v[j]) = (v[j], v[i]);
+            Console.WriteLine($"  intercambia {v[j]} y {v[i]} -> [{string.Join(", ", v)}]");
+        }
+    }
+    return j;
+}
+` },
+            { titulo: "¿Cuánto se tarda de verdad?", explicacion: "Con 20 000 elementos la inserción tarda cientos de milisegundos y QuickSort unos pocos. Multiplica n por 10 y la inserción tardará 100 veces más, mientras que QuickSort solo unas 13. Esa es la diferencia entre n² y n log n.", codigo: r`// Medimos los algoritmos con arrays grandes para ver la diferencia entre O(n²) y O(n log n)
+int n = 20000;
+Random aleatorio = new Random(42);          // semilla fija: todos medimos lo mismo
+
+int[] original = new int[n];
+for (int i = 0; i < n; i++)
+{
+    original[i] = aleatorio.Next(0, 100000);
+}
+
+Console.WriteLine($"Ordenando {n} números...\n");
+
+Medir("Inserción  O(n²)", (int[])original.Clone(), Insercion);
+Medir("QuickSort  O(n log n)", (int[])original.Clone(), v => QuickSort(v, 0, v.Length - 1));
+Medir("Array.Sort (.NET)", (int[])original.Clone(), Array.Sort);
+
+void Medir(string nombre, int[] v, Action<int[]> algoritmo)
+{
+    var reloj = System.Diagnostics.Stopwatch.StartNew();
+    algoritmo(v);
+    reloj.Stop();
+    // Comprobamos que de verdad ha quedado ordenado
+    bool ok = true;
+    for (int i = 1; i < v.Length; i++)
+    {
+        if (v[i - 1] > v[i]) { ok = false; }
+    }
+    Console.WriteLine($"{nombre,-24} {reloj.ElapsedMilliseconds,6} ms   ordenado: {ok}");
+}
+
+void Insercion(int[] v)
+{
+    for (int i = 1; i < v.Length; i++)
+    {
+        int valor = v[i];
+        int j = i - 1;
+        while (j >= 0 && v[j] > valor) { v[j + 1] = v[j]; j--; }
+        v[j + 1] = valor;
+    }
+}
+
+void QuickSort(int[] v, int izq, int der)
+{
+    if (izq >= der) { return; }
+    int pivote = v[(izq + der) / 2];
+    int i = izq - 1, j = der + 1;
+    bool fin = false;
+    while (!fin)
+    {
+        do { i++; } while (v[i] < pivote);
+        do { j--; } while (v[j] > pivote);
+        if (i >= j) { fin = true; }
+        else { (v[i], v[j]) = (v[j], v[i]); }
+    }
+    QuickSort(v, izq, j);
+    QuickSort(v, j + 1, der);
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Ranking de jugadores ordenado a mano",
+              nivel: 1,
+              pista: "Guarda la posición del máximo, no el valor: necesitas el índice para intercambiar los dos arrays.",
+              enunciado: r`<p>Tienes dos arrays paralelos: <code>nombres</code> y
+<code>puntos</code>. Ordénalos <strong>de mayor a menor
+puntuación</strong> con el algoritmo de <strong>selección</strong>,
+cuidando que al mover una puntuación se mueva también su nombre. Después
+muestra el ranking numerado.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Los dos arrays deben intercambiarse <strong>a la vez</strong>: si
+solo ordenas los puntos, los nombres quedan descolocados.</li>
+<li>El orden es <strong>descendente</strong>: busca el máximo, no el
+mínimo.</li>
+<li>Muestra el ranking con el formato
+<code>1. Ana ....... 95</code>.</li>
+<li><strong>Control de errores:</strong> si los dos arrays no tienen la
+misma longitud, muestra un aviso y no ordenes.</li>
+</ul>
+<p>🥉 <strong>Alternativa más sencilla:</strong> usa
+<code>Array.Sort(puntos, nombres)</code>, que ordena el segundo array
+siguiendo al primero, y después recorre el resultado al revés.</p>
+<p>🏅 <strong>Ampliación:</strong> si dos jugadores empatan a puntos,
+ordénalos alfabéticamente por nombre.</p>`,
+              soluciones: [
+                { titulo: "Versión con selección y arrays paralelos", nota: "string.Compare devuelve un número negativo si el primero va antes alfabéticamente: es el mismo criterio que usan los algoritmos de ordenación de .NET.", codigo: r`string[] nombres = { "Ana", "Luis", "Marta", "Pau", "Noa" };
+int[] puntos = { 72, 95, 88, 95, 64 };
+
+if (nombres.Length != puntos.Length)
+{
+    Console.WriteLine("Error: los arrays no tienen la misma longitud.");
+}
+else
+{
+    // Selección descendente: busca el MÁXIMO de la parte no ordenada
+    for (int i = 0; i < puntos.Length - 1; i++)
+    {
+        int posicionMaximo = i;
+        for (int j = i + 1; j < puntos.Length; j++)
+        {
+            bool mayorPuntuacion = puntos[j] > puntos[posicionMaximo];
+            // Ampliación: en caso de empate, gana el nombre alfabéticamente menor
+            bool empateYAntes = puntos[j] == puntos[posicionMaximo]
+                                && string.Compare(nombres[j], nombres[posicionMaximo]) < 0;
+            if (mayorPuntuacion || empateYAntes)
+            {
+                posicionMaximo = j;
+            }
+        }
+
+        if (posicionMaximo != i)
+        {
+            // Los DOS arrays se intercambian juntos
+            (puntos[i], puntos[posicionMaximo]) = (puntos[posicionMaximo], puntos[i]);
+            (nombres[i], nombres[posicionMaximo]) = (nombres[posicionMaximo], nombres[i]);
+        }
+    }
+
+    Console.WriteLine("--- RANKING ---");
+    for (int i = 0; i < nombres.Length; i++)
+    {
+        Console.WriteLine($"{i + 1}. {nombres[i].PadRight(10, '.')} {puntos[i]}");
+    }
+}
+` },
+                { titulo: "Alternativa más sencilla con Array.Sort", nota: "Más corto y más rápido, pero no controla los empates: Array.Sort no es estable, así que el orden de los jugadores empatados es impredecible. Es el precio de la comodidad.", codigo: r`string[] nombres = { "Ana", "Luis", "Marta", "Pau", "Noa" };
+int[] puntos = { 72, 95, 88, 95, 64 };
+
+if (nombres.Length != puntos.Length)
+{
+    Console.WriteLine("Error: los arrays no tienen la misma longitud.");
+}
+else
+{
+    // Esta sobrecarga ordena «claves» y arrastra el array de «valores»
+    Array.Sort(puntos, nombres);        // queda ascendente
+    Array.Reverse(puntos);              // le damos la vuelta...
+    Array.Reverse(nombres);             // ...a los dos a la vez
+
+    Console.WriteLine("--- RANKING ---");
+    for (int i = 0; i < nombres.Length; i++)
+    {
+        Console.WriteLine($"{i + 1}. {nombres[i].PadRight(10, '.')} {puntos[i]}");
+    }
+}
+` },
+              ],
+            },
+            {
+              titulo: "Compara algoritmos con tus propios datos",
+              nivel: 2,
+              pista: "Clone() devuelve object, así que hay que escribir (int[])datos.Clone().",
+              enunciado: r`<p>Escribe un programa que <strong>compare</strong> tres algoritmos de
+ordenación (burbuja, inserción y <code>Array.Sort</code>) sobre el mismo
+conjunto de datos y muestre una tabla con el número de
+<strong>comparaciones</strong> que hace cada uno.</p>
+<p>El programa debe probar tres escenarios con el mismo tamaño: array
+<strong>aleatorio</strong>, array <strong>ya ordenado</strong> y array
+<strong>ordenado al revés</strong>.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Cada algoritmo debe trabajar sobre una <strong>copia</strong> del
+array (usa <code>Clone</code>), o el segundo recibiría los datos ya
+ordenados.</li>
+<li>Cuenta las comparaciones en una variable que devuelvan tus
+funciones.</li>
+<li><strong>Control de errores:</strong> pide el tamaño al usuario y
+valídalo (entre 5 y 5000).</li>
+<li>Muestra la tabla alineada en columnas.</li>
+</ul>
+<p>🏅🏅 <strong>Ampliación avanzada:</strong> añade MergeSort y
+comprueba que su número de comparaciones apenas cambia entre los tres
+escenarios.</p>`,
+              soluciones: [
+                { titulo: "Versión con funciones que devuelven el contador", nota: "Observa los resultados: con el array ya ordenado, la burbuja mejorada hace una sola pasada y la inserción apenas compara. Con el array al revés, las dos llegan a su peor caso. Por eso no basta con decir «es O(n²)»: hay que saber en qué caso estamos.", codigo: r`int tamano = LeerTamano();
+
+int[] aleatorio = new int[tamano];
+Random r = new Random(7);
+for (int i = 0; i < tamano; i++) { aleatorio[i] = r.Next(0, 10000); }
+
+int[] ordenado = new int[tamano];
+for (int i = 0; i < tamano; i++) { ordenado[i] = i; }
+
+int[] inverso = new int[tamano];
+for (int i = 0; i < tamano; i++) { inverso[i] = tamano - i; }
+
+Console.WriteLine($"\n{"Escenario",-16}{"Burbuja",12}{"Inserción",12}");
+Console.WriteLine(new string('-', 40));
+Fila("Aleatorio", aleatorio);
+Fila("Ya ordenado", ordenado);
+Fila("Al revés", inverso);
+
+Console.WriteLine("\nArray.Sort no permite contar comparaciones: está implementado dentro de .NET");
+Console.WriteLine("como un híbrido (introsort) y por eso siempre gana en tiempo.");
+
+void Fila(string nombre, int[] datos)
+{
+    long burbuja = Burbuja((int[])datos.Clone());
+    long insercion = Insercion((int[])datos.Clone());
+    Console.WriteLine($"{nombre,-16}{burbuja,12}{insercion,12}");
+}
+
+// Devuelve el número de comparaciones realizadas
+long Burbuja(int[] v)
+{
+    long comparaciones = 0;
+    bool cambio = true;
+    int pasada = 0;
+    while (cambio && pasada < v.Length - 1)
+    {
+        cambio = false;
+        for (int j = 0; j < v.Length - 1 - pasada; j++)
+        {
+            comparaciones++;
+            if (v[j] > v[j + 1])
+            {
+                (v[j], v[j + 1]) = (v[j + 1], v[j]);
+                cambio = true;
+            }
+        }
+        pasada++;
+    }
+    return comparaciones;
+}
+
+long Insercion(int[] v)
+{
+    long comparaciones = 0;
+    for (int i = 1; i < v.Length; i++)
+    {
+        int valor = v[i];
+        int j = i - 1;
+        bool seguir = j >= 0;
+        while (seguir)
+        {
+            comparaciones++;
+            if (v[j] > valor)
+            {
+                v[j + 1] = v[j];
+                j--;
+                seguir = j >= 0;
+            }
+            else
+            {
+                seguir = false;
+            }
+        }
+        v[j + 1] = valor;
+    }
+    return comparaciones;
+}
+
+int LeerTamano()
+{
+    int valor;
+    bool ok;
+    do
+    {
+        Console.Write("Tamaño del array (5-5000): ");
+        ok = int.TryParse(Console.ReadLine(), out valor) && valor >= 5 && valor <= 5000;
+        if (!ok) { Console.WriteLine("Valor no válido."); }
+    } while (!ok);
+    return valor;
+}
+` },
+                { titulo: "Ampliación avanzada con MergeSort", nota: "MergeSort hace prácticamente las mismas comparaciones en los tres escenarios (unas n·log₂n): es la ventaja de un algoritmo con el mismo coste en el mejor y en el peor caso. Reutilizar un único array auxiliar evita crear memoria en cada llamada.", noRun: true, codigo: r`// Añade esta función al programa anterior y una fila más a la tabla.
+// Cuenta las comparaciones usando una variable capturada por la función local.
+
+long comparacionesMerge = 0;
+
+long MergeSortContado(int[] v)
+{
+    comparacionesMerge = 0;
+    Ordenar(v, 0, v.Length - 1, new int[v.Length]);
+    return comparacionesMerge;
+
+    void Ordenar(int[] a, int izq, int der, int[] auxiliar)
+    {
+        if (izq >= der) { return; }
+        int medio = (izq + der) / 2;
+        Ordenar(a, izq, medio, auxiliar);
+        Ordenar(a, medio + 1, der, auxiliar);
+
+        // mezcla usando el array auxiliar
+        for (int k = izq; k <= der; k++) { auxiliar[k] = a[k]; }
+        int i = izq, j = medio + 1;
+        for (int k = izq; k <= der; k++)
+        {
+            if (i > medio) { a[k] = auxiliar[j]; j++; }
+            else if (j > der) { a[k] = auxiliar[i]; i++; }
+            else
+            {
+                comparacionesMerge++;
+                if (auxiliar[j] < auxiliar[i]) { a[k] = auxiliar[j]; j++; }
+                else { a[k] = auxiliar[i]; i++; }
+            }
+        }
+    }
+}
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "backtracking",
+          titulo: "Backtracking: el problema de las ocho reinas",
+          duracion: "20 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Entender la técnica de backtracking (probar, comprobar y deshacer)", "Resolver el problema de las ocho reinas con recursividad", "Reconocer problemas que se resuelven explorando y descartando"],
+          teoria: r`<p>Hay problemas en los que no existe una fórmula: hay que
+<strong>probar combinaciones</strong>. Pero probarlas todas es inviable
+(en el ajedrez, colocar 8 reinas en 64 casillas son más de 4 000
+millones de combinaciones). El <strong>backtracking</strong> (vuelta
+atrás) es la técnica que hace esa búsqueda razonable: construye la
+solución <strong>paso a paso</strong> y, en cuanto detecta que el camino
+no puede llevar a ninguna solución válida, <strong>lo abandona y
+retrocede</strong> sin seguir explorándolo.</p>
+<h3 id="1-el-esquema-general">1. El esquema general</h3>
+<pre><code>probar(paso):
+    si el paso es el último → hemos encontrado una solución
+    para cada opción posible en este paso:
+        si la opción es válida:
+            ponerla                  ← avanzar
+            probar(paso + 1)         ← seguir hacia delante (recursividad)
+            quitarla                 ← DESHACER: la vuelta atrás</code></pre>
+<p>La línea que da nombre a la técnica es la última:
+<strong>deshacer</strong> lo que acabábamos de poner para poder probar
+la opción siguiente. Es exactamente lo que hace una persona resolviendo
+un sudoku a lápiz: escribe un número, sigue, ve que no cuadra,
+<strong>borra</strong> y prueba otro.</p>
+<h3 id="2-el-problema-de-las-ocho-reinas">2. El problema de las ocho
+reinas</h3>
+<p>Colocar 8 reinas en un tablero de ajedrez de 8 × 8 de forma que
+<strong>ninguna amenace a otra</strong>. La reina ataca en horizontal,
+vertical y en las dos diagonales.</p>
+<pre><code>  a b c d e f g h
+8 . ♛ . . . . . .
+7 . . . ♛ . . . .
+6 . . . . . ♛ . .
+5 . . . . . . . ♛
+4 . . ♛ . . . . .
+3 ♛ . . . . . . .
+2 . . . . . . ♛ .
+1 . . . . ♛ . . .</code></pre>
+<h4 id="la-clave-reducir-el-espacio-de-búsqueda">La clave: reducir el
+espacio de búsqueda</h4>
+<p>La primera idea importante no es programar, es
+<strong>razonar</strong>: si ninguna reina puede compartir columna,
+entonces hay <strong>exactamente una reina por columna</strong>. Así que
+no buscamos «dónde van las 8 reinas en 64 casillas», sino «<strong>en
+qué fila</strong> va la reina de cada columna». El problema pasa de 4 ×
+10⁹ combinaciones a 8⁸ = 16 millones… y el backtracking, descartando
+pronto, solo explora unos <strong>2 000</strong> casos.</p>
+<p>Esto se representa con un array:
+<code>filas[columna] = fila</code>.</p>
+<h4 id="comprobar-si-una-posición-es-válida">Comprobar si una posición
+es válida</h4>
+<p>Al colocar la reina de la columna <code>c</code>, solo hay que
+compararla con las que ya están puestas (columnas
+<code>0 … c-1</code>):</p>
+<ul>
+<li><strong>Misma fila:</strong> <code>filas[i] == fila</code>.</li>
+<li><strong>Misma diagonal:</strong> la distancia horizontal y la
+vertical coinciden:
+<code>Math.Abs(filas[i] - fila) == c - i</code>.</li>
+</ul>
+<p>No hace falta comprobar las columnas: por construcción, cada reina
+está en una distinta.</p>
+<h3 id="3-cuántas-soluciones-hay">3. Cuántas soluciones hay</h3>
+<p>Para 8 reinas existen <strong>92</strong> soluciones (12 si se
+descartan las simétricas). La tabla muestra por qué el problema es un
+clásico para hablar de coste:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>n</th>
+<th>Soluciones</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>4</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>10</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>40</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>92</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>724</td>
+</tr>
+<tr class="odd">
+<td>12</td>
+<td>14 200</td>
+</tr>
+</tbody>
+</table></div>
+<p>Con <code>n = 2</code> y <code>n = 3</code> no hay ninguna solución:
+un resultado interesante, porque demuestra que el algoritmo debe estar
+preparado para no encontrar nada.</p>
+<h3 id="4-otros-problemas-de-backtracking">4. Otros problemas de
+backtracking</h3>
+<p>El mismo esquema resuelve una familia entera de problemas, y
+reconocerla es lo que de verdad hay que llevarse de esta lección:</p>
+<ul>
+<li><strong>Sudoku:</strong> probar un número en una casilla vacía,
+seguir, retroceder si no cuadra.</li>
+<li><strong>Laberintos:</strong> probar una dirección, retroceder al
+llegar a un callejón sin salida.</li>
+<li><strong>El salto del caballo:</strong> recorrer el tablero pasando
+una sola vez por cada casilla.</li>
+<li><strong>Suma de subconjuntos / la mochila:</strong> elegir si cada
+objeto entra o no.</li>
+<li><strong>Generar permutaciones</strong> o todas las combinaciones de
+un conjunto.</li>
+</ul>
+<div class="callout">
+<p><strong>Backtracking frente a fuerza bruta.</strong> La fuerza bruta
+genera <strong>todas</strong> las combinaciones y después comprueba
+cuáles valen. El backtracking comprueba <strong>mientras
+construye</strong> y poda las ramas imposibles. El resultado es el
+mismo; el tiempo, incomparable.</p>
+</div>`,
+          ejemplos: [
+            { titulo: "Las ocho reinas: contar todas las soluciones", explicacion: "Debe salir 92, el número conocido de soluciones para 8 reinas. Fíjate en que EsSegura solo mira las columnas anteriores: las siguientes todavía no tienen reina.", codigo: r`int n = 8;
+int[] filas = new int[n];       // filas[c] = fila donde está la reina de la columna c
+int soluciones = 0;
+List<int[]> primera = new List<int[]>();   // guardamos la primera para dibujarla
+
+Colocar(0);
+
+Console.WriteLine($"Soluciones para {n} reinas: {soluciones}");
+if (primera.Count > 0)
+{
+    Console.WriteLine("\nPrimera solución encontrada:");
+    Dibujar(primera[0], n);
+}
+
+// Intenta colocar la reina de la columna indicada
+void Colocar(int columna)
+{
+    if (columna == n)                      // caso base: las n reinas están colocadas
+    {
+        soluciones++;
+        if (primera.Count == 0)
+        {
+            primera.Add((int[])filas.Clone());   // Clone: copia independiente del array
+        }
+        return;
+    }
+
+    for (int fila = 0; fila < n; fila++)
+    {
+        if (EsSegura(columna, fila))
+        {
+            filas[columna] = fila;         // 1. PONER
+            Colocar(columna + 1);          // 2. SEGUIR
+            // 3. DESHACER: no hay que borrar nada porque la siguiente vuelta
+            //    del for sobreescribe filas[columna] con otro valor
+        }
+    }
+}
+
+// ¿Puede ir una reina en (columna, fila) sin que la ataquen las ya colocadas?
+bool EsSegura(int columna, int fila)
+{
+    bool segura = true;
+    for (int c = 0; c < columna; c++)
+    {
+        bool mismaFila = filas[c] == fila;
+        bool mismaDiagonal = Math.Abs(filas[c] - fila) == columna - c;
+        if (mismaFila || mismaDiagonal)
+        {
+            segura = false;
+        }
+    }
+    return segura;
+}
+
+void Dibujar(int[] solucion, int tamano)
+{
+    for (int fila = 0; fila < tamano; fila++)
+    {
+        string linea = "";
+        for (int columna = 0; columna < tamano; columna++)
+        {
+            linea += solucion[columna] == fila ? " Q" : " .";
+        }
+        Console.WriteLine(linea);
+    }
+}
+` },
+            { titulo: "Ver la vuelta atrás en acción", explicacion: "La traza enseña la esencia de la técnica: cada «vuelvo de la fila X» es una vuelta atrás. Con n = 4 el algoritmo prueba unas 60 posiciones en lugar de las 256 de la fuerza bruta, y encuentra las 2 soluciones.", codigo: r`// Con un tablero pequeño (n = 4) se puede seguir la traza completa del algoritmo
+int n = 4;
+int[] filas = new int[n];
+int intentos = 0;
+int retrocesos = 0;
+
+Colocar(0);
+Console.WriteLine($"\nTotal: {intentos} posiciones probadas, {retrocesos} vueltas atrás");
+
+void Colocar(int columna)
+{
+    if (columna == n)
+    {
+        Console.WriteLine($"  ¡SOLUCIÓN! [{string.Join(", ", filas)}]");
+        return;
+    }
+
+    for (int fila = 0; fila < n; fila++)
+    {
+        intentos++;
+        string sangria = new string(' ', columna * 2);
+
+        if (EsSegura(columna, fila))
+        {
+            filas[columna] = fila;
+            Console.WriteLine($"{sangria}col {columna}: pruebo fila {fila}  -> vale, sigo");
+            Colocar(columna + 1);
+            Console.WriteLine($"{sangria}col {columna}: vuelvo de la fila {fila}");
+            retrocesos++;
+        }
+        else
+        {
+            Console.WriteLine($"{sangria}col {columna}: pruebo fila {fila}  -> atacada, descarto");
+        }
+    }
+}
+
+bool EsSegura(int columna, int fila)
+{
+    bool segura = true;
+    for (int c = 0; c < columna; c++)
+    {
+        if (filas[c] == fila || Math.Abs(filas[c] - fila) == columna - c)
+        {
+            segura = false;
+        }
+    }
+    return segura;
+}
+` },
+            { titulo: "El mismo esquema para otro problema: el laberinto", explicacion: "Es el mismo patrón que las reinas: poner, seguir y deshacer. La marca camino[f,c] = '*' hace dos trabajos: dibuja el recorrido y evita dar vueltas en círculo. Esta estructura es la base de la IA de movimiento de muchos videojuegos.", codigo: r`// Backtracking para encontrar la salida de un laberinto.
+// 0 = libre, 1 = muro. Entrada arriba a la izquierda, salida abajo a la derecha.
+
+int[,] laberinto =
+{
+    { 0, 0, 1, 0, 0 },
+    { 1, 0, 1, 0, 1 },
+    { 0, 0, 0, 0, 0 },
+    { 0, 1, 1, 1, 0 },
+    { 0, 0, 0, 1, 0 },
+};
+
+int alto = laberinto.GetLength(0);
+int ancho = laberinto.GetLength(1);
+char[,] camino = new char[alto, ancho];
+
+for (int f = 0; f < alto; f++)
+{
+    for (int c = 0; c < ancho; c++)
+    {
+        camino[f, c] = laberinto[f, c] == 1 ? '#' : '.';
+    }
+}
+
+if (Buscar(0, 0))
+{
+    Console.WriteLine("Camino encontrado (* marca el recorrido):\n");
+    for (int f = 0; f < alto; f++)
+    {
+        string linea = "";
+        for (int c = 0; c < ancho; c++) { linea += camino[f, c] + " "; }
+        Console.WriteLine(linea);
+    }
+}
+else
+{
+    Console.WriteLine("No hay salida.");
+}
+
+bool Buscar(int fila, int columna)
+{
+    // ¿Es una posición imposible?
+    if (fila < 0 || fila >= alto || columna < 0 || columna >= ancho) { return false; }
+    if (laberinto[fila, columna] == 1) { return false; }       // muro
+    if (camino[fila, columna] == '*') { return false; }        // ya pasé por aquí
+
+    camino[fila, columna] = '*';                               // 1. PONER
+
+    if (fila == alto - 1 && columna == ancho - 1)              // caso base: ¡la salida!
+    {
+        return true;
+    }
+
+    // 2. SEGUIR en las cuatro direcciones
+    if (Buscar(fila + 1, columna)) { return true; }            // abajo
+    if (Buscar(fila, columna + 1)) { return true; }            // derecha
+    if (Buscar(fila - 1, columna)) { return true; }            // arriba
+    if (Buscar(fila, columna - 1)) { return true; }            // izquierda
+
+    camino[fila, columna] = '.';                               // 3. DESHACER: callejón sin salida
+    return false;
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "N reinas con tablero a elección",
+              nivel: 2,
+              pista: "Si no encuentras soluciones para n = 2 o n = 3, el programa funciona bien: realmente no existen.",
+              enunciado: r`<p>Amplía el programa de las reinas para que el usuario elija el
+<strong>tamaño del tablero</strong> (de 1 a 12) y el programa
+muestre:</p>
+<ol type="1">
+<li>El número total de soluciones.</li>
+<li><strong>Todas</strong> las soluciones dibujadas si
+<code>n &lt;= 6</code>; solo la primera si es mayor.</li>
+<li>El número de posiciones probadas, para que se vea el coste.</li>
+</ol>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li><strong>Control de errores:</strong> valida el tamaño con
+<code>int.TryParse</code> y el rango 1-12.</li>
+<li>Con <code>n = 2</code> y <code>n = 3</code> <strong>no hay
+solución</strong>: el programa debe decirlo claramente, no quedarse en
+blanco.</li>
+<li>Avisa al usuario de que con <code>n = 12</code> puede tardar unos
+segundos.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> guarda cada solución encontrada en una
+<code>List&lt;int[]&gt;</code> para poder dibujarlas después.</p>
+<p>🏅 <strong>Ampliación:</strong> muestra cuántas de las soluciones son
+distintas si se descartan las que son reflejo o rotación de otra (para n
+= 8 son 12).</p>`,
+              soluciones: [
+                { titulo: "Versión completa", nota: "El Clone() al guardar la solución es el error más típico de esta actividad: sin él, la lista acaba con N referencias al mismo array, que al final contiene solo la última posición probada.", codigo: r`int n = LeerTamano();
+
+int[] filas = new int[n];
+List<int[]> soluciones = new List<int[]>();
+long probadas = 0;
+
+if (n >= 10)
+{
+    Console.WriteLine("Con tableros grandes esto puede tardar unos segundos...");
+}
+
+Colocar(0);
+
+Console.WriteLine($"\nTablero {n}x{n}: {soluciones.Count} soluciones " +
+                  $"({probadas} posiciones probadas)");
+
+if (soluciones.Count == 0)
+{
+    Console.WriteLine($"No existe ninguna forma de colocar {n} reinas sin que se ataquen.");
+}
+else if (n <= 6)
+{
+    for (int i = 0; i < soluciones.Count; i++)
+    {
+        Console.WriteLine($"\n--- Solución {i + 1} ---");
+        Dibujar(soluciones[i]);
+    }
+}
+else
+{
+    Console.WriteLine("\n--- Primera solución ---");
+    Dibujar(soluciones[0]);
+}
+
+void Colocar(int columna)
+{
+    if (columna == n)
+    {
+        soluciones.Add((int[])filas.Clone());      // Clone: si no, todas apuntarían al mismo array
+        return;
+    }
+
+    for (int fila = 0; fila < n; fila++)
+    {
+        probadas++;
+        if (EsSegura(columna, fila))
+        {
+            filas[columna] = fila;
+            Colocar(columna + 1);
+        }
+    }
+}
+
+bool EsSegura(int columna, int fila)
+{
+    bool segura = true;
+    for (int c = 0; c < columna; c++)
+    {
+        if (filas[c] == fila || Math.Abs(filas[c] - fila) == columna - c)
+        {
+            segura = false;
+        }
+    }
+    return segura;
+}
+
+void Dibujar(int[] solucion)
+{
+    for (int fila = 0; fila < n; fila++)
+    {
+        string linea = "";
+        for (int columna = 0; columna < n; columna++)
+        {
+            linea += solucion[columna] == fila ? " Q" : " .";
+        }
+        Console.WriteLine(linea);
+    }
+}
+
+int LeerTamano()
+{
+    int valor;
+    bool ok;
+    do
+    {
+        Console.Write("Tamaño del tablero (1-12): ");
+        ok = int.TryParse(Console.ReadLine(), out valor) && valor >= 1 && valor <= 12;
+        if (!ok) { Console.WriteLine("Debe ser un entero entre 1 y 12."); }
+    } while (!ok);
+    return valor;
+}
+` },
+                { titulo: "Ampliación: soluciones esencialmente distintas", nota: "Para n = 8 deben salir 12. La idea de la «forma canónica» (elegir un representante de cada grupo de equivalentes) es muy útil y aparece en criptografía, en gráficos y al comparar estructuras.", noRun: true, codigo: r`// Añade esta función y filtra las soluciones encontradas.
+// Dos soluciones son «la misma» si una es rotación o reflejo de la otra.
+
+List<string> esenciales = new List<string>();
+
+foreach (int[] s in soluciones)
+{
+    // Generamos las 8 variantes (4 rotaciones x 2 reflejos) y nos quedamos
+    // con la menor en orden alfabético como representante del grupo
+    string canonica = Canonica(s, n);
+    if (!esenciales.Contains(canonica))
+    {
+        esenciales.Add(canonica);
+    }
+}
+Console.WriteLine($"Soluciones esencialmente distintas: {esenciales.Count}");
+
+string Canonica(int[] s, int tamano)
+{
+    int[] actual = (int[])s.Clone();
+    string menor = Clave(actual);
+
+    for (int giro = 0; giro < 4; giro++)
+    {
+        actual = Rotar(actual, tamano);
+        string k1 = Clave(actual);
+        string k2 = Clave(Reflejar(actual, tamano));
+        if (string.Compare(k1, menor) < 0) { menor = k1; }
+        if (string.Compare(k2, menor) < 0) { menor = k2; }
+    }
+    return menor;
+}
+
+// Girar 90 grados: la reina de la columna c y fila f pasa a la columna f y fila n-1-c
+int[] Rotar(int[] s, int tamano)
+{
+    int[] girado = new int[tamano];
+    for (int c = 0; c < tamano; c++) { girado[s[c]] = tamano - 1 - c; }
+    return girado;
+}
+
+int[] Reflejar(int[] s, int tamano)
+{
+    int[] espejo = new int[tamano];
+    for (int c = 0; c < tamano; c++) { espejo[tamano - 1 - c] = s[c]; }
+    return espejo;
+}
+
+string Clave(int[] s) => string.Join(",", s);
+` },
+              ],
+            },
+          ],
+        },
       ],
     },
     {
@@ -5478,6 +8728,1443 @@ Console.WriteLine(esPalindromo ? "Es un palíndromo" : "No es un palíndromo");
             },
           ],
         },
+        {
+          id: "stringbuilder",
+          titulo: "StringBuilder: construir textos sin arruinar el rendimiento",
+          duracion: "16 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Entender por qué las cadenas de C# son inmutables y qué consecuencias tiene", "Usar StringBuilder para construir textos dentro de bucles", "Elegir entre concatenación, interpolación, string.Join y StringBuilder"],
+          teoria: r`<p>En C# las cadenas (<code>string</code>) son
+<strong>inmutables</strong>: una vez creada, una cadena <strong>no se
+puede modificar</strong>. Cuando escribes <code>texto += "a"</code>, C#
+no añade una letra al final: crea <strong>una cadena nueva</strong> con
+el contenido anterior más la letra, y descarta la antigua. Esto, que
+parece un detalle, es la causa de uno de los problemas de rendimiento
+más habituales en los programas de los principiantes.</p>
+<h3 id="1-por-qué-son-inmutables">1. ¿Por qué son inmutables?</h3>
+<p>Porque así son <strong>seguras</strong>: si pasas una cadena a un
+método, sabes que no te la va a cambiar; dos variables pueden compartir
+el mismo texto en memoria sin peligro, y se pueden usar como claves de
+un diccionario sin miedo a que cambien. El precio es que <strong>cada
+modificación crea un objeto nuevo</strong>.</p>
+<pre><code>texto = &quot;Hola&quot;           →  [&quot;Hola&quot;]
+texto += &quot; mundo&quot;        →  [&quot;Hola&quot;]  [&quot;Hola mundo&quot;]   ← la primera queda para la basura
+texto += &quot;!&quot;             →  [&quot;Hola&quot;]  [&quot;Hola mundo&quot;]  [&quot;Hola mundo!&quot;]</code></pre>
+<h3 id="2-el-problema-concatenar-dentro-de-un-bucle">2. El problema:
+concatenar dentro de un bucle</h3>
+<pre><code>string resultado = &quot;&quot;;
+for (int i = 0; i &lt; 50000; i++)
+{
+    resultado += i + &quot;,&quot;;     // ¡50 000 cadenas creadas y tiradas!
+}</code></pre>
+<p>En cada vuelta se copia <strong>todo</strong> el texto acumulado. Al
+final se han copiado del orden de <em>n²/2</em> caracteres: el coste es
+<strong>O(n²)</strong>. Con 50 000 vueltas el programa tarda segundos;
+con 500 000, minutos.</p>
+<h3 id="3-la-solución-stringbuilder">3. La solución:
+<code>StringBuilder</code></h3>
+<p><code>StringBuilder</code> (en <code>System.Text</code>) es un
+<strong>búfer mutable</strong>: mantiene un array de caracteres con
+espacio de sobra y va escribiendo dentro. Cuando se llena, lo amplía
+(duplicando su tamaño). El coste total es <strong>O(n)</strong>.</p>
+<pre><code>using System.Text;
+
+StringBuilder sb = new StringBuilder();
+for (int i = 0; i &lt; 50000; i++)
+{
+    sb.Append(i).Append(&#39;,&#39;);
+}
+string resultado = sb.ToString();   // una sola cadena, al final</code></pre>
+<h4 id="métodos-principales">Métodos principales</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Método</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Append(x)</code></td>
+<td>Añade al final (cualquier tipo: número, char, bool…)</td>
+</tr>
+<tr class="even">
+<td><code>AppendLine(x)</code></td>
+<td>Añade y salta de línea</td>
+</tr>
+<tr class="odd">
+<td><code>AppendFormat(...)</code></td>
+<td>Añade con formato, como <code>string.Format</code></td>
+</tr>
+<tr class="even">
+<td><code>Insert(pos, x)</code></td>
+<td>Inserta en una posición</td>
+</tr>
+<tr class="odd">
+<td><code>Remove(pos, n)</code></td>
+<td>Borra <em>n</em> caracteres</td>
+</tr>
+<tr class="even">
+<td><code>Replace(a, b)</code></td>
+<td>Sustituye texto en todo el búfer</td>
+</tr>
+<tr class="odd">
+<td><code>Clear()</code></td>
+<td>Vacía el búfer para reutilizarlo</td>
+</tr>
+<tr class="even">
+<td><code>Length</code></td>
+<td>Longitud actual (se puede asignar para recortar)</td>
+</tr>
+<tr class="odd">
+<td><code>ToString()</code></td>
+<td>Produce el <code>string</code> final</td>
+</tr>
+</tbody>
+</table></div>
+<p>Casi todos devuelven el propio <code>StringBuilder</code>, así que se
+pueden <strong>encadenar</strong>:
+<code>sb.Append("Total: ").Append(precio).AppendLine(" €");</code></p>
+<h3 id="4-cuándo-usar-cada-cosa">4. ¿Cuándo usar cada cosa?</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Situación</th>
+<th>Lo adecuado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Unir 2 o 3 trozos conocidos</td>
+<td>Interpolación: <code>$"{nombre} tiene {edad} años"</code></td>
+</tr>
+<tr class="even">
+<td>Unir los elementos de una colección con un separador</td>
+<td><code>string.Join(", ", lista)</code></td>
+</tr>
+<tr class="odd">
+<td>Construir texto en un <strong>bucle</strong> de tamaño
+desconocido</td>
+<td><code>StringBuilder</code></td>
+</tr>
+<tr class="even">
+<td>Montar un informe, un CSV o un HTML línea a línea</td>
+<td><code>StringBuilder</code></td>
+</tr>
+<tr class="odd">
+<td>Modificar un texto corto una vez</td>
+<td>Métodos de <code>string</code> (<code>Replace</code>,
+<code>Trim</code>…)</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p><strong>No uses StringBuilder para todo.</strong> Para tres
+concatenaciones es más código y más lento (crear el objeto cuesta). El
+compilador, además, convierte <code>a + b + c</code> en una única
+llamada a <code>string.Concat</code>, que es eficiente. La regla:
+<strong>StringBuilder cuando hay un bucle</strong>.</p>
+</div>
+<h3 id="5-un-detalle-importante-capacity">5. Un detalle importante:
+<code>Capacity</code></h3>
+<p>Si sabes aproximadamente cuánto vas a escribir, dilo al crear el
+objeto: <code>new StringBuilder(10000)</code>. Evitarás las ampliaciones
+intermedias (cada una copia el búfer entero).</p>
+<h3 id="6-de-paso-stringjoin-y-split">6. De paso:
+<code>string.Join</code> y <code>Split</code></h3>
+<p>Para el caso frecuentísimo de «unir una colección separando por
+comas» no hace falta ni bucle ni <code>StringBuilder</code>:</p>
+<pre><code>string[] nombres = { &quot;Ana&quot;, &quot;Luis&quot;, &quot;Marta&quot; };
+string linea = string.Join(&quot;, &quot;, nombres);        // &quot;Ana, Luis, Marta&quot;
+string[] otraVez = linea.Split(&quot;, &quot;);             // vuelta a los tres nombres</code></pre>
+<p><code>string.Join</code> internamente usa un
+<code>StringBuilder</code>, así que ya es eficiente. Es la forma
+idiomática en C# y la que debe aparecer en tu código.</p>`,
+          ejemplos: [
+            { titulo: "La diferencia medida", explicacion: "Con 30 000 vueltas la diferencia ya es de uno o dos órdenes de magnitud. Si subes n a 300 000, la versión con += puede tardar minutos mientras la otra sigue en milisegundos.", codigo: r`using System.Text;
+using System.Diagnostics;
+
+int n = 30000;
+
+// ---------- Concatenación: O(n²) ----------
+Stopwatch reloj = Stopwatch.StartNew();
+string lento = "";
+for (int i = 0; i < n; i++)
+{
+    lento += i + ",";            // crea una cadena nueva en cada vuelta
+}
+reloj.Stop();
+long tiempoConcatenacion = reloj.ElapsedMilliseconds;
+
+// ---------- StringBuilder: O(n) ----------
+reloj.Restart();
+StringBuilder sb = new StringBuilder();
+for (int i = 0; i < n; i++)
+{
+    sb.Append(i).Append(',');    // escribe dentro del mismo búfer
+}
+string rapido = sb.ToString();
+reloj.Stop();
+long tiempoBuilder = reloj.ElapsedMilliseconds;
+
+Console.WriteLine($"Concatenación:  {tiempoConcatenacion,5} ms");
+Console.WriteLine($"StringBuilder:  {tiempoBuilder,5} ms");
+Console.WriteLine($"Mismo resultado: {lento == rapido}");
+Console.WriteLine($"Longitud: {rapido.Length} caracteres");
+` },
+            { titulo: "Los métodos de StringBuilder", explicacion: "Observa el formato {0,-10}: alinea a la izquierda en 10 caracteres. Es la forma clásica de hacer columnas; con interpolación se escribiría {producto,-10}.", codigo: r`using System.Text;
+
+// Capacity inicial: evitamos ampliaciones si sabemos el tamaño aproximado
+StringBuilder factura = new StringBuilder(256);
+
+factura.AppendLine("=== FACTURA ===");
+factura.Append("Cliente: ").AppendLine("Ana Puig");       // encadenado
+factura.AppendLine();
+
+string[] productos = { "Teclado", "Ratón", "Monitor" };
+decimal[] precios = { 24.90m, 12.50m, 149.00m };
+decimal total = 0;
+
+for (int i = 0; i < productos.Length; i++)
+{
+    // AppendFormat admite los mismos formatos que string.Format
+    factura.AppendFormat("{0,-10} {1,8:F2} €{2}", productos[i], precios[i], Environment.NewLine);
+    total += precios[i];
+}
+
+factura.AppendLine(new string('-', 21));
+factura.AppendFormat("{0,-10} {1,8:F2} €", "TOTAL", total).AppendLine();
+
+Console.WriteLine(factura.ToString());
+
+// El búfer se puede seguir modificando después
+Console.WriteLine($"Longitud: {factura.Length}, capacidad: {factura.Capacity}");
+factura.Replace("FACTURA", "RECIBO");
+Console.WriteLine(factura.ToString().Split(Environment.NewLine)[0]);
+
+factura.Clear();                  // vaciar para reutilizar el objeto
+Console.WriteLine($"Tras Clear(): longitud {factura.Length}");
+` },
+            { titulo: "Cuándo NO usar StringBuilder", explicacion: "La regla práctica: si el texto se construye en un bucle, StringBuilder; si son unos pocos trozos, interpolación; si es unir una colección, string.Join.", codigo: r`using System.Text;
+
+string nombre = "Ana";
+int edad = 20;
+
+// ❌ Innecesario: tres trozos conocidos
+StringBuilder sb = new StringBuilder();
+sb.Append(nombre).Append(" tiene ").Append(edad).Append(" años");
+Console.WriteLine(sb.ToString());
+
+// ✅ Mucho más legible y además más rápido
+Console.WriteLine($"{nombre} tiene {edad} años");
+
+// ❌ Bucle para unir con separador
+string[] lenguajes = { "C#", "Python", "Java", "Rust" };
+StringBuilder sb2 = new StringBuilder();
+for (int i = 0; i < lenguajes.Length; i++)
+{
+    sb2.Append(lenguajes[i]);
+    if (i < lenguajes.Length - 1) { sb2.Append(", "); }    // la típica chapuza del separador
+}
+Console.WriteLine(sb2.ToString());
+
+// ✅ string.Join se encarga de los separadores (y ya usa StringBuilder dentro)
+Console.WriteLine(string.Join(", ", lenguajes));
+
+// ✅ StringBuilder sí, cuando hay bucle de tamaño desconocido
+StringBuilder tabla = new StringBuilder();
+for (int fila = 1; fila <= 3; fila++)
+{
+    for (int columna = 1; columna <= 3; columna++)
+    {
+        tabla.Append($"{fila * columna,4}");
+    }
+    tabla.AppendLine();
+}
+Console.Write(tabla);
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Generador de tabla de multiplicar",
+              nivel: 1,
+              pista: "AppendLine ya añade el salto de línea correcto del sistema operativo: no hace falta escribir \\n.",
+              enunciado: r`<p>Escribe un programa que pida un número y construya <strong>con
+<code>StringBuilder</code></strong> la tabla de multiplicar de ese
+número del 1 al 10, formateada en columnas, y la muestre de una sola vez
+al final.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Todo el texto debe construirse en el <code>StringBuilder</code> y
+mostrarse con <strong>una sola</strong> llamada a
+<code>Console.Write</code>.</li>
+<li><strong>Control de errores:</strong> valida con
+<code>int.TryParse</code> y acepta solo números del 1 al 100.</li>
+<li>Incluye una línea de cabecera y una de separación.</li>
+</ul>
+<p>🏅 <strong>Ampliación:</strong> pide dos números y genera la tabla de
+todas las tablas entre esos dos valores, separadas por una línea en
+blanco.</p>`,
+              soluciones: [
+                { titulo: "Versión con StringBuilder", nota: "Construir todo y escribir una vez no solo es más eficiente: también permite enviar el mismo texto a un fichero o a una ventana sin cambiar la lógica.", codigo: r`using System.Text;
+
+Console.Write("Número (1-100): ");
+
+if (!int.TryParse(Console.ReadLine(), out int numero) || numero < 1 || numero > 100)
+{
+    Console.WriteLine("Número no válido: debe estar entre 1 y 100.");
+}
+else
+{
+    StringBuilder salida = new StringBuilder(256);
+
+    salida.AppendLine($"=== TABLA DEL {numero} ===");
+    salida.AppendLine(new string('-', 20));
+
+    for (int i = 1; i <= 10; i++)
+    {
+        salida.AppendLine($"{numero,3} x {i,2} = {numero * i,4}");
+    }
+
+    salida.AppendLine(new string('-', 20));
+    Console.Write(salida);                    // una sola escritura en consola
+}
+` },
+                { titulo: "Ampliación: rango de tablas", nota: "Dar la capacidad inicial estimada evita que el búfer se amplíe (y se copie) varias veces mientras crece. Con textos grandes se nota.", codigo: r`using System.Text;
+
+int desde = LeerEntero("Desde (1-100): ");
+int hasta = LeerEntero("Hasta (1-100): ");
+
+if (desde > hasta)
+{
+    (desde, hasta) = (hasta, desde);          // si vienen al revés, los cambiamos
+    Console.WriteLine("(He intercambiado los valores)");
+}
+
+// Estimamos el tamaño: unas 20 líneas de 20 caracteres por tabla
+StringBuilder salida = new StringBuilder((hasta - desde + 1) * 400);
+
+for (int tabla = desde; tabla <= hasta; tabla++)
+{
+    salida.AppendLine($"=== TABLA DEL {tabla} ===");
+    for (int i = 1; i <= 10; i++)
+    {
+        salida.AppendLine($"{tabla,3} x {i,2} = {tabla * i,4}");
+    }
+    salida.AppendLine();
+}
+
+Console.Write(salida);
+Console.WriteLine($"({salida.Length} caracteres generados)");
+
+int LeerEntero(string mensaje)
+{
+    int valor;
+    bool ok;
+    do
+    {
+        Console.Write(mensaje);
+        ok = int.TryParse(Console.ReadLine(), out valor) && valor >= 1 && valor <= 100;
+        if (!ok) { Console.WriteLine("Debe ser un entero entre 1 y 100."); }
+    } while (!ok);
+    return valor;
+}
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "expresiones-regulares",
+          titulo: "Expresiones regulares",
+          duracion: "24 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Leer y escribir patrones con las construcciones básicas de las expresiones regulares", "Validar, buscar, extraer y sustituir texto con la clase Regex", "Usar grupos con nombre y saber cuándo una expresión regular no es la herramienta adecuada"],
+          teoria: r`<p>Una <strong>expresión regular</strong> (<em>regex</em>) es un patrón
+que describe un conjunto de textos. Con una sola línea puedes comprobar
+si un texto es un correo válido, extraer todas las fechas de un
+documento o reemplazar todos los espacios múltiples por uno. Es una de
+esas herramientas que, una vez aprendidas, usas toda la vida; y una de
+las que peor fama tienen, porque los patrones se vuelven ilegibles con
+facilidad.</p>
+<p>En C# están en <code>System.Text.RegularExpressions</code>, clase
+<strong><code>Regex</code></strong>.</p>
+<h3 id="1-los-ladrillos-del-patrón">1. Los ladrillos del patrón</h3>
+<h4 id="caracteres-y-clases">Caracteres y clases</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Patrón</th>
+<th>Significa</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>a</code></td>
+<td>la letra «a»</td>
+</tr>
+<tr class="even">
+<td><code>.</code></td>
+<td><strong>cualquier</strong> carácter (menos el salto de línea)</td>
+</tr>
+<tr class="odd">
+<td><code>[aeiou]</code></td>
+<td>uno de esos caracteres</td>
+</tr>
+<tr class="even">
+<td><code>[a-z]</code></td>
+<td>un carácter del rango</td>
+</tr>
+<tr class="odd">
+<td><code>[^0-9]</code></td>
+<td>un carácter que <strong>no</strong> esté en el conjunto</td>
+</tr>
+<tr class="even">
+<td><code>\d</code></td>
+<td>un dígito (<code>[0-9]</code>)</td>
+</tr>
+<tr class="odd">
+<td><code>\D</code></td>
+<td>lo que <strong>no</strong> sea un dígito</td>
+</tr>
+<tr class="even">
+<td><code>\w</code></td>
+<td>letra, dígito o <code>_</code></td>
+</tr>
+<tr class="odd">
+<td><code>\W</code></td>
+<td>lo que no sea <code>\w</code></td>
+</tr>
+<tr class="even">
+<td><code>\s</code></td>
+<td>un espacio en blanco (espacio, tabulador, salto)</td>
+</tr>
+<tr class="odd">
+<td><code>\S</code></td>
+<td>lo que no sea espacio</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="cuantificadores-cuántas-veces">Cuantificadores: cuántas
+veces</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Patrón</th>
+<th>Significa</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>*</code></td>
+<td>0 o más</td>
+</tr>
+<tr class="even">
+<td><code>+</code></td>
+<td>1 o más</td>
+</tr>
+<tr class="odd">
+<td><code>?</code></td>
+<td>0 o 1 (opcional)</td>
+</tr>
+<tr class="even">
+<td><code>{3}</code></td>
+<td>exactamente 3</td>
+</tr>
+<tr class="odd">
+<td><code>{2,4}</code></td>
+<td>entre 2 y 4</td>
+</tr>
+<tr class="even">
+<td><code>{2,}</code></td>
+<td>2 o más</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="anclas-y-agrupaciones">Anclas y agrupaciones</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Patrón</th>
+<th>Significa</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>^</code></td>
+<td>principio del texto (o de la línea con
+<code>RegexOptions.Multiline</code>)</td>
+</tr>
+<tr class="even">
+<td><code>$</code></td>
+<td>final del texto</td>
+</tr>
+<tr class="odd">
+<td><code>\b</code></td>
+<td>límite de palabra</td>
+</tr>
+<tr class="even">
+<td><code>(...)</code></td>
+<td>grupo (se puede recuperar después)</td>
+</tr>
+<tr class="odd">
+<td><code>(?&lt;nombre&gt;...)</code></td>
+<td>grupo <strong>con nombre</strong></td>
+</tr>
+<tr class="even">
+<td><code>|</code></td>
+<td>alternativa: «esto o aquello»</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p><strong>Las anclas son obligatorias al validar.</strong>
+<code>Regex.IsMatch("abc123def", @"\d+")</code> devuelve
+<code>true</code>, porque busca el patrón <strong>en alguna
+parte</strong>. Para exigir que <strong>todo</strong> el texto sea el
+patrón hay que escribir <code>@"^\d+$"</code>. Olvidar <code>^</code> y
+<code>$</code> es el error número uno al validar formularios.</p>
+</div>
+<h3 id="2-siempre-con-cadenas-verbatim">2. Siempre con cadenas
+verbatim</h3>
+<p>Los patrones están llenos de barras invertidas, que en C# son el
+carácter de escape. Por eso los patrones se escriben
+<strong>siempre</strong> con <code>@"..."</code> (cadena
+<em>verbatim</em>), donde la barra no se interpreta:</p>
+<pre><code>string mal  = &quot;\\d{3}-\\d{2}&quot;;    // funciona, pero ilegible
+string bien = @&quot;\d{3}-\d{2}&quot;;     // así se escribe un patrón en C#</code></pre>
+<h3 id="3-los-métodos-de-regex">3. Los métodos de
+<code>Regex</code></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Método</th>
+<th>Para qué</th>
+<th>Devuelve</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>IsMatch</code></td>
+<td>¿cumple el patrón?</td>
+<td><code>bool</code></td>
+</tr>
+<tr class="even">
+<td><code>Match</code></td>
+<td>la <strong>primera</strong> coincidencia</td>
+<td><code>Match</code></td>
+</tr>
+<tr class="odd">
+<td><code>Matches</code></td>
+<td><strong>todas</strong> las coincidencias</td>
+<td>colección de <code>Match</code></td>
+</tr>
+<tr class="even">
+<td><code>Replace</code></td>
+<td>sustituir</td>
+<td><code>string</code></td>
+</tr>
+<tr class="odd">
+<td><code>Split</code></td>
+<td>partir por un patrón</td>
+<td><code>string[]</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Los cinco existen como métodos <strong>estáticos</strong>
+(<code>Regex.IsMatch(texto, patrón)</code>) y como métodos de
+<strong>instancia</strong>
+(<code>new Regex(patrón).IsMatch(texto)</code>). La diferencia importa
+cuando el patrón se usa muchas veces: creando el objeto con
+<code>RegexOptions.Compiled</code>, .NET genera código específico para
+ese patrón y las búsquedas son bastante más rápidas, a cambio de un
+coste inicial.</p>
+<h3 id="4-grupos-extraer-las-partes">4. Grupos: extraer las partes</h3>
+<p>Si el patrón tiene paréntesis, cada grupo captura un trozo. Con
+nombres se lee muchísimo mejor:</p>
+<pre><code>string patron = @&quot;^(?&lt;dia&gt;\d{2})/(?&lt;mes&gt;\d{2})/(?&lt;anio&gt;\d{4})$&quot;;
+Match m = Regex.Match(&quot;27/11/2026&quot;, patron);
+if (m.Success)
+{
+    Console.WriteLine(m.Groups[&quot;dia&quot;].Value);    // 27
+}</code></pre>
+<h3 id="5-patrones-de-uso-frecuente">5. Patrones de uso frecuente</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Para</th>
+<th>Patrón</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Solo dígitos</td>
+<td><code>^\d+$</code></td>
+</tr>
+<tr class="even">
+<td>Código postal español</td>
+<td><code>^\d{5}$</code></td>
+</tr>
+<tr class="odd">
+<td>DNI español</td>
+<td><code>^\d{8}[A-Za-z]$</code></td>
+</tr>
+<tr class="even">
+<td>Hora <code>hh:mm</code> (24 h)</td>
+<td><code>^([01]\d|2[0-3]):[0-5]\d$</code></td>
+</tr>
+<tr class="odd">
+<td>Identificador de C#</td>
+<td><code>^[A-Za-z_]\w*$</code></td>
+</tr>
+<tr class="even">
+<td>Espacios repetidos</td>
+<td><code>\s+</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Sobre el <strong>correo electrónico</strong>: la expresión regular
+«oficial» ocupa varias líneas y casi nadie la usa. En la práctica se
+valida con algo sencillo (<code>^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$</code>)
+y la validación de verdad se hace <strong>enviando un correo de
+confirmación</strong>. En .NET también existe
+<code>MailAddress.TryCreate</code>, que suele ser mejor opción.</p>
+<h3 id="6-dos-avisos-importantes">6. Dos avisos importantes</h3>
+<p><strong>No uses expresiones regulares para HTML o XML.</strong> Son
+lenguajes anidados y una regex no puede analizarlos correctamente. Para
+eso están <code>XDocument</code>, <code>HtmlAgilityPack</code>, etc.</p>
+<p><strong>Cuidado con el <em>backtracking</em> catastrófico.</strong>
+Patrones con cuantificadores anidados como <code>(a+)+$</code> pueden
+tardar un tiempo exponencial con ciertas entradas; si el patrón viene
+del usuario, es una vía de ataque (<em>ReDoS</em>). .NET permite poner
+un límite de tiempo:</p>
+<pre><code>Regex seguro = new Regex(patron, RegexOptions.None, TimeSpan.FromSeconds(1));</code></pre>
+<p>Y si el patrón es fijo y conocido en tiempo de compilación, lo mejor
+en .NET moderno es el <strong>generador de código</strong>, que crea el
+analizador al compilar (sin coste en tiempo de ejecución):</p>
+<pre><code>[GeneratedRegex(@&quot;^\d{5}$&quot;)]
+private static partial Regex CodigoPostal();</code></pre>
+<h3 id="7-la-regla-de-oro-documenta-el-patrón">7. La regla de oro:
+documenta el patrón</h3>
+<p>Una expresión regular se escribe en un minuto y se lee en veinte.
+<strong>Siempre</strong> con un comentario al lado explicando en
+castellano qué acepta, o usando
+<code>RegexOptions.IgnorePatternWhitespace</code> para poder escribirla
+en varias líneas con comentarios.</p>`,
+          ejemplos: [
+            { titulo: "Validar: el papel de ^ y $", explicacion: "Esta es la trampa clásica: sin ^ y $ la expresión busca el patrón dentro del texto, así que «abc12345def» se consideraría un código postal válido.", codigo: r`using System.Text.RegularExpressions;
+
+string[] candidatos = { "12345", "abc123", "1234", "123456", "12 34" };
+string patron = @"^\d{5}$";        // exactamente cinco dígitos y nada más
+
+Console.WriteLine("Patrón: " + patron);
+foreach (string c in candidatos)
+{
+    Console.WriteLine($"  «{c}» -> {(Regex.IsMatch(c, patron) ? "válido" : "no válido")}");
+}
+
+// El mismo patrón SIN anclas acepta cualquier texto que CONTENGA cinco dígitos
+Console.WriteLine("\nSin anclas (patrón \\d{5}) — ojo al resultado:");
+foreach (string c in candidatos)
+{
+    Console.WriteLine($"  «{c}» -> {(Regex.IsMatch(c, @"\d{5}") ? "válido" : "no válido")}");
+}
+
+Console.WriteLine("\n«abc12345def» con anclas: " + Regex.IsMatch("abc12345def", @"^\d{5}$"));
+Console.WriteLine("«abc12345def» sin anclas: " + Regex.IsMatch("abc12345def", @"\d{5}"));
+` },
+            { titulo: "Buscar y extraer con grupos con nombre", explicacion: "Los grupos con nombre convierten un patrón críptico en algo legible. Analizar ficheros de registro así es una tarea muy habitual en administración de sistemas.", codigo: r`using System.Text.RegularExpressions;
+
+string registro = @"
+2026-11-25 10:14 ERROR  Fallo al abrir partida.sav
+2026-11-25 10:15 INFO   Jugador Ana ha entrado
+2026-11-26 09:02 WARN   Memoria al 85%
+2026-11-26 09:30 ERROR  Conexion perdida
+";
+
+// Grupos con nombre: el patrón se lee casi como una frase
+string patron = @"(?<fecha>\d{4}-\d{2}-\d{2})\s+(?<hora>\d{2}:\d{2})\s+(?<nivel>\w+)\s+(?<mensaje>.+)";
+
+MatchCollection coincidencias = Regex.Matches(registro, patron);
+Console.WriteLine($"Líneas reconocidas: {coincidencias.Count}\n");
+
+int errores = 0;
+foreach (Match m in coincidencias)
+{
+    string nivel = m.Groups["nivel"].Value;
+    if (nivel == "ERROR") { errores++; }
+
+    Console.WriteLine($"[{nivel,-5}] {m.Groups["fecha"].Value} a las {m.Groups["hora"].Value}");
+    Console.WriteLine($"         {m.Groups["mensaje"].Value.Trim()}");
+}
+Console.WriteLine($"\nTotal de errores: {errores}");
+
+// Primera coincidencia solamente
+Match primera = Regex.Match(registro, patron);
+if (primera.Success)
+{
+    Console.WriteLine($"\nPrimer registro: {primera.Groups["fecha"].Value} ({primera.Groups["nivel"].Value})");
+}
+` },
+            { titulo: "Sustituir y partir", explicacion: "El Replace con función (lambda) es muy potente: permite decidir el reemplazo según lo encontrado. El último ejemplo funciona con etiquetas simples, pero fallaría con HTML real: queda como advertencia.", codigo: "using System.Text.RegularExpressions;\n\n// --- Replace: limpiar espacios repetidos ---\nstring sucio = \"Esto    tiene\\t\\tdemasiados     espacios\";\nConsole.WriteLine(Regex.Replace(sucio, @\"\\s+\", \" \"));\n\n// --- Replace con referencias a los grupos: $1, $2... o ${nombre} ---\nstring fecha = \"27/11/2026\";\nstring iso = Regex.Replace(fecha, @\"^(\\d{2})/(\\d{2})/(\\d{4})$\", \"$3-$2-$1\");\nConsole.WriteLine($\"{fecha} -> {iso}\");\n\n// --- Replace con nombres (más legible) ---\nstring patron = @\"^(?<d>\\d{2})/(?<m>\\d{2})/(?<a>\\d{4})$\";\nConsole.WriteLine(Regex.Replace(fecha, patron, \"${a}-${m}-${d}\"));\n\n// --- Replace con una función: censurar números de teléfono ---\nstring texto = \"Llama al 666112233 o al 931234567\";\nstring censurado = Regex.Replace(texto, @\"\\d{9}\", m => m.Value.Substring(0, 3) + \"******\");\nConsole.WriteLine(censurado);\n\n// --- Split por un patrón, no por un carácter fijo ---\nstring lista = \"manzana, pera;plátano  ,  kiwi\";\nstring[] frutas = Regex.Split(lista, @\"\\s*[,;]\\s*\");    // coma o punto y coma, con espacios alrededor\nConsole.WriteLine($\"[{string.Join(\"] [\", frutas)}]\");\n\n// --- Quitar etiquetas sencillas (¡solo como demostración!) ---\nstring html = \"<b>Hola</b> <i>mundo</i>\";\nConsole.WriteLine(Regex.Replace(html, @\"<[^>]+>\", \"\"));\nConsole.WriteLine(\"(para HTML de verdad se usa un analizador, no una regex)\");\n" },
+            { titulo: "Validador de formularios reutilizable", explicacion: "(?=...) es un «lookahead»: comprueba que algo aparece más adelante sin consumirlo. Es el truco estándar para exigir varias condiciones a la vez en una contraseña.", codigo: r`using System.Text.RegularExpressions;
+
+// Patrones compilados una sola vez: se reutilizan en todas las comprobaciones
+Regex codigoPostal = new Regex(@"^\d{5}$", RegexOptions.Compiled);
+Regex dni = new Regex(@"^\d{8}[A-Za-z]$", RegexOptions.Compiled);
+Regex hora = new Regex(@"^([01]\d|2[0-3]):[0-5]\d$", RegexOptions.Compiled);
+// Correo «suficientemente bueno»: algo, arroba, algo, punto, 2+ letras
+Regex correo = new Regex(@"^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$", RegexOptions.Compiled);
+// Contraseña: 8+ caracteres con al menos una minúscula, una mayúscula y un dígito
+Regex clave = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$", RegexOptions.Compiled);
+
+Comprobar("Código postal", codigoPostal, new[] { "08001", "0800", "08A01" });
+Comprobar("DNI", dni, new[] { "12345678Z", "1234567Z", "12345678" });
+Comprobar("Hora", hora, new[] { "09:30", "23:59", "24:00", "9:30" });
+Comprobar("Correo", correo, new[] { "ana@itb.cat", "ana@itb", "a@@b.cat" });
+Comprobar("Contraseña", clave, new[] { "Secreta1", "secreta1", "Corta1" });
+
+void Comprobar(string nombre, Regex patron, string[] valores)
+{
+    Console.WriteLine($"--- {nombre} ---");
+    foreach (string v in valores)
+    {
+        Console.WriteLine($"  {v,-14} {(patron.IsMatch(v) ? "OK" : "NO")}");
+    }
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Validador de datos personales",
+              nivel: 1,
+              pista: "Si el patrón te sale muy largo, pártelo: valida el formato con la regex y las reglas de cálculo con código normal.",
+              enunciado: r`<p>Escribe un programa con un <strong>menú</strong> que valide cuatro
+tipos de dato con expresiones regulares: <code>1</code> código postal (5
+dígitos), <code>2</code> DNI (8 dígitos + letra), <code>3</code>
+matrícula española actual (4 dígitos + 3 consonantes) y <code>4</code>
+salir.</p>
+<p>En cada opción el programa pide el valor, dice si es válido y,
+<strong>si no lo es, explica qué formato se espera</strong>.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Todos los patrones deben usar <code>^</code> y <code>$</code>.</li>
+<li>Escribe los patrones con cadenas <em>verbatim</em>
+(<code>@"..."</code>) y <strong>comenta cada uno</strong> en
+castellano.</li>
+<li>Crea los objetos <code>Regex</code> <strong>una sola vez</strong>,
+fuera del bucle del menú.</li>
+<li><strong>Control de errores:</strong> valida la opción del menú con
+<code>int.TryParse</code>. Usa <code>do-while</code> con la condición en
+la cabecera.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> las consonantes de las matrículas españolas
+son <code>BCDFGHJKLMNPRSTVWXYZ</code> (sin vocales ni Ñ, Q, Ü).</p>`,
+              soluciones: [
+                { titulo: "Versión con los tres patrones", nota: "RegexOptions.IgnoreCase permite aceptar la matrícula en minúsculas sin duplicar las consonantes en el patrón. Pasar el formato esperado como parámetro evita repetir el mismo if-else tres veces.", codigo: r`using System.Text.RegularExpressions;
+
+// Patrones creados una sola vez (Compiled porque se usarán muchas veces)
+Regex codigoPostal = new Regex(@"^\d{5}$", RegexOptions.Compiled);               // 5 dígitos exactos
+Regex dni = new Regex(@"^\d{8}[A-Za-z]$", RegexOptions.Compiled);                // 8 dígitos + 1 letra
+Regex matricula = new Regex(@"^\d{4}[BCDFGHJKLMNPRSTVWXYZ]{3}$",                 // 4 dígitos + 3 consonantes
+                            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+int opcion = 0;
+
+do
+{
+    Console.WriteLine("\n1) Código postal   2) DNI   3) Matrícula   4) Salir");
+    Console.Write("Opción: ");
+
+    if (!int.TryParse(Console.ReadLine(), out opcion))
+    {
+        Console.WriteLine("Escribe un número del 1 al 4.");
+        opcion = 0;
+    }
+    else
+    {
+        switch (opcion)
+        {
+            case 1:
+                Validar("Código postal", codigoPostal, "5 dígitos (por ejemplo 08001)");
+                break;
+            case 2:
+                Validar("DNI", dni, "8 dígitos y una letra (por ejemplo 12345678Z)");
+                break;
+            case 3:
+                Validar("Matrícula", matricula, "4 dígitos y 3 consonantes (por ejemplo 1234BCD)");
+                break;
+            case 4:
+                Console.WriteLine("Hasta luego.");
+                break;
+            default:
+                Console.WriteLine("Opción fuera de rango.");
+                break;
+        }
+    }
+} while (opcion != 4);
+
+void Validar(string nombre, Regex patron, string formatoEsperado)
+{
+    Console.Write($"{nombre}: ");
+    string valor = Console.ReadLine() ?? "";
+
+    if (patron.IsMatch(valor))
+    {
+        Console.WriteLine($"  «{valor}» es un {nombre.ToLower()} con formato válido.");
+    }
+    else
+    {
+        Console.WriteLine($"  «{valor}» no es válido. Formato esperado: {formatoEsperado}.");
+    }
+}
+` },
+                { titulo: "Ampliación: comprobar también la letra del DNI", nota: "Aquí se ve el límite de las expresiones regulares: pueden comprobar el *formato*, pero no una regla de cálculo. La regex valida la forma y el código valida el contenido: las dos cosas son necesarias.", codigo: r`using System.Text.RegularExpressions;
+
+// La letra del DNI no es libre: se calcula con el resto de dividir el número entre 23
+const string Letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+Regex formatoDni = new Regex(@"^(?<numero>\d{8})(?<letra>[A-Za-z])$");
+
+string[] pruebas = { "12345678Z", "12345678A", "00000001R", "1234567Z" };
+
+foreach (string valor in pruebas)
+{
+    Match m = formatoDni.Match(valor);
+
+    if (!m.Success)
+    {
+        Console.WriteLine($"{valor,-12} formato incorrecto");
+    }
+    else if (!int.TryParse(m.Groups["numero"].Value, out int numero))
+    {
+        Console.WriteLine($"{valor,-12} número no interpretable");
+    }
+    else
+    {
+        char esperada = Letras[numero % 23];
+        char recibida = char.ToUpper(m.Groups["letra"].Value[0]);
+        bool correcto = esperada == recibida;
+        Console.WriteLine($"{valor,-12} {(correcto ? "VÁLIDO" : $"letra incorrecta (debería ser {esperada})")}");
+    }
+}
+` },
+              ],
+            },
+            {
+              titulo: "Analizador de un fichero de registro",
+              nivel: 2,
+              pista: "RegexOptions.Multiline hace que ^ y $ se refieran a cada línea, no a todo el texto.",
+              enunciado: r`<p>Tienes un texto con líneas de registro en el formato
+<code>FECHA HORA NIVEL MENSAJE</code> (por ejemplo
+<code>2026-11-25 10:14 ERROR Fallo al guardar</code>). Escribe un
+programa que, con expresiones regulares:</p>
+<ol type="1">
+<li>Cuente cuántas líneas hay de cada nivel (<code>INFO</code>,
+<code>WARN</code>, <code>ERROR</code>).</li>
+<li>Muestre solo los mensajes de nivel <code>ERROR</code>, con su fecha
+y hora.</li>
+<li>Extraiga todos los <strong>números</strong> que aparezcan en los
+mensajes y muestre su suma.</li>
+<li>Normalice las fechas al formato <code>dd/MM/yyyy</code>.</li>
+</ol>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Usa <strong>grupos con nombre</strong> para fecha, hora, nivel y
+mensaje.</li>
+<li>Las líneas que no cumplan el formato deben contarse aparte como «no
+reconocidas».</li>
+<li><strong>Control de errores:</strong> usa <code>int.TryParse</code>
+al convertir los números extraídos.</li>
+</ul>
+<p>🏅🏅 <strong>Ampliación avanzada:</strong> permite al usuario
+escribir su propio patrón de búsqueda y aplícalo con un <strong>límite
+de tiempo</strong> de un segundo, capturando
+<code>RegexMatchTimeoutException</code>.</p>`,
+              soluciones: [
+                { titulo: "Versión completa", nota: "El patrón usa INFO|WARN|ERROR en lugar de \\w+ para que una línea con un nivel inventado cuente como no reconocida. Elegir cuánto restringe el patrón es parte del diseño.", codigo: r`using System.Text.RegularExpressions;
+
+string registro = @"2026-11-25 10:14 ERROR Fallo al guardar la partida 3
+2026-11-25 10:15 INFO Jugador Ana ha entrado
+esta linea no tiene el formato correcto
+2026-11-26 09:02 WARN Memoria al 85 por ciento
+2026-11-26 09:30 ERROR Conexion perdida tras 12 intentos
+2026-11-26 09:31 INFO Reconectado en 4 segundos";
+
+Regex linea = new Regex(
+    @"^(?<fecha>\d{4}-\d{2}-\d{2})\s+(?<hora>\d{2}:\d{2})\s+(?<nivel>INFO|WARN|ERROR)\s+(?<mensaje>.+)$",
+    RegexOptions.Compiled | RegexOptions.Multiline);
+
+int info = 0, warn = 0, error = 0, noReconocidas = 0;
+long sumaNumeros = 0;
+
+string[] lineas = registro.Split('\n');
+
+Console.WriteLine("--- ERRORES ---");
+
+foreach (string l in lineas)
+{
+    Match m = linea.Match(l.Trim());
+
+    if (!m.Success)
+    {
+        noReconocidas++;
+    }
+    else
+    {
+        string nivel = m.Groups["nivel"].Value;
+        switch (nivel)
+        {
+            case "INFO": info++; break;
+            case "WARN": warn++; break;
+            case "ERROR": error++; break;
+        }
+
+        if (nivel == "ERROR")
+        {
+            // Normalizamos la fecha de yyyy-MM-dd a dd/MM/yyyy
+            string fechaEs = Regex.Replace(m.Groups["fecha"].Value,
+                                           @"^(\d{4})-(\d{2})-(\d{2})$", "$3/$2/$1");
+            Console.WriteLine($"{fechaEs} {m.Groups["hora"].Value}  {m.Groups["mensaje"].Value}");
+        }
+
+        // Todos los números del mensaje
+        foreach (Match numero in Regex.Matches(m.Groups["mensaje"].Value, @"\d+"))
+        {
+            if (int.TryParse(numero.Value, out int valor))
+            {
+                sumaNumeros += valor;
+            }
+        }
+    }
+}
+
+Console.WriteLine($"\nINFO: {info}   WARN: {warn}   ERROR: {error}");
+Console.WriteLine($"Líneas no reconocidas: {noReconocidas}");
+Console.WriteLine($"Suma de los números de los mensajes: {sumaNumeros}");
+` },
+                { titulo: "Ampliación: patrón del usuario con límite de tiempo", nota: "Nunca compiles una expresión regular que venga del usuario sin límite de tiempo y sin capturar ArgumentException: son dos puertas abiertas a que el programa se cuelgue.", codigo: r`using System.Text.RegularExpressions;
+
+Console.Write("Escribe un patrón de búsqueda: ");
+string patronUsuario = Console.ReadLine() ?? "";
+
+string texto = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa!";
+
+try
+{
+    // Límite de 1 segundo: protege contra patrones que tardarían una eternidad (ReDoS)
+    Regex patron = new Regex(patronUsuario, RegexOptions.None, TimeSpan.FromSeconds(1));
+    Console.WriteLine($"Coincide: {patron.IsMatch(texto)}");
+}
+catch (ArgumentException ex)
+{
+    // El patrón está mal escrito
+    Console.WriteLine($"Patrón no válido: {ex.Message}");
+}
+catch (RegexMatchTimeoutException)
+{
+    Console.WriteLine("El patrón ha tardado demasiado: puede provocar un bloqueo (ReDoS).");
+}
+
+Console.WriteLine("\nPrueba con (a+)+$ para ver el límite de tiempo en acción.");
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "fechas-horas",
+          titulo: "Fechas y horas: DateTime, DateOnly y TimeSpan",
+          duracion: "22 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Crear, formatear y analizar fechas y horas con la cultura adecuada", "Calcular diferencias y desplazamientos con TimeSpan", "Elegir entre DateTime, DateOnly, TimeOnly y DateTimeOffset"],
+          teoria: r`<p>Las fechas parecen fáciles hasta que las programas. Hay zonas
+horarias, años bisiestos, cambios de hora, formatos distintos en cada
+país y un montón de errores clásicos. .NET ofrece varios tipos y la
+clave es <strong>elegir el adecuado para cada caso</strong>.</p>
+<h3 id="1-los-cinco-tipos">1. Los cinco tipos</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Tipo</th>
+<th>Guarda</th>
+<th>Cuándo usarlo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>DateTime</code></td>
+<td>Fecha <strong>y</strong> hora</td>
+<td>Momento concreto (un registro, un guardado)</td>
+</tr>
+<tr class="even">
+<td><code>DateOnly</code></td>
+<td>Solo la fecha</td>
+<td>Fecha de nacimiento, día de entrega, festivos</td>
+</tr>
+<tr class="odd">
+<td><code>TimeOnly</code></td>
+<td>Solo la hora</td>
+<td>Hora de apertura, hora de una alarma</td>
+</tr>
+<tr class="even">
+<td><code>TimeSpan</code></td>
+<td>Una <strong>duración</strong></td>
+<td>Diferencia entre fechas, duración de una partida</td>
+</tr>
+<tr class="odd">
+<td><code>DateTimeOffset</code></td>
+<td>Fecha, hora <strong>y</strong> desfase respecto a UTC</td>
+<td>Datos que viajan entre husos horarios</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>DateOnly</code> y <code>TimeOnly</code> existen desde .NET 6.
+Antes había que usar un <code>DateTime</code> con la hora a cero, y eso
+provocaba errores en cuanto una hora distinta de medianoche se colaba en
+el dato: dos fechas «iguales» dejaban de ser iguales.</p>
+<h3 id="2-crear-fechas">2. Crear fechas</h3>
+<pre><code>DateTime ahora = DateTime.Now;              // fecha y hora local
+DateTime ahoraUtc = DateTime.UtcNow;        // en tiempo universal
+DateTime hoy = DateTime.Today;              // hoy a las 00:00
+DateTime concreta = new DateTime(2026, 11, 27, 13, 30, 0);
+
+DateOnly fechaNacimiento = new DateOnly(2006, 3, 14);
+TimeOnly apertura = new TimeOnly(9, 0);
+TimeSpan duracion = new TimeSpan(1, 30, 0);   // 1 h 30 min</code></pre>
+<p>Las propiedades más usadas: <code>Year</code>, <code>Month</code>,
+<code>Day</code>, <code>Hour</code>, <code>Minute</code>,
+<code>Second</code>, <code>DayOfWeek</code>, <code>DayOfYear</code>,
+<code>Date</code> (la parte de fecha), <code>TimeOfDay</code> (la parte
+de hora).</p>
+<h3 id="3-operar-siempre-con-timespan">3. Operar: siempre con
+<code>TimeSpan</code></h3>
+<p>Los tipos de fecha son <strong>inmutables</strong>: los métodos
+<code>AddDays</code>, <code>AddMonths</code>… no modifican la fecha,
+<strong>devuelven una nueva</strong>.</p>
+<pre><code>DateTime manana = DateTime.Today.AddDays(1);
+DateTime haceUnaSemana = DateTime.Today.AddDays(-7);
+
+TimeSpan diferencia = fin - inicio;         // restar dos fechas da un TimeSpan
+Console.WriteLine(diferencia.TotalDays);    // con decimales
+Console.WriteLine(diferencia.Days);         // solo la parte entera de días</code></pre>
+<p>Ojo con la diferencia entre <code>Days</code> y
+<code>TotalDays</code>: <code>Days</code> es la componente de días de la
+duración (como las horas de un reloj), <code>TotalDays</code> es la
+duración completa expresada en días. Para «cuántos días han pasado» casi
+siempre quieres <code>TotalDays</code>.</p>
+<div class="callout">
+<p><strong><code>AddMonths</code> es más listo de lo que
+parece.</strong> <code>new DateTime(2026, 1, 31).AddMonths(1)</code> da
+el <strong>28 de febrero</strong>, porque el 31 de febrero no existe. Y
+los años bisiestos están contemplados: no intentes calcular fechas
+sumando 365 días.</p>
+</div>
+<h3 id="4-mostrar-formatos-y-cultura">4. Mostrar: formatos y
+cultura</h3>
+<pre><code>DateTime d = new DateTime(2026, 11, 27, 13, 5, 0);
+
+d.ToString(&quot;dd/MM/yyyy&quot;)            // 27/11/2026
+d.ToString(&quot;yyyy-MM-dd HH:mm&quot;)      // 2026-11-27 13:05   (formato ISO, el que ordena bien)
+d.ToString(&quot;dddd, d &#39;de&#39; MMMM&quot;)     // viernes, 27 de noviembre
+d.ToShortDateString()               // según la configuración del ordenador</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Código</th>
+<th>Significa</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>dd</code> / <code>d</code></td>
+<td>día con dos cifras / sin cero delante</td>
+</tr>
+<tr class="even">
+<td><code>MM</code> / <code>MMM</code> / <code>MMMM</code></td>
+<td>mes numérico / abreviado / completo</td>
+</tr>
+<tr class="odd">
+<td><code>yyyy</code> / <code>yy</code></td>
+<td>año de 4 / 2 cifras</td>
+</tr>
+<tr class="even">
+<td><code>HH</code> / <code>hh</code></td>
+<td>hora de 24 h / de 12 h</td>
+</tr>
+<tr class="odd">
+<td><code>mm</code></td>
+<td>minutos</td>
+</tr>
+<tr class="even">
+<td><code>ss</code></td>
+<td>segundos</td>
+</tr>
+<tr class="odd">
+<td><code>dddd</code></td>
+<td>día de la semana</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong><code>MM</code> es el mes y <code>mm</code> los
+minutos.</strong> Confundirlos es el error que todo el mundo comete al
+menos una vez.</p>
+<p>La <strong>cultura</strong> decide el idioma de los nombres y el
+orden de los números. <code>CultureInfo.InvariantCulture</code> da un
+formato fijo, independiente del ordenador: es lo que hay que usar al
+<strong>guardar</strong> datos en ficheros, y
+<code>CultureInfo("ca-ES")</code> o <code>("es-ES")</code> para
+<strong>mostrarlos</strong> al usuario.</p>
+<h3 id="5-leer-fechas-tryparse-y-tryparseexact">5. Leer fechas:
+<code>TryParse</code> y <code>TryParseExact</code></h3>
+<pre><code>// Flexible, con la cultura indicada
+bool ok = DateTime.TryParse(texto, new CultureInfo(&quot;es-ES&quot;),
+                            DateTimeStyles.None, out DateTime fecha);
+
+// Formato exacto: solo acepta dd/MM/yyyy
+bool ok2 = DateTime.TryParseExact(texto, &quot;dd/MM/yyyy&quot;,
+                                  CultureInfo.InvariantCulture,
+                                  DateTimeStyles.None, out DateTime fecha2);</code></pre>
+<p><code>TryParseExact</code> es la opción correcta cuando el formato es
+conocido y fijo (un fichero, una API): evita que <code>01/02/2026</code>
+se interprete como el 2 de enero en un ordenador configurado en
+inglés.</p>
+<h3 id="6-la-regla-de-oro-de-las-zonas-horarias">6. La regla de oro de
+las zonas horarias</h3>
+<p><strong>Guarda en UTC, muestra en local.</strong> Si guardas
+<code>DateTime.Now</code> en un fichero o una base de datos y ese dato
+lo lee alguien en otro huso (o tu propio servidor cambia de hora), las
+cuentas dejan de salir. El patrón profesional:</p>
+<pre><code>DateTime cuandoGuardar = DateTime.UtcNow;                // guardar esto
+DateTime paraMostrar = cuandoGuardar.ToLocalTime();      // mostrar esto</code></pre>
+<p>Y si necesitas conservar el desfase del lugar donde ocurrió algo, usa
+<code>DateTimeOffset</code>, que guarda la fecha, la hora
+<strong>y</strong> el desfase respecto a UTC. Es el tipo recomendado
+para aplicaciones distribuidas.</p>
+<h3 id="7-calcular-una-edad-bien">7. Calcular una edad bien</h3>
+<p>El cálculo «ingenuo» (restar años) falla si todavía no ha llegado el
+cumpleaños este año. La forma correcta:</p>
+<pre><code>int edad = hoy.Year - nacimiento.Year;
+if (nacimiento.AddYears(edad) &gt; hoy) { edad--; }   // aún no ha cumplido</code></pre>`,
+          ejemplos: [
+            { titulo: "Crear, operar y mostrar", explicacion: "Fíjate en el formato dddd dd/MM/yyyy: las letras literales (como «de» o «a las») van entre comillas simples para que no se interpreten como códigos de formato.", codigo: r`using System.Globalization;
+
+DateTime ahora = DateTime.Now;
+DateTime hoy = DateTime.Today;                       // hoy a las 00:00:00
+DateTime examen = new DateTime(2026, 12, 18, 9, 0, 0);
+
+Console.WriteLine($"Ahora:  {ahora:yyyy-MM-dd HH:mm:ss}");
+Console.WriteLine($"Hoy:    {hoy:yyyy-MM-dd HH:mm:ss}");
+Console.WriteLine($"Examen: {examen:dddd dd/MM/yyyy 'a las' HH:mm}");
+
+// Restar dos fechas da un TimeSpan (una duración)
+TimeSpan falta = examen - ahora;
+Console.WriteLine($"\nFaltan {falta.Days} días, {falta.Hours} horas y {falta.Minutes} minutos");
+Console.WriteLine($"Que son {falta.TotalDays:F1} días en total ({falta.TotalHours:F0} horas)");
+
+// Los métodos Add* NO modifican: devuelven una fecha nueva
+Console.WriteLine($"\nMañana:          {hoy.AddDays(1):dd/MM/yyyy}");
+Console.WriteLine($"Hace una semana: {hoy.AddDays(-7):dd/MM/yyyy}");
+Console.WriteLine($"Dentro de 3 meses: {hoy.AddMonths(3):dd/MM/yyyy}");
+
+// AddMonths respeta la longitud de cada mes
+DateTime finEnero = new DateTime(2026, 1, 31);
+Console.WriteLine($"\n31/01/2026 + 1 mes = {finEnero.AddMonths(1):dd/MM/yyyy}  (¡no existe el 31 de febrero!)");
+
+// Propiedades útiles
+Console.WriteLine($"\nDía de la semana: {hoy.DayOfWeek}");
+Console.WriteLine($"Día del año: {hoy.DayOfYear}");
+Console.WriteLine($"¿2026 es bisiesto? {DateTime.IsLeapYear(2026)}");
+Console.WriteLine($"Días de febrero de 2028: {DateTime.DaysInMonth(2028, 2)}");
+
+// Nombres en catalán y en español, con la cultura
+CultureInfo catalan = new CultureInfo("ca-ES");
+CultureInfo espanol = new CultureInfo("es-ES");
+Console.WriteLine($"\nEn catalán: {examen.ToString("dddd d 'de' MMMM 'de' yyyy", catalan)}");
+Console.WriteLine($"En español: {examen.ToString("dddd d 'de' MMMM 'de' yyyy", espanol)}");
+` },
+            { titulo: "DateOnly, TimeOnly y el cálculo de la edad", explicacion: "DayNumber convierte una fecha en un número de días, así que restar dos DayNumber da directamente los días transcurridos. Es más seguro que operar con TimeSpan cuando solo importan los días.", codigo: r`// DateOnly: cuando la hora no tiene sentido (fecha de nacimiento, día de entrega)
+DateOnly nacimiento = new DateOnly(2006, 3, 14);
+DateOnly hoy = DateOnly.FromDateTime(DateTime.Today);
+
+// Cálculo CORRECTO de la edad
+int edad = hoy.Year - nacimiento.Year;
+if (nacimiento.AddYears(edad) > hoy)
+{
+    edad--;                      // este año aún no ha cumplido
+}
+Console.WriteLine($"Nacido el {nacimiento:dd/MM/yyyy}: {edad} años");
+
+// Cálculo INGENUO, para ver el error
+Console.WriteLine($"Restando solo los años saldría: {hoy.Year - nacimiento.Year}");
+
+// Días hasta el próximo cumpleaños
+DateOnly proximo = new DateOnly(hoy.Year, nacimiento.Month, nacimiento.Day);
+if (proximo < hoy)
+{
+    proximo = proximo.AddYears(1);
+}
+int diasQueFaltan = proximo.DayNumber - hoy.DayNumber;   // DayNumber: días desde el año 1
+Console.WriteLine($"Próximo cumpleaños: {proximo:dd/MM/yyyy} (faltan {diasQueFaltan} días)");
+
+// TimeOnly: horarios
+TimeOnly apertura = new TimeOnly(9, 0);
+TimeOnly cierre = new TimeOnly(20, 30);
+TimeOnly ahora = TimeOnly.FromDateTime(DateTime.Now);
+
+bool abierto = ahora >= apertura && ahora <= cierre;
+Console.WriteLine($"\nHorario: {apertura:HH:mm} - {cierre:HH:mm}");
+Console.WriteLine($"Ahora son las {ahora:HH:mm}: {(abierto ? "ABIERTO" : "CERRADO")}");
+Console.WriteLine($"La tienda abre {(cierre - apertura).TotalHours} horas al día");
+` },
+            { titulo: "Leer fechas del usuario sin sorpresas", explicacion: "TryParse acepta muchos formatos y depende de la cultura, lo que es cómodo para la entrada del usuario pero peligroso al leer ficheros. Para datos con formato fijo, TryParseExact con InvariantCulture.", codigo: r`using System.Globalization;
+
+string[] entradas = { "27/11/2026", "2026-11-27", "27-11-2026", "31/02/2026", "hola" };
+
+CultureInfo es = new CultureInfo("es-ES");
+
+Console.WriteLine("--- TryParse (flexible, con cultura española) ---");
+foreach (string entrada in entradas)
+{
+    if (DateTime.TryParse(entrada, es, DateTimeStyles.None, out DateTime fecha))
+    {
+        Console.WriteLine($"  «{entrada,-12}» -> {fecha:yyyy-MM-dd}");
+    }
+    else
+    {
+        Console.WriteLine($"  «{entrada,-12}» -> no es una fecha válida");
+    }
+}
+
+Console.WriteLine("\n--- TryParseExact (solo dd/MM/yyyy) ---");
+foreach (string entrada in entradas)
+{
+    bool ok = DateTime.TryParseExact(entrada, "dd/MM/yyyy",
+                                     CultureInfo.InvariantCulture,
+                                     DateTimeStyles.None, out DateTime fecha);
+    Console.WriteLine($"  «{entrada,-12}» -> {(ok ? fecha.ToString("yyyy-MM-dd") : "rechazada")}");
+}
+
+// Varios formatos admitidos a la vez
+string[] formatos = { "dd/MM/yyyy", "yyyy-MM-dd", "d/M/yyyy" };
+Console.WriteLine("\n--- TryParseExact con varios formatos ---");
+foreach (string entrada in entradas)
+{
+    bool ok = DateTime.TryParseExact(entrada, formatos, CultureInfo.InvariantCulture,
+                                     DateTimeStyles.None, out DateTime fecha);
+    Console.WriteLine($"  «{entrada,-12}» -> {(ok ? fecha.ToString("yyyy-MM-dd") : "rechazada")}");
+}
+
+Console.WriteLine("\nFíjate en que el 31/02/2026 se rechaza siempre: febrero no tiene 31 días.");
+` },
+            { titulo: "UTC, local y DateTimeOffset", explicacion: "El formato \"o\" (ISO 8601 completo) es el único que garantiza recuperar exactamente la misma fecha, hora y tipo. Es lo que hay que usar en ficheros, JSON y bases de datos.", codigo: r`using System.Globalization;
+
+DateTime local = DateTime.Now;
+DateTime utc = DateTime.UtcNow;
+
+Console.WriteLine($"Hora local: {local:HH:mm:ss}  (Kind = {local.Kind})");
+Console.WriteLine($"Hora UTC:   {utc:HH:mm:ss}  (Kind = {utc.Kind})");
+Console.WriteLine($"Desfase de este ordenador: {TimeZoneInfo.Local.BaseUtcOffset}");
+Console.WriteLine($"Zona: {TimeZoneInfo.Local.Id}");
+
+// Convertir entre las dos
+Console.WriteLine($"\nUTC convertida a local: {utc.ToLocalTime():HH:mm:ss}");
+Console.WriteLine($"Local convertida a UTC: {local.ToUniversalTime():HH:mm:ss}");
+
+// DateTimeOffset guarda también el desfase: no se pierde información
+DateTimeOffset conDesfase = DateTimeOffset.Now;
+Console.WriteLine($"\nDateTimeOffset: {conDesfase:yyyy-MM-dd HH:mm:ss zzz}");
+
+// El formato "o" (round-trip) es el que hay que usar para guardar: no pierde nada
+Console.WriteLine($"\nPara guardar en un fichero:");
+Console.WriteLine($"  {utc.ToString("o", CultureInfo.InvariantCulture)}");
+Console.WriteLine($"  {conDesfase.ToString("o", CultureInfo.InvariantCulture)}");
+
+// Y para recuperarlo
+string guardado = utc.ToString("o", CultureInfo.InvariantCulture);
+DateTime recuperado = DateTime.Parse(guardado, CultureInfo.InvariantCulture,
+                                     DateTimeStyles.RoundtripKind);
+Console.WriteLine($"\nRecuperado: {recuperado:yyyy-MM-dd HH:mm:ss} (Kind = {recuperado.Kind})");
+Console.WriteLine($"¿Idéntico al original? {recuperado == utc}");
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Calculadora de fechas",
+              nivel: 1,
+              pista: "TryParseExact necesita cuatro argumentos: texto, formato, cultura y DateTimeStyles.",
+              enunciado: r`<p>Escribe un programa con un <strong>menú</strong> que ofrezca:
+<code>1</code> calcular tu edad, <code>2</code> días entre dos fechas,
+<code>3</code> sumar días a una fecha, <code>4</code> saber qué día de
+la semana cae una fecha y <code>5</code> salir.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Todas las fechas se piden en formato <code>dd/MM/yyyy</code> y se
+leen con <strong><code>DateTime.TryParseExact</code></strong> usando
+<code>CultureInfo.InvariantCulture</code>.</li>
+<li><strong>Control de errores:</strong> si la fecha no es válida, avisa
+y vuelve al menú. Valida también la opción con
+<code>int.TryParse</code>.</li>
+<li>La edad debe calcularse correctamente (teniendo en cuenta si ya ha
+pasado el cumpleaños).</li>
+<li>Usa <code>do-while</code> con la condición en la cabecera.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> para el día de la semana en castellano, usa
+el formato <code>"dddd"</code> con
+<code>new CultureInfo("es-ES")</code>.</p>
+<p>🏅 <strong>Ampliación:</strong> añade una opción que calcule los
+<strong>días laborables</strong> (sin sábados ni domingos) entre dos
+fechas.</p>`,
+              soluciones: [
+                { titulo: "Versión completa", nota: "El patrón bool LeerFecha(..., out DateTime) es el mismo que usan los TryParse de .NET: devuelve si ha ido bien y entrega el valor por el parámetro de salida. Así el menú queda limpio.", codigo: r`using System.Globalization;
+
+CultureInfo invariante = CultureInfo.InvariantCulture;
+CultureInfo espanol = new CultureInfo("es-ES");
+int opcion = 0;
+
+do
+{
+    Console.WriteLine("\n--- CALCULADORA DE FECHAS ---");
+    Console.WriteLine("1) Mi edad          2) Días entre dos fechas");
+    Console.WriteLine("3) Sumar días       4) Día de la semana");
+    Console.WriteLine("5) Salir");
+    Console.Write("Opción: ");
+
+    if (!int.TryParse(Console.ReadLine(), out opcion))
+    {
+        Console.WriteLine("Escribe un número del 1 al 5.");
+        opcion = 0;
+    }
+    else
+    {
+        switch (opcion)
+        {
+            case 1:
+                if (LeerFecha("Fecha de nacimiento (dd/MM/yyyy): ", out DateTime nacimiento))
+                {
+                    DateTime hoy = DateTime.Today;
+                    if (nacimiento > hoy)
+                    {
+                        Console.WriteLine("Esa fecha está en el futuro.");
+                    }
+                    else
+                    {
+                        int edad = hoy.Year - nacimiento.Year;
+                        if (nacimiento.AddYears(edad) > hoy) { edad--; }
+                        Console.WriteLine($"Tienes {edad} años " +
+                                          $"({(hoy - nacimiento).TotalDays:F0} días vividos).");
+                    }
+                }
+                break;
+
+            case 2:
+                if (LeerFecha("Fecha inicial: ", out DateTime inicio)
+                    && LeerFecha("Fecha final:   ", out DateTime fin))
+                {
+                    TimeSpan diferencia = fin - inicio;
+                    Console.WriteLine($"Entre las dos fechas hay {Math.Abs(diferencia.TotalDays):F0} días.");
+                }
+                break;
+
+            case 3:
+                if (LeerFecha("Fecha de partida: ", out DateTime partida))
+                {
+                    Console.Write("Días a sumar (puede ser negativo): ");
+                    if (int.TryParse(Console.ReadLine(), out int dias))
+                    {
+                        Console.WriteLine($"Resultado: {partida.AddDays(dias):dd/MM/yyyy}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Eso no es un número entero.");
+                    }
+                }
+                break;
+
+            case 4:
+                if (LeerFecha("Fecha: ", out DateTime consulta))
+                {
+                    Console.WriteLine($"El {consulta:dd/MM/yyyy} " +
+                                      $"es {consulta.ToString("dddd", espanol)}.");
+                }
+                break;
+
+            case 5:
+                Console.WriteLine("Hasta luego.");
+                break;
+
+            default:
+                Console.WriteLine("Opción fuera de rango.");
+                break;
+        }
+    }
+} while (opcion != 5);
+
+// Lee una fecha con formato exacto. Devuelve false (y avisa) si no es válida.
+bool LeerFecha(string mensaje, out DateTime fecha)
+{
+    Console.Write(mensaje);
+    bool ok = DateTime.TryParseExact(Console.ReadLine(), "dd/MM/yyyy",
+                                     invariante, DateTimeStyles.None, out fecha);
+    if (!ok)
+    {
+        Console.WriteLine("Fecha no válida. El formato debe ser dd/MM/yyyy (por ejemplo 27/11/2026).");
+    }
+    return ok;
+}
+` },
+                { titulo: "Ampliación: días laborables", nota: "El bucle día a día es claro y suficiente para rangos normales. La versión aritmética (semanas completas × 5 + los días sueltos) es la que usarías con millones de días, y es un buen ejemplo de optimización que solo merece la pena si hace falta.", codigo: r`using System.Globalization;
+
+// Cuenta los días de lunes a viernes entre dos fechas (incluyendo las dos)
+int DiasLaborables(DateTime desde, DateTime hasta)
+{
+    if (desde > hasta)
+    {
+        (desde, hasta) = (hasta, desde);
+    }
+
+    int laborables = 0;
+    DateTime actual = desde.Date;
+
+    while (actual <= hasta.Date)
+    {
+        bool esFinDeSemana = actual.DayOfWeek == DayOfWeek.Saturday
+                             || actual.DayOfWeek == DayOfWeek.Sunday;
+        if (!esFinDeSemana)
+        {
+            laborables++;
+        }
+        actual = actual.AddDays(1);
+    }
+    return laborables;
+}
+
+DateTime inicio = new DateTime(2026, 12, 1);
+DateTime fin = new DateTime(2026, 12, 31);
+
+Console.WriteLine($"De {inicio:dd/MM/yyyy} a {fin:dd/MM/yyyy}:");
+Console.WriteLine($"  Días totales:     {(fin - inicio).TotalDays + 1:F0}");
+Console.WriteLine($"  Días laborables:  {DiasLaborables(inicio, fin)}");
+
+// Versión más eficiente para rangos muy grandes: aritmética en lugar de bucle
+int laborablesRapido = 0;
+int diasTotales = (int)(fin - inicio).TotalDays + 1;
+int semanasCompletas = diasTotales / 7;
+laborablesRapido = semanasCompletas * 5;
+DateTime resto = inicio.AddDays(semanasCompletas * 7);
+while (resto <= fin)
+{
+    if (resto.DayOfWeek != DayOfWeek.Saturday && resto.DayOfWeek != DayOfWeek.Sunday)
+    {
+        laborablesRapido++;
+    }
+    resto = resto.AddDays(1);
+}
+Console.WriteLine($"  Comprobación (sin recorrer todo): {laborablesRapido}");
+` },
+              ],
+            },
+          ],
+        },
       ],
     },
     {
@@ -6323,6 +11010,2132 @@ using (FileStream flujo = new FileStream(ruta, FileMode.Open, FileAccess.ReadWri
 }
 
 Console.WriteLine(File.ReadAllText(ruta));                 // AAABBBAAAACCC
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "ficheros-csv",
+          titulo: "Ficheros CSV",
+          duracion: "22 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Leer y escribir ficheros CSV con las clases de .NET", "Tratar los problemas reales del formato: separadores, comillas y decimales", "Convertir las líneas de un CSV en objetos y al revés"],
+          teoria: r`<p><strong>CSV</strong> (<em>Comma-Separated Values</em>) es el formato
+de intercambio de datos más usado del mundo: una línea por registro y
+los campos separados por un carácter. Lo abre Excel, lo exporta
+cualquier base de datos y se lee con un editor de texto. Y, pese a su
+aparente simplicidad, tiene trampas que conviene conocer antes de
+confiar en un <code>Split(',')</code>.</p>
+<pre><code>id,nombre,ciclo,nota
+1,Ana Puig,DAM,9.0
+2,Luis Soler,ASIX,7.5
+3,Marta Vila,DAM,6.25</code></pre>
+<h3 id="1-lo-que-hay-que-saber-del-formato">1. Lo que hay que saber del
+formato</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Problema</th>
+<th>Qué pasa</th>
+<th>Qué hacer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Separador</strong></td>
+<td>En España Excel usa <code>;</code> porque la coma es el separador
+decimal</td>
+<td>Detectarlo o documentarlo</td>
+</tr>
+<tr class="even">
+<td><strong>Decimales</strong></td>
+<td><code>9,5</code> con coma rompe el <code>Split(',')</code></td>
+<td>Guardar con <code>InvariantCulture</code> (punto)</td>
+</tr>
+<tr class="odd">
+<td><strong>Comillas</strong></td>
+<td>Un campo puede contener el separador: <code>"Puig, Ana"</code></td>
+<td>No basta con <code>Split</code>: hay que respetar las comillas</td>
+</tr>
+<tr class="even">
+<td><strong>Cabecera</strong></td>
+<td>Puede estar o no</td>
+<td>Leerla para saber el orden de las columnas</td>
+</tr>
+<tr class="odd">
+<td><strong>Codificación</strong></td>
+<td>Los acentos se estropean si no coincide</td>
+<td>Usar <strong>UTF-8</strong> siempre</td>
+</tr>
+<tr class="even">
+<td><strong>Saltos de línea</strong></td>
+<td>Un campo entre comillas puede contener un salto</td>
+<td>Usar una biblioteca si pasa</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p><strong>La regla profesional.</strong> Para un CSV sencillo que tú
+generas y consumes, <code>Split</code> y <code>string.Join</code>
+bastan. Para CSV que vienen <strong>de fuera</strong> (de un cliente, de
+una exportación de Excel), usa una biblioteca como
+<strong>CsvHelper</strong>: resuelve las comillas, los saltos de línea
+dentro de los campos, las culturas y la conversión a objetos. Escribir
+un analizador de CSV completo y correcto lleva más trabajo del que
+parece.</p>
+</div>
+<h3 id="2-escribir-un-csv">2. Escribir un CSV</h3>
+<pre><code>using System.Globalization;
+
+using (StreamWriter escritor = new StreamWriter(&quot;alumnos.csv&quot;, false, Encoding.UTF8))
+{
+    escritor.WriteLine(&quot;id;nombre;nota&quot;);
+    foreach (Alumno a in alumnos)
+    {
+        // InvariantCulture: el decimal se guarda con punto, siempre igual
+        escritor.WriteLine($&quot;{a.Id};{a.Nombre};{a.Nota.ToString(CultureInfo.InvariantCulture)}&quot;);
+    }
+}</code></pre>
+<p>El <code>using</code> garantiza que el fichero se cierra y se vuelca
+al disco incluso si salta una excepción. Sin él, el fichero puede quedar
+incompleto.</p>
+<h3 id="3-leer-un-csv">3. Leer un CSV</h3>
+<pre><code>string[] lineas = File.ReadAllLines(&quot;alumnos.csv&quot;, Encoding.UTF8);
+
+for (int i = 1; i &lt; lineas.Length; i++)      // empezamos en 1: saltamos la cabecera
+{
+    string[] campos = lineas[i].Split(&#39;;&#39;);
+
+    if (campos.Length != 3) { continue; }    // línea mal formada
+    ...
+}</code></pre>
+<p>Dos formas de leer, según el tamaño:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Método</th>
+<th>Cuándo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>File.ReadAllLines</code></td>
+<td>el fichero cabe en memoria (hasta unos miles de líneas)</td>
+</tr>
+<tr class="even">
+<td><code>File.ReadLines</code> + <code>foreach</code></td>
+<td>ficheros grandes: va leyendo línea a línea</td>
+</tr>
+<tr class="odd">
+<td><code>StreamReader</code> con <code>ReadLine</code></td>
+<td>control total, ficheros enormes</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Nunca uses <code>ReadAllLines</code> con un fichero de un
+gigabyte</strong>: cargaría todo en memoria.</p>
+<h3 id="4-el-control-de-errores-es-la-mitad-del-trabajo">4. El control
+de errores es la mitad del trabajo</h3>
+<p>Un fichero de datos reales <strong>siempre</strong> tiene líneas mal:
+campos que faltan, números que no son números, fechas en otro formato.
+El programa debe sobrevivir y, mejor aún, <strong>informar</strong> de
+qué líneas ha descartado y por qué.</p>
+<pre><code>if (!int.TryParse(campos[0], out int id))
+{
+    errores.Add($&quot;Línea {i + 1}: «{campos[0]}» no es un id válido&quot;);
+}</code></pre>
+<p>Y las excepciones del sistema de ficheros:
+<code>FileNotFoundException</code>,
+<code>DirectoryNotFoundException</code>, <code>IOException</code>,
+<code>UnauthorizedAccessException</code>. Captúralas por separado y da
+un mensaje útil.</p>
+<h3 id="5-campos-con-comillas-el-analizador-mínimo">5. Campos con
+comillas: el analizador mínimo</h3>
+<p>Si un campo contiene el separador, el CSV lo pone entre comillas y,
+si contiene una comilla, la duplica:</p>
+<pre><code>1;&quot;Puig, Ana&quot;;9.0
+2;&quot;Dijo &quot;&quot;hola&quot;&quot; al entrar&quot;;7.5</code></pre>
+<p>Un <code>Split(';')</code> partiría <code>"Puig, Ana"</code>… bueno,
+con <code>;</code> no, pero con <code>,</code> sí. El analizador
+correcto recorre la línea carácter a carácter llevando la cuenta de si
+está dentro o fuera de comillas. El ejemplo de esta lección lo
+implementa en unas quince líneas: merece la pena leerlo una vez para
+entender por qué existen las bibliotecas.</p>`,
+          ejemplos: [
+            { titulo: "Escribir y leer un CSV", explicacion: "Dos detalles imprescindibles: Encoding.UTF8 para que los acentos sobrevivan, y CultureInfo.InvariantCulture para que el 6.25 se escriba y se lea igual en un ordenador configurado en español que en uno en inglés.", codigo: r`using System.Globalization;
+using System.Text;
+
+string ruta = "alumnos.csv";
+
+// ---------- ESCRIBIR ----------
+List<(int id, string nombre, string ciclo, double nota)> alumnos =
+    new List<(int, string, string, double)>
+{
+    (1, "Ana Puig", "DAM", 9.0),
+    (2, "Luis Soler", "ASIX", 7.5),
+    (3, "Marta Vila", "DAM", 6.25),
+    (4, "Pau Roca", "DAW", 4.5),
+};
+
+// El using cierra el fichero aunque salte una excepción
+using (StreamWriter escritor = new StreamWriter(ruta, false, Encoding.UTF8))
+{
+    escritor.WriteLine("id;nombre;ciclo;nota");          // cabecera
+    foreach (var a in alumnos)
+    {
+        // InvariantCulture: el decimal se escribe con PUNTO, igual en cualquier ordenador
+        string nota = a.nota.ToString(CultureInfo.InvariantCulture);
+        escritor.WriteLine($"{a.id};{a.nombre};{a.ciclo};{nota}");
+    }
+}
+
+Console.WriteLine($"Escrito {ruta} ({new FileInfo(ruta).Length} bytes)\n");
+Console.WriteLine("--- Contenido del fichero ---");
+Console.WriteLine(File.ReadAllText(ruta, Encoding.UTF8));
+
+// ---------- LEER ----------
+Console.WriteLine("--- Lectura y conversión ---");
+string[] lineas = File.ReadAllLines(ruta, Encoding.UTF8);
+List<string> errores = new List<string>();
+double suma = 0;
+int validos = 0;
+
+for (int i = 1; i < lineas.Length; i++)       // i = 1: nos saltamos la cabecera
+{
+    string[] campos = lineas[i].Split(';');
+
+    if (campos.Length != 4)
+    {
+        errores.Add($"Línea {i + 1}: tiene {campos.Length} campos, se esperaban 4");
+    }
+    else if (!int.TryParse(campos[0], out int id))
+    {
+        errores.Add($"Línea {i + 1}: «{campos[0]}» no es un id válido");
+    }
+    else if (!double.TryParse(campos[3], NumberStyles.Float,
+                              CultureInfo.InvariantCulture, out double nota))
+    {
+        errores.Add($"Línea {i + 1}: «{campos[3]}» no es una nota válida");
+    }
+    else
+    {
+        Console.WriteLine($"  {id,2}  {campos[1],-12} {campos[2],-6} {nota:F2}");
+        suma += nota;
+        validos++;
+    }
+}
+
+Console.WriteLine($"\nLeídos {validos} registros, media {suma / validos:F2}");
+Console.WriteLine($"Errores: {errores.Count}");
+` },
+            { titulo: "De CSV a objetos y vuelta", explicacion: "Poner ALineaCsv y DesdeLineaCsv dentro de la clase concentra el conocimiento del formato en un solo lugar: si mañana cambia el separador, se toca una línea. Es el principio DRY aplicado a la persistencia.", codigo: r`using System.Globalization;
+using System.Text;
+
+string ruta = "productos.csv";
+
+// ---------- Guardar una lista de objetos ----------
+List<Producto> inventario = new List<Producto>
+{
+    new Producto(1, "Teclado mecanico", 49.90m, 12),
+    new Producto(2, "Raton inalambrico", 24.50m, 30),
+    new Producto(3, "Monitor 27 pulgadas", 249.00m, 4),
+};
+
+Guardar(ruta, inventario);
+Console.WriteLine($"Guardados {inventario.Count} productos\n");
+
+// ---------- Recuperarlos ----------
+List<Producto> recuperados = Cargar(ruta);
+Console.WriteLine($"Recuperados {recuperados.Count} productos:");
+foreach (Producto p in recuperados)
+{
+    Console.WriteLine($"  {p}");
+}
+
+Console.WriteLine($"\nValor del inventario: {recuperados.Sum(p => p.Precio * p.Stock):F2} €");
+
+// ---------- Funciones de persistencia ----------
+void Guardar(string archivo, List<Producto> productos)
+{
+    using StreamWriter escritor = new StreamWriter(archivo, false, Encoding.UTF8);
+    escritor.WriteLine("id;nombre;precio;stock");
+    foreach (Producto p in productos)
+    {
+        escritor.WriteLine(p.ALineaCsv());
+    }
+}
+
+List<Producto> Cargar(string archivo)
+{
+    List<Producto> lista = new List<Producto>();
+
+    if (!File.Exists(archivo))
+    {
+        Console.WriteLine($"Aviso: {archivo} no existe; se devuelve una lista vacía.");
+        return lista;
+    }
+
+    try
+    {
+        foreach (string linea in File.ReadLines(archivo, Encoding.UTF8).Skip(1))
+        {
+            Producto producto = Producto.DesdeLineaCsv(linea);
+            if (producto.Id > 0)                 // Id 0 marca una línea no válida
+            {
+                lista.Add(producto);
+            }
+            else
+            {
+                Console.WriteLine($"  (descartada la línea «{linea}»)");
+            }
+        }
+    }
+    catch (IOException ex)
+    {
+        Console.WriteLine($"Error de lectura: {ex.Message}");
+    }
+
+    return lista;
+}
+
+class Producto
+{
+    public int Id { get; }
+    public string Nombre { get; }
+    public decimal Precio { get; }
+    public int Stock { get; }
+
+    public Producto(int id, string nombre, decimal precio, int stock)
+    {
+        Id = id;
+        Nombre = nombre;
+        Precio = precio;
+        Stock = stock;
+    }
+
+    // La clase sabe convertirse a CSV y reconstruirse: así el formato está en un solo sitio
+    public string ALineaCsv() =>
+        $"{Id};{Nombre};{Precio.ToString(CultureInfo.InvariantCulture)};{Stock}";
+
+    public static Producto DesdeLineaCsv(string linea)
+    {
+        string[] c = linea.Split(';');
+
+        if (c.Length == 4
+            && int.TryParse(c[0], out int id)
+            && decimal.TryParse(c[2], NumberStyles.Float, CultureInfo.InvariantCulture, out decimal precio)
+            && int.TryParse(c[3], out int stock))
+        {
+            return new Producto(id, c[1], precio, stock);
+        }
+
+        return new Producto(0, "", 0, 0);        // objeto «no válido»
+    }
+
+    public override string ToString() => $"{Id,2}  {Nombre,-22}{Precio,8:F2} €  stock {Stock,3}";
+}
+` },
+            { titulo: "Campos con comillas: el analizador correcto", explicacion: "Quince líneas para algo que parecía trivial, y todavía no cubre los saltos de línea dentro de un campo. Esta es la razón de usar CsvHelper o similar con ficheros que vienen de fuera: el formato CSV es más complicado de lo que aparenta.", codigo: r`using System.Text;
+
+string ruta = "con_comillas.csv";
+
+// Un CSV con campos que contienen el separador y comillas
+string contenido = "id,nombre,comentario\n"
+                 + "1,\"Puig, Ana\",Sin problemas\n"
+                 + "2,\"Soler, Luis\",\"Dijo \"\"hola\"\" al entrar\"\n"
+                 + "3,Marta Vila,Normal\n";
+
+File.WriteAllText(ruta, contenido, Encoding.UTF8);
+
+Console.WriteLine("--- Contenido del fichero ---");
+Console.WriteLine(contenido);
+
+string[] lineas = File.ReadAllLines(ruta, Encoding.UTF8);
+
+// ---------- Con Split: INCORRECTO ----------
+Console.WriteLine("--- Con Split(',') ---");
+for (int i = 1; i < lineas.Length; i++)
+{
+    string[] campos = lineas[i].Split(',');
+    Console.WriteLine($"  línea {i}: {campos.Length} campos -> [{string.Join("] [", campos)}]");
+}
+Console.WriteLine("  ¡La primera línea sale con 4 campos: ha partido «Puig, Ana»!\n");
+
+// ---------- Con un analizador que respeta las comillas ----------
+Console.WriteLine("--- Con el analizador correcto ---");
+for (int i = 1; i < lineas.Length; i++)
+{
+    List<string> campos = PartirCsv(lineas[i], ',');
+    Console.WriteLine($"  línea {i}: {campos.Count} campos -> [{string.Join("] [", campos)}]");
+}
+
+// Recorre la línea carácter a carácter llevando la cuenta de si está dentro de comillas
+List<string> PartirCsv(string linea, char separador)
+{
+    List<string> campos = new List<string>();
+    StringBuilder actual = new StringBuilder();
+    bool dentroDeComillas = false;
+    int i = 0;
+
+    while (i < linea.Length)
+    {
+        char c = linea[i];
+
+        if (c == '"')
+        {
+            // Dos comillas seguidas dentro de un campo representan una comilla literal
+            if (dentroDeComillas && i + 1 < linea.Length && linea[i + 1] == '"')
+            {
+                actual.Append('"');
+                i++;
+            }
+            else
+            {
+                dentroDeComillas = !dentroDeComillas;
+            }
+        }
+        else if (c == separador && !dentroDeComillas)
+        {
+            campos.Add(actual.ToString());
+            actual.Clear();
+        }
+        else
+        {
+            actual.Append(c);
+        }
+        i++;
+    }
+
+    campos.Add(actual.ToString());      // el último campo, que no acaba en separador
+    return campos;
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Gestor de notas con persistencia en CSV",
+              nivel: 1,
+              pista: "File.Exists antes de leer, using al escribir y CultureInfo.InvariantCulture en los decimales.",
+              enunciado: r`<p>Escribe un programa que mantenga una lista de alumnos (nombre y nota)
+<strong>guardada en un CSV</strong> entre ejecuciones, con un menú:
+<code>1</code> añadir alumno, <code>2</code> listar, <code>3</code>
+guardar en el fichero, <code>4</code> cargar del fichero y
+<code>5</code> salir (guardando antes).</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Fichero <code>notas.csv</code> con cabecera, separador
+<code>;</code> y <code>Encoding.UTF8</code>.</li>
+<li>Las notas se escriben y se leen con
+<code>CultureInfo.InvariantCulture</code>.</li>
+<li><strong>Control de errores:</strong> si el fichero no existe al
+cargar, empieza con la lista vacía y avisa (no falles). Descarta las
+líneas mal formadas e informa de cuántas.</li>
+<li>Valida que la nota esté entre 0 y 10 con
+<code>double.TryParse</code>.</li>
+<li>Envuelve la escritura en un <code>using</code> y captura
+<code>IOException</code>.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> <code>File.Exists(ruta)</code> antes de leer
+evita la mitad de los problemas.</p>
+<p>🏅 <strong>Ampliación:</strong> añade una opción que exporte un
+informe ordenado por nota con la media al final.</p>`,
+              soluciones: [
+                { titulo: "Versión completa", nota: "Observa la validación del nombre: rechazar el carácter separador evita generar un CSV corrupto. Es el tipo de detalle que distingue un programa que funciona de uno que funciona siempre.", codigo: r`using System.Globalization;
+using System.Text;
+
+const string Ruta = "notas.csv";
+List<(string nombre, double nota)> alumnos = new List<(string, double)>();
+int opcion = 0;
+
+Cargar();                       // intentamos cargar al arrancar
+
+do
+{
+    Console.WriteLine($"\n--- NOTAS ({alumnos.Count} alumnos) ---");
+    Console.WriteLine("1) Añadir   2) Listar   3) Guardar   4) Cargar   5) Salir");
+    Console.Write("Opción: ");
+
+    if (!int.TryParse(Console.ReadLine(), out opcion))
+    {
+        Console.WriteLine("Escribe un número del 1 al 5.");
+        opcion = 0;
+    }
+    else
+    {
+        switch (opcion)
+        {
+            case 1:
+                Console.Write("Nombre: ");
+                string nombre = (Console.ReadLine() ?? "").Trim();
+
+                if (nombre.Length == 0)
+                {
+                    Console.WriteLine("El nombre no puede estar vacío.");
+                }
+                else if (nombre.Contains(';'))
+                {
+                    Console.WriteLine("El nombre no puede contener «;» (es el separador del CSV).");
+                }
+                else
+                {
+                    Console.Write("Nota (0-10): ");
+                    if (double.TryParse(Console.ReadLine(), out double nota)
+                        && nota >= 0 && nota <= 10)
+                    {
+                        alumnos.Add((nombre, nota));
+                        Console.WriteLine($"Añadido. Ahora hay {alumnos.Count} alumnos.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Nota no válida: debe ser un número entre 0 y 10.");
+                    }
+                }
+                break;
+
+            case 2:
+                if (alumnos.Count == 0)
+                {
+                    Console.WriteLine("(no hay alumnos)");
+                }
+                else
+                {
+                    foreach (var a in alumnos)
+                    {
+                        Console.WriteLine($"  {a.nombre,-20} {a.nota,5:F2}");
+                    }
+                    Console.WriteLine($"  Media: {alumnos.Average(a => a.nota):F2}");
+                }
+                break;
+
+            case 3:
+                Guardar();
+                break;
+
+            case 4:
+                Cargar();
+                break;
+
+            case 5:
+                Guardar();
+                Console.WriteLine("Datos guardados. Hasta luego.");
+                break;
+
+            default:
+                Console.WriteLine("Opción fuera de rango.");
+                break;
+        }
+    }
+} while (opcion != 5);
+
+void Guardar()
+{
+    try
+    {
+        using StreamWriter escritor = new StreamWriter(Ruta, false, Encoding.UTF8);
+        escritor.WriteLine("nombre;nota");
+        foreach (var a in alumnos)
+        {
+            escritor.WriteLine($"{a.nombre};{a.nota.ToString(CultureInfo.InvariantCulture)}");
+        }
+        Console.WriteLine($"Guardados {alumnos.Count} alumnos en {Ruta}.");
+    }
+    catch (IOException ex)
+    {
+        Console.WriteLine($"No se ha podido guardar: {ex.Message}");
+    }
+    catch (UnauthorizedAccessException)
+    {
+        Console.WriteLine("No hay permisos para escribir en esa ubicación.");
+    }
+}
+
+void Cargar()
+{
+    if (!File.Exists(Ruta))
+    {
+        Console.WriteLine($"No existe {Ruta}: empezamos con la lista vacía.");
+    }
+    else
+    {
+        try
+        {
+            alumnos.Clear();
+            int descartadas = 0;
+            string[] lineas = File.ReadAllLines(Ruta, Encoding.UTF8);
+
+            for (int i = 1; i < lineas.Length; i++)
+            {
+                string[] campos = lineas[i].Split(';');
+                bool valida = campos.Length == 2
+                              && campos[0].Length > 0
+                              && double.TryParse(campos[1], NumberStyles.Float,
+                                                 CultureInfo.InvariantCulture, out double nota)
+                              && nota >= 0 && nota <= 10;
+                if (valida)
+                {
+                    double.TryParse(campos[1], NumberStyles.Float,
+                                    CultureInfo.InvariantCulture, out double n);
+                    alumnos.Add((campos[0], n));
+                }
+                else
+                {
+                    descartadas++;
+                }
+            }
+
+            Console.WriteLine($"Cargados {alumnos.Count} alumnos" +
+                              (descartadas > 0 ? $" ({descartadas} líneas descartadas)." : "."));
+        }
+        catch (IOException ex)
+        {
+            Console.WriteLine($"No se ha podido leer: {ex.Message}");
+        }
+    }
+}
+` },
+                { titulo: "Ampliación: exportar un informe", nota: "Fíjate en la combinación de las tres cosas que has aprendido: StringBuilder para construir el texto, LINQ para ordenar y calcular, y control de excepciones para la escritura.", codigo: r`using System.Globalization;
+using System.Text;
+
+List<(string nombre, double nota)> alumnos = new List<(string, double)>
+{
+    ("Ana Puig", 9.0), ("Luis Soler", 4.5), ("Marta Vila", 7.25),
+};
+
+ExportarInforme("informe.txt", alumnos);
+Console.WriteLine(File.ReadAllText("informe.txt", Encoding.UTF8));
+
+void ExportarInforme(string ruta, List<(string nombre, double nota)> datos)
+{
+    if (datos.Count == 0)
+    {
+        Console.WriteLine("No hay datos que exportar.");
+        return;
+    }
+
+    // StringBuilder: construimos todo el informe y lo escribimos de una vez
+    StringBuilder informe = new StringBuilder();
+    informe.AppendLine($"INFORME DE NOTAS - {DateTime.Now:dd/MM/yyyy HH:mm}");
+    informe.AppendLine(new string('=', 40));
+
+    int puesto = 1;
+    foreach (var a in datos.OrderByDescending(x => x.nota))
+    {
+        string marca = a.nota >= 5 ? "" : "  (suspendido)";
+        informe.AppendLine($"{puesto,2}. {a.nombre,-20}{a.nota,6:F2}{marca}");
+        puesto++;
+    }
+
+    informe.AppendLine(new string('-', 40));
+    informe.AppendLine($"Alumnos:   {datos.Count}");
+    informe.AppendLine($"Media:     {datos.Average(x => x.nota):F2}");
+    informe.AppendLine($"Aprobados: {datos.Count(x => x.nota >= 5)}");
+
+    try
+    {
+        File.WriteAllText(ruta, informe.ToString(), Encoding.UTF8);
+        Console.WriteLine($"Informe escrito en {ruta}\n");
+    }
+    catch (IOException ex)
+    {
+        Console.WriteLine($"No se ha podido escribir el informe: {ex.Message}");
+    }
+}
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "ficheros-json",
+          titulo: "Ficheros JSON con System.Text.Json",
+          duracion: "24 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Serializar y deserializar objetos con System.Text.Json", "Configurar la serialización (sangrado, nombres, nulos) y manejar los errores", "Recorrer un JSON cuya forma no se conoce con JsonNode"],
+          teoria: r`<p><strong>JSON</strong> (<em>JavaScript Object Notation</em>) es el
+formato de intercambio de datos de internet: lo hablan todas las API
+web, lo usan los ficheros de configuración
+(<code>appsettings.json</code>, <code>package.json</code>) y es el
+formato en el que guardarás el estado de una aplicación. A diferencia
+del CSV, puede representar datos <strong>anidados</strong>: objetos
+dentro de objetos y listas dentro de objetos.</p>
+<pre><code>{
+  &quot;id&quot;: 1,
+  &quot;nombre&quot;: &quot;Ana Puig&quot;,
+  &quot;activo&quot;: true,
+  &quot;notas&quot;: [9.0, 8.5, 7.25],
+  &quot;tutor&quot;: { &quot;nombre&quot;: &quot;Dani&quot;, &quot;correo&quot;: &quot;dani@itb.cat&quot; }
+}</code></pre>
+<h3 id="1-la-sintaxis-en-cinco-reglas">1. La sintaxis, en cinco
+reglas</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Elemento</th>
+<th>Sintaxis</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Objeto</td>
+<td><code>{ "clave": valor, ... }</code> — las claves
+<strong>siempre</strong> entre comillas dobles</td>
+</tr>
+<tr class="even">
+<td>Array</td>
+<td><code>[ valor, valor, ... ]</code></td>
+</tr>
+<tr class="odd">
+<td>Texto</td>
+<td><code>"entre comillas dobles"</code></td>
+</tr>
+<tr class="even">
+<td>Número</td>
+<td><code>42</code>, <code>3.14</code> — <strong>siempre con punto
+decimal</strong></td>
+</tr>
+<tr class="odd">
+<td>Booleano / nulo</td>
+<td><code>true</code>, <code>false</code>, <code>null</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>No admite comentarios ni comas sobrantes al final (aunque .NET puede
+tolerarlas si se le pide).</p>
+<h3 id="2-systemtextjson-la-biblioteca-de-net">2.
+<code>System.Text.Json</code>: la biblioteca de .NET</h3>
+<p>Desde .NET Core 3.0 hay un serializador integrado,
+<strong><code>System.Text.Json</code></strong>, rápido y sin
+dependencias. La alternativa histórica es
+<strong>Newtonsoft.Json</strong> (<code>Json.NET</code>), que sigue
+siendo muy popular, tiene más opciones y es la que verás en proyectos
+antiguos.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th></th>
+<th><code>System.Text.Json</code></th>
+<th><code>Newtonsoft.Json</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Incluido en .NET</td>
+<td><strong>sí</strong></td>
+<td>paquete NuGet</td>
+</tr>
+<tr class="even">
+<td>Velocidad y memoria</td>
+<td>mejor</td>
+<td>buena</td>
+</tr>
+<tr class="odd">
+<td>Flexibilidad</td>
+<td>suficiente</td>
+<td>mayor</td>
+</tr>
+<tr class="even">
+<td>Recomendación</td>
+<td><strong>por defecto</strong></td>
+<td>si necesitas algo que la otra no hace</td>
+</tr>
+</tbody>
+</table></div>
+<h4
+id="serializar-objeto--texto-y-deserializar-texto--objeto">Serializar
+(objeto → texto) y deserializar (texto → objeto)</h4>
+<pre><code>using System.Text.Json;
+
+string json = JsonSerializer.Serialize(alumno);
+Alumno recuperado = JsonSerializer.Deserialize&lt;Alumno&gt;(json);</code></pre>
+<p>Y con ficheros, en una línea cada cosa:</p>
+<pre><code>File.WriteAllText(&quot;datos.json&quot;, JsonSerializer.Serialize(lista, opciones));
+var lista = JsonSerializer.Deserialize&lt;List&lt;Alumno&gt;&gt;(File.ReadAllText(&quot;datos.json&quot;));</code></pre>
+<h3 id="3-las-opciones-que-vas-a-usar-siempre">3. Las opciones que vas a
+usar siempre</h3>
+<pre><code>JsonSerializerOptions opciones = new JsonSerializerOptions
+{
+    WriteIndented = true,                 // con saltos de línea y sangría: legible
+    PropertyNameCaseInsensitive = true,   // al leer, acepta &quot;Nombre&quot; y &quot;nombre&quot;
+    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,   // al escribir: nombre, no Nombre
+    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,   // omite los nulos
+    Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+};</code></pre>
+<p>La última merece explicación: por seguridad, el serializador
+<strong>escapa</strong> los caracteres no ASCII (la «ñ» se convierte en
+<code>ñ</code>). El JSON es correcto y se lee igual, pero resulta
+ilegible para un humano. Esa opción lo deja tal cual; es segura para
+ficheros propios, no para HTML.</p>
+<h3 id="4-requisitos-de-las-clases">4. Requisitos de las clases</h3>
+<p>Para que una clase se serialice bien:</p>
+<ul>
+<li>Las <strong>propiedades públicas</strong> se serializan; los campos
+privados, no.</li>
+<li>Para <strong>deserializar</strong> hacen falta propiedades con
+<code>set</code> (o un constructor cuyos parámetros coincidan con los
+nombres de las propiedades).</li>
+<li>Los <strong><code>record</code></strong> funcionan perfectamente y
+son la opción más cómoda para datos.</li>
+</ul>
+<p>Atributos útiles:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Atributo</th>
+<th>Para qué</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>[JsonPropertyName("otro_nombre")]</code></td>
+<td>el nombre en el JSON es distinto</td>
+</tr>
+<tr class="even">
+<td><code>[JsonIgnore]</code></td>
+<td>no serializar esa propiedad</td>
+</tr>
+<tr class="odd">
+<td><code>[JsonInclude]</code></td>
+<td>sí serializar un miembro que por defecto se omitiría</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-control-de-errores">5. Control de errores</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Excepción</th>
+<th>Cuándo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>JsonException</code></td>
+<td>el texto no es JSON válido, o no encaja con el tipo</td>
+</tr>
+<tr class="even">
+<td><code>NotSupportedException</code></td>
+<td>hay un tipo que no se sabe convertir</td>
+</tr>
+<tr class="odd">
+<td><code>FileNotFoundException</code>, <code>IOException</code></td>
+<td>problemas del fichero</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong><code>Deserialize</code> puede devolver
+<code>null</code></strong> si el texto es literalmente
+<code>"null"</code>. Compruébalo siempre antes de usar el resultado:</p>
+<pre><code>var datos = JsonSerializer.Deserialize&lt;List&lt;Alumno&gt;&gt;(texto);
+if (datos is null) { ... }</code></pre>
+<h3 id="6-cuando-no-conoces-la-forma-del-json">6. Cuando no conoces la
+forma del JSON</h3>
+<p>Si recibes un JSON del que solo quieres un campo, o cuya estructura
+varía, no hace falta crear una clase. Hay dos herramientas:</p>
+<ul>
+<li><strong><code>JsonNode</code></strong> (y <code>JsonObject</code>,
+<code>JsonArray</code>): un árbol <strong>modificable</strong> que se
+navega con índices y nombres.</li>
+<li><strong><code>JsonDocument</code></strong>: solo lectura, más rápido
+y con menos memoria; hay que liberarlo con <code>using</code>.</li>
+</ul>
+<pre><code>JsonNode raiz = JsonNode.Parse(texto);
+string nombre = raiz[&quot;usuario&quot;][&quot;nombre&quot;].GetValue&lt;string&gt;();</code></pre>
+<h3 id="7-json-frente-a-csv">7. JSON frente a CSV</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th></th>
+<th>CSV</th>
+<th>JSON</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Datos anidados</td>
+<td>no</td>
+<td><strong>sí</strong></td>
+</tr>
+<tr class="even">
+<td>Tipos</td>
+<td>todo es texto</td>
+<td>texto, número, booleano, nulo</td>
+</tr>
+<tr class="odd">
+<td>Tamaño</td>
+<td><strong>menor</strong></td>
+<td>mayor (repite las claves)</td>
+</tr>
+<tr class="even">
+<td>Lo abre Excel</td>
+<td><strong>sí</strong></td>
+<td>no directamente</td>
+</tr>
+<tr class="odd">
+<td>APIs web</td>
+<td>poco</td>
+<td><strong>el estándar</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>La elección es sencilla: <strong>tabla plana para Excel → CSV; datos
+con estructura o para una API → JSON</strong>.</p>`,
+          ejemplos: [
+            { titulo: "Serializar y deserializar", explicacion: "Observa el valor inicial de las propiedades de texto (= \"\"): evita que queden en null si el JSON no trae ese campo. Y fíjate en la comprobación de null tras Deserialize: es obligatoria, porque el texto podría ser literalmente «null».", codigo: r`using System.Text.Json;
+
+// ---------- Un objeto a texto JSON ----------
+Alumno ana = new Alumno
+{
+    Id = 1,
+    Nombre = "Ana Puig",
+    Ciclo = "DAM",
+    Activo = true,
+    Notas = new List<double> { 9.0, 8.5, 7.25 },
+};
+
+string compacto = JsonSerializer.Serialize(ana);
+Console.WriteLine("--- Compacto (para enviar por la red) ---");
+Console.WriteLine(compacto);
+
+// Con opciones: legible y sin escapar los acentos
+JsonSerializerOptions opciones = new JsonSerializerOptions
+{
+    WriteIndented = true,
+    Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+};
+
+Console.WriteLine("\n--- Con sangrado (para un fichero de configuración) ---");
+Console.WriteLine(JsonSerializer.Serialize(ana, opciones));
+
+// ---------- De texto JSON a objeto ----------
+string texto = @"{
+  ""id"": 2,
+  ""nombre"": ""Luis Soler"",
+  ""ciclo"": ""ASIX"",
+  ""activo"": false,
+  ""notas"": [6.5, 7.0]
+}";
+
+JsonSerializerOptions lectura = new JsonSerializerOptions
+{
+    PropertyNameCaseInsensitive = true,      // acepta "nombre" y "Nombre"
+};
+
+Alumno luis = JsonSerializer.Deserialize<Alumno>(texto, lectura);
+
+if (luis is null)
+{
+    Console.WriteLine("\nEl JSON no contenía un objeto.");
+}
+else
+{
+    Console.WriteLine($"\n--- Recuperado ---");
+    Console.WriteLine($"{luis.Nombre} ({luis.Ciclo}), activo: {luis.Activo}");
+    Console.WriteLine($"Notas: {string.Join(", ", luis.Notas)}  media {luis.Notas.Average():F2}");
+}
+
+// ---------- Un JSON mal formado ----------
+try
+{
+    JsonSerializer.Deserialize<Alumno>("{ esto no es json }");
+}
+catch (JsonException ex)
+{
+    Console.WriteLine($"\nJsonException capturada: {ex.Message.Split('.')[0]}");
+}
+
+class Alumno
+{
+    // Para deserializar hacen falta propiedades con set
+    public int Id { get; set; }
+    public string Nombre { get; set; } = "";
+    public string Ciclo { get; set; } = "";
+    public bool Activo { get; set; }
+    public List<double> Notas { get; set; } = new List<double>();
+}
+` },
+            { titulo: "Guardar y recuperar el estado de una aplicación", explicacion: "Este es el patrón real de «guardar partida» o «guardar configuración»: una clase con los datos, serialización a JSON y una función de carga que sobrevive a un fichero inexistente o corrupto devolviendo un estado por defecto.", codigo: r`using System.Text.Json;
+using System.Text.Json.Serialization;
+
+string ruta = "partida.json";
+
+JsonSerializerOptions opciones = new JsonSerializerOptions
+{
+    WriteIndented = true,
+    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+    Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+};
+
+// ---------- Guardar ----------
+Partida partida = new Partida
+{
+    Jugador = "Ana",
+    Nivel = 7,
+    Puntos = 15430,
+    Guardada = new DateTime(2026, 11, 27, 13, 5, 0),
+    Inventario = new List<Objeto>
+    {
+        new Objeto { Nombre = "Espada de hierro", Cantidad = 1, Valor = 120.5m },
+        new Objeto { Nombre = "Poción de vida", Cantidad = 5, Valor = 15m },
+    },
+    Ajustes = new Dictionary<string, string>
+    {
+        ["dificultad"] = "normal",
+        ["idioma"] = "ca",
+    },
+};
+
+File.WriteAllText(ruta, JsonSerializer.Serialize(partida, opciones));
+Console.WriteLine($"--- {ruta} ---");
+Console.WriteLine(File.ReadAllText(ruta));
+
+// ---------- Recuperar ----------
+Partida recuperada = CargarPartida(ruta, opciones);
+
+if (recuperada is null)
+{
+    Console.WriteLine("No se ha podido cargar la partida.");
+}
+else
+{
+    Console.WriteLine($"Jugador: {recuperada.Jugador}, nivel {recuperada.Nivel}, " +
+                      $"{recuperada.Puntos} puntos");
+    Console.WriteLine($"Guardada el {recuperada.Guardada:dd/MM/yyyy HH:mm}");
+    Console.WriteLine($"Inventario ({recuperada.Inventario.Count} objetos):");
+    foreach (Objeto o in recuperada.Inventario)
+    {
+        Console.WriteLine($"  {o.Cantidad,2} x {o.Nombre,-18} {o.Valor,8:F2}");
+    }
+    Console.WriteLine($"Valor total: {recuperada.Inventario.Sum(o => o.Cantidad * o.Valor):F2}");
+    Console.WriteLine($"Dificultad: {recuperada.Ajustes.GetValueOrDefault("dificultad", "normal")}");
+}
+
+Partida CargarPartida(string archivo, JsonSerializerOptions opts)
+{
+    if (!File.Exists(archivo))
+    {
+        Console.WriteLine($"No existe {archivo}: se empieza una partida nueva.");
+        return new Partida();
+    }
+
+    try
+    {
+        string json = File.ReadAllText(archivo);
+        Partida p = JsonSerializer.Deserialize<Partida>(json, opts);
+        return p ?? new Partida();          // si el JSON era «null», partida nueva
+    }
+    catch (JsonException ex)
+    {
+        Console.WriteLine($"La partida guardada está corrupta: {ex.Message.Split('.')[0]}");
+        return new Partida();
+    }
+    catch (IOException ex)
+    {
+        Console.WriteLine($"Error de lectura: {ex.Message}");
+        return new Partida();
+    }
+}
+
+class Partida
+{
+    public string Jugador { get; set; } = "";
+    public int Nivel { get; set; } = 1;
+    public int Puntos { get; set; }
+    public DateTime Guardada { get; set; }
+    public List<Objeto> Inventario { get; set; } = new List<Objeto>();
+    public Dictionary<string, string> Ajustes { get; set; } = new Dictionary<string, string>();
+
+    // Esta propiedad no se guarda en el fichero: se calcula
+    [JsonIgnore]
+    public int Objetos => Inventario.Sum(o => o.Cantidad);
+}
+
+class Objeto
+{
+    public string Nombre { get; set; } = "";
+    public int Cantidad { get; set; }
+    public decimal Valor { get; set; }
+}
+` },
+            { titulo: "JSON de forma desconocida: JsonNode", explicacion: "JsonNode es la herramienta cuando solo quieres dos campos de una respuesta enorme, o cuando la forma del JSON varía. Para datos estables, siempre es mejor una clase: el compilador te ayuda y el código se lee mucho mejor.", codigo: r`using System.Text.Json;
+using System.Text.Json.Nodes;
+
+// Un JSON como el que devolvería una API: no queremos crear clases para todo
+string respuesta = @"{
+  ""estado"": ""ok"",
+  ""pagina"": 1,
+  ""total"": 3,
+  ""resultados"": [
+    { ""id"": 10, ""titulo"": ""Hollow Knight"", ""nota"": 9.2, ""generos"": [""accion"", ""metroidvania""] },
+    { ""id"": 11, ""titulo"": ""Celeste"", ""nota"": 9.0, ""generos"": [""plataformas""] },
+    { ""id"": 12, ""titulo"": ""Hades"", ""nota"": 9.3, ""generos"": [""roguelike"", ""accion""] }
+  ]
+}";
+
+JsonNode raiz = JsonNode.Parse(respuesta);
+
+if (raiz is null)
+{
+    Console.WriteLine("Respuesta vacía.");
+}
+else
+{
+    // Navegar con nombres de propiedad e índices
+    Console.WriteLine($"Estado: {raiz["estado"].GetValue<string>()}");
+    Console.WriteLine($"Total:  {raiz["total"].GetValue<int>()}");
+
+    JsonArray resultados = raiz["resultados"].AsArray();
+    Console.WriteLine($"\nJuegos ({resultados.Count}):");
+
+    foreach (JsonNode juego in resultados)
+    {
+        string titulo = juego["titulo"].GetValue<string>();
+        double nota = juego["nota"].GetValue<double>();
+        var generos = juego["generos"].AsArray().Select(g => g.GetValue<string>());
+        Console.WriteLine($"  {titulo,-16} {nota:F1}  [{string.Join(", ", generos)}]");
+    }
+
+    // El árbol es MODIFICABLE
+    raiz["pagina"] = 2;
+    resultados.Add(new JsonObject
+    {
+        ["id"] = 13,
+        ["titulo"] = "Undertale",
+        ["nota"] = 9.1,
+        ["generos"] = new JsonArray("rpg"),
+    });
+    raiz["total"] = resultados.Count;
+
+    Console.WriteLine($"\n--- Modificado ---");
+    Console.WriteLine(raiz.ToJsonString(new JsonSerializerOptions { WriteIndented = true }));
+
+    // Acceso seguro: un campo que puede no existir
+    JsonNode inexistente = raiz["no_existe"];
+    Console.WriteLine($"\nCampo inexistente: {(inexistente is null ? "no está (null)" : "está")}");
+}
+
+// JsonDocument: solo lectura, más eficiente. Hay que liberarlo con using.
+using (JsonDocument documento = JsonDocument.Parse(respuesta))
+{
+    JsonElement raizDoc = documento.RootElement;
+    Console.WriteLine($"\nCon JsonDocument, estado = {raizDoc.GetProperty("estado").GetString()}");
+
+    // TryGetProperty para los campos opcionales
+    if (raizDoc.TryGetProperty("total", out JsonElement total))
+    {
+        Console.WriteLine($"Total: {total.GetInt32()}");
+    }
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Agenda de contactos en JSON",
+              nivel: 1,
+              pista: "Deserialize<List<Contacto>> recupera toda la lista; comprueba el null y captura JsonException.",
+              enunciado: r`<p>Escribe una agenda de contactos que se guarde en
+<code>contactos.json</code>, con un menú: <code>1</code> añadir contacto
+(nombre, teléfono, correo y una lista de etiquetas), <code>2</code>
+listar, <code>3</code> buscar por nombre o etiqueta, <code>4</code>
+eliminar por nombre y <code>5</code> salir guardando.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Crea una clase <code>Contacto</code> con propiedades públicas con
+<code>get</code> y <code>set</code>.</li>
+<li>Usa <code>WriteIndented = true</code> para que el fichero sea
+legible, y el codificador relajado para que los acentos se vean
+bien.</li>
+<li><strong>Control de errores:</strong> si el fichero no existe,
+empieza con la agenda vacía; si está corrupto, captura
+<code>JsonException</code> y avisa sin perder el programa. Comprueba el
+<code>null</code> de <code>Deserialize</code>.</li>
+<li>Valida que el nombre no esté vacío y que el teléfono tenga 9 dígitos
+(con una expresión regular o comprobando los caracteres).</li>
+</ul>
+<p>💡 <strong>TIP:</strong>
+<code>JsonSerializer.Deserialize&lt;List&lt;Contacto&gt;&gt;(texto)</code>
+recupera la lista completa de una vez.</p>
+<p>🏅 <strong>Ampliación:</strong> añade una copia de seguridad: antes
+de guardar, si el fichero existe, renómbralo a
+<code>contactos.bak</code>.</p>`,
+              soluciones: [
+                { titulo: "Versión completa", nota: "La copia de seguridad antes de sobrescribir es una costumbre que salva datos: si el programa falla a media escritura, el .bak conserva la versión anterior. Fíjate también en el operador ?? para el resultado de Deserialize.", codigo: r`using System.Text.Json;
+
+const string Ruta = "contactos.json";
+
+JsonSerializerOptions Opciones = new JsonSerializerOptions
+{
+    WriteIndented = true,
+    PropertyNameCaseInsensitive = true,
+    Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+};
+
+List<Contacto> agenda = Cargar();
+int opcion = 0;
+
+do
+{
+    Console.WriteLine($"\n--- AGENDA ({agenda.Count} contactos) ---");
+    Console.WriteLine("1) Añadir   2) Listar   3) Buscar   4) Eliminar   5) Salir");
+    Console.Write("Opción: ");
+
+    if (!int.TryParse(Console.ReadLine(), out opcion))
+    {
+        Console.WriteLine("Escribe un número del 1 al 5.");
+        opcion = 0;
+    }
+    else
+    {
+        switch (opcion)
+        {
+            case 1:
+                Console.Write("Nombre: ");
+                string nombre = (Console.ReadLine() ?? "").Trim();
+
+                if (nombre.Length == 0)
+                {
+                    Console.WriteLine("El nombre no puede estar vacío.");
+                }
+                else if (agenda.Any(c => c.Nombre.Equals(nombre, StringComparison.OrdinalIgnoreCase)))
+                {
+                    Console.WriteLine("Ya existe un contacto con ese nombre.");
+                }
+                else
+                {
+                    Console.Write("Teléfono (9 dígitos): ");
+                    string telefono = (Console.ReadLine() ?? "").Trim();
+
+                    bool telefonoValido = telefono.Length == 9 && telefono.All(char.IsDigit);
+                    if (!telefonoValido)
+                    {
+                        Console.WriteLine("El teléfono debe tener exactamente 9 dígitos.");
+                    }
+                    else
+                    {
+                        Console.Write("Correo: ");
+                        string correo = (Console.ReadLine() ?? "").Trim();
+
+                        Console.Write("Etiquetas (separadas por comas): ");
+                        string etiquetasTexto = Console.ReadLine() ?? "";
+                        List<string> etiquetas = etiquetasTexto
+                            .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                            .Select(e => e.Trim().ToLower())
+                            .Where(e => e.Length > 0)
+                            .Distinct()
+                            .ToList();
+
+                        agenda.Add(new Contacto
+                        {
+                            Nombre = nombre,
+                            Telefono = telefono,
+                            Correo = correo,
+                            Etiquetas = etiquetas,
+                        });
+                        Console.WriteLine($"Añadido. La agenda tiene {agenda.Count} contactos.");
+                    }
+                }
+                break;
+
+            case 2:
+                if (agenda.Count == 0)
+                {
+                    Console.WriteLine("(agenda vacía)");
+                }
+                else
+                {
+                    foreach (Contacto c in agenda.OrderBy(x => x.Nombre))
+                    {
+                        Console.WriteLine($"  {c.Nombre,-18}{c.Telefono,11}  {c.Correo,-24}" +
+                                          $"[{string.Join(", ", c.Etiquetas)}]");
+                    }
+                }
+                break;
+
+            case 3:
+                Console.Write("Texto a buscar: ");
+                string busqueda = (Console.ReadLine() ?? "").Trim().ToLower();
+
+                var encontrados = agenda.Where(c =>
+                    c.Nombre.ToLower().Contains(busqueda)
+                    || c.Etiquetas.Any(e => e.Contains(busqueda))).ToList();
+
+                if (!encontrados.Any())
+                {
+                    Console.WriteLine("Sin coincidencias.");
+                }
+                else
+                {
+                    Console.WriteLine($"{encontrados.Count} coincidencias:");
+                    foreach (Contacto c in encontrados)
+                    {
+                        Console.WriteLine($"  {c.Nombre} - {c.Telefono}");
+                    }
+                }
+                break;
+
+            case 4:
+                Console.Write("Nombre a eliminar: ");
+                string aBorrar = (Console.ReadLine() ?? "").Trim();
+                int borrados = agenda.RemoveAll(c =>
+                    c.Nombre.Equals(aBorrar, StringComparison.OrdinalIgnoreCase));
+                Console.WriteLine(borrados > 0
+                    ? $"Eliminado «{aBorrar}»."
+                    : $"No hay ningún contacto llamado «{aBorrar}».");
+                break;
+
+            case 5:
+                Guardar(agenda);
+                Console.WriteLine("Agenda guardada. Hasta luego.");
+                break;
+
+            default:
+                Console.WriteLine("Opción fuera de rango.");
+                break;
+        }
+    }
+} while (opcion != 5);
+
+List<Contacto> Cargar()
+{
+    if (!File.Exists(Ruta))
+    {
+        Console.WriteLine($"No existe {Ruta}: se empieza con la agenda vacía.");
+        return new List<Contacto>();
+    }
+
+    try
+    {
+        string json = File.ReadAllText(Ruta);
+        List<Contacto> lista = JsonSerializer.Deserialize<List<Contacto>>(json, Opciones);
+        Console.WriteLine($"Cargados {lista?.Count ?? 0} contactos.");
+        return lista ?? new List<Contacto>();      // el JSON podía ser «null»
+    }
+    catch (JsonException)
+    {
+        Console.WriteLine($"{Ruta} está corrupto: se empieza con la agenda vacía.");
+        return new List<Contacto>();
+    }
+    catch (IOException ex)
+    {
+        Console.WriteLine($"No se ha podido leer: {ex.Message}");
+        return new List<Contacto>();
+    }
+}
+
+void Guardar(List<Contacto> contactos)
+{
+    try
+    {
+        // Copia de seguridad antes de sobrescribir
+        if (File.Exists(Ruta))
+        {
+            File.Copy(Ruta, "contactos.bak", true);
+        }
+        File.WriteAllText(Ruta, JsonSerializer.Serialize(contactos, Opciones));
+    }
+    catch (IOException ex)
+    {
+        Console.WriteLine($"No se ha podido guardar: {ex.Message}");
+    }
+}
+
+class Contacto
+{
+    public string Nombre { get; set; } = "";
+    public string Telefono { get; set; } = "";
+    public string Correo { get; set; } = "";
+    public List<string> Etiquetas { get; set; } = new List<string>();
+}
+` },
+                { titulo: "Comparación: el mismo contacto en CSV y en JSON", nota: "La comparación hace visible el criterio de elección: en cuanto hay una lista o un objeto dentro de otro, el CSV obliga a inventar convenciones y el JSON lo representa de forma natural.", codigo: r`using System.Text.Json;
+
+Contacto ana = new Contacto
+{
+    Nombre = "Ana Puig",
+    Telefono = "666111222",
+    Correo = "ana@itb.cat",
+    Etiquetas = new List<string> { "clase", "proyecto", "DAM" },
+};
+
+// En JSON: la lista de etiquetas se representa de forma natural
+string json = JsonSerializer.Serialize(ana,
+    new JsonSerializerOptions
+    {
+        WriteIndented = true,
+        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+    });
+Console.WriteLine("--- JSON ---");
+Console.WriteLine(json);
+
+// En CSV hay que «aplanar» la lista con un separador secundario: incómodo y frágil
+string csv = $"{ana.Nombre};{ana.Telefono};{ana.Correo};{string.Join("|", ana.Etiquetas)}";
+Console.WriteLine("--- CSV ---");
+Console.WriteLine("nombre;telefono;correo;etiquetas");
+Console.WriteLine(csv);
+
+Console.WriteLine("\nEl CSV necesita un segundo separador (|) para la lista, y cualquier");
+Console.WriteLine("etiqueta que contenga ese carácter rompería el fichero.");
+Console.WriteLine("Conclusión: datos planos -> CSV; datos con estructura -> JSON.");
+
+class Contacto
+{
+    public string Nombre { get; set; } = "";
+    public string Telefono { get; set; } = "";
+    public string Correo { get; set; } = "";
+    public List<string> Etiquetas { get; set; } = new List<string>();
+}
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "ficheros-xml",
+          titulo: "Ficheros XML y LINQ to XML",
+          duracion: "22 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Leer y escribir XML con XDocument y LINQ to XML", "Distinguir elementos de atributos y recorrer un documento con consultas", "Conocer las alternativas (XmlReader, XmlDocument, serialización) y cuándo usar cada una"],
+          teoria: r`<p><strong>XML</strong> (<em>eXtensible Markup Language</em>) fue
+durante años <strong>el</strong> formato de intercambio de datos, y
+sigue muy presente: los ficheros <code>.csproj</code> de tus proyectos
+de C# son XML, igual que los documentos de Office por dentro, las
+configuraciones de muchos servidores, los SVG y los RSS. Saber leerlo y
+escribirlo es imprescindible para mantener software existente.</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;biblioteca&gt;
+  &lt;libro id=&quot;1&quot; prestado=&quot;false&quot;&gt;
+    &lt;titulo&gt;El Quijote&lt;/titulo&gt;
+    &lt;autor&gt;Cervantes&lt;/autor&gt;
+    &lt;anio&gt;1605&lt;/anio&gt;
+  &lt;/libro&gt;
+  &lt;libro id=&quot;2&quot; prestado=&quot;true&quot;&gt;
+    &lt;titulo&gt;Rayuela&lt;/titulo&gt;
+    &lt;autor&gt;Cortázar&lt;/autor&gt;
+    &lt;anio&gt;1963&lt;/anio&gt;
+  &lt;/libro&gt;
+&lt;/biblioteca&gt;</code></pre>
+<h3 id="1-elementos-y-atributos">1. Elementos y atributos</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Concepto</th>
+<th>Ejemplo</th>
+<th>Cuándo usarlo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Elemento</strong></td>
+<td><code>&lt;titulo&gt;El Quijote&lt;/titulo&gt;</code></td>
+<td>para los <strong>datos</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Atributo</strong></td>
+<td><code>id="1"</code></td>
+<td>para los <strong>metadatos</strong> (identificadores, banderas)</td>
+</tr>
+<tr class="odd">
+<td><strong>Raíz</strong></td>
+<td><code>&lt;biblioteca&gt;</code></td>
+<td>solo puede haber <strong>una</strong> por documento</td>
+</tr>
+</tbody>
+</table></div>
+<p>La regla práctica: si es información que el usuario vería, elemento;
+si es información <strong>sobre</strong> el dato (un identificador, un
+tipo, un idioma), atributo. No hay una norma universal, pero esa
+convención es la más seguida.</p>
+<p>Reglas del formato: toda etiqueta se cierra, las etiquetas distinguen
+mayúsculas, los atributos van entre comillas y hay cinco caracteres que
+deben escaparse: <code>&amp;lt;</code> (<code>&lt;</code>),
+<code>&amp;gt;</code> (<code>&gt;</code>), <code>&amp;amp;</code>
+(<code>&amp;</code>), <code>&amp;quot;</code> (<code>"</code>),
+<code>&amp;apos;</code> (<code>'</code>).</p>
+<h3 id="2-las-tres-formas-de-trabajar-con-xml-en-net">2. Las tres formas
+de trabajar con XML en .NET</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>API</th>
+<th>Modelo</th>
+<th>Cuándo usarla</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong><code>XDocument</code></strong> (LINQ to XML)</td>
+<td>árbol en memoria, con LINQ</td>
+<td><strong>la recomendada</strong> para casi todo</td>
+</tr>
+<tr class="even">
+<td><code>XmlDocument</code></td>
+<td>árbol en memoria, estilo DOM</td>
+<td>código antiguo; API más verbosa</td>
+</tr>
+<tr class="odd">
+<td><code>XmlReader</code> / <code>XmlWriter</code></td>
+<td>flujo, sin cargar el documento</td>
+<td>ficheros enormes (cientos de MB)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Y aparte, la <strong>serialización</strong> con
+<code>XmlSerializer</code>, que convierte objetos en XML y al revés,
+igual que <code>JsonSerializer</code> con JSON.</p>
+<p>Esta lección se centra en <code>XDocument</code>, en
+<code>System.Xml.Linq</code>, porque es la que hace el trabajo
+cómodo.</p>
+<h3 id="3-crear-un-xml">3. Crear un XML</h3>
+<p>La sintaxis <strong>funcional</strong> de LINQ to XML permite
+construir el documento de una vez, con una estructura que se parece al
+resultado:</p>
+<pre><code>XDocument doc = new XDocument(
+    new XDeclaration(&quot;1.0&quot;, &quot;utf-8&quot;, null),
+    new XElement(&quot;biblioteca&quot;,
+        new XElement(&quot;libro&quot;,
+            new XAttribute(&quot;id&quot;, 1),
+            new XElement(&quot;titulo&quot;, &quot;El Quijote&quot;),
+            new XElement(&quot;autor&quot;, &quot;Cervantes&quot;))));
+
+doc.Save(&quot;biblioteca.xml&quot;);</code></pre>
+<p>Y con una colección, usando LINQ dentro de la construcción:</p>
+<pre><code>new XElement(&quot;biblioteca&quot;,
+    libros.Select(l =&gt; new XElement(&quot;libro&quot;,
+        new XAttribute(&quot;id&quot;, l.Id),
+        new XElement(&quot;titulo&quot;, l.Titulo))))</code></pre>
+<h3 id="4-leer-y-consultar">4. Leer y consultar</h3>
+<pre><code>XDocument doc = XDocument.Load(&quot;biblioteca.xml&quot;);
+
+// Elementos hijos directos de la raíz
+var titulos = doc.Root.Elements(&quot;libro&quot;)
+                      .Select(l =&gt; l.Element(&quot;titulo&quot;).Value);
+
+// Descendientes a cualquier profundidad
+var todos = doc.Descendants(&quot;titulo&quot;).Select(t =&gt; t.Value);
+
+// Con filtros y conversiones
+var antiguos = doc.Descendants(&quot;libro&quot;)
+                  .Where(l =&gt; (int)l.Element(&quot;anio&quot;) &lt; 1900)
+                  .Select(l =&gt; (string)l.Element(&quot;titulo&quot;));</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Método</th>
+<th>Qué devuelve</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Element("x")</code></td>
+<td>el <strong>primer</strong> hijo llamado así (o
+<code>null</code>)</td>
+</tr>
+<tr class="even">
+<td><code>Elements("x")</code></td>
+<td>todos los hijos directos llamados así</td>
+</tr>
+<tr class="odd">
+<td><code>Descendants("x")</code></td>
+<td>todos los descendientes, a cualquier nivel</td>
+</tr>
+<tr class="even">
+<td><code>Attribute("x")</code></td>
+<td>el atributo (o <code>null</code>)</td>
+</tr>
+<tr class="odd">
+<td><code>Value</code></td>
+<td>el texto del elemento</td>
+</tr>
+<tr class="even">
+<td><code>(int)elemento</code>, <code>(bool)atributo</code></td>
+<td>conversión al tipo, mejor que <code>Value</code> +
+<code>Parse</code></td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p><strong>Los moldes son la forma correcta de convertir.</strong>
+<code>(int?)l.Element("anio")</code> devuelve <code>null</code> si el
+elemento no existe, en lugar de lanzar
+<code>NullReferenceException</code> como haría
+<code>.Element("anio").Value</code>. Con datos reales, esa diferencia es
+la que evita que el programa se caiga.</p>
+</div>
+<h3 id="5-modificar-y-guardar">5. Modificar y guardar</h3>
+<pre><code>XElement libro = doc.Descendants(&quot;libro&quot;).First(l =&gt; (int)l.Attribute(&quot;id&quot;) == 2);
+libro.Element(&quot;titulo&quot;).Value = &quot;Rayuela (edición nueva)&quot;;
+libro.SetAttributeValue(&quot;prestado&quot;, &quot;false&quot;);      // añade o actualiza
+libro.Add(new XElement(&quot;editorial&quot;, &quot;Sudamericana&quot;));
+libro.Element(&quot;anio&quot;).Remove();
+doc.Save(&quot;biblioteca.xml&quot;);</code></pre>
+<h3 id="6-control-de-errores">6. Control de errores</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Excepción</th>
+<th>Cuándo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>XmlException</code></td>
+<td>el XML está mal formado (una etiqueta sin cerrar, por ejemplo)</td>
+</tr>
+<tr class="even">
+<td><code>FileNotFoundException</code> / <code>IOException</code></td>
+<td>problemas del fichero</td>
+</tr>
+<tr class="odd">
+<td><code>NullReferenceException</code></td>
+<td>has accedido a <code>.Value</code> de un elemento que no existe ←
+<strong>el más frecuente</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>La prevención del tercero es usar los moldes a tipos que admiten nulo
+(<code>(int?)</code>, <code>(string)</code>) y el operador
+<code>?.</code>.</p>
+<h3 id="7-xml-frente-a-json">7. XML frente a JSON</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th></th>
+<th>XML</th>
+<th>JSON</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Verbosidad</td>
+<td>mayor (etiqueta de cierre)</td>
+<td>menor</td>
+</tr>
+<tr class="even">
+<td>Atributos</td>
+<td><strong>sí</strong></td>
+<td>no (solo pares clave-valor)</td>
+</tr>
+<tr class="odd">
+<td>Comentarios</td>
+<td><strong>sí</strong></td>
+<td>no</td>
+</tr>
+<tr class="even">
+<td>Validación con esquema</td>
+<td><strong>XSD</strong>, muy potente</td>
+<td>JSON Schema, menos extendido</td>
+</tr>
+<tr class="odd">
+<td>Transformación</td>
+<td><strong>XSLT</strong>, consultas XPath</td>
+<td>código</td>
+</tr>
+<tr class="even">
+<td>Uso actual</td>
+<td>configuración, documentos, sistemas corporativos</td>
+<td>API web, aplicaciones modernas</td>
+</tr>
+</tbody>
+</table></div>
+<p>Para un proyecto nuevo que habla con una API, JSON. Para
+configuración compleja con comentarios y validación estricta, o para
+interoperar con sistemas existentes, XML sigue teniendo ventajas
+reales.</p>`,
+          ejemplos: [
+            { titulo: "Crear un XML con la sintaxis funcional", explicacion: "Fíjate en el Select dentro del XElement: LINQ genera la lista de elementos hijos. Esta forma de construir XML, llamada «construcción funcional», es una de las razones por las que XDocument desplazó a XmlDocument.", codigo: r`using System.Xml.Linq;
+
+string ruta = "biblioteca.xml";
+
+List<(int id, string titulo, string autor, int anio, bool prestado)> libros =
+    new List<(int, string, string, int, bool)>
+{
+    (1, "El Quijote", "Cervantes", 1605, false),
+    (2, "Rayuela", "Cortázar", 1963, true),
+    (3, "1984", "Orwell", 1949, false),
+};
+
+// La estructura del código se parece a la del XML resultante
+XDocument documento = new XDocument(
+    new XDeclaration("1.0", "utf-8", null),
+    new XComment("Catálogo de la biblioteca del centro"),
+    new XElement("biblioteca",
+        new XAttribute("centro", "ITB"),
+        new XAttribute("actualizado", DateTime.Today.ToString("yyyy-MM-dd")),
+        libros.Select(l => new XElement("libro",
+            new XAttribute("id", l.id),
+            new XAttribute("prestado", l.prestado),
+            new XElement("titulo", l.titulo),
+            new XElement("autor", l.autor),
+            new XElement("anio", l.anio)))));
+
+documento.Save(ruta);
+
+Console.WriteLine($"--- {ruta} ---");
+Console.WriteLine(File.ReadAllText(ruta));
+
+Console.WriteLine($"Tamaño: {new FileInfo(ruta).Length} bytes");
+Console.WriteLine($"Libros en el documento: {documento.Root.Elements("libro").Count()}");
+` },
+            { titulo: "Leer y consultar con LINQ to XML", explicacion: "La diferencia entre .Element(\"anio\").Value y (int?)l.Element(\"anio\") es la que separa un programa que se cae con datos reales de uno que no. Los moldes de LINQ to XML están pensados justo para eso.", codigo: r`using System.Xml.Linq;
+
+string ruta = "catalogo.xml";
+
+// Preparamos un fichero de ejemplo (con un libro al que le falta el año, a propósito)
+string contenido = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<biblioteca centro=""ITB"">
+  <libro id=""1"" prestado=""false"">
+    <titulo>El Quijote</titulo>
+    <autor>Cervantes</autor>
+    <anio>1605</anio>
+  </libro>
+  <libro id=""2"" prestado=""true"">
+    <titulo>Rayuela</titulo>
+    <autor>Cortazar</autor>
+    <anio>1963</anio>
+  </libro>
+  <libro id=""3"" prestado=""false"">
+    <titulo>Libro sin fecha</titulo>
+    <autor>Anonimo</autor>
+  </libro>
+</biblioteca>";
+File.WriteAllText(ruta, contenido);
+
+XDocument documento = XDocument.Load(ruta);
+XElement raiz = documento.Root;
+
+Console.WriteLine($"Centro: {raiz.Attribute("centro").Value}");
+Console.WriteLine($"Libros: {raiz.Elements("libro").Count()}\n");
+
+// Recorrer los libros, con moldes a tipos que admiten nulo
+foreach (XElement libro in raiz.Elements("libro"))
+{
+    int id = (int)libro.Attribute("id");
+    bool prestado = (bool)libro.Attribute("prestado");
+    string titulo = (string)libro.Element("titulo");
+    int? anio = (int?)libro.Element("anio");          // null si el elemento no existe
+
+    Console.WriteLine($"  {id}. {titulo,-20} {anio?.ToString() ?? "s.f.",-6} " +
+                      $"{(prestado ? "prestado" : "disponible")}");
+}
+
+// Consultas LINQ sobre el documento
+Console.WriteLine($"\nDisponibles: " +
+    string.Join(", ", raiz.Elements("libro")
+                          .Where(l => !(bool)l.Attribute("prestado"))
+                          .Select(l => (string)l.Element("titulo"))));
+
+Console.WriteLine($"Anteriores a 1900: " +
+    string.Join(", ", raiz.Elements("libro")
+                          .Where(l => (int?)l.Element("anio") < 1900)
+                          .Select(l => (string)l.Element("titulo"))));
+
+Console.WriteLine($"Autores: " +
+    string.Join(", ", documento.Descendants("autor").Select(a => a.Value).Distinct().OrderBy(a => a)));
+
+// El error más frecuente, y cómo evitarlo
+XElement sinAnio = raiz.Elements("libro").Last();
+try
+{
+    Console.WriteLine(sinAnio.Element("anio").Value);
+}
+catch (NullReferenceException)
+{
+    Console.WriteLine("\nNullReferenceException: ese libro no tiene elemento <anio>");
+}
+Console.WriteLine($"Con el molde seguro: {(int?)sinAnio.Element("anio") ?? -1}");
+Console.WriteLine($"Con ?.Value: {sinAnio.Element("anio")?.Value ?? "(sin año)"}");
+` },
+            { titulo: "Modificar un XML existente", explicacion: "SetAttributeValue añade el atributo si no existe y lo actualiza si existe, lo que evita el típico if. Y observa el ?.Remove(): si FirstOrDefault no encuentra nada, no pasa nada en lugar de reventar.", codigo: r`using System.Xml.Linq;
+
+string ruta = "inventario.xml";
+
+// Documento de partida
+new XDocument(
+    new XElement("inventario",
+        new XElement("producto", new XAttribute("id", 1),
+            new XElement("nombre", "Teclado"), new XElement("stock", 12)),
+        new XElement("producto", new XAttribute("id", 2),
+            new XElement("nombre", "Ratón"), new XElement("stock", 30))
+    )).Save(ruta);
+
+XDocument documento = XDocument.Load(ruta);
+
+// --- Modificar el valor de un elemento ---
+XElement teclado = documento.Descendants("producto")
+                            .FirstOrDefault(p => (int)p.Attribute("id") == 1);
+if (teclado is null)
+{
+    Console.WriteLine("No se ha encontrado el producto 1.");
+}
+else
+{
+    teclado.Element("stock").Value = "8";
+    teclado.SetAttributeValue("revisado", DateTime.Today.ToString("yyyy-MM-dd"));
+    teclado.Add(new XElement("precio", "24.90"));       // añadir un hijo nuevo
+}
+
+// --- Añadir un producto entero ---
+documento.Root.Add(new XElement("producto",
+    new XAttribute("id", 3),
+    new XElement("nombre", "Monitor"),
+    new XElement("stock", 4),
+    new XElement("precio", "149.00")));
+
+// --- Eliminar ---
+XElement raton = documento.Descendants("producto")
+                          .FirstOrDefault(p => (string)p.Element("nombre") == "Ratón");
+raton?.Remove();
+
+documento.Save(ruta);
+
+Console.WriteLine($"--- {ruta} tras los cambios ---");
+Console.WriteLine(File.ReadAllText(ruta));
+
+// --- Resumen con LINQ ---
+XDocument actualizado = XDocument.Load(ruta);
+var resumen = actualizado.Descendants("producto")
+    .Select(p => new
+    {
+        Nombre = (string)p.Element("nombre"),
+        Stock = (int?)p.Element("stock") ?? 0,
+        Precio = (decimal?)p.Element("precio") ?? 0m,
+    })
+    .ToList();
+
+Console.WriteLine($"{"PRODUCTO",-12}{"STOCK",7}{"PRECIO",10}{"VALOR",10}");
+foreach (var p in resumen)
+{
+    Console.WriteLine($"{p.Nombre,-12}{p.Stock,7}{p.Precio,10:F2}{p.Stock * p.Precio,10:F2}");
+}
+Console.WriteLine($"\nValor del inventario: {resumen.Sum(p => p.Stock * p.Precio):F2} €");
+` },
+            { titulo: "XmlSerializer: objetos a XML sin escribir el árbol", explicacion: "XmlSerializer es a XML lo que JsonSerializer es a JSON: si tienes clases que representan los datos, es el camino más corto. Los atributos [XmlElement] y [XmlAttribute] deciden la forma del documento sin tocar el código de serialización.", codigo: r`using System.Xml.Serialization;
+
+string ruta = "equipo.xml";
+
+Equipo equipo = new Equipo
+{
+    Nombre = "Dracs ITB",
+    Ciudad = "Barcelona",
+    Jugadores = new List<Jugador>
+    {
+        new Jugador { Nombre = "Ana", Dorsal = 7, Puntos = 142 },
+        new Jugador { Nombre = "Luis", Dorsal = 10, Puntos = 98 },
+    },
+};
+
+// ---------- Serializar ----------
+XmlSerializer serializador = new XmlSerializer(typeof(Equipo));
+
+using (StreamWriter escritor = new StreamWriter(ruta))
+{
+    serializador.Serialize(escritor, equipo);
+}
+
+Console.WriteLine($"--- {ruta} ---");
+Console.WriteLine(File.ReadAllText(ruta));
+
+// ---------- Deserializar ----------
+using (StreamReader lector = new StreamReader(ruta))
+{
+    object leido = serializador.Deserialize(lector);
+    Equipo recuperado = leido as Equipo;
+
+    if (recuperado is null)
+    {
+        Console.WriteLine("El XML no contenía un equipo.");
+    }
+    else
+    {
+        Console.WriteLine($"Equipo: {recuperado.Nombre} ({recuperado.Ciudad})");
+        foreach (Jugador j in recuperado.Jugadores)
+        {
+            Console.WriteLine($"  {j.Dorsal,2} {j.Nombre,-8} {j.Puntos} puntos");
+        }
+        Console.WriteLine($"Total de puntos: {recuperado.Jugadores.Sum(j => j.Puntos)}");
+    }
+}
+
+// Las clases necesitan constructor sin parámetros y propiedades públicas con set,
+// igual que con JSON. Los atributos controlan cómo se representan.
+[XmlRoot("equipo")]
+public class Equipo
+{
+    [XmlElement("nombre")]
+    public string Nombre { get; set; } = "";
+
+    [XmlAttribute("ciudad")]          // esto será un atributo, no un elemento
+    public string Ciudad { get; set; } = "";
+
+    [XmlArray("jugadores")]
+    [XmlArrayItem("jugador")]
+    public List<Jugador> Jugadores { get; set; } = new List<Jugador>();
+}
+
+public class Jugador
+{
+    [XmlAttribute("dorsal")]
+    public int Dorsal { get; set; }
+
+    [XmlElement("nombre")]
+    public string Nombre { get; set; } = "";
+
+    [XmlElement("puntos")]
+    public int Puntos { get; set; }
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Catálogo de videojuegos en XML",
+              nivel: 2,
+              pista: "XDocument.Load para leer, raiz.Elements(\"juego\") para recorrer y los moldes (int?) o (double?) para convertir sin riesgo.",
+              enunciado: r`<p>Escribe un programa que gestione un catálogo de videojuegos guardado
+en <code>juegos.xml</code>, con esta estructura: una raíz
+<code>&lt;catalogo&gt;</code> y elementos <code>&lt;juego&gt;</code> con
+atributo <code>id</code> y elementos hijos <code>&lt;titulo&gt;</code>,
+<code>&lt;genero&gt;</code>, <code>&lt;anio&gt;</code> y
+<code>&lt;nota&gt;</code>.</p>
+<p>El programa debe:</p>
+<ol type="1">
+<li>Crear el fichero con al menos cinco juegos si no existe.</li>
+<li>Mostrar el catálogo completo en columnas.</li>
+<li>Mostrar los juegos de nota mayor o igual a 8, ordenados por
+nota.</li>
+<li>Mostrar la nota media por género (con <code>GroupBy</code>).</li>
+<li>Añadir un juego nuevo pidiendo los datos al usuario y guardar el
+fichero.</li>
+<li>Marcar un juego como favorito añadiéndole el atributo
+<code>favorito="true"</code>.</li>
+</ol>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Usa <code>XDocument</code> y la construcción funcional.</li>
+<li><strong>Control de errores:</strong> captura
+<code>XmlException</code> si el fichero está mal formado y
+<code>IOException</code> al leer o escribir. Usa los moldes
+<code>(int?)</code> y <code>(double?)</code> para los elementos que
+puedan faltar.</li>
+<li>Valida la nota (0-10) y el año (1950-2100) con
+<code>TryParse</code>.</li>
+<li>El <code>id</code> del juego nuevo debe ser el máximo existente más
+uno.</li>
+</ul>
+<p>💡 <strong>TIP:</strong>
+<code>SetAttributeValue("favorito", "true")</code> añade el atributo si
+no está.</p>
+<p>🏅 <strong>Ampliación:</strong> exporta el mismo catálogo a JSON para
+comparar los dos formatos.</p>`,
+              soluciones: [
+                { titulo: "Versión completa", nota: "Fíjate en la función local Juego dentro de CrearSiNoExiste: una función que devuelve un XElement hace la construcción del documento mucho más legible que repetir cinco veces el mismo bloque. Y en el molde (double?) con ?? 0, que convierte un dato que falta en un valor seguro.", codigo: r`using System.Xml;
+using System.Xml.Linq;
+
+const string Ruta = "juegos.xml";
+
+CrearSiNoExiste();
+
+XDocument documento = Cargar();
+
+if (documento?.Root is null)
+{
+    Console.WriteLine("No se ha podido trabajar con el catálogo.");
+}
+else
+{
+    XElement raiz = documento.Root;
+
+    // 2. Catálogo completo
+    Console.WriteLine($"=== CATÁLOGO ({raiz.Elements("juego").Count()} juegos) ===");
+    Console.WriteLine($"{"ID",3}  {"TÍTULO",-18}{"GÉNERO",-14}{"AÑO",6}{"NOTA",6}");
+    foreach (XElement j in raiz.Elements("juego"))
+    {
+        Console.WriteLine($"{(int)j.Attribute("id"),3}  {(string)j.Element("titulo"),-18}" +
+                          $"{(string)j.Element("genero"),-14}{(int?)j.Element("anio") ?? 0,6}" +
+                          $"{(double?)j.Element("nota") ?? 0,6:F1}");
+    }
+
+    // 3. Notables
+    Console.WriteLine("\n=== NOTA >= 8 ===");
+    var notables = raiz.Elements("juego")
+                       .Where(j => ((double?)j.Element("nota") ?? 0) >= 8)
+                       .OrderByDescending(j => (double?)j.Element("nota"));
+    foreach (XElement j in notables)
+    {
+        Console.WriteLine($"  {(string)j.Element("titulo"),-18}{(double)j.Element("nota"):F1}");
+    }
+
+    // 4. Media por género
+    Console.WriteLine("\n=== MEDIA POR GÉNERO ===");
+    var porGenero = raiz.Elements("juego")
+        .Select(j => new
+        {
+            Genero = (string)j.Element("genero") ?? "sin género",
+            Nota = (double?)j.Element("nota") ?? 0,
+        })
+        .GroupBy(x => x.Genero)
+        .Select(g => new { Genero = g.Key, Cuantos = g.Count(), Media = g.Average(x => x.Nota) })
+        .OrderByDescending(x => x.Media);
+    foreach (var g in porGenero)
+    {
+        Console.WriteLine($"  {g.Genero,-14}{g.Cuantos,3} juegos, media {g.Media:F2}");
+    }
+
+    // 5. Añadir un juego
+    Console.WriteLine("\n=== AÑADIR UN JUEGO ===");
+    Console.Write("Título: ");
+    string titulo = (Console.ReadLine() ?? "").Trim();
+
+    if (titulo.Length == 0)
+    {
+        Console.WriteLine("Título vacío: no se añade nada.");
+    }
+    else
+    {
+        Console.Write("Género: ");
+        string genero = (Console.ReadLine() ?? "").Trim();
+
+        Console.Write("Año (1950-2100): ");
+        bool anioOk = int.TryParse(Console.ReadLine(), out int anio) && anio >= 1950 && anio <= 2100;
+
+        Console.Write("Nota (0-10): ");
+        bool notaOk = double.TryParse(Console.ReadLine(), out double nota) && nota >= 0 && nota <= 10;
+
+        if (!anioOk || !notaOk)
+        {
+            Console.WriteLine("Año o nota no válidos: no se añade nada.");
+        }
+        else
+        {
+            // El id siguiente: el máximo existente más uno
+            int nuevoId = raiz.Elements("juego").Any()
+                ? raiz.Elements("juego").Max(j => (int)j.Attribute("id")) + 1
+                : 1;
+
+            raiz.Add(new XElement("juego",
+                new XAttribute("id", nuevoId),
+                new XElement("titulo", titulo),
+                new XElement("genero", genero.Length > 0 ? genero : "sin género"),
+                new XElement("anio", anio),
+                new XElement("nota", nota.ToString(System.Globalization.CultureInfo.InvariantCulture))));
+
+            Console.WriteLine($"Añadido con id {nuevoId}.");
+        }
+    }
+
+    // 6. Marcar el mejor como favorito
+    XElement mejor = raiz.Elements("juego").MaxBy(j => (double?)j.Element("nota") ?? 0);
+    mejor?.SetAttributeValue("favorito", "true");
+    Console.WriteLine($"\nFavorito: {(string)mejor?.Element("titulo")}");
+
+    Guardar(documento);
+}
+
+void CrearSiNoExiste()
+{
+    if (File.Exists(Ruta))
+    {
+        return;
+    }
+
+    new XDocument(
+        new XDeclaration("1.0", "utf-8", null),
+        new XElement("catalogo",
+            Juego(1, "Hollow Knight", "metroidvania", 2017, 9.2),
+            Juego(2, "Celeste", "plataformas", 2018, 9.0),
+            Juego(3, "Hades", "roguelike", 2020, 9.3),
+            Juego(4, "Cuphead", "plataformas", 2017, 8.6),
+            Juego(5, "Katana ZERO", "plataformas", 2019, 7.9))
+    ).Save(Ruta);
+
+    Console.WriteLine($"Creado {Ruta} con 5 juegos.\n");
+
+    XElement Juego(int id, string titulo, string genero, int anio, double nota) =>
+        new XElement("juego",
+            new XAttribute("id", id),
+            new XElement("titulo", titulo),
+            new XElement("genero", genero),
+            new XElement("anio", anio),
+            new XElement("nota", nota.ToString(System.Globalization.CultureInfo.InvariantCulture)));
+}
+
+XDocument Cargar()
+{
+    try
+    {
+        return XDocument.Load(Ruta);
+    }
+    catch (XmlException ex)
+    {
+        Console.WriteLine($"El XML está mal formado: {ex.Message}");
+        return new XDocument(new XElement("catalogo"));
+    }
+    catch (IOException ex)
+    {
+        Console.WriteLine($"Error de lectura: {ex.Message}");
+        return new XDocument(new XElement("catalogo"));
+    }
+}
+
+void Guardar(XDocument doc)
+{
+    try
+    {
+        doc.Save(Ruta);
+        Console.WriteLine($"\nCatálogo guardado en {Ruta}.");
+    }
+    catch (IOException ex)
+    {
+        Console.WriteLine($"No se ha podido guardar: {ex.Message}");
+    }
+}
+` },
+                { titulo: "Ampliación: el mismo catálogo en XML y en JSON", nota: "Convertir entre formatos pasando por objetos es el camino habitual, y hace evidente que XML y JSON representan lo mismo con convenciones distintas. Compara los tamaños: el JSON compacto es bastante más pequeño.", codigo: r`using System.Text.Json;
+using System.Xml.Linq;
+
+// Partimos de un XML y lo convertimos a JSON
+string xml = @"<catalogo>
+  <juego id=""1""><titulo>Hades</titulo><genero>roguelike</genero><nota>9.3</nota></juego>
+  <juego id=""2""><titulo>Celeste</titulo><genero>plataformas</genero><nota>9.0</nota></juego>
+</catalogo>";
+
+XDocument documento = XDocument.Parse(xml);
+
+// XML -> objetos -> JSON
+var juegos = documento.Descendants("juego")
+    .Select(j => new Juego
+    {
+        Id = (int)j.Attribute("id"),
+        Titulo = (string)j.Element("titulo"),
+        Genero = (string)j.Element("genero"),
+        Nota = (double?)j.Element("nota") ?? 0,
+    })
+    .ToList();
+
+string json = JsonSerializer.Serialize(juegos, new JsonSerializerOptions
+{
+    WriteIndented = true,
+    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+});
+
+Console.WriteLine("--- XML original ---");
+Console.WriteLine(xml);
+Console.WriteLine($"\n({xml.Length} caracteres)\n");
+
+Console.WriteLine("--- Mismo contenido en JSON ---");
+Console.WriteLine(json);
+Console.WriteLine($"\n({json.Length} caracteres con sangrado, " +
+                  $"{JsonSerializer.Serialize(juegos).Length} compacto)");
+
+Console.WriteLine("\nXML permite atributos, comentarios y validación con XSD.");
+Console.WriteLine("JSON es más compacto y es el estándar de las API web.");
+
+class Juego
+{
+    public int Id { get; set; }
+    public string Titulo { get; set; } = "";
+    public string Genero { get; set; } = "";
+    public double Nota { get; set; }
+}
 ` },
               ],
             },
@@ -9724,6 +16537,10959 @@ class Avion : IVolador
       ],
     },
     {
+      id: "m11",
+      titulo: "UML y modelado",
+      lecciones: [
+        {
+          id: "uml-introduccion",
+          titulo: "¿Qué es UML y para qué sirve?",
+          duracion: "16 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Entender para qué se modela antes de programar", "Conocer los tipos de diagramas UML y cuándo se usa cada uno", "Escribir diagramas como texto con Mermaid"],
+          teoria: r`<p>Un plano de un edificio no es el edificio, pero sin plano nadie
+construye. <strong>UML</strong> (<em>Unified Modeling Language</em>,
+lenguaje unificado de modelado) es el conjunto de diagramas estándar
+para dibujar los planos del software: qué clases hay, cómo se
+relacionan, qué hace el sistema y en qué orden.</p>
+<p>No es un lenguaje de programación: es un lenguaje <strong>de
+comunicación</strong>. Sirve para pensar antes de escribir, para
+explicar un diseño a otra persona y para documentar lo que existe.</p>
+<h3 id="1-por-qué-modelar">1. ¿Por qué modelar?</h3>
+<ul>
+<li><strong>Para pensar.</strong> Dibujar las clases obliga a decidir
+qué responsabilidades tiene cada una <strong>antes</strong> de que el
+código esté escrito y sea caro cambiarlo.</li>
+<li><strong>Para comunicar.</strong> Un diagrama de clases se entiende
+en un minuto; leer el mismo diseño en 500 líneas de código lleva media
+hora.</li>
+<li><strong>Para documentar.</strong> El código dice
+<strong>cómo</strong>; el diagrama dice <strong>cómo encaja
+todo</strong>.</li>
+<li><strong>Para detectar errores de diseño.</strong> Una clase con
+veinte relaciones salta a la vista en un dibujo y pasa desapercibida en
+el código.</li>
+</ul>
+<div class="callout">
+<p><strong>El equilibrio sensato.</strong> En los años 90 se intentó
+modelar <strong>todo</strong> antes de programar, y fue un fracaso: los
+diagramas quedaban obsoletos al día siguiente. Hoy el consenso es
+modelar <strong>lo que ayuda</strong>: el diagrama de clases del núcleo
+del sistema, el de casos de uso para acordar el alcance con el cliente y
+algún diagrama de secuencia para los flujos difíciles. El resto,
+código.</p>
+</div>
+<h3 id="2-los-dos-grandes-grupos">2. Los dos grandes grupos</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Grupo</th>
+<th>Qué describen</th>
+<th>Diagramas</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Estructurales</strong> (estáticos)</td>
+<td><strong>qué</strong> hay en el sistema</td>
+<td>clases, objetos, componentes, despliegue, paquetes, estructuras
+compuestas</td>
+</tr>
+<tr class="even">
+<td><strong>De comportamiento</strong> (dinámicos)</td>
+<td><strong>qué pasa</strong> y en qué orden</td>
+<td>casos de uso, secuencia, comunicación, estados, actividades,
+tiempos</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-el-catálogo-con-una-frase-cada-uno">3. El catálogo, con una
+frase cada uno</h3>
+<p><strong>Estructurales:</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Diagrama</th>
+<th>Responde a</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Clases</strong></td>
+<td>¿qué clases hay y cómo se relacionan? ← <strong>el más
+usado</strong></td>
+</tr>
+<tr class="even">
+<td>Objetos</td>
+<td>¿cómo está el sistema en un instante concreto?</td>
+</tr>
+<tr class="odd">
+<td>Paquetes</td>
+<td>¿cómo se agrupa el código en módulos?</td>
+</tr>
+<tr class="even">
+<td>Componentes</td>
+<td>¿en qué piezas desplegables se divide?</td>
+</tr>
+<tr class="odd">
+<td>Despliegue</td>
+<td>¿en qué máquinas corre cada pieza?</td>
+</tr>
+<tr class="even">
+<td>Estructuras compuestas</td>
+<td>¿cómo se compone internamente una clase compleja?</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>De comportamiento:</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Diagrama</th>
+<th>Responde a</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Casos de uso</strong></td>
+<td>¿qué puede hacer cada tipo de usuario? ← el más usado con el
+cliente</td>
+</tr>
+<tr class="even">
+<td><strong>Secuencia</strong></td>
+<td>¿en qué orden se llaman los objetos entre sí?</td>
+</tr>
+<tr class="odd">
+<td>Comunicación</td>
+<td>¿quién habla con quién? (la misma información, otra forma)</td>
+</tr>
+<tr class="even">
+<td><strong>Estados</strong></td>
+<td>¿en qué situaciones puede estar un objeto y cómo cambia?</td>
+</tr>
+<tr class="odd">
+<td>Actividades</td>
+<td>¿cuál es el flujo del proceso? (como un diagrama de flujo)</td>
+</tr>
+<tr class="even">
+<td>Tiempos</td>
+<td>¿cómo evolucionan los estados en el tiempo?</td>
+</tr>
+</tbody>
+</table></div>
+<p>De los trece, en la práctica profesional se usan de verdad
+<strong>cuatro</strong>: clases, casos de uso, secuencia y estados. Son
+los que trataremos a fondo.</p>
+<h3 id="4-mermaid-diagramas-como-texto">4. Mermaid: diagramas como
+texto</h3>
+<p>Dibujar diagramas con el ratón es lento y el resultado no se puede
+versionar con Git. <strong>Mermaid</strong> resuelve las dos cosas: se
+escribe el diagrama como <strong>texto</strong> y la herramienta lo
+dibuja.</p>
+<p>Lo mejor para ti: <strong>GitHub lo renderiza directamente en los
+<code>README.md</code></strong>. Puedes documentar tus prácticas con
+diagramas de verdad sin instalar nada.</p>
+<pre><code>classDiagram
+    class Jugador {
+        -string nombre
+        -int puntos
+        +Puntuar(int p) void
+    }</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Diagrama</th>
+<th>Palabra inicial en Mermaid</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Clases</td>
+<td><code>classDiagram</code></td>
+</tr>
+<tr class="even">
+<td>Casos de uso</td>
+<td><code>flowchart LR</code> (Mermaid no tiene uno específico)</td>
+</tr>
+<tr class="odd">
+<td>Secuencia</td>
+<td><code>sequenceDiagram</code></td>
+</tr>
+<tr class="even">
+<td>Estados</td>
+<td><code>stateDiagram-v2</code></td>
+</tr>
+<tr class="odd">
+<td>Flujo / actividades</td>
+<td><code>flowchart TD</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Para probar sin salir del navegador existe el editor en vivo de
+Mermaid; y en VS Code hay extensiones que lo muestran al escribir.</p>
+<h3 id="5-otras-herramientas">5. Otras herramientas</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Herramienta</th>
+<th>Nota</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Mermaid</strong></td>
+<td>texto, versionable, se renderiza en GitHub ← <strong>la recomendada
+aquí</strong></td>
+</tr>
+<tr class="even">
+<td>PlantUML</td>
+<td>texto, más completo en UML; necesita un servidor o un
+complemento</td>
+</tr>
+<tr class="odd">
+<td>draw.io / diagrams.net</td>
+<td>ratón, gratuito, muy cómodo para diagramas sueltos</td>
+</tr>
+<tr class="even">
+<td>Visual Paradigm, StarUML</td>
+<td>herramientas profesionales de modelado</td>
+</tr>
+<tr class="odd">
+<td>Visual Studio</td>
+<td>puede generar diagramas de clases a partir del código</td>
+</tr>
+</tbody>
+</table></div>
+<p>Esa última idea es importante: <strong>el diagrama puede salir del
+código</strong>. Es lo que se llama ingeniería inversa, y es la forma de
+que la documentación no se quede obsoleta.</p>`,
+          ejemplos: [
+            { titulo: "De la descripción al diagrama de clases", explicacion: "El método para pasar de un enunciado a un diagrama: subraya los sustantivos (clases y atributos) y los verbos (métodos). Observa cómo la relación «prestado a» se convierte en C# en un campo que referencia a otro objeto.", codigo: r`// Lee el enunciado y fíjate en las palabras clave:
+//
+//   «Una BIBLIOTECA tiene varios LIBROS. Cada libro TIENE un título y un autor,
+//    y PUEDE ESTAR prestado a un SOCIO. Un socio tiene nombre y número de carné.»
+//
+// - Los SUSTANTIVOS son candidatos a clase: Biblioteca, Libro, Socio
+// - Los sustantivos «pequeños» son atributos: titulo, autor, nombre, carne
+// - Los VERBOS son candidatos a método: prestar, devolver
+// - «tiene varios» indica una relación de 1 a muchos
+//
+// En Mermaid (pégalo en un README.md de GitHub y se dibujará):
+//
+//   classDiagram
+//       Biblioteca "1" --> "*" Libro : contiene
+//       Libro "0..*" --> "0..1" Socio : prestado a
+//       class Biblioteca {
+//           -List~Libro~ libros
+//           +Prestar(string isbn, Socio s) bool
+//           +Devolver(string isbn) bool
+//       }
+//       class Libro {
+//           -string isbn
+//           -string titulo
+//           -string autor
+//           +bool Prestado
+//       }
+//       class Socio {
+//           -string carne
+//           -string nombre
+//       }
+//
+// Y el mismo diseño, ya en C#:
+
+Biblioteca biblioteca = new Biblioteca();
+biblioteca.Anadir(new Libro("978-1", "El Quijote", "Cervantes"));
+biblioteca.Anadir(new Libro("978-2", "Rayuela", "Cortazar"));
+
+Socio ana = new Socio("S-001", "Ana Puig");
+
+Console.WriteLine($"Prestar El Quijote a Ana: {biblioteca.Prestar("978-1", ana)}");
+Console.WriteLine($"Prestarlo otra vez:       {biblioteca.Prestar("978-1", ana)}");
+Console.WriteLine($"Devolverlo:               {biblioteca.Devolver("978-1")}");
+
+biblioteca.MostrarEstado();
+
+class Biblioteca
+{
+    private readonly List<Libro> libros = new List<Libro>();
+
+    public void Anadir(Libro libro) => libros.Add(libro);
+
+    public bool Prestar(string isbn, Socio socio)
+    {
+        Libro libro = libros.FirstOrDefault(l => l.Isbn == isbn);
+        if (libro is null || libro.Prestado)
+        {
+            return false;
+        }
+        libro.PrestarA(socio);
+        return true;
+    }
+
+    public bool Devolver(string isbn)
+    {
+        Libro libro = libros.FirstOrDefault(l => l.Isbn == isbn);
+        if (libro is null || !libro.Prestado)
+        {
+            return false;
+        }
+        libro.Devolver();
+        return true;
+    }
+
+    public void MostrarEstado()
+    {
+        Console.WriteLine($"\nBiblioteca ({libros.Count} libros):");
+        foreach (Libro l in libros)
+        {
+            Console.WriteLine($"  {l}");
+        }
+    }
+}
+
+class Libro
+{
+    public string Isbn { get; }
+    public string Titulo { get; }
+    public string Autor { get; }
+
+    // La relación «prestado a»: una referencia que puede no existir
+    private Socio prestadoA;
+
+    public bool Prestado => prestadoA is not null;
+
+    public Libro(string isbn, string titulo, string autor)
+    {
+        Isbn = isbn;
+        Titulo = titulo;
+        Autor = autor;
+    }
+
+    public void PrestarA(Socio socio) => prestadoA = socio;
+    public void Devolver() => prestadoA = null;
+
+    public override string ToString() =>
+        $"{Titulo,-14} {Autor,-12} {(Prestado ? $"prestado a {prestadoA.Nombre}" : "disponible")}";
+}
+
+class Socio
+{
+    public string Carne { get; }
+    public string Nombre { get; }
+
+    public Socio(string carne, string nombre)
+    {
+        Carne = carne;
+        Nombre = nombre;
+    }
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Modela antes de programar",
+              nivel: 1,
+              pista: "Subraya los sustantivos del enunciado (candidatos a clase) y los verbos (candidatos a método).",
+              enunciado: r`<p>Elige <strong>uno</strong> de estos sistemas y modélalo
+<strong>antes</strong> de escribir código:</p>
+<ul>
+<li>Un gimnasio con socios, actividades y reservas.</li>
+<li>Una tienda con productos, clientes y pedidos.</li>
+<li>Un videojuego con jugadores, enemigos y objetos.</li>
+</ul>
+<p>Entrega, en el <code>README.md</code> del repositorio:</p>
+<ol type="1">
+<li>Una lista de las <strong>clases</strong> que has identificado, con
+sus atributos y métodos principales.</li>
+<li>El <strong>diagrama de clases en Mermaid</strong>, con las
+relaciones y sus multiplicidades.</li>
+<li>Una explicación de <strong>tres líneas por clase</strong> sobre su
+responsabilidad.</li>
+<li>Una <strong>pregunta de diseño</strong> que te hayas planteado, con
+la decisión que has tomado y por qué.</li>
+</ol>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Entre 3 y 5 clases: ni una (no habría diseño) ni quince
+(inabordable).</li>
+<li>Cada clase debe tener <strong>una responsabilidad clara</strong>
+(principio SRP del módulo de código limpio).</li>
+<li>Las multiplicidades deben estar justificadas: ¿un pedido puede tener
+varios productos? ¿Un producto puede estar en varios pedidos?</li>
+</ul>
+<p>💡 <strong>TIP:</strong> comprueba en GitHub que el diagrama se
+dibuja. Si no, suele faltar la palabra inicial
+(<code>classDiagram</code>) o hay un error de sangría.</p>
+<p>🏅 <strong>Ampliación:</strong> implementa las clases en C# siguiendo
+tu diagrama y comprueba si tuviste que cambiar algo. Si lo tuviste,
+explica qué y por qué: eso es lo más valioso del ejercicio.</p>`,
+              soluciones: [
+                { titulo: "Ejemplo resuelto: gimnasio", nota: "Fíjate en el apartado de la pregunta de diseño: es lo que demuestra que has modelado y no solo dibujado. Decidir quién es el dueño de un dato es la decisión de diseño más frecuente y la que más consecuencias tiene.", noRun: true, codigo: r`## Clases identificadas
+
+### Socio
+Responsabilidad: representar a una persona inscrita y sus datos de contacto.
+Atributos: numeroSocio, nombre, fechaAlta, activo
+Metodos: Activar(), Desactivar()
+
+### Actividad
+Responsabilidad: representar una clase dirigida con su horario y aforo.
+Atributos: nombre, dia, hora, plazasMaximas
+Metodos: PlazasLibres(), EstaCompleta()
+
+### Reserva
+Responsabilidad: unir un socio con una actividad en una fecha concreta.
+Atributos: socio, actividad, fecha, confirmada
+Metodos: Confirmar(), Anular()
+
+### Gimnasio
+Responsabilidad: gestionar las colecciones y las reglas de negocio.
+Atributos: socios, actividades, reservas
+Metodos: Reservar(socio, actividad, fecha), AnularReserva(id)
+
+## Diagrama (Mermaid)
+
+classDiagram
+    Gimnasio "1" --> "*" Socio : tiene
+    Gimnasio "1" --> "*" Actividad : ofrece
+    Gimnasio "1" --> "*" Reserva : gestiona
+    Reserva "*" --> "1" Socio : la hace
+    Reserva "*" --> "1" Actividad : es de
+    class Socio {
+        -int numeroSocio
+        -string nombre
+        -DateOnly fechaAlta
+        -bool activo
+        +Activar() void
+        +Desactivar() void
+    }
+    class Actividad {
+        -string nombre
+        -DayOfWeek dia
+        -TimeOnly hora
+        -int plazasMaximas
+        +PlazasLibres(int reservadas) int
+        +EstaCompleta(int reservadas) bool
+    }
+    class Reserva {
+        -DateOnly fecha
+        -bool confirmada
+        +Confirmar() void
+        +Anular() void
+    }
+    class Gimnasio {
+        +Reservar(Socio s, Actividad a, DateOnly f) bool
+        +AnularReserva(int id) bool
+    }
+
+## Pregunta de diseno
+
+Me plantee si las plazas libres debia saberlas la Actividad o el Gimnasio.
+Decision: las sabe el Gimnasio, porque para contarlas hace falta mirar la
+coleccion de reservas, y esa coleccion es del Gimnasio. La Actividad solo
+conoce su aforo maximo. Asi cada clase usa unicamente los datos que posee
+(ley de Demeter) y la Actividad no necesita una referencia a las reservas.
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "uml-clases",
+          titulo: "Diagramas de clases: relaciones y multiplicidad",
+          duracion: "24 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Dibujar una clase UML con sus atributos, métodos y visibilidades", "Distinguir asociación, agregación, composición, herencia y realización", "Traducir un diagrama de clases a C# y al revés"],
+          teoria: r`<p>El <strong>diagrama de clases</strong> es el plano del sistema: qué
+clases hay, qué sabe y qué hace cada una, y cómo se relacionan. Es el
+diagrama que más vas a leer y escribir.</p>
+<h3 id="1-una-clase-en-tres-pisos">1. Una clase, en tres pisos</h3>
+<pre><code>┌────────────────────────┐
+│        Jugador         │   ← nombre (en cursiva si es abstracta)
+├────────────────────────┤
+│ - nombre : string      │   ← atributos
+│ - puntos : int         │
+│ + Vidas : int          │
+├────────────────────────┤
+│ + Puntuar(p : int)     │   ← métodos
+│ + Morir() : bool       │
+│ - Reiniciar()          │
+└────────────────────────┘</code></pre>
+<h4 id="visibilidad">Visibilidad</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Símbolo</th>
+<th>UML</th>
+<th>C#</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>+</code></td>
+<td>público</td>
+<td><code>public</code></td>
+</tr>
+<tr class="even">
+<td><code>-</code></td>
+<td>privado</td>
+<td><code>private</code></td>
+</tr>
+<tr class="odd">
+<td><code>#</code></td>
+<td>protegido</td>
+<td><code>protected</code></td>
+</tr>
+<tr class="even">
+<td><code>~</code></td>
+<td>de paquete</td>
+<td><code>internal</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Convenciones adicionales: los miembros <strong>estáticos</strong> se
+<strong>subrayan</strong>, y los nombres <strong>abstractos</strong> van
+en <em>cursiva</em>.</p>
+<h3 id="2-las-cinco-relaciones">2. Las cinco relaciones</h3>
+<p>Esta es la parte que hay que entender bien, porque cada relación
+significa algo distinto en el código.</p>
+<pre><code>Asociación      A ─────────&gt; B      «A usa B» / «A conoce a B»
+Agregación      A ◇─────────  B     «A tiene B, pero B vive sin A»
+Composición     A ◆─────────  B     «A tiene B, y B muere con A»
+Herencia        A ──────────▷ B     «A es un B»
+Realización     A ─ ─ ─ ─ ─ ▷ I     «A implementa la interfaz I»
+Dependencia     A ─ ─ ─ ─ ─ &gt; B     «A necesita B puntualmente»</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Relación</th>
+<th>Pregunta clave</th>
+<th>En C#</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Asociación</strong></td>
+<td>¿A conoce a B?</td>
+<td>un campo o propiedad de tipo B</td>
+</tr>
+<tr class="even">
+<td><strong>Agregación</strong></td>
+<td>¿A contiene B, pero B puede existir sin A?</td>
+<td>una colección de B que <strong>llega de fuera</strong></td>
+</tr>
+<tr class="odd">
+<td><strong>Composición</strong></td>
+<td>¿B es parte de A y muere con A?</td>
+<td>una colección de B <strong>creada dentro</strong> de A</td>
+</tr>
+<tr class="even">
+<td><strong>Herencia</strong></td>
+<td>¿A <strong>es un</strong> B?</td>
+<td><code>class A : B</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Realización</strong></td>
+<td>¿A cumple un contrato?</td>
+<td><code>class A : IB</code></td>
+</tr>
+<tr class="even">
+<td><strong>Dependencia</strong></td>
+<td>¿A usa B solo en un método?</td>
+<td>un parámetro o una variable local</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="agregación-o-composición-el-ejemplo-que-lo-aclara">Agregación o
+composición: el ejemplo que lo aclara</h4>
+<ul>
+<li>Un <strong>Equipo</strong> y sus <strong>Jugadores</strong>:
+<strong>agregación</strong>. Si se disuelve el equipo, los jugadores
+siguen existiendo.</li>
+<li>Una <strong>Casa</strong> y sus <strong>Habitaciones</strong>:
+<strong>composición</strong>. Si se derriba la casa, las habitaciones
+dejan de existir.</li>
+</ul>
+<p>En el código, la pista es <strong>quién crea el objeto</strong>: si
+el constructor de A recibe los B, es agregación; si los crea él mismo,
+es composición.</p>
+<div class="callout">
+<p><strong>La regla práctica.</strong> Si dudas entre asociación y
+agregación, pon asociación: es la más general y casi nunca es
+incorrecta. La distinción importa en el diseño y en la documentación, no
+en que el programa funcione.</p>
+</div>
+<h3 id="3-multiplicidad">3. Multiplicidad</h3>
+<p>Se escribe en los extremos de la relación:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Notación</th>
+<th>Significa</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>1</code></td>
+<td>exactamente uno</td>
+</tr>
+<tr class="even">
+<td><code>0..1</code></td>
+<td>cero o uno (opcional)</td>
+</tr>
+<tr class="odd">
+<td><code>*</code> o <code>0..*</code></td>
+<td>cero o muchos</td>
+</tr>
+<tr class="even">
+<td><code>1..*</code></td>
+<td>uno o muchos (al menos uno)</td>
+</tr>
+<tr class="odd">
+<td><code>2..5</code></td>
+<td>entre dos y cinco</td>
+</tr>
+</tbody>
+</table></div>
+<pre><code>Pedido &quot;1&quot; ──── &quot;1..*&quot; LineaPedido        un pedido tiene al menos una línea
+Alumno &quot;*&quot; ──── &quot;*&quot; Modulo                 muchos a muchos</code></pre>
+<p>Una relación <strong>muchos a muchos</strong> suele convertirse, al
+programar o al diseñar la base de datos, en una <strong>clase
+intermedia</strong> (<code>Matricula</code> entre <code>Alumno</code> y
+<code>Modulo</code>), que además puede guardar datos propios (la nota,
+la fecha).</p>
+<h3 id="4-herencia-e-interfaces">4. Herencia e interfaces</h3>
+<pre><code>         ┌──────────────┐          ┌──────────────┐
+         │  «abstract»  │          │ «interface»  │
+         │   Personaje  │          │  IAtacable   │
+         └──────▲───────┘          └──────▲───────┘
+                │                          ┆
+      ┌─────────┴─────────┐                ┆
+┌─────┴─────┐      ┌──────┴────┐           ┆
+│  Heroe    │      │  Enemigo  │ ─ ─ ─ ─ ─ ┘
+└───────────┘      └───────────┘</code></pre>
+<p>Triángulo <strong>vacío con línea continua</strong> para la herencia;
+triángulo vacío con <strong>línea discontinua</strong> para implementar
+una interfaz. Una clase hereda de <strong>una</strong> sola clase pero
+puede implementar <strong>varias</strong> interfaces, y eso se ve de un
+vistazo en el diagrama.</p>
+<h3 id="5-el-mismo-diagrama-en-mermaid">5. El mismo diagrama en
+Mermaid</h3>
+<pre><code>classDiagram
+    class Personaje {
+        &lt;&lt;abstract&gt;&gt;
+        #string nombre
+        #int vida
+        +Atacar()* int
+        +RecibirDano(int d) void
+    }
+    class Heroe {
+        -int experiencia
+        +Atacar() int
+        +SubirNivel() void
+    }
+    class Enemigo {
+        -int recompensa
+        +Atacar() int
+    }
+    class IAtacable {
+        &lt;&lt;interface&gt;&gt;
+        +RecibirDano(int d) void
+    }
+    Personaje &lt;|-- Heroe
+    Personaje &lt;|-- Enemigo
+    IAtacable &lt;|.. Enemigo
+    Heroe &quot;1&quot; --&gt; &quot;*&quot; Objeto : lleva</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Mermaid</th>
+<th>Relación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>A &lt;|-- B</code></td>
+<td>B hereda de A</td>
+</tr>
+<tr class="even">
+<td><code>A &lt;|.. B</code></td>
+<td>B implementa la interfaz A</td>
+</tr>
+<tr class="odd">
+<td><code>A --&gt; B</code></td>
+<td>asociación</td>
+</tr>
+<tr class="even">
+<td><code>A o-- B</code></td>
+<td>agregación</td>
+</tr>
+<tr class="odd">
+<td><code>A *-- B</code></td>
+<td>composición</td>
+</tr>
+<tr class="even">
+<td><code>A ..&gt; B</code></td>
+<td>dependencia</td>
+</tr>
+</tbody>
+</table></div>`,
+          ejemplos: [
+            { titulo: "Las cinco relaciones en código", explicacion: "Fíjate en la pista que distingue agregación de composición: el Inventario se crea DENTRO del Heroe (composición), mientras que el Equipo RECIBE personajes que ya existían (agregación). El diagrama lo refleja con ◆ y ◇.", codigo: r`// --- HERENCIA: Heroe ES UN Personaje ---
+Heroe heroe = new Heroe("Ana");
+
+// --- COMPOSICIÓN: el inventario nace y muere con el héroe ---
+heroe.Inventario.Guardar("Espada");
+heroe.Inventario.Guardar("Poción");
+
+// --- AGREGACIÓN: el equipo recibe jugadores que ya existían ---
+Equipo equipo = new Equipo("Dracs");
+equipo.Fichar(heroe);                       // el héroe existía antes del equipo
+Console.WriteLine($"{equipo}");
+
+// --- ASOCIACIÓN: el héroe conoce su arma (y puede no tener ninguna) ---
+heroe.Equipar(new Arma("Espada de hierro", 12));
+Console.WriteLine($"Daño del héroe: {heroe.Atacar()}");
+
+// --- DEPENDENCIA: el método necesita un Enemigo solo durante la llamada ---
+Enemigo enemigo = new Enemigo("Goblin", 30);
+heroe.Combatir(enemigo);
+
+Console.WriteLine($"\nEl inventario del héroe tiene {heroe.Inventario.Cuantos} objetos");
+Console.WriteLine("Si el héroe desaparece, su inventario desaparece con él (composición).");
+Console.WriteLine("Si el equipo se disuelve, el héroe sigue existiendo (agregación).");
+
+abstract class Personaje
+{
+    protected string nombre;
+    protected int vida = 100;
+
+    protected Personaje(string nombre) => this.nombre = nombre;
+
+    public string Nombre => nombre;
+    public int Vida => vida;
+
+    public abstract int Atacar();                    // método abstracto: cursiva en UML
+
+    public void RecibirDano(int dano)
+    {
+        vida = Math.Max(0, vida - dano);
+    }
+}
+
+// HERENCIA: class Heroe : Personaje   →   Personaje <|-- Heroe
+class Heroe : Personaje
+{
+    // COMPOSICIÓN: se crea dentro, nadie más la tiene   →   Heroe *-- Inventario
+    public Inventario Inventario { get; } = new Inventario();
+
+    // ASOCIACIÓN opcional (0..1): puede tener arma o no   →   Heroe --> Arma
+    private Arma arma;
+
+    public Heroe(string nombre) : base(nombre) { }
+
+    public void Equipar(Arma nueva) => arma = nueva;
+
+    public override int Atacar() => 5 + (arma?.Dano ?? 0);
+
+    // DEPENDENCIA: usa Enemigo solo aquí   →   Heroe ..> Enemigo
+    public void Combatir(Enemigo objetivo)
+    {
+        int dano = Atacar();
+        objetivo.RecibirDano(dano);
+        Console.WriteLine($"{nombre} golpea a {objetivo.Nombre} por {dano} " +
+                          $"(le queda {objetivo.Vida} de vida)");
+    }
+}
+
+class Enemigo : Personaje
+{
+    public int Recompensa { get; }
+
+    public Enemigo(string nombre, int recompensa) : base(nombre) => Recompensa = recompensa;
+
+    public override int Atacar() => 8;
+}
+
+class Inventario
+{
+    private readonly List<string> objetos = new List<string>();
+
+    public int Cuantos => objetos.Count;
+
+    public void Guardar(string objeto) => objetos.Add(objeto);
+}
+
+class Arma
+{
+    public string Nombre { get; }
+    public int Dano { get; }
+
+    public Arma(string nombre, int dano)
+    {
+        Nombre = nombre;
+        Dano = dano;
+    }
+}
+
+// AGREGACIÓN: los jugadores llegan de fuera   →   Equipo o-- Personaje
+class Equipo
+{
+    private readonly List<Personaje> miembros = new List<Personaje>();
+
+    public string Nombre { get; }
+
+    public Equipo(string nombre) => Nombre = nombre;
+
+    public void Fichar(Personaje p) => miembros.Add(p);
+
+    public override string ToString() =>
+        $"{Nombre}: {string.Join(", ", miembros.Select(m => m.Nombre))}";
+}
+` },
+            { titulo: "Muchos a muchos: la clase intermedia", explicacion: "La pregunta que delata una clase intermedia: «¿dónde guardo la nota?». No es del alumno (tiene una por módulo) ni del módulo (una por alumno): es de la relación. En la base de datos será la tabla intermedia.", codigo: r`// Diagrama de partida (Mermaid):
+//
+//   classDiagram
+//       Alumno "1" --> "*" Matricula
+//       Modulo "1" --> "*" Matricula
+//       class Matricula {
+//           -DateOnly fecha
+//           -double nota
+//           +EstaAprobada() bool
+//       }
+//
+// La relación Alumno *--* Modulo se convierte en dos relaciones 1-* con
+// una clase intermedia que, además, guarda datos propios: fecha y nota.
+
+Alumno ana = new Alumno(1, "Ana Puig");
+Alumno luis = new Alumno(2, "Luis Soler");
+
+Modulo programacion = new Modulo("0485", "Programación");
+Modulo bases = new Modulo("0484", "Bases de datos");
+
+List<Matricula> matriculas = new List<Matricula>
+{
+    new Matricula(ana, programacion, new DateOnly(2026, 9, 15), 9.0),
+    new Matricula(ana, bases, new DateOnly(2026, 9, 15), 7.5),
+    new Matricula(luis, programacion, new DateOnly(2026, 9, 16), 4.5),
+};
+
+// Los módulos de un alumno
+Console.WriteLine($"Módulos de {ana.Nombre}:");
+foreach (Matricula m in matriculas.Where(m => m.Alumno == ana))
+{
+    Console.WriteLine($"  {m.Modulo.Nombre,-16} {m.Nota:F2} " +
+                      $"{(m.EstaAprobada() ? "aprobado" : "suspendido")}");
+}
+
+// Los alumnos de un módulo
+Console.WriteLine($"\nAlumnos de {programacion.Nombre}:");
+foreach (Matricula m in matriculas.Where(m => m.Modulo == programacion))
+{
+    Console.WriteLine($"  {m.Alumno.Nombre,-14} {m.Nota:F2}");
+}
+
+Console.WriteLine($"\nNota media de {programacion.Nombre}: " +
+                  $"{matriculas.Where(m => m.Modulo == programacion).Average(m => m.Nota):F2}");
+
+Console.WriteLine("\nSin la clase intermedia no habría dónde guardar la nota:");
+Console.WriteLine("es el dato que pertenece a la RELACIÓN, no al alumno ni al módulo.");
+
+class Alumno
+{
+    public int Id { get; }
+    public string Nombre { get; }
+
+    public Alumno(int id, string nombre)
+    {
+        Id = id;
+        Nombre = nombre;
+    }
+}
+
+class Modulo
+{
+    public string Codigo { get; }
+    public string Nombre { get; }
+
+    public Modulo(string codigo, string nombre)
+    {
+        Codigo = codigo;
+        Nombre = nombre;
+    }
+}
+
+// La clase intermedia: representa la relación y guarda sus datos
+class Matricula
+{
+    public Alumno Alumno { get; }
+    public Modulo Modulo { get; }
+    public DateOnly Fecha { get; }
+    public double Nota { get; }
+
+    public Matricula(Alumno alumno, Modulo modulo, DateOnly fecha, double nota)
+    {
+        Alumno = alumno;
+        Modulo = modulo;
+        Fecha = fecha;
+        Nota = nota;
+    }
+
+    public bool EstaAprobada() => Nota >= 5;
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Del diagrama al código",
+              nivel: 2,
+              pista: "Traduce símbolo a símbolo: # protected, - private, cursiva abstracta, o-- agregación.",
+              enunciado: r`<p>Te damos este diagrama en Mermaid. <strong>Impleméntalo en
+C#</strong> respetando exactamente las visibilidades, los tipos y las
+relaciones, y escribe un programa que lo demuestre funcionando.</p>
+<pre><code>classDiagram
+    class Vehiculo {
+        &lt;&lt;abstract&gt;&gt;
+        #string matricula
+        #int plazas
+        +Vehiculo(string m, int p)
+        +Describir()* string
+        +Matricula string
+    }
+    class Coche {
+        -bool electrico
+        +Describir() string
+    }
+    class Moto {
+        -int cilindrada
+        +Describir() string
+    }
+    class Flota {
+        -List~Vehiculo~ vehiculos
+        +Anadir(Vehiculo v) void
+        +Buscar(string matricula) Vehiculo
+        +TotalPlazas() int
+    }
+    Vehiculo &lt;|-- Coche
+    Vehiculo &lt;|-- Moto
+    Flota &quot;1&quot; o-- &quot;*&quot; Vehiculo : contiene</code></pre>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li><code>Describir()</code> es <strong>abstracto</strong> (en cursiva
+con <code>*</code> en Mermaid): cada subclase lo implementa a su
+manera.</li>
+<li>La relación es una <strong>agregación</strong> (<code>o--</code>):
+los vehículos llegan de fuera, no los crea la flota.</li>
+<li><strong>Control de errores:</strong> el constructor debe rechazar
+una matrícula vacía y un número de plazas menor que 1;
+<code>Buscar</code> debe devolver <code>null</code> si no encuentra nada
+y el programa debe tratarlo.</li>
+<li>Añade al menos dos coches y una moto, busca uno que exista y otro
+que no, y muestra el total de plazas.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> <code>#</code> en UML es
+<code>protected</code>; <code>-</code> es <code>private</code>;
+<code>-List~Vehiculo~</code> es <code>List&lt;Vehiculo&gt;</code>.</p>
+<p>🏅 <strong>Ampliación:</strong> dibuja el diagrama de tu solución
+final en el README y señala qué has tenido que añadir que no estaba en
+el diagrama original (por ejemplo, <code>ToString</code>).</p>`,
+              soluciones: [
+                { titulo: "Implementación fiel al diagrama", nota: "Observa la traducción literal: # → protected, - → private, cursiva → abstract, o-- → la colección recibe objetos de fuera. Y el detalle que el diagrama no dice pero el código necesita: qué hacer con una matrícula repetida. Esas decisiones son las que siempre aparecen al implementar.", codigo: r`Flota flota = new Flota();
+
+flota.Anadir(new Coche("1234ABC", 5, true));
+flota.Anadir(new Coche("5678DEF", 5, false));
+flota.Anadir(new Moto("9012GHI", 2, 125));
+
+// Control de errores del constructor
+try
+{
+    flota.Anadir(new Coche("", 5, false));
+}
+catch (ArgumentException ex)
+{
+    Console.WriteLine($"Rechazado: {ex.Message.Split(' ')[0]}... (matrícula vacía)");
+}
+
+Console.WriteLine($"\nFlota ({flota.Cuantos} vehículos, {flota.TotalPlazas()} plazas):");
+flota.Mostrar();
+
+// Buscar algo que existe y algo que no
+Vehiculo encontrado = flota.Buscar("9012GHI");
+Console.WriteLine($"\nBuscar 9012GHI: {encontrado?.Describir() ?? "no encontrado"}");
+
+Vehiculo inexistente = flota.Buscar("0000XXX");
+if (inexistente is null)
+{
+    Console.WriteLine("Buscar 0000XXX: no está en la flota");
+}
+
+abstract class Vehiculo
+{
+    protected string matricula;        // # en UML
+    protected int plazas;
+
+    protected Vehiculo(string matricula, int plazas)
+    {
+        if (string.IsNullOrWhiteSpace(matricula))
+        {
+            throw new ArgumentException("La matrícula no puede estar vacía", nameof(matricula));
+        }
+        if (plazas < 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(plazas), "Debe haber al menos 1 plaza");
+        }
+
+        this.matricula = matricula;
+        this.plazas = plazas;
+    }
+
+    public string Matricula => matricula;
+    public int Plazas => plazas;
+
+    // Abstracto: en el diagrama aparece en cursiva (con * en Mermaid)
+    public abstract string Describir();
+
+    public override string ToString() => Describir();
+}
+
+class Coche : Vehiculo
+{
+    private readonly bool electrico;        // - en UML
+
+    public Coche(string matricula, int plazas, bool electrico)
+        : base(matricula, plazas)
+    {
+        this.electrico = electrico;
+    }
+
+    public override string Describir() =>
+        $"Coche {matricula} ({plazas} plazas, {(electrico ? "eléctrico" : "combustión")})";
+}
+
+class Moto : Vehiculo
+{
+    private readonly int cilindrada;
+
+    public Moto(string matricula, int plazas, int cilindrada)
+        : base(matricula, plazas)
+    {
+        this.cilindrada = cilindrada;
+    }
+
+    public override string Describir() =>
+        $"Moto {matricula} ({plazas} plazas, {cilindrada} cc)";
+}
+
+// AGREGACIÓN: recibe vehículos que ya existen, no los crea
+class Flota
+{
+    private readonly List<Vehiculo> vehiculos = new List<Vehiculo>();
+
+    public int Cuantos => vehiculos.Count;
+
+    public void Anadir(Vehiculo vehiculo)
+    {
+        if (vehiculo is null)
+        {
+            throw new ArgumentNullException(nameof(vehiculo));
+        }
+        if (vehiculos.Any(v => v.Matricula == vehiculo.Matricula))
+        {
+            Console.WriteLine($"La matrícula {vehiculo.Matricula} ya está en la flota.");
+        }
+        else
+        {
+            vehiculos.Add(vehiculo);
+        }
+    }
+
+    // Devuelve null si no lo encuentra: quien llama debe comprobarlo
+    public Vehiculo Buscar(string matricula) =>
+        vehiculos.FirstOrDefault(v => v.Matricula == matricula);
+
+    public int TotalPlazas() => vehiculos.Sum(v => v.Plazas);
+
+    public void Mostrar()
+    {
+        foreach (Vehiculo v in vehiculos)
+        {
+            Console.WriteLine($"  {v.Describir()}");
+        }
+    }
+}
+` },
+                { titulo: "El diagrama de la solución final", nota: "Que el diagrama final tenga más miembros que el inicial es normal y deseable: el diseño se refina al implementarlo. Lo importante es actualizar el diagrama, no dejarlo obsoleto.", noRun: true, codigo: r`classDiagram
+    class Vehiculo {
+        <<abstract>>
+        #string matricula
+        #int plazas
+        +Vehiculo(string m, int p)
+        +Describir()* string
+        +Matricula string
+        +Plazas int
+        +ToString() string
+    }
+    class Coche {
+        -bool electrico
+        +Describir() string
+    }
+    class Moto {
+        -int cilindrada
+        +Describir() string
+    }
+    class Flota {
+        -List~Vehiculo~ vehiculos
+        +Cuantos int
+        +Anadir(Vehiculo v) void
+        +Buscar(string matricula) Vehiculo
+        +TotalPlazas() int
+        +Mostrar() void
+    }
+    Vehiculo <|-- Coche
+    Vehiculo <|-- Moto
+    Flota "1" o-- "*" Vehiculo : contiene
+
+%% Anadido respecto al diagrama original:
+%%  - Vehiculo.Plazas: la flota necesita leer las plazas para sumarlas
+%%  - Vehiculo.ToString(): para poder mostrar el vehiculo directamente
+%%  - Flota.Cuantos: para informar sin exponer la lista interna
+%%  - Flota.Mostrar(): la flota sabe listarse (evita devolver la lista)
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "uml-casos-uso",
+          titulo: "Diagramas de casos de uso",
+          duracion: "20 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Identificar actores y casos de uso a partir de un enunciado", "Usar las relaciones include, extend y generalización", "Escribir un diagrama de casos de uso con Mermaid"],
+          teoria: r`<p>El diagrama de clases responde a «¿cómo está hecho el sistema?». El
+de <strong>casos de uso</strong> responde a una pregunta anterior y más
+importante: «<strong>¿qué puede hacer cada usuario con el
+sistema?</strong>». Es el diagrama que se enseña al cliente, porque no
+habla de código: habla de <strong>lo que el sistema le ofrece a quien lo
+usa</strong>.</p>
+<h3 id="1-los-cuatro-elementos">1. Los cuatro elementos</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Elemento</th>
+<th>Dibujo</th>
+<th>Qué es</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Actor</strong></td>
+<td>un monigote</td>
+<td>quien usa el sistema (persona, otro sistema, un temporizador)</td>
+</tr>
+<tr class="even">
+<td><strong>Caso de uso</strong></td>
+<td>una elipse</td>
+<td>algo que el sistema hace <strong>para</strong> un actor</td>
+</tr>
+<tr class="odd">
+<td><strong>Límite del sistema</strong></td>
+<td>un rectángulo alrededor</td>
+<td>qué queda dentro y qué fuera</td>
+</tr>
+<tr class="even">
+<td><strong>Asociación</strong></td>
+<td>una línea</td>
+<td>este actor usa este caso de uso</td>
+</tr>
+</tbody>
+</table></div>
+<pre><code>  ┌──────────── Sistema de la biblioteca ────────────┐
+  │                                                   │
+  │     ( Buscar libro )        ( Prestar libro )     │
+  │           │                        │              │
+  └───────────┼────────────────────────┼──────────────┘
+              │                        │
+            ☺ Socio               ☺ Bibliotecario</code></pre>
+<h4 id="cómo-se-nombra-un-caso-de-uso">Cómo se nombra un caso de
+uso</h4>
+<p><strong>Verbo en infinitivo + complemento</strong>, desde el punto de
+vista del usuario: «Prestar libro», «Consultar nota», «Reservar
+actividad».</p>
+<p>No son casos de uso: «Base de datos», «Clase Libro», «Validar
+formulario» (demasiado interno), «Pulsar el botón azul» (es un paso de
+la interfaz, no un objetivo).</p>
+<div class="callout">
+<p><strong>El criterio del valor.</strong> Un caso de uso debe aportar
+<strong>valor</strong> al actor por sí mismo. «Iniciar sesión» es
+discutible (nadie entra en una aplicación <em>para</em> iniciar sesión),
+y es la razón por la que normalmente se modela como un
+<code>include</code> de los demás, no como un caso suelto.</p>
+</div>
+<h3 id="2-los-actores">2. Los actores</h3>
+<p>Un actor es un <strong>papel</strong>, no una persona. La misma
+persona puede ser «Socio» y «Bibliotecario» en momentos distintos, y eso
+son dos actores.</p>
+<p>Hay dos tipos:</p>
+<ul>
+<li><strong>Primarios:</strong> inician casos de uso (el socio, el
+bibliotecario).</li>
+<li><strong>Secundarios:</strong> el sistema los necesita para completar
+algo (una pasarela de pago, un servidor de correo).</li>
+</ul>
+<p>Y <strong>no son actores</strong> las partes internas del sistema: la
+base de datos no es un actor, es parte del sistema.</p>
+<h3 id="3-las-relaciones-entre-casos-de-uso">3. Las relaciones entre
+casos de uso</h3>
+<h4 id="include-siempre-pasa"><code>«include»</code>: siempre pasa</h4>
+<p>El caso A <strong>siempre</strong> ejecuta el caso B. Sirve para no
+repetir un trozo común en varios casos de uso.</p>
+<pre><code>( Prestar libro ) ----«include»----&gt; ( Identificar socio )
+( Devolver libro ) ---«include»----&gt; ( Identificar socio )</code></pre>
+<h4 id="extend-a-veces-pasa"><code>«extend»</code>: a veces pasa</h4>
+<p>El caso B <strong>amplía</strong> el A en ciertas condiciones. El A
+funciona perfectamente sin el B.</p>
+<pre><code>( Prestar libro ) &lt;---«extend»---- ( Avisar de sanción pendiente )</code></pre>
+<p>La flecha apunta <strong>al contrario</strong> que en
+<code>include</code>, y es el detalle que más se confunde: en
+<code>include</code> apunta hacia lo incluido; en <code>extend</code>,
+hacia lo extendido.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th></th>
+<th><code>«include»</code></th>
+<th><code>«extend»</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>¿Ocurre siempre?</td>
+<td><strong>sí</strong></td>
+<td>solo si se da una condición</td>
+</tr>
+<tr class="even">
+<td>Dirección de la flecha</td>
+<td>del caso base <strong>al</strong> incluido</td>
+<td>del caso extensor <strong>al</strong> base</td>
+</tr>
+<tr class="odd">
+<td>Para qué</td>
+<td>factorizar lo común</td>
+<td>añadir un comportamiento opcional</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="generalización">Generalización</h4>
+<p>Entre <strong>actores</strong>: un «Administrador» puede hacer todo
+lo que un «Usuario», y más. Entre <strong>casos de uso</strong>: «Pagar»
+se especializa en «Pagar con tarjeta» y «Pagar con Bizum».</p>
+<h3 id="4-en-mermaid">4. En Mermaid</h3>
+<p>Mermaid no tiene un diagrama específico de casos de uso, así que se
+dibuja con <code>flowchart</code> y las formas adecuadas:
+<code>((...))</code> para las elipses de los casos de uso y
+<code>[...]</code> o un icono para los actores.</p>
+<pre><code>flowchart LR
+    socio([Socio])
+    biblio([Bibliotecario])
+
+    subgraph Sistema de la biblioteca
+        buscar((Buscar libro))
+        prestar((Prestar libro))
+        devolver((Devolver libro))
+        identificar((Identificar socio))
+        sancion((Avisar de sanción))
+    end
+
+    socio --- buscar
+    biblio --- prestar
+    biblio --- devolver
+    prestar -.-&gt;|include| identificar
+    devolver -.-&gt;|include| identificar
+    sancion -.-&gt;|extend| prestar</code></pre>
+<h3 id="5-del-diagrama-a-la-descripción">5. Del diagrama a la
+descripción</h3>
+<p>El diagrama dice <strong>qué</strong> casos hay; para cada uno
+importante se escribe además una <strong>descripción</strong>, que es la
+que acaba convirtiéndose en las pruebas de aceptación:</p>
+<pre><code>Caso de uso: Prestar libro
+Actor principal: Bibliotecario
+Precondiciones: el socio está identificado y no tiene sanciones
+Flujo principal:
+  1. El bibliotecario introduce el código del libro.
+  2. El sistema comprueba que el libro está disponible.
+  3. El sistema registra el préstamo con la fecha de devolución.
+  4. El sistema muestra la fecha de devolución.
+Flujos alternativos:
+  2a. El libro ya está prestado → el sistema avisa y no registra nada.
+  2b. El código no existe → el sistema avisa.
+Postcondiciones: el libro queda marcado como prestado.</code></pre>
+<p>Esta ficha es, en el fondo, lo mismo que una <strong>historia de
+usuario</strong> con sus criterios de aceptación: dos formas de escribir
+el mismo acuerdo.</p>
+<h3 id="6-los-errores-habituales">6. Los errores habituales</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Error</th>
+<th>Por qué está mal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Casos de uso que son pasos de la interfaz («Pulsar Guardar»)</td>
+<td>describen el <strong>cómo</strong>, no el <strong>qué</strong></td>
+</tr>
+<tr class="even">
+<td>Un caso de uso por cada método de una clase</td>
+<td>el diagrama se convierte en el código</td>
+</tr>
+<tr class="odd">
+<td>La base de datos como actor</td>
+<td>es parte del sistema, no un usuario</td>
+</tr>
+<tr class="even">
+<td>Descomponer en exceso</td>
+<td>se pierde la visión general, que es lo que aporta</td>
+</tr>
+<tr class="odd">
+<td>Confundir la dirección de <code>include</code> y
+<code>extend</code></td>
+<td>cambia el significado</td>
+</tr>
+</tbody>
+</table></div>`,
+          ejemplos: [
+            { titulo: "Del enunciado a los casos de uso", explicacion: "Fíjate en la correspondencia: el include es una comprobación que SIEMPRE se hace, el extend es un if que solo añade algo en una condición concreta, y los flujos alternativos son los returns tempranos con mensaje. El diagrama no es decoración: se convierte en la estructura del método.", codigo: r`// ENUNCIADO
+//   «En la aplicación del gimnasio, los SOCIOS pueden consultar el horario de
+//    actividades y reservar una plaza. Para reservar hay que estar identificado.
+//    Si el socio tiene una cuota pendiente, el sistema se lo avisa al reservar.
+//    Los MONITORES pueden consultar la lista de inscritos de sus actividades.
+//    El ADMINISTRADOR puede hacer todo lo que hace un monitor y además dar de
+//    alta actividades.»
+//
+// ACTORES
+//   Socio (primario)
+//   Monitor (primario)
+//   Administrador (generaliza a Monitor: hace todo lo suyo y más)
+//   Pasarela de pago (secundario, si hubiera pagos)
+//
+// CASOS DE USO
+//   Consultar horario            (Socio)
+//   Reservar plaza               (Socio)      include -> Identificarse
+//   Avisar de cuota pendiente    extend -> Reservar plaza
+//   Consultar inscritos          (Monitor)
+//   Dar de alta actividad        (Administrador)
+//
+// DIAGRAMA (Mermaid: pégalo en un README.md)
+//
+//   flowchart LR
+//       socio([Socio])
+//       monitor([Monitor])
+//       admin([Administrador])
+//       subgraph Gimnasio
+//           horario((Consultar horario))
+//           reservar((Reservar plaza))
+//           ident((Identificarse))
+//           cuota((Avisar cuota pendiente))
+//           inscritos((Consultar inscritos))
+//           alta((Dar de alta actividad))
+//       end
+//       socio --- horario
+//       socio --- reservar
+//       monitor --- inscritos
+//       admin --- inscritos
+//       admin --- alta
+//       reservar -.->|include| ident
+//       cuota -.->|extend| reservar
+//
+// Y así se traduce el caso de uso «Reservar plaza» a código:
+
+Gimnasio gimnasio = new Gimnasio();
+gimnasio.AnadirActividad("Spinning", 3);
+
+Socio ana = new Socio("S-001", "Ana", cuotaPendiente: false);
+Socio luis = new Socio("S-002", "Luis", cuotaPendiente: true);
+
+Console.WriteLine(gimnasio.Reservar(ana, "Spinning"));
+Console.WriteLine(gimnasio.Reservar(luis, "Spinning"));     // aquí salta el «extend»
+Console.WriteLine(gimnasio.Reservar(ana, "Yoga"));          // flujo alternativo: no existe
+
+class Gimnasio
+{
+    private readonly Dictionary<string, int> plazas = new Dictionary<string, int>();
+    private readonly List<(Socio socio, string actividad)> reservas =
+        new List<(Socio, string)>();
+
+    public void AnadirActividad(string nombre, int plazasMaximas) =>
+        plazas[nombre] = plazasMaximas;
+
+    // Caso de uso «Reservar plaza», con su include, su extend y sus alternativos
+    public string Reservar(Socio socio, string actividad)
+    {
+        // include: Identificarse (aquí, simplificado: comprobar que el socio existe)
+        if (!Identificar(socio))
+        {
+            return "No se ha podido identificar al socio.";
+        }
+
+        // flujo alternativo: la actividad no existe
+        if (!plazas.TryGetValue(actividad, out int maximo))
+        {
+            return $"La actividad «{actividad}» no existe.";
+        }
+
+        // flujo alternativo: no hay plazas
+        int ocupadas = reservas.Count(r => r.actividad == actividad);
+        if (ocupadas >= maximo)
+        {
+            return $"«{actividad}» está completa ({ocupadas}/{maximo}).";
+        }
+
+        reservas.Add((socio, actividad));
+        string mensaje = $"Reserva confirmada: {socio.Nombre} en {actividad} " +
+                         $"({ocupadas + 1}/{maximo}).";
+
+        // extend: Avisar de cuota pendiente (solo si se da la condición)
+        if (socio.CuotaPendiente)
+        {
+            mensaje += " AVISO: tienes una cuota pendiente de pago.";
+        }
+
+        return mensaje;
+    }
+
+    private bool Identificar(Socio socio) => socio is not null && socio.Carne.Length > 0;
+}
+
+class Socio
+{
+    public string Carne { get; }
+    public string Nombre { get; }
+    public bool CuotaPendiente { get; }
+
+    public Socio(string carne, string nombre, bool cuotaPendiente)
+    {
+        Carne = carne;
+        Nombre = nombre;
+        CuotaPendiente = cuotaPendiente;
+    }
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Casos de uso de una aplicación real",
+              nivel: 1,
+              pista: "Verbo en infinitivo, desde el punto de vista del usuario, y comprueba que cada caso aporta valor por sí mismo.",
+              enunciado: r`<p>Elige una aplicación que uses a diario (una de música, una de
+mensajería, la de la biblioteca del centro, un videojuego con tienda) y
+modela sus casos de uso.</p>
+<p>Entrega en el <code>README.md</code>:</p>
+<ol type="1">
+<li>La lista de <strong>actores</strong>, indicando cuáles son primarios
+y cuáles secundarios, y si hay generalización entre ellos.</li>
+<li>Entre <strong>seis y diez casos de uso</strong>, nombrados con verbo
+en infinitivo.</li>
+<li>Al menos <strong>un <code>include</code></strong> y <strong>un
+<code>extend</code></strong>, justificando por qué cada uno es de ese
+tipo.</li>
+<li>El <strong>diagrama en Mermaid</strong>.</li>
+<li>La <strong>ficha completa</strong> de uno de los casos de uso:
+actor, precondiciones, flujo principal numerado, al menos dos flujos
+alternativos y postcondiciones.</li>
+</ol>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Los casos de uso describen <strong>qué</strong> ofrece el sistema,
+no cómo está programado ni qué botones tiene.</li>
+<li>La base de datos <strong>no</strong> es un actor.</li>
+<li>Recuerda la dirección de las flechas: <code>include</code> apunta
+hacia lo incluido; <code>extend</code>, hacia lo extendido.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> si un caso de uso no aporta valor al actor
+por sí mismo, probablemente sea un <code>include</code> de otro.</p>
+<p>🏅 <strong>Ampliación:</strong> convierte los casos de uso en
+<strong>historias de usuario</strong> con criterios de aceptación y
+ponlas como <em>issues</em> en tu repositorio.</p>`,
+              soluciones: [
+                { titulo: "Ejemplo resuelto: aplicación de música", nota: "Lo que convierte este ejercicio en un buen trabajo es la justificación de las relaciones y los flujos alternativos. Los flujos alternativos son, literalmente, el juego de pruebas del caso de uso: cada uno es un caso que hay que probar.", noRun: true, codigo: "# Casos de uso - Aplicacion de musica\n\n## Actores\n\n- **Oyente** (primario): escucha musica y gestiona sus listas.\n- **Oyente Premium** (primario, *generaliza* a Oyente): todo lo del Oyente,\n  mas descargar sin conexion y saltar sin limite.\n- **Artista** (primario): sube su musica y consulta estadisticas.\n- **Pasarela de pago** (secundario): el sistema la necesita para cobrar la suscripcion.\n\nLa base de datos y el servidor de audio NO son actores: son partes del sistema.\n\n## Casos de uso\n\n1. Buscar cancion            (Oyente)\n2. Reproducir cancion        (Oyente)       include -> Comprobar derechos\n3. Crear lista               (Oyente)\n4. Anadir cancion a lista    (Oyente)\n5. Descargar para sin conexion (Oyente Premium)\n6. Suscribirse a Premium     (Oyente)       include -> Procesar pago\n7. Subir cancion             (Artista)\n8. Consultar estadisticas    (Artista)\n9. Mostrar anuncio           extend -> Reproducir cancion\n10. Comprobar derechos       (incluido, no se asocia a ningun actor)\n\n### Justificacion de las relaciones\n\n- `Reproducir cancion` --include--> `Comprobar derechos`: SIEMPRE hay que\n  comprobar si la cancion esta disponible en el pais del oyente. No es opcional.\n- `Mostrar anuncio` --extend--> `Reproducir cancion`: solo ocurre si el oyente\n  NO es Premium y ha escuchado tres canciones. La reproduccion funciona\n  perfectamente sin el anuncio, asi que es una extension.\n\n## Diagrama\n\nflowchart LR\n    oyente([Oyente])\n    premium([Oyente Premium])\n    artista([Artista])\n    pago([Pasarela de pago])\n\n    subgraph Aplicacion de musica\n        buscar((Buscar cancion))\n        reproducir((Reproducir cancion))\n        derechos((Comprobar derechos))\n        anuncio((Mostrar anuncio))\n        lista((Crear lista))\n        anadir((Anadir a lista))\n        descargar((Descargar sin conexion))\n        suscribir((Suscribirse a Premium))\n        procesar((Procesar pago))\n        subir((Subir cancion))\n        stats((Consultar estadisticas))\n    end\n\n    oyente --- buscar\n    oyente --- reproducir\n    oyente --- lista\n    oyente --- anadir\n    oyente --- suscribir\n    premium --- descargar\n    premium -.-> oyente\n    artista --- subir\n    artista --- stats\n    procesar --- pago\n    reproducir -.->|include| derechos\n    suscribir -.->|include| procesar\n    anuncio -.->|extend| reproducir\n\n## Ficha del caso de uso: Reproducir cancion\n\n**Actor principal:** Oyente\n**Actores secundarios:** ninguno\n**Precondiciones:** el oyente ha iniciado sesion y tiene conexion\n  (o la cancion esta descargada).\n\n**Flujo principal:**\n1. El oyente selecciona una cancion.\n2. El sistema comprueba los derechos de reproduccion en su pais.\n3. El sistema empieza a reproducir el audio.\n4. El sistema registra la escucha para las estadisticas del artista.\n5. Al terminar, el sistema pasa a la siguiente cancion de la lista.\n\n**Flujos alternativos:**\n- 2a. La cancion no esta disponible en el pais: el sistema avisa y\n  propone una version alternativa si existe.\n- 3a. Se pierde la conexion: el sistema pausa y avisa; si la cancion\n  estaba descargada, sigue reproduciendola.\n- 4a. El oyente no es Premium y ha escuchado 3 canciones: se muestra\n  un anuncio antes de continuar (caso de uso Mostrar anuncio).\n\n**Postcondiciones:** la escucha queda registrada y el reproductor\nqueda en la siguiente cancion.\n" },
+              ],
+            },
+          ],
+        },
+        {
+          id: "uml-dinamicos",
+          titulo: "Diagramas dinámicos: secuencia, estados y actividades",
+          duracion: "22 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Leer y escribir un diagrama de secuencia con sus mensajes y respuestas", "Modelar el ciclo de vida de un objeto con un diagrama de estados", "Traducir un diagrama de estados a código con una máquina de estados"],
+          teoria: r`<p>Los diagramas estructurales dicen <strong>qué</strong> hay. Los
+<strong>dinámicos</strong> dicen <strong>qué pasa</strong>: en qué orden
+se llaman los objetos, en qué situaciones puede estar uno y cómo fluye
+un proceso. De la media docena que define UML, tres se usan de
+verdad.</p>
+<h3 id="1-diagrama-de-secuencia-el-orden-de-las-llamadas">1. Diagrama de
+secuencia: el orden de las llamadas</h3>
+<p>Muestra cómo colaboran varios objetos <strong>a lo largo del
+tiempo</strong> para completar una operación. El tiempo baja de arriba
+abajo.</p>
+<pre><code> Usuario      Interfaz        Servicio       Repositorio
+    │             │               │               │
+    │─ reservar ─&gt;│               │               │
+    │             │─ Reservar() ─&gt;│               │
+    │             │               │─ Buscar() ───&gt;│
+    │             │               │&lt;── libro ─────│
+    │             │               │─ Guardar() ──&gt;│
+    │             │               │&lt;── ok ────────│
+    │             │&lt;── true ──────│               │
+    │&lt;── &quot;OK&quot; ────│               │               │</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Elemento</th>
+<th>Qué es</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Línea de vida</strong></td>
+<td>la línea vertical de cada participante</td>
+</tr>
+<tr class="even">
+<td><strong>Mensaje síncrono</strong></td>
+<td>flecha con punta rellena: espera respuesta</td>
+</tr>
+<tr class="odd">
+<td><strong>Mensaje asíncrono</strong></td>
+<td>flecha con punta abierta: no espera</td>
+</tr>
+<tr class="even">
+<td><strong>Respuesta</strong></td>
+<td>flecha discontinua de vuelta</td>
+</tr>
+<tr class="odd">
+<td><strong>Fragmento <code>alt</code></strong></td>
+<td>alternativa (if / else)</td>
+</tr>
+<tr class="even">
+<td><strong>Fragmento <code>loop</code></strong></td>
+<td>repetición</td>
+</tr>
+</tbody>
+</table></div>
+<p>Se dibuja cuando un flujo es <strong>difícil de seguir leyendo el
+código</strong>: una autenticación, un pago, una sincronización. No para
+cada método.</p>
+<h3 id="2-diagrama-de-estados-el-ciclo-de-vida-de-un-objeto">2. Diagrama
+de estados: el ciclo de vida de un objeto</h3>
+<p>Muestra en qué <strong>situaciones</strong> puede estar un objeto y
+qué <strong>transiciones</strong> lo llevan de una a otra. Es útilísimo
+para cualquier cosa con «estado»: un pedido, una reserva, un enemigo de
+un videojuego, una conexión.</p>
+<pre><code>      ●
+      │ crear
+      ▼
+ ┌──────────┐  confirmar   ┌───────────┐  enviar   ┌─────────┐
+ │ Pendiente│ ───────────&gt; │ Confirmado│ ────────&gt; │ Enviado │
+ └──────────┘              └───────────┘           └─────────┘
+      │ cancelar                 │ cancelar             │ entregar
+      ▼                          ▼                      ▼
+ ┌──────────┐                                      ┌──────────┐
+ │ Cancelado│ &lt;────────────────────                │ Entregado│
+ └──────────┘                                      └──────────┘
+      │                                                 │
+      ▼                                                 ▼
+      ◉                                                 ◉</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Elemento</th>
+<th>Notación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Estado inicial</td>
+<td>círculo negro</td>
+</tr>
+<tr class="even">
+<td>Estado final</td>
+<td>círculo negro con anillo</td>
+</tr>
+<tr class="odd">
+<td>Estado</td>
+<td>rectángulo redondeado</td>
+</tr>
+<tr class="even">
+<td>Transición</td>
+<td>flecha con el <strong>evento</strong> que la provoca</td>
+</tr>
+<tr class="odd">
+<td>Guarda</td>
+<td><code>[condición]</code> en la transición</td>
+</tr>
+<tr class="even">
+<td>Acción</td>
+<td><code>/ accion()</code> en la transición</td>
+</tr>
+</tbody>
+</table></div>
+<p>La transición se escribe: <code>evento [guarda] / acción</code>.</p>
+<p><strong>Lo valioso del diagrama</strong> es que hace visibles las
+transiciones que <strong>no</strong> existen: en el ejemplo, un pedido
+<code>Enviado</code> no se puede cancelar. Eso, en el código, son las
+validaciones que normalmente se olvidan.</p>
+<h3 id="3-diagrama-de-actividades-el-flujo-del-proceso">3. Diagrama de
+actividades: el flujo del proceso</h3>
+<p>Es el diagrama de flujo de toda la vida, con dos añadidos: puede
+mostrar <strong>caminos en paralelo</strong> (barras de sincronización)
+y <strong>carriles</strong> (<em>swimlanes</em>) para indicar quién hace
+cada paso.</p>
+<p>Se usa para documentar un proceso de negocio («cómo se tramita una
+matrícula») más que para código.</p>
+<h3 id="4-mermaid-para-los-tres">4. Mermaid para los tres</h3>
+<pre><code>sequenceDiagram
+    actor U as Usuario
+    participant I as Interfaz
+    participant S as Servicio
+    U-&gt;&gt;I: reservar(&quot;978-1&quot;)
+    I-&gt;&gt;S: Reservar(isbn, socio)
+    S-&gt;&gt;S: Comprobar disponibilidad
+    alt disponible
+        S--&gt;&gt;I: true
+        I--&gt;&gt;U: &quot;Reserva confirmada&quot;
+    else no disponible
+        S--&gt;&gt;I: false
+        I--&gt;&gt;U: &quot;No hay ejemplares&quot;
+    end</code></pre>
+<pre><code>stateDiagram-v2
+    [*] --&gt; Pendiente : crear
+    Pendiente --&gt; Confirmado : confirmar
+    Pendiente --&gt; Cancelado : cancelar
+    Confirmado --&gt; Enviado : enviar
+    Confirmado --&gt; Cancelado : cancelar
+    Enviado --&gt; Entregado : entregar
+    Cancelado --&gt; [*]
+    Entregado --&gt; [*]</code></pre>
+<h3 id="5-del-diagrama-de-estados-al-código">5. Del diagrama de estados
+al código</h3>
+<p>Un diagrama de estados se programa con un <code>enum</code> para los
+estados y un método por evento que comprueba si la transición es
+legal:</p>
+<pre><code>enum EstadoPedido { Pendiente, Confirmado, Enviado, Entregado, Cancelado }
+
+public bool Confirmar()
+{
+    if (Estado != EstadoPedido.Pendiente) { return false; }   // transición ilegal
+    Estado = EstadoPedido.Confirmado;
+    return true;
+}</code></pre>
+<p>Con muchos estados, en lugar de un <code>if</code> por método se usa
+una <strong>tabla de transiciones</strong>: un diccionario que dice,
+para cada par (estado, evento), el estado destino. Añadir una transición
+pasa a ser añadir una línea de datos, no de código. Es el mismo
+principio que la tabla de delegados que viste en la lección de
+delegados.</p>`,
+          ejemplos: [
+            { titulo: "Máquina de estados: un pedido", explicacion: "Lo importante de esta implementación: las transiciones que el diagrama NO tiene devuelven false. Sin el diagrama, es muy fácil olvidar que un pedido enviado no debería poder cancelarse.", codigo: r`// Implementación directa del diagrama de estados de la teoría
+Pedido pedido = new Pedido(1);
+
+Console.WriteLine($"Estado inicial: {pedido.Estado}");
+
+Intentar("confirmar", () => pedido.Confirmar());
+Intentar("cancelar", () => pedido.Cancelar());        // ilegal: ya está confirmado... veamos
+Intentar("enviar", () => pedido.Enviar());
+Intentar("cancelar", () => pedido.Cancelar());        // ilegal: ya está enviado
+Intentar("entregar", () => pedido.Entregar());
+Intentar("enviar", () => pedido.Enviar());            // ilegal: ya está entregado
+
+Console.WriteLine($"\nHistorial: {string.Join(" -> ", pedido.Historial)}");
+
+void Intentar(string evento, Func<bool> accion)
+{
+    string estadoAntes = pedido.Estado.ToString();
+    bool ok = accion();
+    Console.WriteLine($"  {evento,-10} {(ok ? "OK   " : "RECHAZADO")}  " +
+                      $"{estadoAntes} -> {pedido.Estado}");
+}
+
+enum EstadoPedido { Pendiente, Confirmado, Enviado, Entregado, Cancelado }
+
+class Pedido
+{
+    public int Id { get; }
+    public EstadoPedido Estado { get; private set; } = EstadoPedido.Pendiente;
+
+    private readonly List<string> historial = new List<string> { "Pendiente" };
+    public IReadOnlyList<string> Historial => historial;
+
+    public Pedido(int id) => Id = id;
+
+    // Un método por evento; cada uno comprueba si la transición es legal
+    public bool Confirmar() => Transitar(EstadoPedido.Pendiente, EstadoPedido.Confirmado);
+
+    public bool Enviar() => Transitar(EstadoPedido.Confirmado, EstadoPedido.Enviado);
+
+    public bool Entregar() => Transitar(EstadoPedido.Enviado, EstadoPedido.Entregado);
+
+    // Cancelar es legal desde dos estados
+    public bool Cancelar()
+    {
+        bool legal = Estado == EstadoPedido.Pendiente || Estado == EstadoPedido.Confirmado;
+        if (!legal)
+        {
+            return false;
+        }
+        Estado = EstadoPedido.Cancelado;
+        historial.Add(Estado.ToString());
+        return true;
+    }
+
+    private bool Transitar(EstadoPedido desde, EstadoPedido hacia)
+    {
+        if (Estado != desde)
+        {
+            return false;                      // la transición no existe en el diagrama
+        }
+        Estado = hacia;
+        historial.Add(hacia.ToString());
+        return true;
+    }
+}
+` },
+            { titulo: "Tabla de transiciones: el mismo diagrama, como datos", explicacion: "La tupla (string, string) como clave funciona porque las tuplas comparan por valor. Este diseño permite incluso cargar las transiciones desde un fichero JSON: la máquina de estados queda configurable sin recompilar.", codigo: r`// Con muchos estados, una tabla es más mantenible que un método por evento:
+// añadir una transición es añadir una línea de DATOS, no de código.
+
+MaquinaDeEstados maquina = new MaquinaDeEstados("Pendiente");
+
+// (estado actual, evento) -> estado destino
+maquina.Permitir("Pendiente", "confirmar", "Confirmado");
+maquina.Permitir("Pendiente", "cancelar", "Cancelado");
+maquina.Permitir("Confirmado", "enviar", "Enviado");
+maquina.Permitir("Confirmado", "cancelar", "Cancelado");
+maquina.Permitir("Enviado", "entregar", "Entregado");
+
+string[] eventos = { "confirmar", "cancelar", "enviar", "entregar", "enviar" };
+
+Console.WriteLine($"Estado inicial: {maquina.Estado}\n");
+foreach (string evento in eventos)
+{
+    string antes = maquina.Estado;
+    bool ok = maquina.Disparar(evento);
+    Console.WriteLine($"  {evento,-10} {(ok ? "OK   " : "RECHAZADO")}  {antes} -> {maquina.Estado}");
+}
+
+Console.WriteLine($"\nEventos posibles ahora mismo: {string.Join(", ", maquina.EventosPosibles())}");
+Console.WriteLine($"Transiciones definidas: {maquina.Cuantas}");
+
+class MaquinaDeEstados
+{
+    // La clave es la pareja (estado, evento): un tipo anónimo no sirve como clave
+    // de diccionario público, así que usamos una tupla, que compara por valor.
+    private readonly Dictionary<(string estado, string evento), string> transiciones =
+        new Dictionary<(string, string), string>();
+
+    public string Estado { get; private set; }
+    public int Cuantas => transiciones.Count;
+
+    public MaquinaDeEstados(string estadoInicial) => Estado = estadoInicial;
+
+    public void Permitir(string desde, string evento, string hacia) =>
+        transiciones[(desde, evento)] = hacia;
+
+    public bool Disparar(string evento)
+    {
+        if (transiciones.TryGetValue((Estado, evento), out string destino))
+        {
+            Estado = destino;
+            return true;
+        }
+        return false;                     // no existe esa transición: se ignora
+    }
+
+    public List<string> EventosPosibles() =>
+        transiciones.Keys.Where(k => k.estado == Estado).Select(k => k.evento).ToList();
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Máquina de estados de un personaje",
+              nivel: 2,
+              pista: "Un Dictionary con clave (Estado, string) te da la tabla de transiciones en unas pocas líneas.",
+              enunciado: r`<p>Modela y programa el ciclo de vida de un <strong>personaje de
+videojuego</strong> con estos estados: <code>Idle</code>,
+<code>Caminando</code>, <code>Saltando</code>, <code>Atacando</code> y
+<code>Muerto</code>.</p>
+<p>Transiciones permitidas:</p>
+<ul>
+<li><code>Idle</code> → <code>Caminando</code> (mover),
+<code>Saltando</code> (saltar), <code>Atacando</code> (atacar)</li>
+<li><code>Caminando</code> → <code>Idle</code> (parar),
+<code>Saltando</code> (saltar), <code>Atacando</code> (atacar)</li>
+<li><code>Saltando</code> → <code>Idle</code> (aterrizar)</li>
+<li><code>Atacando</code> → <code>Idle</code> (terminar)</li>
+<li>Desde <strong>cualquier</strong> estado → <code>Muerto</code>
+(morir)</li>
+<li>Desde <code>Muerto</code> → ninguna (es un estado final)</li>
+</ul>
+<p>Entrega:</p>
+<ol type="1">
+<li>El <strong>diagrama de estados en Mermaid</strong> en el
+README.</li>
+<li>La implementación en C#, con un <code>enum</code> para los
+estados.</li>
+<li>Un programa que pruebe una secuencia de eventos, incluyendo
+<strong>al menos tres transiciones ilegales</strong>, y muestre qué se
+acepta y qué se rechaza.</li>
+</ol>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Una transición ilegal <strong>no</strong> debe lanzar excepción:
+devuelve <code>false</code> y deja el estado como estaba.</li>
+<li>Añade un método que devuelva <strong>qué eventos son
+posibles</strong> en el estado actual (es lo que usaría la interfaz para
+activar o desactivar botones).</li>
+<li><strong>Control de errores:</strong> desde <code>Muerto</code> no se
+acepta ningún evento.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> la tabla de transiciones con un
+<code>Dictionary&lt;(EstadoPersonaje, string), EstadoPersonaje&gt;</code>
+evita escribir un método por evento.</p>
+<p>🏅 <strong>Ampliación:</strong> añade un contador de vida: el evento
+<code>recibirDano(int)</code> resta vida y, si llega a 0, dispara
+automáticamente la transición a <code>Muerto</code> desde cualquier
+estado.</p>`,
+              soluciones: [
+                { titulo: "Versión con tabla de transiciones", nota: "La tabla estática de transiciones es el núcleo del diseño: el diagrama de estados está escrito literalmente como datos, así que leer el código es leer el diagrama. EventosPosibles() es lo que usaría la interfaz para saber qué botones habilitar.", codigo: r`Personaje personaje = new Personaje("Ana");
+
+Console.WriteLine($"Estado inicial: {personaje.Estado}");
+Console.WriteLine($"Eventos posibles: {string.Join(", ", personaje.EventosPosibles())}\n");
+
+string[] secuencia = { "mover", "saltar", "atacar", "aterrizar", "atacar",
+                       "terminar", "morir", "mover" };
+
+foreach (string evento in secuencia)
+{
+    EstadoPersonaje antes = personaje.Estado;
+    bool ok = personaje.Disparar(evento);
+    Console.WriteLine($"  {evento,-10} {(ok ? "OK       " : "RECHAZADO")} " +
+                      $"{antes,-10} -> {personaje.Estado}");
+}
+
+Console.WriteLine($"\nEventos posibles al final: " +
+                  $"{(personaje.EventosPosibles().Count == 0 ? "(ninguno: está muerto)" : string.Join(", ", personaje.EventosPosibles()))}");
+
+enum EstadoPersonaje { Idle, Caminando, Saltando, Atacando, Muerto }
+
+class Personaje
+{
+    private static readonly Dictionary<(EstadoPersonaje, string), EstadoPersonaje> Transiciones =
+        new Dictionary<(EstadoPersonaje, string), EstadoPersonaje>
+    {
+        [(EstadoPersonaje.Idle, "mover")] = EstadoPersonaje.Caminando,
+        [(EstadoPersonaje.Idle, "saltar")] = EstadoPersonaje.Saltando,
+        [(EstadoPersonaje.Idle, "atacar")] = EstadoPersonaje.Atacando,
+
+        [(EstadoPersonaje.Caminando, "parar")] = EstadoPersonaje.Idle,
+        [(EstadoPersonaje.Caminando, "saltar")] = EstadoPersonaje.Saltando,
+        [(EstadoPersonaje.Caminando, "atacar")] = EstadoPersonaje.Atacando,
+
+        [(EstadoPersonaje.Saltando, "aterrizar")] = EstadoPersonaje.Idle,
+        [(EstadoPersonaje.Atacando, "terminar")] = EstadoPersonaje.Idle,
+
+        // morir es legal desde cualquier estado vivo
+        [(EstadoPersonaje.Idle, "morir")] = EstadoPersonaje.Muerto,
+        [(EstadoPersonaje.Caminando, "morir")] = EstadoPersonaje.Muerto,
+        [(EstadoPersonaje.Saltando, "morir")] = EstadoPersonaje.Muerto,
+        [(EstadoPersonaje.Atacando, "morir")] = EstadoPersonaje.Muerto,
+    };
+
+    public string Nombre { get; }
+    public EstadoPersonaje Estado { get; private set; } = EstadoPersonaje.Idle;
+    public int Vida { get; private set; } = 100;
+
+    public Personaje(string nombre) => Nombre = nombre;
+
+    public bool Disparar(string evento)
+    {
+        // Desde Muerto no se acepta nada: es un estado final
+        if (Transiciones.TryGetValue((Estado, evento), out EstadoPersonaje destino))
+        {
+            Estado = destino;
+            return true;
+        }
+        return false;
+    }
+
+    public List<string> EventosPosibles() =>
+        Transiciones.Keys.Where(k => k.Item1 == Estado).Select(k => k.Item2).ToList();
+
+    // Ampliación: el daño puede provocar la transición automática a Muerto
+    public void RecibirDano(int dano)
+    {
+        if (Estado == EstadoPersonaje.Muerto || dano <= 0)
+        {
+            return;
+        }
+
+        Vida = Math.Max(0, Vida - dano);
+        Console.WriteLine($"  {Nombre} recibe {dano} de daño (vida: {Vida})");
+
+        if (Vida == 0)
+        {
+            Disparar("morir");
+            Console.WriteLine($"  {Nombre} ha muerto.");
+        }
+    }
+}
+` },
+                { titulo: "El diagrama de estados en Mermaid", nota: "Pega esto en el README y GitHub lo dibujará. Observa lo que el diagrama hace evidente: desde Saltando no se puede atacar, una regla que en el código sería un if fácil de olvidar.", noRun: true, codigo: r`stateDiagram-v2
+    [*] --> Idle : crear
+
+    Idle --> Caminando : mover
+    Idle --> Saltando : saltar
+    Idle --> Atacando : atacar
+
+    Caminando --> Idle : parar
+    Caminando --> Saltando : saltar
+    Caminando --> Atacando : atacar
+
+    Saltando --> Idle : aterrizar
+    Atacando --> Idle : terminar
+
+    Idle --> Muerto : morir
+    Caminando --> Muerto : morir
+    Saltando --> Muerto : morir
+    Atacando --> Muerto : morir
+
+    Muerto --> [*]
+
+    note right of Muerto
+        Estado final:
+        no acepta ningun evento
+    end note
+` },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "m12",
+      titulo: "Genéricos y colecciones",
+      lecciones: [
+        {
+          id: "tipos-genericos",
+          titulo: "Tipos genéricos",
+          duracion: "22 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Entender qué problema resuelven los genéricos frente a usar object", "Escribir clases y métodos genéricos con uno o varios parámetros de tipo", "Aplicar restricciones (where) para poder operar con el tipo recibido"],
+          teoria: r`<p>Imagina que escribes una clase <code>Caja</code> que guarda un valor.
+¿De qué tipo? Si la haces para <code>int</code>, necesitarás otra para
+<code>string</code>, otra para <code>Jugador</code>… Si la haces para
+<code>object</code> (el tipo del que heredan todos), valdrá para todo,
+pero perderás la seguridad de tipos: el compilador ya no podrá avisarte
+de nada. Los <strong>genéricos</strong> resuelven exactamente este
+dilema.</p>
+<p>Un tipo genérico es una <strong>plantilla</strong>: se escribe una
+sola vez con un «hueco» para el tipo, y se concreta al usarla.</p>
+<h3 id="1-el-problema-la-solución-con-object">1. El problema: la
+solución con <code>object</code></h3>
+<pre><code>class CajaVieja
+{
+    public object Contenido { get; set; }
+}
+
+CajaVieja c = new CajaVieja();
+c.Contenido = 42;
+string texto = (string)c.Contenido;   // compila... y revienta al ejecutar</code></pre>
+<p>Tres problemas, y los tres graves:</p>
+<ol type="1">
+<li><strong>No hay seguridad de tipos.</strong> El error aparece al
+ejecutar (<code>InvalidCastException</code>), no al compilar.</li>
+<li><strong>Hacen falta moldes</strong> (<em>casts</em>) en todas
+partes: código ruidoso y frágil.</li>
+<li><strong>Hay <em>boxing</em>.</strong> Al guardar un <code>int</code>
+(tipo por valor) en un <code>object</code> (tipo por referencia), .NET
+lo envuelve en un objeto del montón. Con millones de elementos, eso es
+mucha memoria y mucho trabajo para el recolector de basura.</li>
+</ol>
+<h3 id="2-la-solución-un-parámetro-de-tipo">2. La solución: un parámetro
+de tipo</h3>
+<pre><code>class Caja&lt;T&gt;                     // T es el «hueco»: un parámetro de tipo
+{
+    public T Contenido { get; set; }
+}
+
+Caja&lt;int&gt; cajaNumeros = new Caja&lt;int&gt;();
+cajaNumeros.Contenido = 42;       // solo acepta int
+// cajaNumeros.Contenido = &quot;hola&quot;;  ← error de COMPILACIÓN. Perfecto.
+
+int valor = cajaNumeros.Contenido;   // sin molde, sin boxing</code></pre>
+<p>Por convención el parámetro se llama <code>T</code> (de
+<em>type</em>), o <code>TKey</code>, <code>TValue</code>,
+<code>TItem</code>… cuando hay varios o cuando un nombre descriptivo
+ayuda.</p>
+<h4 id="las-tres-ventajas">Las tres ventajas</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Con <code>object</code></th>
+<th>Con genéricos</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Errores de tipo</td>
+<td>al ejecutar</td>
+<td>al <strong>compilar</strong></td>
+</tr>
+<tr class="even">
+<td>Moldes</td>
+<td>obligatorios</td>
+<td>ninguno</td>
+</tr>
+<tr class="odd">
+<td>Rendimiento con tipos por valor</td>
+<td><em>boxing</em></td>
+<td>sin <em>boxing</em></td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p><strong>Dónde los has usado ya sin saberlo.</strong>
+<code>List&lt;int&gt;</code>, <code>Dictionary&lt;string, int&gt;</code>
+o <code>Nullable&lt;T&gt;</code> (que escribimos <code>int?</code>) son
+tipos genéricos de la biblioteca. Toda la familia de colecciones moderna
+de .NET es genérica, y por eso es rápida y segura.</p>
+</div>
+<h3 id="3-métodos-genéricos">3. Métodos genéricos</h3>
+<p>No hace falta que la clase entera sea genérica: un método puede tener
+su propio parámetro de tipo.</p>
+<pre><code>void Intercambiar&lt;T&gt;(ref T a, ref T b)
+{
+    T temporal = a;
+    a = b;
+    b = temporal;
+}
+
+int x = 1, y = 2;
+Intercambiar(ref x, ref y);        // C# deduce que T es int: no hay que escribirlo</code></pre>
+<p>La <strong>inferencia de tipos</strong> hace que casi nunca tengas
+que indicar el tipo al llamar a un método genérico.</p>
+<h3 id="4-restricciones-where">4. Restricciones: <code>where</code></h3>
+<p>El problema de un <code>T</code> «libre» es que no sabes nada de él,
+así que apenas puedes hacer nada con él. Esto <strong>no
+compila</strong>:</p>
+<pre><code>T Mayor&lt;T&gt;(T a, T b)
+{
+    return a &gt; b ? a : b;      // ❌ ¿y si T es un Jugador? ¿qué significa &gt;?
+}</code></pre>
+<p>Las <strong>restricciones</strong> le dicen al compilador qué
+garantiza el tipo:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Restricción</th>
+<th>Significa</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>where T : struct</code></td>
+<td>es un tipo por valor</td>
+</tr>
+<tr class="even">
+<td><code>where T : class</code></td>
+<td>es un tipo por referencia</td>
+</tr>
+<tr class="odd">
+<td><code>where T : new()</code></td>
+<td>tiene constructor sin parámetros</td>
+</tr>
+<tr class="even">
+<td><code>where T : Persona</code></td>
+<td>es <code>Persona</code> o hereda de ella</td>
+</tr>
+<tr class="odd">
+<td><code>where T : IComparable&lt;T&gt;</code></td>
+<td>implementa esa interfaz</td>
+</tr>
+<tr class="even">
+<td><code>where T : notnull</code></td>
+<td>no admite null</td>
+</tr>
+</tbody>
+</table></div>
+<p>Con la restricción adecuada, el método anterior sí compila:</p>
+<pre><code>T Mayor&lt;T&gt;(T a, T b) where T : IComparable&lt;T&gt;
+{
+    return a.CompareTo(b) &gt; 0 ? a : b;    // ahora el compilador sabe que existe CompareTo
+}</code></pre>
+<p>Se pueden combinar:
+<code>where T : class, IComparable&lt;T&gt;, new()</code>.</p>
+<h3 id="5-varios-parámetros-de-tipo">5. Varios parámetros de tipo</h3>
+<pre><code>class Par&lt;TPrimero, TSegundo&gt;
+{
+    public TPrimero Primero { get; set; }
+    public TSegundo Segundo { get; set; }
+}
+
+Par&lt;string, int&gt; puntuacion = new Par&lt;string, int&gt; { Primero = &quot;Ana&quot;, Segundo = 95 };</code></pre>
+<p>Así está construido <code>Dictionary&lt;TKey, TValue&gt;</code>. Para
+casos sencillos, C# ya ofrece las <strong>tuplas</strong>
+(<code>(string nombre, int puntos)</code>), que son más cómodas; las
+clases genéricas se escriben cuando hace falta añadir
+comportamiento.</p>
+<h3 id="6-default-y-el-valor-inicial">6. <code>default</code> y el valor
+inicial</h3>
+<p>¿Qué valor inicial tiene una variable de tipo <code>T</code>?
+Depende: <code>0</code> si es un número, <code>false</code> si es un
+<code>bool</code>, <code>null</code> si es una clase. La palabra clave
+<code>default</code> resuelve el problema:</p>
+<pre><code>T vacio = default;      // 0, false, null... según lo que sea T</code></pre>
+<h3 id="7-covarianza-en-una-frase">7. Covarianza en una frase</h3>
+<p>Habrás visto en la documentación <code>IComparable&lt;in T&gt;</code>
+o <code>IEnumerable&lt;out T&gt;</code>. <code>out</code> significa que
+el tipo solo <strong>sale</strong> (se puede usar un
+<code>IEnumerable&lt;Perro&gt;</code> donde se espera un
+<code>IEnumerable&lt;Animal&gt;</code>), e <code>in</code> que solo
+<strong>entra</strong>. Es un tema avanzado: por ahora basta con
+reconocer los símbolos y saber que sirven para que los genéricos y la
+herencia se lleven bien.</p>`,
+          ejemplos: [
+            { titulo: "object frente a genéricos", explicacion: "El mensaje clave: con object el error llega cuando el programa ya está en manos del usuario; con genéricos, cuando el programador está delante del teclado.", codigo: r`// ---------- Con object: los errores aparecen al EJECUTAR ----------
+CajaVieja vieja = new CajaVieja();
+vieja.Contenido = 42;
+
+try
+{
+    string texto = (string)vieja.Contenido;   // compila sin problema
+    Console.WriteLine(texto);
+}
+catch (InvalidCastException)
+{
+    Console.WriteLine("¡Error en tiempo de ejecución! Había un int, no un string.");
+}
+
+// ---------- Con genéricos: el error ni se puede escribir ----------
+Caja<int> numeros = new Caja<int>();
+numeros.Contenido = 42;
+int valor = numeros.Contenido;            // sin molde
+Console.WriteLine($"Caja<int> contiene {valor}");
+
+Caja<string> palabras = new Caja<string>();
+palabras.Contenido = "hola";
+Console.WriteLine($"Caja<string> contiene «{palabras.Contenido}» " +
+                  $"de {palabras.Contenido.Length} letras");
+
+// palabras.Contenido = 42;   ← descomenta esta línea: el compilador la rechaza
+
+// La misma plantilla sirve para cualquier tipo, incluso nuestros propios tipos
+Caja<DateTime> fechas = new Caja<DateTime>();
+fechas.Contenido = DateTime.Today;
+Console.WriteLine($"Caja<DateTime> contiene {fechas.Contenido:dd/MM/yyyy}");
+
+class CajaVieja
+{
+    public object Contenido { get; set; } = new object();
+}
+
+class Caja<T>
+{
+    public T Contenido { get; set; } = default!;      // default: el valor inicial de T
+
+    public void Mostrar() => Console.WriteLine($"[{typeof(T).Name}] {Contenido}");
+}
+` },
+            { titulo: "Métodos genéricos con restricciones", explicacion: "Un solo método Maximo funciona con números, textos y fechas porque los tres implementan IComparable<T>. Sin genéricos harían falta tres métodos sobrecargados.", codigo: r`int a = 3, b = 7;
+Intercambiar(ref a, ref b);                  // T se deduce: int
+Console.WriteLine($"a = {a}, b = {b}");
+
+string uno = "Ana", dos = "Luis";
+Intercambiar(ref uno, ref dos);              // T se deduce: string
+Console.WriteLine($"{uno}, {dos}");
+
+// Mayor necesita poder comparar: por eso la restricción IComparable<T>
+Console.WriteLine($"Mayor de 3 y 7: {Mayor(3, 7)}");
+Console.WriteLine($"Mayor de «Ana» y «Luis»: {Mayor("Ana", "Luis")}");
+Console.WriteLine($"Fecha mayor: {Mayor(DateTime.Today, DateTime.Today.AddDays(5)):dd/MM/yyyy}");
+
+// Máximo de un array de cualquier tipo comparable
+int[] puntos = { 12, 45, 7, 98, 23 };
+string[] nombres = { "Pau", "Ana", "Zoe", "Marc" };
+Console.WriteLine($"Máximo de los puntos: {Maximo(puntos)}");
+Console.WriteLine($"Último alfabéticamente: {Maximo(nombres)}");
+
+void Intercambiar<T>(ref T x, ref T y)
+{
+    T temporal = x;
+    x = y;
+    y = temporal;
+}
+
+// where T : IComparable<T> garantiza que T sabe compararse consigo mismo
+T Mayor<T>(T x, T y) where T : IComparable<T>
+{
+    return x.CompareTo(y) > 0 ? x : y;
+}
+
+T Maximo<T>(T[] valores) where T : IComparable<T>
+{
+    if (valores.Length == 0)
+    {
+        throw new ArgumentException("El array no puede estar vacío", nameof(valores));
+    }
+
+    T mayor = valores[0];
+    for (int i = 1; i < valores.Length; i++)
+    {
+        if (valores[i].CompareTo(mayor) > 0)
+        {
+            mayor = valores[i];
+        }
+    }
+    return mayor;
+}
+` },
+            { titulo: "Una clase genérica útil: pila con límite", explicacion: "Esta clase es una versión simplificada del Stack<T> de .NET. Escribirla una vez ayuda a entender qué hay dentro de las colecciones que usarás a diario.", codigo: r`// Una pila (LIFO) genérica con capacidad máxima, hecha a mano para ver el mecanismo
+PilaLimitada<string> historial = new PilaLimitada<string>(3);
+
+historial.Apilar("abrir fichero");
+historial.Apilar("escribir texto");
+historial.Apilar("borrar línea");
+Console.WriteLine($"Elementos: {historial.Cuantos} (máximo {historial.Capacidad})");
+
+bool cabe = historial.Apilar("pegar");
+Console.WriteLine($"¿Ha cabido una cuarta acción? {cabe}");
+
+while (historial.Cuantos > 0)
+{
+    Console.WriteLine($"  deshacer: {historial.Desapilar()}");
+}
+
+// La misma clase, ahora con números
+PilaLimitada<int> numeros = new PilaLimitada<int>(2);
+numeros.Apilar(10);
+numeros.Apilar(20);
+Console.WriteLine($"\nCima de la pila de enteros: {numeros.Cima()}");
+
+class PilaLimitada<T>
+{
+    private readonly T[] datos;
+    private int cuantos;
+
+    public PilaLimitada(int capacidad)
+    {
+        if (capacidad <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(capacidad), "Debe ser mayor que 0");
+        }
+        datos = new T[capacidad];
+        cuantos = 0;
+    }
+
+    public int Capacidad => datos.Length;
+    public int Cuantos => cuantos;
+
+    // Devuelve false si está llena, en lugar de lanzar excepción (patrón Try)
+    public bool Apilar(T elemento)
+    {
+        if (cuantos == datos.Length)
+        {
+            return false;
+        }
+        datos[cuantos] = elemento;
+        cuantos++;
+        return true;
+    }
+
+    public T Desapilar()
+    {
+        if (cuantos == 0)
+        {
+            throw new InvalidOperationException("La pila está vacía");
+        }
+        cuantos--;
+        T elemento = datos[cuantos];
+        datos[cuantos] = default!;       // liberamos la referencia
+        return elemento;
+    }
+
+    public T Cima()
+    {
+        if (cuantos == 0)
+        {
+            throw new InvalidOperationException("La pila está vacía");
+        }
+        return datos[cuantos - 1];
+    }
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Lista genérica propia",
+              nivel: 2,
+              pista: "Cuando el array se llena, crea uno del doble de tamaño, copia y sustituye la referencia.",
+              enunciado: r`<p>Escribe una clase genérica <code>ListaSimple&lt;T&gt;</code> que
+funcione como una lista que crece sola, con esta interfaz pública:</p>
+<pre><code>public int Cuantos { get; }          // número de elementos
+
+public void Anadir(T elemento)       // añade al final (y amplía si hace falta)
+
+public T Obtener(int posicion)       // devuelve el elemento de esa posición
+
+public bool Contiene(T elemento)     // ¿está el elemento en la lista?
+
+public bool Eliminar(T elemento)     // quita la primera aparición; false si no está</code></pre>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Empieza con un array de 4 posiciones y, cuando se llene, crea otro
+del <strong>doble</strong> y copia los elementos (es lo que hace
+<code>List&lt;T&gt;</code> por dentro).</li>
+<li><strong>Control de errores:</strong> <code>Obtener</code> debe
+lanzar <code>ArgumentOutOfRangeException</code> si la posición no es
+válida.</li>
+<li>Para comparar elementos en <code>Contiene</code> y
+<code>Eliminar</code>, usa
+<code>EqualityComparer&lt;T&gt;.Default.Equals(a, b)</code>: funciona
+con cualquier tipo, también con null.</li>
+<li>Comprueba la clase con <code>ListaSimple&lt;string&gt;</code> y
+<code>ListaSimple&lt;int&gt;</code>.</li>
+</ul>
+<p>💡 <strong>TIP:</strong>
+<code>Array.Resize(ref array, nuevoTamaño)</code> hace la ampliación por
+ti, pero hazlo a mano al menos una vez para entenderlo.</p>
+<p>🏅 <strong>Ampliación:</strong> añade un indexador
+(<code>lista[2]</code>) y una propiedad <code>Capacidad</code> para ver
+cuántas ampliaciones se han producido.</p>`,
+              soluciones: [
+                { titulo: "Versión con ampliación manual", nota: "Duplicar la capacidad en lugar de ampliarla de uno en uno es lo que hace que añadir sea O(1) «amortizado»: las ampliaciones son cada vez menos frecuentes. datos[0..cuantos] usa un rango, la sintaxis moderna para quedarse con un trozo del array.", codigo: r`ListaSimple<string> lenguajes = new ListaSimple<string>();
+lenguajes.Anadir("C#");
+lenguajes.Anadir("Python");
+lenguajes.Anadir("Java");
+lenguajes.Anadir("Rust");
+lenguajes.Anadir("Go");                    // aquí se produce la primera ampliación
+
+Console.WriteLine($"Elementos: {lenguajes.Cuantos}, capacidad: {lenguajes.Capacidad}");
+Console.WriteLine($"El tercero es {lenguajes.Obtener(2)}");
+Console.WriteLine($"¿Contiene Rust? {lenguajes.Contiene("Rust")}");
+Console.WriteLine($"Eliminar Java: {lenguajes.Eliminar("Java")}");
+Console.WriteLine($"Eliminar Kotlin: {lenguajes.Eliminar("Kotlin")}");
+Console.WriteLine($"Quedan {lenguajes.Cuantos}: {lenguajes}");
+
+try
+{
+    lenguajes.Obtener(99);
+}
+catch (ArgumentOutOfRangeException ex)
+{
+    Console.WriteLine($"Error controlado: {ex.ParamName} fuera de rango");
+}
+
+ListaSimple<int> numeros = new ListaSimple<int>();
+for (int i = 1; i <= 10; i++) { numeros.Anadir(i * i); }
+Console.WriteLine($"\nCuadrados: {numeros} (capacidad {numeros.Capacidad})");
+
+class ListaSimple<T>
+{
+    private T[] datos = new T[4];        // capacidad inicial
+    private int cuantos;
+
+    public int Cuantos => cuantos;
+    public int Capacidad => datos.Length;
+
+    // Indexador: permite escribir lista[2] (ampliación)
+    public T this[int posicion] => Obtener(posicion);
+
+    public void Anadir(T elemento)
+    {
+        if (cuantos == datos.Length)
+        {
+            Ampliar();
+        }
+        datos[cuantos] = elemento;
+        cuantos++;
+    }
+
+    public T Obtener(int posicion)
+    {
+        if (posicion < 0 || posicion >= cuantos)
+        {
+            throw new ArgumentOutOfRangeException(nameof(posicion),
+                $"Debe estar entre 0 y {cuantos - 1}");
+        }
+        return datos[posicion];
+    }
+
+    public bool Contiene(T elemento) => BuscarPosicion(elemento) >= 0;
+
+    public bool Eliminar(T elemento)
+    {
+        int posicion = BuscarPosicion(elemento);
+        if (posicion < 0)
+        {
+            return false;
+        }
+
+        // Desplazamos a la izquierda todo lo que había detrás
+        for (int i = posicion; i < cuantos - 1; i++)
+        {
+            datos[i] = datos[i + 1];
+        }
+        cuantos--;
+        datos[cuantos] = default!;
+        return true;
+    }
+
+    public override string ToString() => "[" + string.Join(", ", datos[0..cuantos]) + "]";
+
+    private int BuscarPosicion(T elemento)
+    {
+        // EqualityComparer<T>.Default sabe comparar cualquier tipo, también con null
+        var comparador = EqualityComparer<T>.Default;
+        for (int i = 0; i < cuantos; i++)
+        {
+            if (comparador.Equals(datos[i], elemento))
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private void Ampliar()
+    {
+        T[] nuevo = new T[datos.Length * 2];        // el doble: amortiza el coste
+        for (int i = 0; i < datos.Length; i++)
+        {
+            nuevo[i] = datos[i];
+        }
+        datos = nuevo;
+        Console.WriteLine($"  (ampliada a {datos.Length} posiciones)");
+    }
+}
+` },
+                { titulo: "Versión corta con Array.Resize y lo que ya trae .NET", nota: "Array.Resize, Array.IndexOf y Array.Copy son métodos de la biblioteca optimizados. La moraleja de la actividad: entender la implementación sirve para elegir bien; en producción se usa List<T>.", noRun: true, codigo: r`// La misma idea, pero dejando que la biblioteca haga el trabajo pesado
+class ListaSimple<T>
+{
+    private T[] datos = new T[4];
+    private int cuantos;
+
+    public int Cuantos => cuantos;
+    public int Capacidad => datos.Length;
+
+    public void Anadir(T elemento)
+    {
+        if (cuantos == datos.Length)
+        {
+            Array.Resize(ref datos, datos.Length * 2);   // amplía y copia en una línea
+        }
+        datos[cuantos++] = elemento;
+    }
+
+    public T Obtener(int posicion) =>
+        posicion >= 0 && posicion < cuantos
+            ? datos[posicion]
+            : throw new ArgumentOutOfRangeException(nameof(posicion));
+
+    public bool Contiene(T elemento) => Array.IndexOf(datos, elemento, 0, cuantos) >= 0;
+
+    public bool Eliminar(T elemento)
+    {
+        int posicion = Array.IndexOf(datos, elemento, 0, cuantos);
+        if (posicion < 0) { return false; }
+
+        Array.Copy(datos, posicion + 1, datos, posicion, cuantos - posicion - 1);
+        cuantos--;
+        datos[cuantos] = default!;
+        return true;
+    }
+
+    public override string ToString() => "[" + string.Join(", ", datos[0..cuantos]) + "]";
+}
+
+// ...y en un programa real, todo esto es simplemente:
+List<string> lista = new List<string>();
+lista.Add("C#");
+lista.Remove("C#");
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "colecciones-panorama",
+          titulo: "Panorama de las colecciones",
+          duracion: "20 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Conocer las interfaces que organizan las colecciones de .NET", "Elegir la colección adecuada según las operaciones que hagan falta", "Reconocer las colecciones no genéricas heredadas y saber por qué no se usan"],
+          teoria: r`<p>Hasta ahora has guardado conjuntos de datos en
+<strong>arrays</strong>. Funcionan, pero tienen una limitación de fondo:
+su tamaño es <strong>fijo</strong>. Si no sabes cuántos elementos habrá,
+o necesitas insertar y borrar por el medio, o buscar por una clave, el
+array se queda corto. .NET ofrece una familia entera de
+<strong>colecciones</strong> para eso, y la habilidad profesional
+consiste en <strong>elegir la adecuada</strong>.</p>
+<h3 id="1-las-interfaces-el-mapa-de-la-familia">1. Las interfaces: el
+mapa de la familia</h3>
+<p>Las colecciones no son clases aisladas: forman una jerarquía de
+interfaces, y cada una añade capacidades.</p>
+<pre><code>IEnumerable&lt;T&gt;          se puede recorrer con foreach
+      ↑
+ICollection&lt;T&gt;          + Count, Add, Remove, Contains
+      ↑
+   IList&lt;T&gt;             + acceso por índice [i], Insert, RemoveAt</code></pre>
+<p>Aparte, <code>IDictionary&lt;TKey, TValue&gt;</code> para las
+colecciones de pares clave-valor y <code>ISet&lt;T&gt;</code> para los
+conjuntos.</p>
+<p><strong>Por qué importa esto:</strong> si tu método solo necesita
+recorrer los datos, declara el parámetro como
+<code>IEnumerable&lt;T&gt;</code> y podrá recibir un array, una lista,
+un conjunto o el resultado de una consulta LINQ. Programar contra la
+interfaz, no contra la clase concreta, es una de las marcas del código
+profesional.</p>
+<pre><code>double Media(IEnumerable&lt;int&gt; numeros) { ... }   // acepta array, List, HashSet...</code></pre>
+<h3 id="2-las-colecciones-genéricas-systemcollectionsgeneric">2. Las
+colecciones genéricas (<code>System.Collections.Generic</code>)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Colección</th>
+<th>Para qué sirve</th>
+<th>Acceso</th>
+<th>Orden</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>List&lt;T&gt;</code></td>
+<td>Lista que crece sola; la de uso general</td>
+<td>por índice, O(1)</td>
+<td>de inserción</td>
+</tr>
+<tr class="even">
+<td><code>Dictionary&lt;TKey,TValue&gt;</code></td>
+<td>Buscar un valor por una clave</td>
+<td>por clave, O(1)</td>
+<td>sin orden garantizado</td>
+</tr>
+<tr class="odd">
+<td><code>HashSet&lt;T&gt;</code></td>
+<td>Conjunto sin repetidos</td>
+<td><code>Contains</code> O(1)</td>
+<td>sin orden</td>
+</tr>
+<tr class="even">
+<td><code>Queue&lt;T&gt;</code></td>
+<td>Cola: el primero que entra, el primero que sale (FIFO)</td>
+<td>solo por los extremos</td>
+<td>de llegada</td>
+</tr>
+<tr class="odd">
+<td><code>Stack&lt;T&gt;</code></td>
+<td>Pila: el último que entra, el primero que sale (LIFO)</td>
+<td>solo por la cima</td>
+<td>inverso</td>
+</tr>
+<tr class="even">
+<td><code>SortedList&lt;TKey,TValue&gt;</code></td>
+<td>Diccionario <strong>siempre ordenado</strong> por clave</td>
+<td>por clave, O(log n)</td>
+<td>ordenado</td>
+</tr>
+<tr class="odd">
+<td><code>SortedDictionary&lt;TKey,TValue&gt;</code></td>
+<td>Igual, mejor si hay muchas inserciones</td>
+<td>por clave, O(log n)</td>
+<td>ordenado</td>
+</tr>
+<tr class="even">
+<td><code>SortedSet&lt;T&gt;</code></td>
+<td>Conjunto sin repetidos y ordenado</td>
+<td>O(log n)</td>
+<td>ordenado</td>
+</tr>
+<tr class="odd">
+<td><code>LinkedList&lt;T&gt;</code></td>
+<td>Lista doblemente enlazada; insertar por el medio es O(1)</td>
+<td>solo recorriendo</td>
+<td>de inserción</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-la-tabla-que-de-verdad-hay-que-saberse">3. La tabla que de
+verdad hay que saberse</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Operación</th>
+<th>Array</th>
+<th><code>List&lt;T&gt;</code></th>
+<th><code>Dictionary</code></th>
+<th><code>HashSet&lt;T&gt;</code></th>
+<th><code>LinkedList&lt;T&gt;</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Acceder por índice</td>
+<td>O(1)</td>
+<td>O(1)</td>
+<td>—</td>
+<td>—</td>
+<td>O(n)</td>
+</tr>
+<tr class="even">
+<td>Buscar un valor</td>
+<td>O(n)</td>
+<td>O(n)</td>
+<td><strong>O(1)</strong> por clave</td>
+<td><strong>O(1)</strong></td>
+<td>O(n)</td>
+</tr>
+<tr class="odd">
+<td>Añadir al final</td>
+<td>—</td>
+<td>O(1)*</td>
+<td>O(1)</td>
+<td>O(1)</td>
+<td>O(1)</td>
+</tr>
+<tr class="even">
+<td>Insertar al principio</td>
+<td>—</td>
+<td>O(n)</td>
+<td>—</td>
+<td>—</td>
+<td><strong>O(1)</strong></td>
+</tr>
+<tr class="odd">
+<td>Borrar por el medio</td>
+<td>—</td>
+<td>O(n)</td>
+<td>O(1) por clave</td>
+<td>O(1)</td>
+<td><strong>O(1)</strong> si tienes el nodo</td>
+</tr>
+</tbody>
+</table></div>
+<p>* <em>amortizado</em>: casi siempre O(1), salvo cuando toca ampliar
+el array interno.</p>
+<div class="callout">
+<p><strong>La pregunta que hay que hacerse</strong> no es «qué colección
+es mejor», sino <strong>«qué operación voy a hacer mil veces?»</strong>.
+Si vas a buscar por nombre, un <code>Dictionary</code>. Si vas a
+recorrer y añadir al final, una <code>List</code>. Si necesitas que no
+haya repetidos, un <code>HashSet</code>. Buscar un elemento en una lista
+de 100 000 nombres con <code>Contains</code> es O(n); con un
+<code>HashSet</code> es inmediato.</p>
+</div>
+<h3 id="4-array-o-listt">4. Array o <code>List&lt;T&gt;</code>?</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Array</th>
+<th><code>List&lt;T&gt;</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Tamaño</td>
+<td>fijo al crearlo</td>
+<td>crece solo</td>
+</tr>
+<tr class="even">
+<td>Sintaxis</td>
+<td><code>new int[10]</code></td>
+<td><code>new List&lt;int&gt;()</code></td>
+</tr>
+<tr class="odd">
+<td>Rendimiento</td>
+<td>mínimamente mejor</td>
+<td>prácticamente igual</td>
+</tr>
+<tr class="even">
+<td>Matrices de 2 dimensiones</td>
+<td>sí (<code>int[,]</code>)</td>
+<td>no directamente</td>
+</tr>
+</tbody>
+</table></div>
+<p>En la práctica: <strong><code>List&lt;T&gt;</code> por
+defecto</strong>, y array cuando el tamaño es fijo y conocido (un
+tablero de ajedrez, los días de la semana, una matriz de píxeles) o
+cuando lo exige una API.</p>
+<h3 id="5-las-colecciones-no-genéricas-historia-que-conviene-conocer">5.
+Las colecciones no genéricas: historia que conviene conocer</h3>
+<p>Antes de C# 2.0 (año 2005) no había genéricos, y las colecciones
+estaban en <code>System.Collections</code> guardando
+<code>object</code>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Antigua</th>
+<th>Equivalente moderno</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ArrayList</code></td>
+<td><code>List&lt;T&gt;</code></td>
+</tr>
+<tr class="even">
+<td><code>Hashtable</code></td>
+<td><code>Dictionary&lt;TKey,TValue&gt;</code></td>
+</tr>
+<tr class="odd">
+<td><code>SortedList</code></td>
+<td><code>SortedList&lt;TKey,TValue&gt;</code></td>
+</tr>
+<tr class="even">
+<td><code>Queue</code></td>
+<td><code>Queue&lt;T&gt;</code></td>
+</tr>
+<tr class="odd">
+<td><code>Stack</code></td>
+<td><code>Stack&lt;T&gt;</code></td>
+</tr>
+</tbody>
+</table></div>
+<pre><code>ArrayList vieja = new ArrayList();
+vieja.Add(42);
+vieja.Add(&quot;hola&quot;);                    // ¡acepta cualquier cosa, sin avisar!
+int suma = (int)vieja[0] + (int)vieja[1];   // compila y revienta al ejecutar</code></pre>
+<p>Arrastran los tres problemas de <code>object</code>: sin seguridad de
+tipos, con moldes y con <em>boxing</em>.</p>
+<p><strong>¿Hay que estudiarlas?</strong> Sí, por dos motivos: aparecen
+en código antiguo que tendrás que mantener, y porque entender por qué se
+sustituyeron es entender para qué sirven los genéricos. <strong>Pero no
+las uses en código nuevo.</strong> Si en una revisión de código aparece
+un <code>ArrayList</code>, la corrección es cambiarlo por
+<code>List&lt;T&gt;</code>.</p>
+<h3 id="6-colecciones-de-solo-lectura-y-concurrentes">6. Colecciones de
+solo lectura y concurrentes</h3>
+<p>Dos familias más que conviene saber que existen:</p>
+<ul>
+<li><strong>Inmutables / solo lectura:</strong>
+<code>IReadOnlyList&lt;T&gt;</code>,
+<code>ReadOnlyCollection&lt;T&gt;</code>,
+<code>ImmutableList&lt;T&gt;</code>. Se usan para exponer datos sin
+permitir que quien los recibe los modifique. Devolver
+<code>IReadOnlyList&lt;T&gt;</code> en una propiedad pública es una
+buena práctica de encapsulamiento.</li>
+<li><strong>Concurrentes</strong>
+(<code>System.Collections.Concurrent</code>):
+<code>ConcurrentDictionary&lt;TKey,TValue&gt;</code>,
+<code>ConcurrentQueue&lt;T&gt;</code>… Pensadas para que varios hilos
+trabajen a la vez sin corromper los datos. Las usarás en el módulo de
+servicios y procesos.</li>
+</ul>`,
+          ejemplos: [
+            { titulo: "La misma tarea con array y con List", explicacion: "Fíjate en TotalLetras: al declarar el parámetro como IEnumerable<string> el método sirve para cualquier colección. Si lo hubiéramos declarado como string[], no aceptaría la lista.", codigo: r`// ---------- Con array: hay que saber el tamaño de antemano ----------
+string[] conArray = new string[3];
+conArray[0] = "Ana";
+conArray[1] = "Luis";
+conArray[2] = "Marta";
+// conArray[3] = "Pau";   ← IndexOutOfRangeException: el array no crece
+
+Console.WriteLine($"Array: {string.Join(", ", conArray)} (longitud fija {conArray.Length})");
+
+// Para «añadir» hay que crear otro array más grande
+Array.Resize(ref conArray, 4);
+conArray[3] = "Pau";
+Console.WriteLine($"Tras Resize: {string.Join(", ", conArray)}");
+
+// ---------- Con List<T>: crece sola ----------
+List<string> conLista = new List<string>();
+conLista.Add("Ana");
+conLista.Add("Luis");
+conLista.Add("Marta");
+conLista.Add("Pau");                      // sin pensar en el tamaño
+
+Console.WriteLine($"\nList: {string.Join(", ", conLista)} ({conLista.Count} elementos)");
+
+conLista.Insert(0, "Zoe");                // insertar por el principio
+conLista.Remove("Luis");                  // quitar por valor
+Console.WriteLine($"Tras insertar y quitar: {string.Join(", ", conLista)}");
+
+// ---------- Un método que acepta las dos cosas ----------
+Console.WriteLine($"\nLetras del array: {TotalLetras(conArray)}");
+Console.WriteLine($"Letras de la lista: {TotalLetras(conLista)}");
+
+// IEnumerable<string> acepta array, List, HashSet, consulta LINQ...
+int TotalLetras(IEnumerable<string> nombres)
+{
+    int total = 0;
+    foreach (string nombre in nombres)
+    {
+        total += nombre.Length;
+    }
+    return total;
+}
+` },
+            { titulo: "¿Por qué elegir bien la colección?", explicacion: "La misma operación, el mismo resultado y una diferencia de rendimiento enorme. Esto es lo que significa «elegir la estructura de datos adecuada», y es lo que más distingue a un programador con criterio.", codigo: r`using System.Diagnostics;
+
+// Preparamos 50 000 nombres
+int n = 50000;
+List<string> lista = new List<string>();
+HashSet<string> conjunto = new HashSet<string>();
+
+for (int i = 0; i < n; i++)
+{
+    lista.Add($"usuario{i}");
+    conjunto.Add($"usuario{i}");
+}
+
+// Buscamos 2 000 nombres que NO existen (el peor caso: hay que recorrerlo todo)
+int busquedas = 2000;
+
+Stopwatch reloj = Stopwatch.StartNew();
+int encontradosLista = 0;
+for (int i = 0; i < busquedas; i++)
+{
+    if (lista.Contains($"inexistente{i}")) { encontradosLista++; }
+}
+reloj.Stop();
+long tiempoLista = reloj.ElapsedMilliseconds;
+
+reloj.Restart();
+int encontradosConjunto = 0;
+for (int i = 0; i < busquedas; i++)
+{
+    if (conjunto.Contains($"inexistente{i}")) { encontradosConjunto++; }
+}
+reloj.Stop();
+long tiempoConjunto = reloj.ElapsedMilliseconds;
+
+Console.WriteLine($"{busquedas} búsquedas en {n} elementos:");
+Console.WriteLine($"  List<string>.Contains:    {tiempoLista,5} ms   (O(n): recorre uno a uno)");
+Console.WriteLine($"  HashSet<string>.Contains: {tiempoConjunto,5} ms   (O(1): calcula la posición)");
+Console.WriteLine($"\nLos dos encuentran lo mismo: {encontradosLista} y {encontradosConjunto}");
+` },
+            { titulo: "Las colecciones antiguas y sus problemas", explicacion: "El ejemplo muestra por qué las colecciones no genéricas se consideran obsoletas: todo lo que ellas detectan al ejecutar, las genéricas lo detectan al compilar.", codigo: r`using System.Collections;          // el namespace de las colecciones NO genéricas
+
+// ---------- ArrayList: acepta cualquier cosa ----------
+ArrayList mezcla = new ArrayList();
+mezcla.Add(42);
+mezcla.Add("hola");
+mezcla.Add(true);
+mezcla.Add(DateTime.Today);
+
+Console.WriteLine($"ArrayList con {mezcla.Count} elementos de tipos distintos:");
+foreach (object elemento in mezcla)
+{
+    Console.WriteLine($"  {elemento}  ({elemento.GetType().Name})");
+}
+
+// El problema: el compilador no puede ayudarte
+try
+{
+    int suma = (int)mezcla[0] + (int)mezcla[1];     // compila; falla al ejecutar
+    Console.WriteLine(suma);
+}
+catch (InvalidCastException)
+{
+    Console.WriteLine("\nInvalidCastException: mezcla[1] era un string, no un int.");
+}
+
+// ---------- Hashtable: lo mismo, con claves ----------
+Hashtable tabla = new Hashtable();
+tabla["ana"] = 95;
+tabla["luis"] = "ochenta";                 // ¿un número? ¿un texto? nadie lo impide
+
+Console.WriteLine($"\nHashtable: ana = {tabla["ana"]}, luis = {tabla["luis"]}");
+
+// ---------- La versión moderna de lo mismo ----------
+List<int> numeros = new List<int> { 42, 17 };
+Console.WriteLine($"\nList<int>: suma = {numeros[0] + numeros[1]} (sin moldes)");
+
+Dictionary<string, int> notas = new Dictionary<string, int>
+{
+    ["ana"] = 95,
+    ["luis"] = 80,
+};
+Console.WriteLine($"Dictionary<string,int>: ana = {notas["ana"]}, luis = {notas["luis"]}");
+// notas["marta"] = "ochenta";   ← el compilador lo rechaza. Eso es lo que queremos.
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Elige la colección adecuada",
+              nivel: 1,
+              pista: "Pregúntate siempre: ¿qué operación voy a repetir miles de veces? Esa es la que decide la colección.",
+              enunciado: r`<p>Para cada situación, indica <strong>qué colección usarías y por
+qué</strong> (escríbelo en el README) y después programa una pequeña
+demostración de dos de ellas, a tu elección:</p>
+<ol type="1">
+<li>Guardar las puntuaciones de los 10 niveles de un juego, accediendo
+por número de nivel.</li>
+<li>Saber si un nombre de usuario ya está registrado, entre 200 000
+usuarios.</li>
+<li>Guardar el histórico de acciones para poder deshacer la última.</li>
+<li>Atender las peticiones de impresión por orden de llegada.</li>
+<li>Guardar el teléfono de cada contacto, buscándolo por su nombre.</li>
+<li>Mantener la lista de palabras distintas de un texto, en orden
+alfabético.</li>
+</ol>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Justifica la elección por la <strong>operación más
+frecuente</strong>, no por costumbre.</li>
+<li>En el programa, muestra el resultado de las operaciones típicas de
+cada colección elegida.</li>
+<li><strong>Control de errores:</strong> si accedes a una clave de
+diccionario, usa <code>TryGetValue</code> en lugar de
+<code>[]</code>.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> el caso 3 es una pila, el 4 una cola y el 6
+un <code>SortedSet&lt;string&gt;</code>.</p>`,
+              soluciones: [
+                { titulo: "Las respuestas, con demostración de dos casos", nota: "Fíjate en TryGetValue: acceder con agenda[\"Marta Vila\"] cuando la clave no existe lanza KeyNotFoundException. Con TryGetValue se controla sin excepciones, que es el patrón recomendado.", codigo: r`// 1. int[] o List<int> indexado por nivel   -> acceso por índice O(1)
+// 2. HashSet<string>                         -> Contains O(1) en lugar de O(n)
+// 3. Stack<string>                           -> LIFO: deshacer la última acción
+// 4. Queue<string>                           -> FIFO: por orden de llegada
+// 5. Dictionary<string, string>              -> buscar por clave O(1)
+// 6. SortedSet<string>                       -> sin repetidos y ordenado
+
+// ---------- Demostración del caso 3: pila de deshacer ----------
+Stack<string> historial = new Stack<string>();
+historial.Push("escribir «Hola»");
+historial.Push("poner en negrita");
+historial.Push("borrar línea 3");
+
+Console.WriteLine("Pila de acciones (la última arriba):");
+foreach (string accion in historial)
+{
+    Console.WriteLine($"  {accion}");
+}
+
+Console.WriteLine($"\nÚltima acción (sin sacarla): {historial.Peek()}");
+Console.WriteLine($"Deshacer: {historial.Pop()}");
+Console.WriteLine($"Deshacer: {historial.Pop()}");
+Console.WriteLine($"Quedan {historial.Count} acciones por deshacer");
+
+// ---------- Demostración del caso 5: agenda ----------
+Dictionary<string, string> agenda = new Dictionary<string, string>
+{
+    ["Ana Puig"] = "666111222",
+    ["Luis Soler"] = "933445566",
+};
+
+// TryGetValue: no lanza excepción si la clave no existe
+if (agenda.TryGetValue("Ana Puig", out string telefonoAna))
+{
+    Console.WriteLine($"\nTeléfono de Ana Puig: {telefonoAna}");
+}
+
+if (!agenda.TryGetValue("Marta Vila", out string telefonoMarta))
+{
+    Console.WriteLine("Marta Vila no está en la agenda");
+}
+
+agenda["Marta Vila"] = "677889900";          // el indexador añade si no existe
+Console.WriteLine($"Ahora la agenda tiene {agenda.Count} contactos");
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "coleccion-list",
+          titulo: "List<T>: la colección de uso diario",
+          duracion: "22 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Crear y manipular listas: añadir, insertar, buscar y eliminar", "Recorrer una lista con seguridad, evitando el error de modificarla mientras se recorre", "Conocer los métodos de búsqueda y ordenación que trae List<T>"],
+          teoria: r`<p><code>List&lt;T&gt;</code> es la colección que usarás el 80 % de las
+veces. Por dentro es un <strong>array que se amplía solo</strong>:
+mantiene un array interno con espacio de sobra y, cuando se llena, crea
+otro del doble y copia. Eso le da lo mejor de los dos mundos: acceso por
+índice instantáneo y tamaño flexible.</p>
+<h3 id="1-crear-una-lista">1. Crear una lista</h3>
+<pre><code>List&lt;int&gt; vacia = new List&lt;int&gt;();
+List&lt;int&gt; conCapacidad = new List&lt;int&gt;(100);              // reserva sitio para 100
+List&lt;string&gt; conDatos = new List&lt;string&gt; { &quot;Ana&quot;, &quot;Luis&quot; };   // inicializador
+List&lt;string&gt; moderna = [&quot;Ana&quot;, &quot;Luis&quot;];                   // expresión de colección (C# 12)</code></pre>
+<p>La última forma, con corchetes, es la sintaxis moderna introducida en
+C# 12: funciona igual para listas, arrays y conjuntos. Es la que verás
+en código nuevo.</p>
+<h3 id="2-los-métodos-esenciales">2. Los métodos esenciales</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Método / propiedad</th>
+<th>Qué hace</th>
+<th>Coste</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Add(x)</code></td>
+<td>añade al final</td>
+<td>O(1)*</td>
+</tr>
+<tr class="even">
+<td><code>AddRange(otra)</code></td>
+<td>añade varios de golpe</td>
+<td>O(m)</td>
+</tr>
+<tr class="odd">
+<td><code>Insert(i, x)</code></td>
+<td>inserta en la posición <em>i</em></td>
+<td>O(n)</td>
+</tr>
+<tr class="even">
+<td><code>Remove(x)</code></td>
+<td>quita la <strong>primera</strong> aparición de ese valor</td>
+<td>O(n)</td>
+</tr>
+<tr class="odd">
+<td><code>RemoveAt(i)</code></td>
+<td>quita el de la posición <em>i</em></td>
+<td>O(n)</td>
+</tr>
+<tr class="even">
+<td><code>RemoveAll(cond)</code></td>
+<td>quita <strong>todos</strong> los que cumplan la condición</td>
+<td>O(n)</td>
+</tr>
+<tr class="odd">
+<td><code>Clear()</code></td>
+<td>vacía la lista</td>
+<td>O(n)</td>
+</tr>
+<tr class="even">
+<td><code>Count</code></td>
+<td>cuántos elementos hay</td>
+<td>O(1)</td>
+</tr>
+<tr class="odd">
+<td><code>Contains(x)</code></td>
+<td>¿está?</td>
+<td>O(n)</td>
+</tr>
+<tr class="even">
+<td><code>IndexOf(x)</code></td>
+<td>posición, o −1 si no está</td>
+<td>O(n)</td>
+</tr>
+<tr class="odd">
+<td><code>Sort()</code></td>
+<td>ordena la lista <strong>en su sitio</strong></td>
+<td>O(n log n)</td>
+</tr>
+<tr class="even">
+<td><code>Reverse()</code></td>
+<td>le da la vuelta</td>
+<td>O(n)</td>
+</tr>
+<tr class="odd">
+<td><code>ToArray()</code></td>
+<td>copia a un array</td>
+<td>O(n)</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>Count</code> es el número de elementos; <code>Capacity</code>
+es el espacio reservado. No se confunden: <code>Count</code> es lo que
+te interesa casi siempre.</p>
+<h3 id="3-el-error-clásico-modificar-mientras-se-recorre">3. El error
+clásico: modificar mientras se recorre</h3>
+<pre><code>foreach (int n in numeros)
+{
+    if (n &lt; 0) { numeros.Remove(n); }    // ❌ InvalidOperationException
+}</code></pre>
+<p><code>foreach</code> no permite que la colección cambie mientras se
+recorre: lanza <code>InvalidOperationException</code> («Collection was
+modified»). Hay <strong>tres soluciones correctas</strong>, de peor a
+mejor:</p>
+<pre><code>// 1. Recorrer hacia atrás con for (los índices de delante no se mueven)
+for (int i = numeros.Count - 1; i &gt;= 0; i--)
+{
+    if (numeros[i] &lt; 0) { numeros.RemoveAt(i); }
+}
+
+// 2. Recorrer una copia
+foreach (int n in numeros.ToList()) { ... }
+
+// 3. RemoveAll con una condición  ← la forma idiomática
+numeros.RemoveAll(n =&gt; n &lt; 0);</code></pre>
+<p><code>RemoveAll</code> recibe un <strong>predicado</strong>: una
+pequeña función que dice si cada elemento cumple la condición. Es la
+primera vez que aparecen las lambdas en el curso; las verás a fondo en
+el módulo de LINQ.</p>
+<h3 id="4-buscar-la-familia-de-métodos">4. Buscar: la familia de
+métodos</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Método</th>
+<th>Devuelve</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Find(cond)</code></td>
+<td>el <strong>primer</strong> elemento que cumple la condición (o
+<code>default</code>)</td>
+</tr>
+<tr class="even">
+<td><code>FindLast(cond)</code></td>
+<td>el último</td>
+</tr>
+<tr class="odd">
+<td><code>FindAll(cond)</code></td>
+<td><strong>todos</strong> los que cumplen, en una lista nueva</td>
+</tr>
+<tr class="even">
+<td><code>FindIndex(cond)</code></td>
+<td>la posición del primero, o −1</td>
+</tr>
+<tr class="odd">
+<td><code>Exists(cond)</code></td>
+<td><code>bool</code>: ¿hay alguno?</td>
+</tr>
+<tr class="even">
+<td><code>TrueForAll(cond)</code></td>
+<td><code>bool</code>: ¿lo cumplen todos?</td>
+</tr>
+<tr class="odd">
+<td><code>BinarySearch(x)</code></td>
+<td>posición, en O(log n), <strong>si la lista está
+ordenada</strong></td>
+</tr>
+</tbody>
+</table></div>
+<pre><code>var mejor = jugadores.Find(j =&gt; j.Puntos &gt; 90);
+List&lt;Jugador&gt; aprobados = jugadores.FindAll(j =&gt; j.Puntos &gt;= 50);
+bool hayAlguno = jugadores.Exists(j =&gt; j.Puntos == 100);</code></pre>
+<h3 id="5-ojo-las-listas-son-tipos-por-referencia">5. Ojo: las listas
+son tipos por referencia</h3>
+<pre><code>List&lt;int&gt; a = new List&lt;int&gt; { 1, 2, 3 };
+List&lt;int&gt; b = a;          // NO es una copia: las dos variables apuntan a la MISMA lista
+b.Add(4);
+Console.WriteLine(a.Count);   // 4</code></pre>
+<p>Para una copia de verdad:
+<code>List&lt;int&gt; copia = new List&lt;int&gt;(a);</code> o
+<code>a.ToList()</code>. Y cuidado: es una <strong>copia
+superficial</strong>. Si la lista contiene objetos, la copia tiene las
+mismas referencias, así que modificar un objeto se ve desde las dos
+listas.</p>
+<h3 id="6-devolver-listas-sin-romper-el-encapsulamiento">6. Devolver
+listas sin romper el encapsulamiento</h3>
+<p>Si una clase devuelve su lista interna, cualquiera puede modificarla
+por la espalda:</p>
+<pre><code>class Equipo
+{
+    private readonly List&lt;string&gt; jugadores = new List&lt;string&gt;();
+
+    public List&lt;string&gt; Jugadores =&gt; jugadores;              // ❌ fuga
+    public IReadOnlyList&lt;string&gt; Jugadores =&gt; jugadores;     // ✅ solo lectura
+}</code></pre>
+<p>Devolver <code>IReadOnlyList&lt;T&gt;</code> (o
+<code>jugadores.AsReadOnly()</code>) permite consultar y recorrer, pero
+no añadir ni quitar. Es una buena práctica que se valora mucho, y enlaza
+directamente con lo que viste en encapsulamiento.</p>`,
+          ejemplos: [
+            { titulo: "Operaciones básicas", explicacion: "Observa cómo Capacity va duplicándose (0, 4, 8, 16…) mientras Count crece de uno en uno: cada duplicación es una ampliación del array interno.", codigo: r`List<string> equipo = new List<string> { "Ana", "Luis", "Marta" };
+
+equipo.Add("Pau");                               // al final
+equipo.Insert(0, "Zoe");                         // al principio
+equipo.AddRange(new[] { "Noa", "Marc" });        // varios de golpe
+
+Console.WriteLine($"Equipo ({equipo.Count}): {string.Join(", ", equipo)}");
+
+// Acceso por índice, igual que un array
+Console.WriteLine($"El primero es {equipo[0]} y el último {equipo[^1]}");   // ^1 = último
+
+// Buscar
+Console.WriteLine($"¿Está Marta? {equipo.Contains("Marta")}");
+Console.WriteLine($"Luis está en la posición {equipo.IndexOf("Luis")}");
+Console.WriteLine($"Pedro está en la posición {equipo.IndexOf("Pedro")} (-1 = no está)");
+
+// Eliminar
+equipo.Remove("Luis");                           // por valor
+equipo.RemoveAt(0);                              // por posición
+Console.WriteLine($"Tras eliminar: {string.Join(", ", equipo)}");
+
+// Ordenar y dar la vuelta (modifican la lista en su sitio)
+equipo.Sort();
+Console.WriteLine($"Ordenado: {string.Join(", ", equipo)}");
+equipo.Reverse();
+Console.WriteLine($"Al revés:  {string.Join(", ", equipo)}");
+
+// Count frente a Capacity
+List<int> numeros = new List<int>();
+Console.WriteLine($"\nLista nueva: Count = {numeros.Count}, Capacity = {numeros.Capacity}");
+for (int i = 0; i < 10; i++)
+{
+    numeros.Add(i);
+    Console.WriteLine($"  tras añadir {i}: Count = {numeros.Count}, Capacity = {numeros.Capacity}");
+}
+` },
+            { titulo: "Modificar mientras se recorre: el error y las tres soluciones", explicacion: "El último caso es un error silencioso, de los peores: no lanza excepción, simplemente se salta elementos. Por eso RemoveAll es la respuesta correcta.", codigo: r`List<int> original = new List<int> { 5, -3, 8, -1, 9, -7, 2 };
+
+// ---------- El error ----------
+List<int> conError = new List<int>(original);
+try
+{
+    foreach (int n in conError)
+    {
+        if (n < 0)
+        {
+            conError.Remove(n);     // ¡modifica la lista que está recorriendo!
+        }
+    }
+}
+catch (InvalidOperationException)
+{
+    Console.WriteLine("InvalidOperationException: la colección cambió durante el foreach");
+}
+
+// ---------- Solución 1: for hacia atrás ----------
+List<int> solucion1 = new List<int>(original);
+for (int i = solucion1.Count - 1; i >= 0; i--)
+{
+    if (solucion1[i] < 0)
+    {
+        solucion1.RemoveAt(i);      // al ir hacia atrás, los índices pendientes no se mueven
+    }
+}
+Console.WriteLine($"For hacia atrás: {string.Join(", ", solucion1)}");
+
+// ---------- Solución 2: recorrer una copia ----------
+List<int> solucion2 = new List<int>(original);
+foreach (int n in new List<int>(solucion2))     // recorremos la copia, modificamos la original
+{
+    if (n < 0)
+    {
+        solucion2.Remove(n);
+    }
+}
+Console.WriteLine($"Sobre una copia:  {string.Join(", ", solucion2)}");
+
+// ---------- Solución 3: RemoveAll (la forma idiomática) ----------
+List<int> solucion3 = new List<int>(original);
+int eliminados = solucion3.RemoveAll(n => n < 0);     // n => n < 0 es un predicado
+Console.WriteLine($"RemoveAll:        {string.Join(", ", solucion3)} ({eliminados} eliminados)");
+
+// ¿Por qué falla el for hacia DELANTE? Porque al borrar, los demás se desplazan
+List<int> malFor = new List<int>(original);
+for (int i = 0; i < malFor.Count; i++)
+{
+    if (malFor[i] < 0) { malFor.RemoveAt(i); }
+}
+Console.WriteLine($"\nFor hacia delante: {string.Join(", ", malFor)}  ← ¡se cuela un negativo!");
+Console.WriteLine("Al borrar la posición i, el siguiente elemento pasa a ser el i... y el for ya ha avanzado.");
+` },
+            { titulo: "Los métodos de búsqueda con predicados", explicacion: "j => j.Puntos >= 90 se lee «dado un jugador j, devuelve si sus puntos son 90 o más». Sort con una lambda de comparación permite ordenar por cualquier criterio: aquí b frente a a para que sea descendente.", codigo: r`List<Jugador> jugadores = new List<Jugador>
+{
+    new Jugador("Ana", 95),
+    new Jugador("Luis", 48),
+    new Jugador("Marta", 72),
+    new Jugador("Pau", 95),
+    new Jugador("Noa", 31),
+};
+
+// Find: el primero que cumple
+var mejor = jugadores.Find(j => j.Puntos >= 90);
+Console.WriteLine($"Primer jugador con 90 o más: {mejor?.Nombre}");
+
+// FindLast: el último
+var ultimoBueno = jugadores.FindLast(j => j.Puntos >= 90);
+Console.WriteLine($"Último con 90 o más: {ultimoBueno?.Nombre}");
+
+// FindAll: todos los que cumplen, en una lista nueva
+List<Jugador> aprobados = jugadores.FindAll(j => j.Puntos >= 50);
+Console.WriteLine($"Aprobados ({aprobados.Count}): {string.Join(", ", aprobados.Select(j => j.Nombre))}");
+
+// FindIndex: la posición
+Console.WriteLine($"Marta está en la posición {jugadores.FindIndex(j => j.Nombre == "Marta")}");
+
+// Exists y TrueForAll: preguntas de sí o no
+Console.WriteLine($"¿Hay algún suspenso? {jugadores.Exists(j => j.Puntos < 50)}");
+Console.WriteLine($"¿Han aprobado todos? {jugadores.TrueForAll(j => j.Puntos >= 50)}");
+
+// Ordenar por un criterio propio con una comparación
+jugadores.Sort((a, b) => b.Puntos.CompareTo(a.Puntos));    // descendente por puntos
+Console.WriteLine("\nRanking:");
+foreach (Jugador j in jugadores)
+{
+    Console.WriteLine($"  {j.Nombre,-8} {j.Puntos,3}");
+}
+
+class Jugador
+{
+    public string Nombre { get; }
+    public int Puntos { get; }
+
+    public Jugador(string nombre, int puntos)
+    {
+        Nombre = nombre;
+        Puntos = puntos;
+    }
+}
+` },
+            { titulo: "Referencias, copias y solo lectura", explicacion: "Exponer IReadOnlyList<T> en lugar de List<T> es la forma correcta de dar acceso a una colección interna: quien la recibe puede consultarla pero no alterar el estado del objeto.", codigo: r`// ---------- Las listas son tipos por REFERENCIA ----------
+List<int> a = new List<int> { 1, 2, 3 };
+List<int> b = a;                         // la misma lista, dos nombres
+List<int> c = new List<int>(a);          // una copia de verdad
+
+b.Add(4);
+
+Console.WriteLine($"a: {string.Join(", ", a)}   (ha cambiado)");
+Console.WriteLine($"b: {string.Join(", ", b)}");
+Console.WriteLine($"c: {string.Join(", ", c)}   (la copia no)");
+Console.WriteLine($"¿a y b son el mismo objeto? {ReferenceEquals(a, b)}");
+
+// ---------- Encapsulamiento: devolver la lista interna es una fuga ----------
+Equipo equipo = new Equipo("Dracs");
+equipo.Fichar("Ana");
+equipo.Fichar("Luis");
+
+Console.WriteLine($"\n{equipo.Nombre}: {string.Join(", ", equipo.Jugadores)}");
+
+// La propiedad es IReadOnlyList: se puede leer y recorrer...
+Console.WriteLine($"Tiene {equipo.Jugadores.Count} jugadores, el primero es {equipo.Jugadores[0]}");
+
+// ...pero no modificar. Descomenta y verás que no compila:
+// equipo.Jugadores.Add("Intruso");
+
+class Equipo
+{
+    private readonly List<string> jugadores = new List<string>();
+
+    public string Nombre { get; }
+
+    public Equipo(string nombre) => Nombre = nombre;
+
+    // Solo lectura hacia fuera: nadie puede modificar la lista por la espalda
+    public IReadOnlyList<string> Jugadores => jugadores;
+
+    public void Fichar(string jugador)
+    {
+        if (string.IsNullOrWhiteSpace(jugador))
+        {
+            throw new ArgumentException("El nombre no puede estar vacío", nameof(jugador));
+        }
+        if (jugadores.Contains(jugador))
+        {
+            Console.WriteLine($"{jugador} ya está en el equipo");
+        }
+        else
+        {
+            jugadores.Add(jugador);
+        }
+    }
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Gestor de tareas con List",
+              nivel: 1,
+              pista: "Guarda las tareas en List<string> y recuerda que el usuario cuenta desde 1.",
+              enunciado: r`<p>Escribe un gestor de tareas por consola con un <strong>menú</strong>:
+<code>1</code> añadir tarea, <code>2</code> listar tareas numeradas,
+<code>3</code> marcar una tarea como hecha (se elimina de la lista),
+<code>4</code> buscar tareas que contengan un texto y <code>5</code>
+salir.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Guarda las tareas en una <code>List&lt;string&gt;</code>.</li>
+<li><strong>Control de errores:</strong> valida la opción con
+<code>int.TryParse</code>; al marcar una tarea, comprueba que el número
+está dentro del rango; no permitas añadir tareas vacías.</li>
+<li>La lista se muestra numerada <strong>empezando por 1</strong> (el
+usuario no piensa en índices desde 0).</li>
+<li>Usa <code>do-while</code> con la condición en la cabecera.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> para buscar sin distinguir mayúsculas, usa
+<code>t.Contains(texto, StringComparison.OrdinalIgnoreCase)</code>.</p>
+<p>🏅 <strong>Ampliación:</strong> permite deshacer la última tarea
+marcada (guárdala en una pila).</p>`,
+              soluciones: [
+                { titulo: "Versión completa", nota: "El detalle de numero - 1 aparece siempre que se habla con un usuario: las personas cuentan desde 1 y los arrays desde 0. Conviene hacer la conversión en un solo punto del programa.", codigo: r`List<string> tareas = new List<string>();
+int opcion = 0;
+
+do
+{
+    Console.WriteLine($"\n--- TAREAS ({tareas.Count}) ---");
+    Console.WriteLine("1) Añadir   2) Listar   3) Marcar hecha   4) Buscar   5) Salir");
+    Console.Write("Opción: ");
+
+    if (!int.TryParse(Console.ReadLine(), out opcion))
+    {
+        Console.WriteLine("Escribe un número del 1 al 5.");
+        opcion = 0;
+    }
+    else
+    {
+        switch (opcion)
+        {
+            case 1:
+                Console.Write("Descripción: ");
+                string nueva = (Console.ReadLine() ?? "").Trim();
+                if (string.IsNullOrEmpty(nueva))
+                {
+                    Console.WriteLine("La tarea no puede estar vacía.");
+                }
+                else if (tareas.Contains(nueva))
+                {
+                    Console.WriteLine("Esa tarea ya está en la lista.");
+                }
+                else
+                {
+                    tareas.Add(nueva);
+                    Console.WriteLine($"Añadida en la posición {tareas.Count}.");
+                }
+                break;
+
+            case 2:
+                Listar(tareas);
+                break;
+
+            case 3:
+                if (tareas.Count == 0)
+                {
+                    Console.WriteLine("No hay tareas pendientes.");
+                }
+                else
+                {
+                    Listar(tareas);
+                    Console.Write($"¿Qué tarea has hecho (1-{tareas.Count})? ");
+                    if (int.TryParse(Console.ReadLine(), out int numero)
+                        && numero >= 1 && numero <= tareas.Count)
+                    {
+                        string hecha = tareas[numero - 1];      // del número del usuario al índice
+                        tareas.RemoveAt(numero - 1);
+                        Console.WriteLine($"¡Hecho! «{hecha}» eliminada.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Número de tarea no válido.");
+                    }
+                }
+                break;
+
+            case 4:
+                Console.Write("Texto a buscar: ");
+                string texto = Console.ReadLine() ?? "";
+                List<string> encontradas =
+                    tareas.FindAll(t => t.Contains(texto, StringComparison.OrdinalIgnoreCase));
+                if (encontradas.Count == 0)
+                {
+                    Console.WriteLine("Ninguna tarea contiene ese texto.");
+                }
+                else
+                {
+                    Console.WriteLine($"{encontradas.Count} coincidencias:");
+                    foreach (string t in encontradas)
+                    {
+                        Console.WriteLine($"  - {t}");
+                    }
+                }
+                break;
+
+            case 5:
+                Console.WriteLine($"Te quedan {tareas.Count} tareas pendientes. ¡Ánimo!");
+                break;
+
+            default:
+                Console.WriteLine("Opción fuera de rango.");
+                break;
+        }
+    }
+} while (opcion != 5);
+
+void Listar(List<string> lista)
+{
+    if (lista.Count == 0)
+    {
+        Console.WriteLine("(no hay tareas)");
+    }
+    else
+    {
+        for (int i = 0; i < lista.Count; i++)
+        {
+            Console.WriteLine($"  {i + 1}. {lista[i]}");
+        }
+    }
+}
+` },
+                { titulo: "Ampliación: deshacer con una pila", nota: "Una pila es exactamente lo que necesita un «deshacer»: siempre se recupera la última acción. Si quisieras un «rehacer», harían falta dos pilas.", codigo: r`List<string> tareas = new List<string> { "Estudiar LINQ", "Entregar práctica" };
+Stack<string> hechas = new Stack<string>();          // pila: la última hecha, arriba
+
+// Marcar como hecha
+void MarcarHecha(int numero)
+{
+    if (numero < 1 || numero > tareas.Count)
+    {
+        Console.WriteLine("Número no válido.");
+    }
+    else
+    {
+        string tarea = tareas[numero - 1];
+        tareas.RemoveAt(numero - 1);
+        hechas.Push(tarea);                          // la guardamos para poder deshacer
+        Console.WriteLine($"Hecha: {tarea}");
+    }
+}
+
+// Deshacer la última
+void Deshacer()
+{
+    if (hechas.Count == 0)
+    {
+        Console.WriteLine("No hay nada que deshacer.");
+    }
+    else
+    {
+        string tarea = hechas.Pop();
+        tareas.Add(tarea);
+        Console.WriteLine($"Recuperada: {tarea}");
+    }
+}
+
+MarcarHecha(1);
+MarcarHecha(1);
+Console.WriteLine($"Pendientes: {tareas.Count}, hechas: {hechas.Count}");
+Deshacer();
+Console.WriteLine($"Pendientes: {string.Join(", ", tareas)}");
+` },
+              ],
+            },
+            {
+              titulo: "Estadísticas de una lista de notas",
+              nivel: 2,
+              pista: "El centinela -1 se compara en la condición del do-while y no se añade a la lista.",
+              enunciado: r`<p>Escribe un programa que lea notas (de 0 a 10) hasta que el usuario
+escriba <code>-1</code>, las guarde en una
+<code>List&lt;double&gt;</code> y muestre un informe con: cuántas notas
+hay, la media, la nota máxima y mínima, cuántas están aprobadas y la
+lista ordenada de mayor a menor.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li><strong>Control de errores:</strong> usa
+<code>double.TryParse</code> y rechaza las notas fuera de 0-10 (sin
+añadirlas).</li>
+<li>Si no se introduce ninguna nota, el informe debe decirlo en lugar de
+dividir entre cero.</li>
+<li>Usa <code>do-while</code> con la condición en la cabecera;
+<code>-1</code> es el centinela y no se guarda.</li>
+<li>Calcula la media, el máximo y el mínimo <strong>con un bucle
+propio</strong>, sin usar LINQ.</li>
+</ul>
+<p>🏅 <strong>Ampliación:</strong> muestra un histograma de barras con
+el número de notas de cada tramo (0-4, 5-6, 7-8, 9-10).</p>`,
+              soluciones: [
+                { titulo: "Versión con bucles propios", nota: "Inicializar maxima y minima con el primer elemento (y no con 0 o 10) es la forma correcta: si inicializas el máximo a 0 y todas las notas son negativas, el resultado sería falso.", codigo: r`List<double> notas = new List<double>();
+double entrada;
+
+do
+{
+    Console.Write("Nota (0-10, o -1 para terminar): ");
+
+    if (!double.TryParse(Console.ReadLine(), out entrada))
+    {
+        Console.WriteLine("  Eso no es un número.");
+        entrada = 0;                        // valor neutro: ni centinela ni nota válida nueva
+    }
+    else if (entrada == -1)
+    {
+        Console.WriteLine("  Fin de la introducción de datos.");
+    }
+    else if (entrada < 0 || entrada > 10)
+    {
+        Console.WriteLine("  Fuera de rango: la nota debe estar entre 0 y 10.");
+    }
+    else
+    {
+        notas.Add(entrada);
+        Console.WriteLine($"  Añadida ({notas.Count} notas)");
+    }
+} while (entrada != -1);
+
+Console.WriteLine("\n===== INFORME =====");
+
+if (notas.Count == 0)
+{
+    Console.WriteLine("No se ha introducido ninguna nota.");
+}
+else
+{
+    double suma = 0;
+    double maxima = notas[0];
+    double minima = notas[0];
+    int aprobadas = 0;
+
+    foreach (double nota in notas)
+    {
+        suma += nota;
+        if (nota > maxima) { maxima = nota; }
+        if (nota < minima) { minima = nota; }
+        if (nota >= 5) { aprobadas++; }
+    }
+
+    Console.WriteLine($"Notas:      {notas.Count}");
+    Console.WriteLine($"Media:      {suma / notas.Count:F2}");
+    Console.WriteLine($"Máxima:     {maxima:F2}");
+    Console.WriteLine($"Mínima:     {minima:F2}");
+    Console.WriteLine($"Aprobadas:  {aprobadas} ({100.0 * aprobadas / notas.Count:F1} %)");
+
+    // Copia para no alterar el orden de introducción
+    List<double> ordenadas = new List<double>(notas);
+    ordenadas.Sort();
+    ordenadas.Reverse();
+    Console.WriteLine($"Ordenadas:  {string.Join(", ", ordenadas)}");
+}
+` },
+                { titulo: "Ampliación: histograma y versión con LINQ", nota: "Compara las dos versiones: el bucle propio enseña cómo funciona; LINQ es lo que escribirás en un proyecto. Saber hacerlo a mano es lo que permite entender qué hace LINQ por dentro.", codigo: r`List<double> notas = new List<double> { 3.5, 7, 9.5, 5, 6.5, 8, 2, 10, 4.5, 7.5 };
+
+// ---------- Histograma con un array de contadores ----------
+int[] tramos = new int[4];          // 0: 0-4, 1: 5-6, 2: 7-8, 3: 9-10
+string[] etiquetas = { "0-4 ", "5-6 ", "7-8 ", "9-10" };
+
+foreach (double nota in notas)
+{
+    if (nota < 5) { tramos[0]++; }
+    else if (nota < 7) { tramos[1]++; }
+    else if (nota < 9) { tramos[2]++; }
+    else { tramos[3]++; }
+}
+
+Console.WriteLine("Distribución:");
+for (int i = 0; i < tramos.Length; i++)
+{
+    Console.WriteLine($"  {etiquetas[i]} {new string('#', tramos[i])} ({tramos[i]})");
+}
+
+// ---------- El mismo informe con LINQ (lo veremos en el módulo siguiente) ----------
+Console.WriteLine($"\nCon LINQ, el informe cabe en cinco líneas:");
+Console.WriteLine($"  Media:     {notas.Average():F2}");
+Console.WriteLine($"  Máxima:    {notas.Max():F2}");
+Console.WriteLine($"  Mínima:    {notas.Min():F2}");
+Console.WriteLine($"  Aprobadas: {notas.Count(n => n >= 5)}");
+Console.WriteLine($"  Ordenadas: {string.Join(", ", notas.OrderByDescending(n => n))}");
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "coleccion-dictionary",
+          titulo: "Dictionary, HashSet y colecciones ordenadas",
+          duracion: "24 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Usar un diccionario para buscar por clave en tiempo constante", "Acceder a las claves con seguridad (TryGetValue, ContainsKey)", "Distinguir HashSet, SortedList, SortedDictionary y SortedSet"],
+          teoria: r`<p>Un <strong>diccionario</strong> asocia una <strong>clave</strong> a
+un <strong>valor</strong>, como un diccionario de verdad asocia una
+palabra a su definición. Su gracia es que buscar por la clave es
+<strong>O(1)</strong>: tarda lo mismo con 10 elementos que con un
+millón. Es la estructura de datos que más veces convierte un programa
+lento en un programa rápido.</p>
+<h3 id="1-cómo-funciona-por-dentro-en-dos-párrafos">1. Cómo funciona por
+dentro (en dos párrafos)</h3>
+<p>Un <code>Dictionary&lt;TKey, TValue&gt;</code> es una <strong>tabla
+hash</strong>. Al añadir un par, calcula un número a partir de la clave
+(su <code>GetHashCode()</code>), y ese número le dice
+<strong>directamente</strong> en qué posición del array interno
+colocarlo. Al buscar, repite el cálculo y va derecho a esa posición: no
+recorre nada.</p>
+<p>Si dos claves distintas caen en la misma posición (una
+<strong>colisión</strong>), el diccionario guarda ahí una pequeña lista
+y compara con <code>Equals</code>. Por eso el rendimiento es O(1) «en
+promedio»: con un <code>GetHashCode</code> mal escrito, todo
+colisionaría y degeneraría a O(n).</p>
+<div class="callout">
+<p><strong>Consecuencia práctica.</strong> Si usas tus propias clases
+como clave, <strong>debes</strong> sobrescribir <code>Equals</code> y
+<code>GetHashCode</code> de forma coherente (dos objetos iguales deben
+dar el mismo código). Si usas <code>record</code>, C# lo hace por ti: es
+una de las razones de su existencia.</p>
+</div>
+<h3 id="2-crear-y-usar-un-diccionario">2. Crear y usar un
+diccionario</h3>
+<pre><code>Dictionary&lt;string, int&gt; notas = new Dictionary&lt;string, int&gt;();
+notas[&quot;Ana&quot;] = 95;                 // añade o actualiza
+notas.Add(&quot;Luis&quot;, 80);             // añade; lanza excepción si la clave ya existe
+
+Dictionary&lt;string, int&gt; conDatos = new Dictionary&lt;string, int&gt;
+{
+    [&quot;Ana&quot;] = 95,
+    [&quot;Luis&quot;] = 80,
+};</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Operación</th>
+<th>Cómo</th>
+<th>Nota</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Añadir o actualizar</td>
+<td><code>d[clave] = valor</code></td>
+<td>nunca falla</td>
+</tr>
+<tr class="even">
+<td>Añadir solo si no existe</td>
+<td><code>d.Add(clave, valor)</code></td>
+<td><code>ArgumentException</code> si ya está</td>
+</tr>
+<tr class="odd">
+<td>Añadir solo si no existe (sin excepción)</td>
+<td><code>d.TryAdd(clave, valor)</code></td>
+<td>devuelve <code>bool</code></td>
+</tr>
+<tr class="even">
+<td>Leer</td>
+<td><code>d[clave]</code></td>
+<td><strong><code>KeyNotFoundException</code></strong> si no está</td>
+</tr>
+<tr class="odd">
+<td>Leer con seguridad</td>
+<td><code>d.TryGetValue(clave, out valor)</code></td>
+<td>la forma recomendada</td>
+</tr>
+<tr class="even">
+<td>¿Existe la clave?</td>
+<td><code>d.ContainsKey(clave)</code></td>
+<td>O(1)</td>
+</tr>
+<tr class="odd">
+<td>¿Existe el valor?</td>
+<td><code>d.ContainsValue(valor)</code></td>
+<td>O(n): recorre todo</td>
+</tr>
+<tr class="even">
+<td>Borrar</td>
+<td><code>d.Remove(clave)</code></td>
+<td><code>bool</code></td>
+</tr>
+<tr class="odd">
+<td>Recorrer</td>
+<td><code>foreach (var par in d)</code></td>
+<td><code>par.Key</code>, <code>par.Value</code></td>
+</tr>
+<tr class="even">
+<td>Solo claves / solo valores</td>
+<td><code>d.Keys</code>, <code>d.Values</code></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="trygetvalue-frente-a-containskey--"><code>TryGetValue</code>
+frente a <code>ContainsKey</code> + <code>[]</code></h4>
+<pre><code>// ❌ Busca dos veces
+if (notas.ContainsKey(&quot;Ana&quot;)) { int n = notas[&quot;Ana&quot;]; }
+
+// ✅ Busca una vez
+if (notas.TryGetValue(&quot;Ana&quot;, out int nota)) { ... }</code></pre>
+<p>Las dos funcionan, pero la segunda hace la mitad del trabajo y es la
+que se espera ver en código profesional.</p>
+<h3 id="3-el-orden-no-lo-hay">3. El orden: no lo hay</h3>
+<p>Un <code>Dictionary</code> <strong>no garantiza el orden</strong> al
+recorrerlo. Puede parecer que sale el de inserción, pero es casualidad y
+cambia al borrar elementos. Si necesitas orden:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Necesito…</th>
+<th>Colección</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Orden por clave, muchas lecturas y pocas inserciones</td>
+<td><code>SortedList&lt;TKey,TValue&gt;</code></td>
+</tr>
+<tr class="even">
+<td>Orden por clave, muchas inserciones y borrados</td>
+<td><code>SortedDictionary&lt;TKey,TValue&gt;</code></td>
+</tr>
+<tr class="odd">
+<td>Orden de inserción</td>
+<td>una <code>List&lt;T&gt;</code> de pares, o guardar el orden
+aparte</td>
+</tr>
+<tr class="even">
+<td>Ordenar al mostrar</td>
+<td><code>foreach (var p in d.OrderBy(p =&gt; p.Key))</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><code>SortedList</code> guarda dos arrays ordenados (búsqueda
+binaria, O(log n); insertar en medio, O(n));
+<code>SortedDictionary</code> es un árbol binario equilibrado (O(log n)
+para todo). La regla: <strong><code>SortedList</code> si consultas
+mucho, <code>SortedDictionary</code> si modificas mucho</strong>.</p>
+<h3 id="4-hashsett-el-conjunto">4. <code>HashSet&lt;T&gt;</code>: el
+conjunto</h3>
+<p>Un <code>HashSet&lt;T&gt;</code> es como un diccionario <strong>sin
+valores</strong>: solo guarda elementos, sin repetidos y con
+<code>Contains</code> en O(1).</p>
+<pre><code>HashSet&lt;string&gt; visitados = new HashSet&lt;string&gt;();
+bool esNuevo = visitados.Add(&quot;inicio&quot;);    // true la primera vez, false si ya estaba</code></pre>
+<p>Y trae las operaciones de la teoría de conjuntos, que ahorran bucles
+enteros:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Método</th>
+<th>Operación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>UnionWith(otro)</code></td>
+<td>unión (A ∪ B)</td>
+</tr>
+<tr class="even">
+<td><code>IntersectWith(otro)</code></td>
+<td>intersección (A ∩ B)</td>
+</tr>
+<tr class="odd">
+<td><code>ExceptWith(otro)</code></td>
+<td>diferencia (A − B)</td>
+</tr>
+<tr class="even">
+<td><code>SymmetricExceptWith(otro)</code></td>
+<td>los que están en uno pero no en los dos</td>
+</tr>
+<tr class="odd">
+<td><code>IsSubsetOf(otro)</code></td>
+<td>¿es subconjunto?</td>
+</tr>
+<tr class="even">
+<td><code>Overlaps(otro)</code></td>
+<td>¿tienen algo en común?</td>
+</tr>
+</tbody>
+</table></div>
+<p>Para «quitar los repetidos de una lista», un <code>HashSet</code> es
+la respuesta: <code>new HashSet&lt;string&gt;(lista)</code>.</p>
+<h3 id="5-patrones-que-vas-a-usar-mucho">5. Patrones que vas a usar
+mucho</h3>
+<h4 id="contar-apariciones">Contar apariciones</h4>
+<pre><code>Dictionary&lt;string, int&gt; cuenta = new Dictionary&lt;string, int&gt;();
+foreach (string palabra in palabras)
+{
+    cuenta[palabra] = cuenta.GetValueOrDefault(palabra) + 1;
+}</code></pre>
+<p><code>GetValueOrDefault</code> devuelve 0 si la clave no existe, así
+que no hace falta el <code>if</code> de la primera vez. Es el patrón de
+«contar cosas» más limpio en C#.</p>
+<h4 id="agrupar-en-listas">Agrupar en listas</h4>
+<pre><code>Dictionary&lt;char, List&lt;string&gt;&gt; porInicial = new Dictionary&lt;char, List&lt;string&gt;&gt;();
+foreach (string nombre in nombres)
+{
+    char inicial = nombre[0];
+    if (!porInicial.ContainsKey(inicial))
+    {
+        porInicial[inicial] = new List&lt;string&gt;();
+    }
+    porInicial[inicial].Add(nombre);
+}</code></pre>
+<h4 id="caché-memoización">Caché (memoización)</h4>
+<p>Guardar en un diccionario resultados ya calculados para no repetir el
+trabajo. Es lo que convierte un Fibonacci recursivo inviable en
+instantáneo.</p>`,
+          ejemplos: [
+            { titulo: "Operaciones con un diccionario", explicacion: "El resumen de la lección en dos líneas: para escribir, el indexador; para leer, TryGetValue. El Add y el indexador de lectura son los que lanzan excepciones.", codigo: r`Dictionary<string, int> notas = new Dictionary<string, int>
+{
+    ["Ana"] = 95,
+    ["Luis"] = 80,
+    ["Marta"] = 72,
+};
+
+// Añadir o actualizar con el indexador: nunca falla
+notas["Pau"] = 64;
+notas["Ana"] = 97;                      // actualiza la existente
+
+// Add lanza excepción si la clave ya existe
+try
+{
+    notas.Add("Luis", 50);
+}
+catch (ArgumentException)
+{
+    Console.WriteLine("Add falla porque «Luis» ya existe (el indexador habría actualizado)");
+}
+
+// TryAdd: lo mismo, sin excepción
+Console.WriteLine($"TryAdd(«Luis»): {notas.TryAdd("Luis", 50)}");
+Console.WriteLine($"TryAdd(«Noa»):  {notas.TryAdd("Noa", 88)}");
+
+// Leer: el indexador lanza excepción si no existe
+try
+{
+    Console.WriteLine(notas["Pedro"]);
+}
+catch (KeyNotFoundException)
+{
+    Console.WriteLine("\nKeyNotFoundException al leer una clave que no existe");
+}
+
+// La forma segura: TryGetValue (una sola búsqueda)
+if (notas.TryGetValue("Marta", out int notaMarta))
+{
+    Console.WriteLine($"Marta tiene un {notaMarta}");
+}
+if (!notas.TryGetValue("Pedro", out int notaPedro))
+{
+    Console.WriteLine($"Pedro no está (la variable queda a {notaPedro}, el valor por defecto)");
+}
+
+// GetValueOrDefault: valor si está, valor por defecto si no
+Console.WriteLine($"Nota de Pedro o 0: {notas.GetValueOrDefault("Pedro")}");
+Console.WriteLine($"Nota de Pedro o -1: {notas.GetValueOrDefault("Pedro", -1)}");
+
+// Recorrer
+Console.WriteLine($"\n{notas.Count} alumnos:");
+foreach (KeyValuePair<string, int> par in notas)
+{
+    Console.WriteLine($"  {par.Key,-8} {par.Value,3}");
+}
+
+// Solo claves, solo valores
+Console.WriteLine($"\nNombres: {string.Join(", ", notas.Keys)}");
+Console.WriteLine($"Media: {notas.Values.Average():F2}");
+
+// Borrar
+notas.Remove("Pau");
+Console.WriteLine($"Tras borrar a Pau quedan {notas.Count}");
+` },
+            { titulo: "Contar y agrupar: los dos patrones estrella", explicacion: "Los tres patrones aparecen constantemente. El de la caché es espectacular: la misma función recursiva que sin diccionario es inviable, con él es instantánea.", codigo: r`string texto = "el gato y el perro y el raton y el gato";
+string[] palabras = texto.Split(' ');
+
+// ---------- PATRÓN 1: contar apariciones ----------
+Dictionary<string, int> frecuencia = new Dictionary<string, int>();
+
+foreach (string palabra in palabras)
+{
+    // GetValueOrDefault devuelve 0 si la palabra es nueva: no hace falta el if
+    frecuencia[palabra] = frecuencia.GetValueOrDefault(palabra) + 1;
+}
+
+Console.WriteLine("Frecuencia de palabras (de más a menos):");
+foreach (var par in frecuencia.OrderByDescending(p => p.Value).ThenBy(p => p.Key))
+{
+    Console.WriteLine($"  {par.Key,-8} {new string('#', par.Value)} ({par.Value})");
+}
+
+// ---------- PATRÓN 2: agrupar en listas ----------
+string[] nombres = { "Ana", "Alberto", "Luis", "Marta", "Marc", "Noa", "Aina" };
+Dictionary<char, List<string>> porInicial = new Dictionary<char, List<string>>();
+
+foreach (string nombre in nombres)
+{
+    char inicial = char.ToUpper(nombre[0]);
+
+    if (!porInicial.ContainsKey(inicial))
+    {
+        porInicial[inicial] = new List<string>();     // la primera vez, creamos la lista
+    }
+    porInicial[inicial].Add(nombre);
+}
+
+Console.WriteLine("\nNombres agrupados por inicial:");
+foreach (var grupo in porInicial.OrderBy(g => g.Key))
+{
+    Console.WriteLine($"  {grupo.Key}: {string.Join(", ", grupo.Value)}");
+}
+
+// ---------- PATRÓN 3: caché (memoización) ----------
+Dictionary<int, long> cache = new Dictionary<int, long>();
+
+Console.WriteLine($"\nFibonacci(60) con caché = {Fibonacci(60)}");
+Console.WriteLine($"Valores guardados en la caché: {cache.Count}");
+Console.WriteLine("Sin caché, Fibonacci(60) recursivo tardaría años: haría 10^12 llamadas.");
+
+long Fibonacci(int n)
+{
+    if (n <= 1) { return n; }
+
+    if (cache.TryGetValue(n, out long guardado))
+    {
+        return guardado;                   // ya calculado: lo devolvemos sin recalcular
+    }
+
+    long resultado = Fibonacci(n - 1) + Fibonacci(n - 2);
+    cache[n] = resultado;
+    return resultado;
+}
+` },
+            { titulo: "HashSet y operaciones de conjuntos", explicacion: "Estas operaciones sustituyen bucles anidados: calcular la intersección a mano serían dos bucles y un if; aquí es una línea y además es O(n) en lugar de O(n²).", codigo: r`// Quitar repetidos de una lista: una línea
+List<string> conRepetidos = new List<string> { "C#", "Java", "C#", "Python", "Java", "C#" };
+HashSet<string> sinRepetidos = new HashSet<string>(conRepetidos);
+Console.WriteLine($"Original ({conRepetidos.Count}): {string.Join(", ", conRepetidos)}");
+Console.WriteLine($"Sin repetir ({sinRepetidos.Count}): {string.Join(", ", sinRepetidos)}");
+
+// Add devuelve si el elemento era nuevo
+Console.WriteLine($"\nAdd(«Rust»): {sinRepetidos.Add("Rust")}  (era nuevo)");
+Console.WriteLine($"Add(«C#»):   {sinRepetidos.Add("C#")}  (ya estaba)");
+
+// ---------- Operaciones de conjuntos ----------
+HashSet<string> cursoA = new HashSet<string> { "Ana", "Luis", "Marta", "Pau" };
+HashSet<string> cursoB = new HashSet<string> { "Marta", "Pau", "Noa", "Marc" };
+
+Console.WriteLine($"\nCurso A: {string.Join(", ", cursoA)}");
+Console.WriteLine($"Curso B: {string.Join(", ", cursoB)}");
+
+// Los métodos WITH modifican el conjunto, así que trabajamos sobre copias
+HashSet<string> union = new HashSet<string>(cursoA);
+union.UnionWith(cursoB);
+Console.WriteLine($"\nEn alguno de los dos (unión): {string.Join(", ", union)}");
+
+HashSet<string> comunes = new HashSet<string>(cursoA);
+comunes.IntersectWith(cursoB);
+Console.WriteLine($"En los dos (intersección):   {string.Join(", ", comunes)}");
+
+HashSet<string> soloA = new HashSet<string>(cursoA);
+soloA.ExceptWith(cursoB);
+Console.WriteLine($"Solo en A (diferencia):      {string.Join(", ", soloA)}");
+
+HashSet<string> enUnoSolo = new HashSet<string>(cursoA);
+enUnoSolo.SymmetricExceptWith(cursoB);
+Console.WriteLine($"En uno pero no en los dos:   {string.Join(", ", enUnoSolo)}");
+
+Console.WriteLine($"\n¿Comparten alguien? {cursoA.Overlaps(cursoB)}");
+Console.WriteLine($"¿A está contenido en B? {cursoA.IsSubsetOf(cursoB)}");
+` },
+            { titulo: "Diccionarios ordenados y claves propias", explicacion: "Si Punto fuera una class normal, el diccionario no encontraría nada: compararía referencias y dos objetos distintos con los mismos valores no serían iguales. Con record funciona sin escribir nada.", codigo: r`// Dictionary NO garantiza orden; SortedDictionary sí (por clave)
+Dictionary<string, int> sinOrden = new Dictionary<string, int>
+{
+    ["zanahoria"] = 3, ["manzana"] = 5, ["pera"] = 2, ["kiwi"] = 7,
+};
+
+SortedDictionary<string, int> ordenado = new SortedDictionary<string, int>(sinOrden);
+
+Console.WriteLine("Dictionary (orden no garantizado):");
+Console.WriteLine($"  {string.Join(", ", sinOrden.Keys)}");
+Console.WriteLine("SortedDictionary (siempre ordenado por clave):");
+Console.WriteLine($"  {string.Join(", ", ordenado.Keys)}");
+
+// SortedList: mismo orden, distinta implementación (dos arrays)
+SortedList<string, int> lista = new SortedList<string, int>(sinOrden);
+Console.WriteLine($"SortedList, acceso por posición: la 0 es «{lista.Keys[0]}»");
+
+// Ordenar un Dictionary al mostrarlo, sin cambiar de colección
+Console.WriteLine("\nDictionary ordenado por VALOR (descendente):");
+foreach (var par in sinOrden.OrderByDescending(p => p.Value))
+{
+    Console.WriteLine($"  {par.Key,-10} {par.Value}");
+}
+
+// ---------- Usar una clase propia como clave ----------
+Dictionary<Punto, string> mapa = new Dictionary<Punto, string>();
+mapa[new Punto(0, 0)] = "salida";
+mapa[new Punto(3, 4)] = "cofre";
+
+// Buscamos con un objeto DISTINTO pero con los mismos valores:
+// funciona porque el record implementa Equals y GetHashCode por nosotros
+Punto buscado = new Punto(3, 4);
+Console.WriteLine($"\nEn {buscado} hay: {mapa.GetValueOrDefault(buscado, "nada")}");
+Console.WriteLine($"En {new Punto(9, 9)} hay: {mapa.GetValueOrDefault(new Punto(9, 9), "nada")}");
+
+// Un record genera Equals, GetHashCode y ToString automáticamente:
+// por eso es el tipo ideal para usar como clave de un diccionario
+record Punto(int X, int Y);
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Inventario de una tienda",
+              nivel: 1,
+              pista: "Para escribir en el diccionario, el indexador; para leer, TryGetValue o GetValueOrDefault.",
+              enunciado: r`<p>Escribe un gestor de inventario con un
+<code>Dictionary&lt;string, int&gt;</code> (producto → unidades) y un
+<strong>menú</strong>: <code>1</code> añadir unidades, <code>2</code>
+vender unidades, <code>3</code> consultar un producto, <code>4</code>
+listar el inventario ordenado por nombre, <code>5</code> mostrar los
+productos sin existencias y <code>6</code> salir.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Al añadir, si el producto ya existe se <strong>suman</strong> las
+unidades; si no, se crea.</li>
+<li>Al vender, comprueba que hay suficientes unidades; si no, avisa sin
+modificar nada.</li>
+<li><strong>Control de errores:</strong> valida la opción y las
+cantidades con <code>int.TryParse</code> (las cantidades deben ser
+mayores que 0). Para consultar usa <code>TryGetValue</code>, nunca el
+indexador directo.</li>
+<li>Usa <code>do-while</code> con la condición en la cabecera.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> <code>GetValueOrDefault(producto)</code>
+devuelve 0 si el producto no está, lo que simplifica el «añadir
+unidades».</p>
+<p>🏅 <strong>Ampliación:</strong> añade una opción que muestre el
+producto con más unidades y el valor total del inventario (necesitarás
+un segundo diccionario con los precios).</p>`,
+              soluciones: [
+                { titulo: "Versión completa", nota: "Normalizar el nombre con Trim().ToLower() evita que «Teclado» y «teclado » se guarden como dos productos distintos: un detalle pequeño que en un programa real da muchos quebraderos de cabeza.", codigo: r`Dictionary<string, int> inventario = new Dictionary<string, int>
+{
+    ["teclado"] = 12,
+    ["raton"] = 30,
+    ["monitor"] = 4,
+};
+
+int opcion = 0;
+
+do
+{
+    Console.WriteLine($"\n--- INVENTARIO ({inventario.Count} productos) ---");
+    Console.WriteLine("1) Añadir   2) Vender   3) Consultar");
+    Console.WriteLine("4) Listar   5) Sin stock   6) Salir");
+    Console.Write("Opción: ");
+
+    if (!int.TryParse(Console.ReadLine(), out opcion))
+    {
+        Console.WriteLine("Escribe un número del 1 al 6.");
+        opcion = 0;
+    }
+    else
+    {
+        switch (opcion)
+        {
+            case 1:
+                string producto = LeerProducto();
+                if (LeerCantidad("Unidades a añadir: ", out int anadir))
+                {
+                    // Si no existe, GetValueOrDefault devuelve 0 y queda creado con la cantidad
+                    inventario[producto] = inventario.GetValueOrDefault(producto) + anadir;
+                    Console.WriteLine($"{producto}: {inventario[producto]} unidades en total.");
+                }
+                break;
+
+            case 2:
+                string vender = LeerProducto();
+                if (!inventario.TryGetValue(vender, out int existencias))
+                {
+                    Console.WriteLine($"No tenemos «{vender}» en el inventario.");
+                }
+                else if (LeerCantidad("Unidades a vender: ", out int cantidad))
+                {
+                    if (cantidad > existencias)
+                    {
+                        Console.WriteLine($"Solo quedan {existencias} unidades. Venta no realizada.");
+                    }
+                    else
+                    {
+                        inventario[vender] = existencias - cantidad;
+                        Console.WriteLine($"Vendidas {cantidad}. Quedan {inventario[vender]}.");
+                    }
+                }
+                break;
+
+            case 3:
+                string consulta = LeerProducto();
+                if (inventario.TryGetValue(consulta, out int unidades))
+                {
+                    Console.WriteLine($"{consulta}: {unidades} unidades.");
+                }
+                else
+                {
+                    Console.WriteLine($"«{consulta}» no está en el inventario.");
+                }
+                break;
+
+            case 4:
+                if (inventario.Count == 0)
+                {
+                    Console.WriteLine("(inventario vacío)");
+                }
+                else
+                {
+                    Console.WriteLine($"{"PRODUCTO",-15}{"UNIDADES",10}");
+                    foreach (var par in inventario.OrderBy(p => p.Key))
+                    {
+                        Console.WriteLine($"{par.Key,-15}{par.Value,10}");
+                    }
+                }
+                break;
+
+            case 5:
+                List<string> agotados = new List<string>();
+                foreach (var par in inventario)
+                {
+                    if (par.Value == 0)
+                    {
+                        agotados.Add(par.Key);
+                    }
+                }
+                Console.WriteLine(agotados.Count == 0
+                    ? "Todos los productos tienen existencias."
+                    : $"Sin stock: {string.Join(", ", agotados)}");
+                break;
+
+            case 6:
+                Console.WriteLine("Hasta luego.");
+                break;
+
+            default:
+                Console.WriteLine("Opción fuera de rango.");
+                break;
+        }
+    }
+} while (opcion != 6);
+
+string LeerProducto()
+{
+    string nombre;
+    do
+    {
+        Console.Write("Producto: ");
+        nombre = (Console.ReadLine() ?? "").Trim().ToLower();
+        if (nombre.Length == 0)
+        {
+            Console.WriteLine("El nombre no puede estar vacío.");
+        }
+    } while (nombre.Length == 0);
+    return nombre;
+}
+
+bool LeerCantidad(string mensaje, out int cantidad)
+{
+    Console.Write(mensaje);
+    bool ok = int.TryParse(Console.ReadLine(), out cantidad) && cantidad > 0;
+    if (!ok)
+    {
+        Console.WriteLine("La cantidad debe ser un entero mayor que 0.");
+    }
+    return ok;
+}
+` },
+                { titulo: "Ampliación: dos diccionarios en paralelo", nota: "Dos diccionarios con la misma clave funcionan, pero cuando hay varios datos por producto lo correcto es una clase o un record (Producto con Nombre, Unidades y Precio) y un único Dictionary<string, Producto>.", codigo: r`Dictionary<string, int> existencias = new Dictionary<string, int>
+{
+    ["teclado"] = 12, ["raton"] = 30, ["monitor"] = 4,
+};
+Dictionary<string, decimal> precios = new Dictionary<string, decimal>
+{
+    ["teclado"] = 24.90m, ["raton"] = 12.50m, ["monitor"] = 149.00m,
+};
+
+// Producto con más unidades
+string masUnidades = "";
+int maximo = -1;
+foreach (var par in existencias)
+{
+    if (par.Value > maximo)
+    {
+        maximo = par.Value;
+        masUnidades = par.Key;
+    }
+}
+Console.WriteLine($"Más unidades: {masUnidades} ({maximo})");
+
+// Valor total del inventario
+decimal total = 0;
+List<string> sinPrecio = new List<string>();
+
+foreach (var par in existencias)
+{
+    if (precios.TryGetValue(par.Key, out decimal precio))
+    {
+        total += precio * par.Value;
+    }
+    else
+    {
+        sinPrecio.Add(par.Key);        // control de errores: falta el precio
+    }
+}
+
+Console.WriteLine($"Valor del inventario: {total:F2} €");
+if (sinPrecio.Count > 0)
+{
+    Console.WriteLine($"¡Atención! Sin precio asignado: {string.Join(", ", sinPrecio)}");
+}
+
+// Ficha completa
+Console.WriteLine($"\n{"PRODUCTO",-12}{"UDS",5}{"PRECIO",10}{"VALOR",12}");
+foreach (var par in existencias.OrderBy(p => p.Key))
+{
+    decimal p = precios.GetValueOrDefault(par.Key);
+    Console.WriteLine($"{par.Key,-12}{par.Value,5}{p,10:F2}{p * par.Value,12:F2}");
+}
+` },
+              ],
+            },
+            {
+              titulo: "Analizador de texto con diccionarios y conjuntos",
+              nivel: 2,
+              pista: "Un HashSet<string> construido desde el array de palabras te da las distintas en una línea.",
+              enunciado: r`<p>Escribe un programa que analice un texto (puedes tenerlo en una
+variable) y muestre:</p>
+<ol type="1">
+<li>El número de palabras <strong>totales</strong> y el de palabras
+<strong>distintas</strong> (usa un
+<code>HashSet&lt;string&gt;</code>).</li>
+<li>La frecuencia de cada palabra, ordenada de más a menos
+frecuente.</li>
+<li>Las palabras que aparecen <strong>una sola vez</strong>.</li>
+<li>Las letras usadas, en orden alfabético (un
+<code>SortedSet&lt;char&gt;</code>).</li>
+<li>La <strong>intersección</strong> con una lista de palabras clave que
+definas tú.</li>
+</ol>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Normaliza el texto: todo a minúsculas y sin signos de
+puntuación.</li>
+<li>No cuentes las palabras vacías que resultan de separar por espacios
+múltiples.</li>
+<li><strong>Control de errores:</strong> si el texto queda vacío tras
+normalizar, muestra un aviso en lugar de dividir entre cero.</li>
+</ul>
+<p>🏅🏅 <strong>Ampliación avanzada:</strong> excluye las palabras
+«vacías» de contenido (artículos, preposiciones) guardándolas en un
+<code>HashSet&lt;string&gt;</code>, y muestra el top 3 real.</p>`,
+              soluciones: [
+                { titulo: "Versión completa", nota: "RemoveEmptyEntries descarta las cadenas vacías que dejarían los espacios múltiples. El patrón [^\\p{L}\\s] significa «lo que no sea letra ni espacio» y funciona también con acentos.", codigo: r`// Split con varios separadores y RemoveEmptyEntries descarta las cadenas vacías
+using System.Text.RegularExpressions;
+
+string texto = @"El gato de mi vecina es un gato muy tranquilo.
+El perro de mi vecino no es tan tranquilo como el gato.
+Mi vecina dice que su gato duerme todo el dia.";
+
+// 1. Normalizar: minúsculas y fuera la puntuación
+string limpio = Regex.Replace(texto.ToLower(), @"[^\p{L}\s]", " ");
+char[] separadores = { ' ', '\n', '\r', '\t' };
+string[] palabras = limpio.Split(separadores, StringSplitOptions.RemoveEmptyEntries);
+
+if (palabras.Length == 0)
+{
+    Console.WriteLine("El texto no contiene palabras.");
+}
+else
+{
+    HashSet<string> distintas = new HashSet<string>(palabras);
+    Console.WriteLine($"Palabras totales:   {palabras.Length}");
+    Console.WriteLine($"Palabras distintas: {distintas.Count}");
+    Console.WriteLine($"Riqueza léxica:     {100.0 * distintas.Count / palabras.Length:F1} %");
+
+    // 2. Frecuencias
+    Dictionary<string, int> frecuencia = new Dictionary<string, int>();
+    foreach (string p in palabras)
+    {
+        frecuencia[p] = frecuencia.GetValueOrDefault(p) + 1;
+    }
+
+    Console.WriteLine("\nMás frecuentes:");
+    foreach (var par in frecuencia.OrderByDescending(x => x.Value).ThenBy(x => x.Key).Take(8))
+    {
+        Console.WriteLine($"  {par.Key,-12} {new string('#', par.Value)} ({par.Value})");
+    }
+
+    // 3. Las que aparecen una sola vez
+    List<string> unicas = new List<string>();
+    foreach (var par in frecuencia)
+    {
+        if (par.Value == 1) { unicas.Add(par.Key); }
+    }
+    unicas.Sort();
+    Console.WriteLine($"\nAparecen una sola vez ({unicas.Count}): {string.Join(", ", unicas)}");
+
+    // 4. Letras usadas, ordenadas (SortedSet se mantiene ordenado siempre)
+    SortedSet<char> letras = new SortedSet<char>();
+    foreach (char c in limpio)
+    {
+        if (char.IsLetter(c)) { letras.Add(c); }
+    }
+    Console.WriteLine($"\nLetras usadas ({letras.Count}): {string.Join(" ", letras)}");
+
+    // 5. Intersección con las palabras clave
+    HashSet<string> clave = new HashSet<string> { "gato", "perro", "pajaro", "tranquilo" };
+    HashSet<string> encontradas = new HashSet<string>(clave);
+    encontradas.IntersectWith(distintas);
+    Console.WriteLine($"\nPalabras clave encontradas: {string.Join(", ", encontradas)}");
+
+    HashSet<string> noEncontradas = new HashSet<string>(clave);
+    noEncontradas.ExceptWith(distintas);
+    Console.WriteLine($"Palabras clave ausentes:    {string.Join(", ", noEncontradas)}");
+}
+` },
+                { titulo: "Ampliación: descartar palabras vacías de contenido", nota: "Las stop words son el primer paso de cualquier análisis de texto real (buscadores, clasificadores). Guardarlas en un HashSet y no en una List es la diferencia entre O(1) y O(n) por cada palabra comprobada.", codigo: r`// Las «stop words»: palabras muy frecuentes que no aportan información
+HashSet<string> vacias = new HashSet<string>
+{
+    "el", "la", "los", "las", "un", "una", "de", "del", "que", "y", "o",
+    "a", "en", "es", "su", "mi", "no", "como", "tan", "muy", "todo",
+};
+
+Dictionary<string, int> frecuencia = new Dictionary<string, int>
+{
+    ["el"] = 5, ["gato"] = 4, ["de"] = 3, ["tranquilo"] = 2, ["vecina"] = 2, ["mi"] = 3,
+};
+
+Console.WriteLine("Top 3 incluyendo palabras vacías:");
+foreach (var par in frecuencia.OrderByDescending(x => x.Value).Take(3))
+{
+    Console.WriteLine($"  {par.Key,-12} {par.Value}");
+}
+
+Console.WriteLine("\nTop 3 con contenido real:");
+List<KeyValuePair<string, int>> significativas = new List<KeyValuePair<string, int>>();
+foreach (var par in frecuencia)
+{
+    if (!vacias.Contains(par.Key))        // Contains en O(1): por eso un HashSet
+    {
+        significativas.Add(par);
+    }
+}
+significativas.Sort((a, b) => b.Value.CompareTo(a.Value));
+
+for (int i = 0; i < Math.Min(3, significativas.Count); i++)
+{
+    Console.WriteLine($"  {significativas[i].Key,-12} {significativas[i].Value}");
+}
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "coleccion-pilas-colas",
+          titulo: "Queue y Stack: colas y pilas",
+          duracion: "18 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Distinguir el comportamiento FIFO de una cola del LIFO de una pila", "Usar Queue<T> y Stack<T> con sus métodos propios", "Reconocer los problemas que se resuelven con cada una"],
+          teoria: r`<p>Hay dos colecciones que no sirven para guardar datos «en general»,
+sino para imponer un <strong>orden de salida</strong>. No tienen acceso
+por índice a propósito: su valor está justo en la restricción.</p>
+<h3 id="1-queuet-la-cola-fifo">1. <code>Queue&lt;T&gt;</code>: la cola
+(FIFO)</h3>
+<p><strong>First In, First Out</strong>: el primero que entra es el
+primero que sale. Como la cola de la cafetería.</p>
+<pre><code>entra →  [D] [C] [B] [A]  → sale
+          Enqueue      Dequeue</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Método</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Enqueue(x)</code></td>
+<td>mete al final</td>
+</tr>
+<tr class="even">
+<td><code>Dequeue()</code></td>
+<td>saca el primero <strong>y lo quita</strong></td>
+</tr>
+<tr class="odd">
+<td><code>Peek()</code></td>
+<td>mira el primero <strong>sin quitarlo</strong></td>
+</tr>
+<tr class="even">
+<td><code>Count</code></td>
+<td>cuántos hay</td>
+</tr>
+<tr class="odd">
+<td><code>Contains(x)</code></td>
+<td>¿está? (O(n))</td>
+</tr>
+<tr class="even">
+<td><code>TryDequeue(out x)</code></td>
+<td>saca si hay; devuelve <code>bool</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><code>Dequeue</code> y <code>Peek</code> lanzan
+<code>InvalidOperationException</code> si la cola está vacía. Comprueba
+<code>Count &gt; 0</code> o usa <code>TryDequeue</code>.</p>
+<p><strong>Dónde se usa:</strong> peticiones de impresión, mensajes
+pendientes de enviar, turnos de atención, el recorrido en
+<strong>anchura</strong> (BFS) de un grafo o un laberinto, la cola de
+tareas de un servidor.</p>
+<h3 id="2-stackt-la-pila-lifo">2. <code>Stack&lt;T&gt;</code>: la pila
+(LIFO)</h3>
+<p><strong>Last In, First Out</strong>: el último que entra es el
+primero que sale. Como una pila de platos.</p>
+<pre><code>         entra ↓ ↑ sale
+            [D]        Push / Pop
+            [C]
+            [B]
+            [A]</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Método</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Push(x)</code></td>
+<td>pone encima</td>
+</tr>
+<tr class="even">
+<td><code>Pop()</code></td>
+<td>saca el de arriba <strong>y lo quita</strong></td>
+</tr>
+<tr class="odd">
+<td><code>Peek()</code></td>
+<td>mira el de arriba <strong>sin quitarlo</strong></td>
+</tr>
+<tr class="even">
+<td><code>TryPop(out x)</code></td>
+<td>saca si hay; devuelve <code>bool</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Dónde se usa:</strong> el «deshacer» de cualquier programa,
+el botón «atrás» del navegador, comprobar paréntesis equilibrados,
+evaluar expresiones, convertir una recursividad en un bucle y —muy
+importante— <strong>la propia pila de llamadas</strong> del programa:
+cada llamada a un método se apila y se desapila al volver. Cuando una
+recursividad infinita provoca <code>StackOverflowException</code>, es
+esta pila la que se desborda.</p>
+<h3 id="3-el-detalle-del-foreach">3. El detalle del
+<code>foreach</code></h3>
+<p>Recorrer una cola o una pila con <code>foreach</code> <strong>no saca
+los elementos</strong>: solo los mira, en el orden en que saldrían. Una
+pila, por tanto, se recorre de arriba abajo (del último al primero).</p>
+<p>Para <strong>vaciar</strong> la colección procesándola hay que usar
+un bucle con la condición en la cabecera:</p>
+<pre><code>while (cola.Count &gt; 0)
+{
+    Console.WriteLine(cola.Dequeue());
+}</code></pre>
+<h3 id="4-y-si-necesito-prioridades">4. ¿Y si necesito prioridades?</h3>
+<p>Desde .NET 6 existe
+<code>PriorityQueue&lt;TElement, TPriority&gt;</code>: saca siempre el
+elemento de <strong>menor prioridad numérica</strong>, sin importar
+cuándo entró. Es lo que necesitan un planificador de tareas, un triaje
+de urgencias o el algoritmo de caminos mínimos de Dijkstra.</p>
+<pre><code>PriorityQueue&lt;string, int&gt; urgencias = new PriorityQueue&lt;string, int&gt;();
+urgencias.Enqueue(&quot;Esguince&quot;, 3);
+urgencias.Enqueue(&quot;Infarto&quot;, 1);      // prioridad 1 = la más urgente
+Console.WriteLine(urgencias.Dequeue());   // Infarto</code></pre>`,
+          ejemplos: [
+            { titulo: "Cola: atender por orden de llegada", explicacion: "Fíjate en la diferencia entre foreach (mira) y el while con Dequeue (consume). Es la confusión más habitual con colas y pilas.", codigo: r`Queue<string> impresion = new Queue<string>();
+
+impresion.Enqueue("informe.pdf");
+impresion.Enqueue("practica.docx");
+impresion.Enqueue("foto.png");
+
+Console.WriteLine($"Documentos en cola: {impresion.Count}");
+Console.WriteLine($"El siguiente será: {impresion.Peek()}   (Peek no lo saca)");
+Console.WriteLine($"Siguen siendo {impresion.Count}\n");
+
+// foreach solo MIRA, en el orden de salida
+Console.WriteLine("Contenido de la cola:");
+foreach (string documento in impresion)
+{
+    Console.WriteLine($"  {documento}");
+}
+
+// Procesar vaciando: condición en la cabecera del while
+Console.WriteLine("\nImprimiendo:");
+while (impresion.Count > 0)
+{
+    string documento = impresion.Dequeue();
+    Console.WriteLine($"  imprimiendo {documento}... ({impresion.Count} pendientes)");
+}
+
+// Dequeue con la cola vacía lanza excepción
+try
+{
+    impresion.Dequeue();
+}
+catch (InvalidOperationException)
+{
+    Console.WriteLine("\nInvalidOperationException: la cola estaba vacía");
+}
+
+// TryDequeue: la versión segura
+if (!impresion.TryDequeue(out string siguiente))
+{
+    Console.WriteLine("TryDequeue devuelve false en lugar de lanzar la excepción");
+}
+` },
+            { titulo: "Pila: deshacer y comprobar paréntesis", explicacion: "Este algoritmo es el que usa tu editor para avisarte de un paréntesis sin cerrar, y es la pregunta de entrevista técnica más repetida del mundo. La pila es la estructura natural: el último que se abre es el primero que debe cerrarse.", codigo: r`// ---------- 1. Deshacer ----------
+Stack<string> acciones = new Stack<string>();
+acciones.Push("escribir «Hola»");
+acciones.Push("poner en negrita");
+acciones.Push("borrar la línea 3");
+
+Console.WriteLine("Pila de acciones (de arriba abajo, el foreach recorre así):");
+foreach (string accion in acciones)
+{
+    Console.WriteLine($"  {accion}");
+}
+
+Console.WriteLine($"\nDeshacer: {acciones.Pop()}");
+Console.WriteLine($"Deshacer: {acciones.Pop()}");
+Console.WriteLine($"Quedan {acciones.Count} acciones\n");
+
+// ---------- 2. Paréntesis equilibrados: el caso clásico ----------
+string[] expresiones =
+{
+    "(a + b) * [c - d]",
+    "{ if (x) { y[0]; } }",
+    "(a + b",
+    "(a + b]",
+    "a + b)",
+};
+
+foreach (string expresion in expresiones)
+{
+    Console.WriteLine($"{expresion,-22} {(Equilibrada(expresion) ? "equilibrada" : "MAL")}");
+}
+
+bool Equilibrada(string texto)
+{
+    Stack<char> pendientes = new Stack<char>();
+    bool correcto = true;
+
+    foreach (char c in texto)
+    {
+        if (c == '(' || c == '[' || c == '{')
+        {
+            pendientes.Push(c);                      // apertura: a la pila
+        }
+        else if (c == ')' || c == ']' || c == '}')
+        {
+            if (pendientes.Count == 0)
+            {
+                correcto = false;                    // cierre sin apertura
+            }
+            else
+            {
+                char abierto = pendientes.Pop();
+                bool empareja = (abierto == '(' && c == ')')
+                                || (abierto == '[' && c == ']')
+                                || (abierto == '{' && c == '}');
+                if (!empareja)
+                {
+                    correcto = false;                // cierre del tipo equivocado
+                }
+            }
+        }
+    }
+
+    // Al final no debe quedar nada pendiente
+    return correcto && pendientes.Count == 0;
+}
+` },
+            { titulo: "Cola frente a pila en un laberinto: anchura y profundidad", explicacion: "Una sola línea de diferencia (cola o pila) y el algoritmo cambia de nombre: BFS o DFS. El BFS encuentra el camino más corto; el DFS gasta menos memoria. Las tuplas (int f, int c) permiten guardar dos valores sin crear una clase.", codigo: r`// El mismo recorrido con cola (anchura) y con pila (profundidad).
+// Solo cambia la colección, y el orden de visita cambia por completo.
+
+int[,] mapa =
+{
+    { 0, 0, 0, 1 },
+    { 1, 1, 0, 1 },
+    { 0, 0, 0, 0 },
+};
+int alto = mapa.GetLength(0);
+int ancho = mapa.GetLength(1);
+
+Console.WriteLine("Recorrido en ANCHURA (cola): se exploran los vecinos cercanos primero");
+Recorrer(true);
+
+Console.WriteLine("\nRecorrido en PROFUNDIDAD (pila): se avanza hasta el final por un camino");
+Recorrer(false);
+
+void Recorrer(bool conCola)
+{
+    bool[,] visitado = new bool[alto, ancho];
+    Queue<(int f, int c)> cola = new Queue<(int, int)>();
+    Stack<(int f, int c)> pila = new Stack<(int, int)>();
+
+    if (conCola) { cola.Enqueue((0, 0)); } else { pila.Push((0, 0)); }
+    visitado[0, 0] = true;
+
+    int orden = 0;
+    while ((conCola ? cola.Count : pila.Count) > 0)
+    {
+        (int f, int c) actual = conCola ? cola.Dequeue() : pila.Pop();
+        orden++;
+        Console.WriteLine($"  {orden}. visito ({actual.f},{actual.c})");
+
+        // Los cuatro vecinos
+        (int, int)[] vecinos =
+        {
+            (actual.f + 1, actual.c), (actual.f, actual.c + 1),
+            (actual.f - 1, actual.c), (actual.f, actual.c - 1),
+        };
+
+        foreach ((int f, int c) v in vecinos)
+        {
+            bool dentro = v.f >= 0 && v.f < alto && v.c >= 0 && v.c < ancho;
+            if (dentro && mapa[v.f, v.c] == 0 && !visitado[v.f, v.c])
+            {
+                visitado[v.f, v.c] = true;
+                if (conCola) { cola.Enqueue(v); } else { pila.Push(v); }
+            }
+        }
+    }
+}
+` },
+            { titulo: "Cola con prioridades", explicacion: "Dentro de la misma prioridad, PriorityQueue no garantiza el orden de llegada. Si eso importa, hay que incluir un número de secuencia en la prioridad.", codigo: r`// PriorityQueue (desde .NET 6): sale primero el de menor número de prioridad
+PriorityQueue<string, int> urgencias = new PriorityQueue<string, int>();
+
+urgencias.Enqueue("Esguince de tobillo", 3);
+urgencias.Enqueue("Dolor en el pecho", 1);
+urgencias.Enqueue("Fiebre alta", 2);
+urgencias.Enqueue("Corte superficial", 4);
+urgencias.Enqueue("Dificultad para respirar", 1);
+
+Console.WriteLine($"Pacientes en espera: {urgencias.Count}\n");
+Console.WriteLine("Orden de atención:");
+
+while (urgencias.TryDequeue(out string paciente, out int prioridad))
+{
+    Console.WriteLine($"  [prioridad {prioridad}] {paciente}");
+}
+
+// Comparación con una cola normal: el orden sería el de llegada
+Queue<string> normal = new Queue<string>();
+normal.Enqueue("Esguince de tobillo");
+normal.Enqueue("Dolor en el pecho");
+normal.Enqueue("Fiebre alta");
+
+Console.WriteLine("\nCon una cola normal (por orden de llegada):");
+while (normal.Count > 0)
+{
+    Console.WriteLine($"  {normal.Dequeue()}");
+}
+Console.WriteLine("\n...el dolor en el pecho esperaría su turno. Por eso existen las prioridades.");
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Simulador de cola de atención",
+              nivel: 1,
+              pista: "TryDequeue(out nombre) devuelve false si la cola está vacía, y así te ahorras el if de Count.",
+              enunciado: r`<p>Simula la cola de atención de una secretaría con un
+<strong>menú</strong>: <code>1</code> llega un cliente (pide su nombre),
+<code>2</code> atender al siguiente, <code>3</code> ver quién es el
+siguiente sin atenderlo, <code>4</code> ver toda la cola y
+<code>5</code> salir.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Usa <code>Queue&lt;string&gt;</code>.</li>
+<li><strong>Control de errores:</strong> no permitas nombres vacíos; al
+atender o consultar con la cola vacía, muestra un aviso en lugar de
+dejar que salte la excepción.</li>
+<li>Muestra siempre cuántas personas quedan esperando.</li>
+<li>Usa <code>do-while</code> con la condición en la cabecera.</li>
+</ul>
+<p>🏅 <strong>Ampliación:</strong> usa
+<code>PriorityQueue&lt;string, int&gt;</code> para que los clientes con
+cita previa (prioridad 1) pasen antes que los que llegan sin cita
+(prioridad 2).</p>`,
+              soluciones: [
+                { titulo: "Versión con Queue", nota: "TryDequeue resuelve en una línea lo que con Dequeue exigiría comprobar Count antes o capturar la excepción. Es el mismo patrón Try de TryParse y TryGetValue: aparece por toda la biblioteca de .NET.", codigo: r`Queue<string> cola = new Queue<string>();
+int atendidos = 0;
+int opcion = 0;
+
+do
+{
+    Console.WriteLine($"\n--- SECRETARÍA (esperando: {cola.Count}) ---");
+    Console.WriteLine("1) Llega cliente   2) Atender   3) Ver siguiente");
+    Console.WriteLine("4) Ver la cola     5) Cerrar");
+    Console.Write("Opción: ");
+
+    if (!int.TryParse(Console.ReadLine(), out opcion))
+    {
+        Console.WriteLine("Escribe un número del 1 al 5.");
+        opcion = 0;
+    }
+    else
+    {
+        switch (opcion)
+        {
+            case 1:
+                Console.Write("Nombre del cliente: ");
+                string nombre = (Console.ReadLine() ?? "").Trim();
+                if (nombre.Length == 0)
+                {
+                    Console.WriteLine("El nombre no puede estar vacío.");
+                }
+                else
+                {
+                    cola.Enqueue(nombre);
+                    Console.WriteLine($"{nombre} se pone en la cola (posición {cola.Count}).");
+                }
+                break;
+
+            case 2:
+                if (cola.TryDequeue(out string atendido))
+                {
+                    atendidos++;
+                    Console.WriteLine($"Atendiendo a {atendido}. Quedan {cola.Count}.");
+                }
+                else
+                {
+                    Console.WriteLine("No hay nadie esperando.");
+                }
+                break;
+
+            case 3:
+                if (cola.Count > 0)
+                {
+                    Console.WriteLine($"El siguiente es {cola.Peek()} (sigue en la cola).");
+                }
+                else
+                {
+                    Console.WriteLine("La cola está vacía.");
+                }
+                break;
+
+            case 4:
+                if (cola.Count == 0)
+                {
+                    Console.WriteLine("(cola vacía)");
+                }
+                else
+                {
+                    int posicion = 1;
+                    foreach (string cliente in cola)          // foreach no saca a nadie
+                    {
+                        Console.WriteLine($"  {posicion}. {cliente}");
+                        posicion++;
+                    }
+                }
+                break;
+
+            case 5:
+                Console.WriteLine($"Cerramos. Atendidos hoy: {atendidos}. " +
+                                  $"Sin atender: {cola.Count}.");
+                break;
+
+            default:
+                Console.WriteLine("Opción fuera de rango.");
+                break;
+        }
+    }
+} while (opcion != 5);
+` },
+                { titulo: "Ampliación: con cita previa", nota: "El aviso del final es importante: PriorityQueue no es estable. Para garantizar el orden de llegada dentro de una prioridad se usa como prioridad una tupla (prioridad, numeroDeOrden).", codigo: r`PriorityQueue<string, int> cola = new PriorityQueue<string, int>();
+
+void Llega(string nombre, bool conCita)
+{
+    int prioridad = conCita ? 1 : 2;              // 1 pasa antes que 2
+    cola.Enqueue(nombre, prioridad);
+    Console.WriteLine($"{nombre} llega {(conCita ? "con cita" : "sin cita")}. " +
+                      $"En espera: {cola.Count}");
+}
+
+Llega("Ana", false);
+Llega("Luis", true);
+Llega("Marta", false);
+Llega("Pau", true);
+
+Console.WriteLine("\nOrden de atención:");
+while (cola.TryDequeue(out string cliente, out int prioridad))
+{
+    Console.WriteLine($"  {cliente} ({(prioridad == 1 ? "con cita" : "sin cita")})");
+}
+
+Console.WriteLine("\nLos de cita previa pasan antes aunque hayan llegado después.");
+Console.WriteLine("Dentro de la misma prioridad, el orden no está garantizado:");
+Console.WriteLine("si hiciera falta respetar la llegada, habría que añadir un número de secuencia.");
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "ordenacion-colecciones",
+          titulo: "Ordenar colecciones: IComparable e IComparer",
+          duracion: "20 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Implementar IComparable<T> para dar a una clase su orden natural", "Escribir comparadores externos con IComparer<T> para criterios alternativos", "Ordenar con lambdas y con OrderBy, y saber cuándo usar cada opción"],
+          teoria: r`<p><code>Sort()</code> sabe ordenar <code>int</code> y
+<code>string</code> porque esos tipos saben compararse. Pero si intentas
+ordenar una lista de objetos de tu propia clase, obtendrás una
+excepción: <em>«Failed to compare two elements in the array»</em>. El
+programa no tiene forma de saber si un <code>Jugador</code> es «menor»
+que otro. Hay que decírselo, y hay <strong>dos maneras</strong>, con una
+diferencia conceptual importante.</p>
+<h3 id="1-icomparablet-el-orden-natural">1.
+<code>IComparable&lt;T&gt;</code>: el orden natural</h3>
+<p>Implementar <code>IComparable&lt;T&gt;</code> en la clase significa:
+«<strong>este</strong> es el orden propio de este tipo». Solo se puede
+elegir uno, y debería ser el más evidente (un empleado por su número,
+una fecha cronológicamente, una versión por su número).</p>
+<pre><code>class Jugador : IComparable&lt;Jugador&gt;
+{
+    public string Nombre { get; set; }
+    public int Puntos { get; set; }
+
+    public int CompareTo(Jugador otro)
+    {
+        if (otro is null) { return 1; }        // null va al principio, por convenio
+        return Puntos.CompareTo(otro.Puntos);  // delegamos en el tipo que ya sabe comparar
+    }
+}</code></pre>
+<p>El contrato de <code>CompareTo</code> es siempre el mismo:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Devuelve</th>
+<th>Significa</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>negativo</strong></td>
+<td><code>this</code> va <strong>antes</strong> que el otro</td>
+</tr>
+<tr class="even">
+<td><strong>0</strong></td>
+<td>están empatados</td>
+</tr>
+<tr class="odd">
+<td><strong>positivo</strong></td>
+<td><code>this</code> va <strong>después</strong></td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p><strong>No calcules la resta.</strong>
+<code>return Puntos - otro.Puntos;</code> parece ingenioso y funciona…
+hasta que los números son grandes y la resta desborda el
+<code>int</code>, devolviendo el signo contrario. Usa siempre
+<code>CompareTo</code> del tipo subyacente.</p>
+</div>
+<p>Con la interfaz implementada, <code>lista.Sort()</code>,
+<code>Array.Sort</code>, <code>SortedSet&lt;T&gt;</code> y
+<code>OrderBy</code> ya funcionan sin decir nada más.</p>
+<h3 id="2-icomparert-criterios-alternativos">2.
+<code>IComparer&lt;T&gt;</code>: criterios alternativos</h3>
+<p>¿Y si unas veces quiero ordenar por puntos y otras por nombre? Un
+<code>IComparer&lt;T&gt;</code> es un <strong>objeto comparador
+externo</strong>: una clase aparte cuya única misión es comparar dos
+elementos.</p>
+<pre><code>class PorNombre : IComparer&lt;Jugador&gt;
+{
+    public int Compare(Jugador a, Jugador b) =&gt; string.Compare(a.Nombre, b.Nombre);
+}
+
+jugadores.Sort(new PorNombre());</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th></th>
+<th><code>IComparable&lt;T&gt;</code></th>
+<th><code>IComparer&lt;T&gt;</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Dónde se escribe</td>
+<td><strong>dentro</strong> de la clase</td>
+<td>en una clase <strong>aparte</strong></td>
+</tr>
+<tr class="even">
+<td>Método</td>
+<td><code>CompareTo(otro)</code></td>
+<td><code>Compare(a, b)</code></td>
+</tr>
+<tr class="odd">
+<td>Cuántos puede haber</td>
+<td><strong>uno</strong> (el orden natural)</td>
+<td><strong>tantos como quieras</strong></td>
+</tr>
+<tr class="even">
+<td>Se usa cuando</td>
+<td>hay un orden evidente</td>
+<td>hay varios criterios, o la clase no es tuya</td>
+</tr>
+</tbody>
+</table></div>
+<p>La segunda razón es clave: si la clase viene de una biblioteca que no
+puedes modificar, <code>IComparer&lt;T&gt;</code> es la
+<strong>única</strong> opción.</p>
+<h3 id="3-la-vía-rápida-lambdas">3. La vía rápida: lambdas</h3>
+<p>Para un criterio puntual no hace falta crear una clase:
+<code>Sort</code> acepta una <strong>comparación</strong> escrita en el
+momento.</p>
+<pre><code>jugadores.Sort((a, b) =&gt; a.Nombre.CompareTo(b.Nombre));        // por nombre
+jugadores.Sort((a, b) =&gt; b.Puntos.CompareTo(a.Puntos));        // por puntos, descendente</code></pre>
+<p>Fíjate en el truco del orden descendente: se invierten los operandos
+(<code>b</code> antes que <code>a</code>).</p>
+<p>Y criterios compuestos («por puntos y, en caso de empate, por
+nombre»):</p>
+<pre><code>jugadores.Sort((a, b) =&gt;
+{
+    int porPuntos = b.Puntos.CompareTo(a.Puntos);
+    return porPuntos != 0 ? porPuntos : a.Nombre.CompareTo(b.Nombre);
+});</code></pre>
+<h3 id="4-la-vía-moderna-orderby-linq">4. La vía moderna:
+<code>OrderBy</code> (LINQ)</h3>
+<pre><code>var ranking = jugadores.OrderByDescending(j =&gt; j.Puntos)
+                       .ThenBy(j =&gt; j.Nombre);</code></pre>
+<p>Mucho más legible: se dice <strong>por qué</strong> ordenar, no cómo
+comparar. Dos diferencias importantes con <code>Sort</code>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th></th>
+<th><code>Sort()</code></th>
+<th><code>OrderBy()</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Qué hace</td>
+<td>reordena <strong>la propia lista</strong></td>
+<td>devuelve una <strong>secuencia nueva</strong></td>
+</tr>
+<tr class="even">
+<td>La original</td>
+<td>queda modificada</td>
+<td>queda intacta</td>
+</tr>
+<tr class="odd">
+<td>Estabilidad</td>
+<td><strong>no</strong> es estable</td>
+<td><strong>sí</strong> es estable</td>
+</tr>
+</tbody>
+</table></div>
+<p>Que <code>OrderBy</code> sea estable significa que los elementos
+empatados conservan su orden anterior, lo que permite encadenar
+criterios con confianza. Y que no modifique la original es casi siempre
+lo que quieres.</p>
+<p><strong>La recomendación:</strong> <code>OrderBy</code> por defecto;
+<code>Sort</code> cuando quieras ahorrar la copia en colecciones
+grandes; <code>IComparable&lt;T&gt;</code> cuando la clase tenga un
+orden natural obvio; <code>IComparer&lt;T&gt;</code> cuando necesites
+varios criterios reutilizables o la clase no sea tuya.</p>
+<h3 id="5-ordenar-textos-cuidado-con-la-cultura">5. Ordenar textos:
+cuidado con la cultura</h3>
+<pre><code>string.Compare(&quot;ñandú&quot;, &quot;nutria&quot;);                        // depende de la cultura
+string.Compare(&quot;a&quot;, &quot;B&quot;, StringComparison.Ordinal);       // por código: &#39;B&#39; (66) &lt; &#39;a&#39; (97)
+string.Compare(&quot;a&quot;, &quot;B&quot;, StringComparison.OrdinalIgnoreCase);</code></pre>
+<p>Para <strong>mostrar</strong> al usuario, la comparación cultural es
+la correcta (en español la ñ va después de la n). Para <strong>comparar
+claves internas</strong>, identificadores o nombres de ficheros, usa
+<code>Ordinal</code>: es más rápido y, sobre todo, da el mismo resultado
+en cualquier ordenador.</p>`,
+          ejemplos: [
+            { titulo: "Sin IComparable no se puede ordenar", explicacion: "El mensaje de error es claro una vez se sabe leerlo: Sort no puede comparar dos elementos porque el tipo no define ningún orden. Las lambdas resuelven el caso puntual.", codigo: r`List<Jugador> jugadores = new List<Jugador>
+{
+    new Jugador("Marta", 72),
+    new Jugador("Ana", 95),
+    new Jugador("Luis", 48),
+};
+
+// Intentar ordenar una clase que no sabe compararse
+try
+{
+    jugadores.Sort();
+}
+catch (InvalidOperationException ex)
+{
+    Console.WriteLine("Sort() falla: " + ex.InnerException?.Message);
+    Console.WriteLine("(la clase no implementa IComparable<Jugador>)");
+}
+
+// Soluciones sin tocar la clase: una lambda de comparación
+jugadores.Sort((a, b) => a.Puntos.CompareTo(b.Puntos));
+Console.WriteLine("\nPor puntos (ascendente):");
+Mostrar(jugadores);
+
+jugadores.Sort((a, b) => b.Puntos.CompareTo(a.Puntos));     // operandos invertidos
+Console.WriteLine("\nPor puntos (descendente):");
+Mostrar(jugadores);
+
+jugadores.Sort((a, b) => string.Compare(a.Nombre, b.Nombre));
+Console.WriteLine("\nPor nombre:");
+Mostrar(jugadores);
+
+void Mostrar(List<Jugador> lista)
+{
+    foreach (Jugador j in lista)
+    {
+        Console.WriteLine($"  {j.Nombre,-8} {j.Puntos,3}");
+    }
+}
+
+class Jugador
+{
+    public string Nombre { get; }
+    public int Puntos { get; }
+
+    public Jugador(string nombre, int puntos)
+    {
+        Nombre = nombre;
+        Puntos = puntos;
+    }
+}
+` },
+            { titulo: "IComparable: el orden natural de la clase", explicacion: "Un criterio compuesto se escribe así: compara el primer campo y, solo si hay empate (0), pasa al siguiente. Y observa que como texto «1.10.0» sería menor que «1.9.9»: comparar números como cadenas es un error clásico.", codigo: r`List<Version> versiones = new List<Version>
+{
+    new Version(1, 10, 3),
+    new Version(1, 2, 0),
+    new Version(2, 0, 0),
+    new Version(1, 10, 1),
+};
+
+versiones.Sort();                 // ahora sí: la clase sabe compararse
+Console.WriteLine("Versiones ordenadas:");
+foreach (Version v in versiones)
+{
+    Console.WriteLine($"  {v}");
+}
+
+Console.WriteLine($"\nLa más reciente: {versiones[^1]}");
+
+// IComparable hace que funcionen también estas tres cosas, sin escribir nada más:
+Console.WriteLine($"Máxima con LINQ: {versiones.Max()}");
+
+SortedSet<Version> ordenado = new SortedSet<Version>(versiones);
+Console.WriteLine($"SortedSet: {string.Join(" < ", ordenado)}");
+
+Version[] array = versiones.ToArray();
+Array.Sort(array);
+Console.WriteLine($"Array.Sort: {string.Join(" < ", array)}");
+
+// Comparar dos a dos
+Version a = new Version(1, 10, 0);
+Version b = new Version(1, 9, 9);
+Console.WriteLine($"\n{a}.CompareTo({b}) = {a.CompareTo(b)} (positivo: {a} va después)");
+Console.WriteLine("Fíjate en que 1.10.0 es MAYOR que 1.9.9: comparamos números, no texto.");
+
+class Version : IComparable<Version>
+{
+    public int Mayor { get; }
+    public int Menor { get; }
+    public int Parche { get; }
+
+    public Version(int mayor, int menor, int parche)
+    {
+        Mayor = mayor;
+        Menor = menor;
+        Parche = parche;
+    }
+
+    // Orden natural: por mayor, luego menor, luego parche
+    public int CompareTo(Version otra)
+    {
+        if (otra is null) { return 1; }
+
+        int porMayor = Mayor.CompareTo(otra.Mayor);
+        if (porMayor != 0) { return porMayor; }
+
+        int porMenor = Menor.CompareTo(otra.Menor);
+        if (porMenor != 0) { return porMenor; }
+
+        return Parche.CompareTo(otra.Parche);
+    }
+
+    public override string ToString() => $"{Mayor}.{Menor}.{Parche}";
+}
+` },
+            { titulo: "IComparer: varios criterios reutilizables", explicacion: "Separar cada criterio en su propia clase tiene dos ventajas: se puede probar por separado y se reutiliza en toda la aplicación. Comparer<T>.Create es el atajo cuando el criterio se usa una sola vez.", codigo: r`List<Producto> productos = new List<Producto>
+{
+    new Producto("Monitor", 149.00m, 4),
+    new Producto("Teclado", 24.90m, 12),
+    new Producto("Ratón", 12.50m, 30),
+    new Producto("Alfombrilla", 12.50m, 7),
+};
+
+// Cada comparador es un objeto reutilizable, con nombre y probable
+productos.Sort(new PorPrecio());
+Console.WriteLine("Por precio (y, si empatan, por nombre):");
+Mostrar(productos);
+
+productos.Sort(new PorStock());
+Console.WriteLine("\nPor existencias (de más a menos):");
+Mostrar(productos);
+
+// También se pueden usar con Array.Sort, SortedSet, OrderBy...
+SortedSet<Producto> porPrecio = new SortedSet<Producto>(new PorPrecio());
+foreach (Producto p in productos) { porPrecio.Add(p); }
+Console.WriteLine($"\nEl más barato: {porPrecio.Min.Nombre}");
+Console.WriteLine($"El más caro:   {porPrecio.Max.Nombre}");
+
+// Comparer.Create: un IComparer al momento, sin escribir la clase
+var porLongitudDelNombre = Comparer<Producto>.Create(
+    (a, b) => a.Nombre.Length.CompareTo(b.Nombre.Length));
+productos.Sort(porLongitudDelNombre);
+Console.WriteLine("\nPor longitud del nombre:");
+Mostrar(productos);
+
+void Mostrar(List<Producto> lista)
+{
+    foreach (Producto p in lista)
+    {
+        Console.WriteLine($"  {p.Nombre,-12} {p.Precio,8:F2} €  stock {p.Stock,3}");
+    }
+}
+
+class Producto
+{
+    public string Nombre { get; }
+    public decimal Precio { get; }
+    public int Stock { get; }
+
+    public Producto(string nombre, decimal precio, int stock)
+    {
+        Nombre = nombre;
+        Precio = precio;
+        Stock = stock;
+    }
+}
+
+class PorPrecio : IComparer<Producto>
+{
+    public int Compare(Producto a, Producto b)
+    {
+        if (a is null || b is null) { return 0; }
+
+        int porPrecio = a.Precio.CompareTo(b.Precio);
+        return porPrecio != 0 ? porPrecio : string.Compare(a.Nombre, b.Nombre);
+    }
+}
+
+class PorStock : IComparer<Producto>
+{
+    public int Compare(Producto a, Producto b)
+    {
+        if (a is null || b is null) { return 0; }
+        return b.Stock.CompareTo(a.Stock);          // invertido: de más a menos
+    }
+}
+` },
+            { titulo: "Sort frente a OrderBy", explicacion: "La diferencia entre cultural y ordinal es visible con la ñ y los acentos. Regla: cultural para mostrar a personas, ordinal para claves internas y nombres de ficheros (más rápido y siempre igual en todos los ordenadores).", codigo: r`List<string> nombres = new List<string> { "Marta", "ana", "Luis", "Álex", "ñoño", "noa" };
+
+// ---------- Sort MODIFICA la lista ----------
+List<string> paraSort = new List<string>(nombres);
+paraSort.Sort();
+Console.WriteLine($"Original: {string.Join(", ", nombres)}");
+Console.WriteLine($"Sort():   {string.Join(", ", paraSort)}  (la lista ha cambiado)");
+
+// ---------- OrderBy DEVUELVE una secuencia nueva ----------
+var ordenados = nombres.OrderBy(n => n);
+Console.WriteLine($"OrderBy:  {string.Join(", ", ordenados)}");
+Console.WriteLine($"Original: {string.Join(", ", nombres)}  (intacta)");
+
+// ---------- Cultura: cómo se ordena la ñ y los acentos ----------
+Console.WriteLine("\nOrdenación cultural (la que espera una persona):");
+Console.WriteLine($"  {string.Join(", ", nombres.OrderBy(n => n, StringComparer.CurrentCulture))}");
+
+Console.WriteLine("Ordenación ordinal (por código de carácter: mayúsculas primero):");
+Console.WriteLine($"  {string.Join(", ", nombres.OrderBy(n => n, StringComparer.Ordinal))}");
+
+Console.WriteLine("Ordinal ignorando mayúsculas:");
+Console.WriteLine($"  {string.Join(", ", nombres.OrderBy(n => n, StringComparer.OrdinalIgnoreCase))}");
+
+// ---------- Estabilidad ----------
+List<(string nombre, int grupo)> alumnos = new List<(string, int)>
+{
+    ("Ana", 1), ("Luis", 2), ("Marta", 1), ("Pau", 2), ("Noa", 1),
+};
+
+Console.WriteLine("\nOrderBy por grupo (estable: dentro de cada grupo se mantiene el orden original):");
+foreach (var a in alumnos.OrderBy(x => x.grupo))
+{
+    Console.WriteLine($"  grupo {a.grupo}: {a.nombre}");
+}
+
+Console.WriteLine("\nVarios criterios con ThenBy:");
+foreach (var a in alumnos.OrderBy(x => x.grupo).ThenByDescending(x => x.nombre))
+{
+    Console.WriteLine($"  grupo {a.grupo}: {a.nombre}");
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Biblioteca ordenable de varias formas",
+              nivel: 2,
+              pista: "CompareTo devuelve negativo, cero o positivo; para invertir el orden, cambia a y b de sitio.",
+              enunciado: r`<p>Crea una clase <code>Libro</code> con <code>Titulo</code>,
+<code>Autor</code>, <code>Anio</code> y <code>Paginas</code>, y una
+lista con al menos seis libros (incluyendo dos del mismo autor y dos del
+mismo año).</p>
+<p>Después:</p>
+<ol type="1">
+<li>Haz que <code>Libro</code> implemente
+<code>IComparable&lt;Libro&gt;</code> con el <strong>orden natural por
+título</strong>.</li>
+<li>Escribe dos comparadores: <code>PorAnio</code> (del más reciente al
+más antiguo) y <code>PorAutorYTitulo</code> (por autor y, si empatan,
+por título).</li>
+<li>Muestra la lista ordenada de las tres formas, más una cuarta usando
+<code>OrderBy</code>/<code>ThenBy</code> con LINQ.</li>
+<li>Muestra el libro más antiguo y el más largo.</li>
+</ol>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>En <code>CompareTo</code> y <code>Compare</code>, usa el
+<code>CompareTo</code> del tipo subyacente; <strong>nunca</strong> la
+resta de dos enteros.</li>
+<li>Protege los dos métodos contra <code>null</code>.</li>
+<li><strong>Control de errores:</strong> el constructor debe rechazar un
+título vacío y un año fuera de 1400-2100.</li>
+</ul>
+<p>💡 <strong>TIP:</strong>
+<code>string.Compare(a, b, StringComparison.CurrentCulture)</code> es la
+comparación adecuada para títulos que verá una persona.</p>
+<p>🏅 <strong>Ampliación:</strong> añade un
+<code>SortedSet&lt;Libro&gt;</code> con el comparador
+<code>PorAnio</code> y comprueba qué pasa con dos libros del mismo año
+(pista: un conjunto no admite «duplicados» según su comparador).</p>`,
+              soluciones: [
+                { titulo: "Versión completa", nota: "Las validaciones en el constructor garantizan que no puede existir un Libro inválido: es el principio de «objeto siempre en estado válido» que viste en encapsulamiento. Y observa que los comparadores son clases pequeñísimas, fáciles de probar por separado.", codigo: r`List<Libro> biblioteca = new List<Libro>
+{
+    new Libro("El Quijote", "Cervantes", 1605, 863),
+    new Libro("Rayuela", "Cortazar", 1963, 635),
+    new Libro("Bestiario", "Cortazar", 1951, 160),
+    new Libro("1984", "Orwell", 1949, 328),
+    new Libro("Rebelion en la granja", "Orwell", 1945, 112),
+    new Libro("Fahrenheit 451", "Bradbury", 1953, 194),
+};
+
+Console.WriteLine("=== Orden natural (por título) ===");
+biblioteca.Sort();
+Mostrar(biblioteca);
+
+Console.WriteLine("\n=== Por año, del más reciente ===");
+biblioteca.Sort(new PorAnio());
+Mostrar(biblioteca);
+
+Console.WriteLine("\n=== Por autor y título ===");
+biblioteca.Sort(new PorAutorYTitulo());
+Mostrar(biblioteca);
+
+Console.WriteLine("\n=== Con LINQ: por autor y, dentro, por año ===");
+foreach (Libro l in biblioteca.OrderBy(x => x.Autor).ThenBy(x => x.Anio))
+{
+    Console.WriteLine($"  {l}");
+}
+
+// Max y Min funcionan con un selector, sin necesidad de comparador
+Libro masAntiguo = biblioteca.OrderBy(l => l.Anio).First();
+Libro masLargo = biblioteca.OrderByDescending(l => l.Paginas).First();
+Console.WriteLine($"\nMás antiguo: {masAntiguo}");
+Console.WriteLine($"Más largo:   {masLargo} ({masLargo.Paginas} páginas)");
+
+void Mostrar(List<Libro> lista)
+{
+    foreach (Libro l in lista)
+    {
+        Console.WriteLine($"  {l}");
+    }
+}
+
+class Libro : IComparable<Libro>
+{
+    public string Titulo { get; }
+    public string Autor { get; }
+    public int Anio { get; }
+    public int Paginas { get; }
+
+    public Libro(string titulo, string autor, int anio, int paginas)
+    {
+        if (string.IsNullOrWhiteSpace(titulo))
+        {
+            throw new ArgumentException("El título no puede estar vacío", nameof(titulo));
+        }
+        if (anio < 1400 || anio > 2100)
+        {
+            throw new ArgumentOutOfRangeException(nameof(anio), "Debe estar entre 1400 y 2100");
+        }
+        if (paginas <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(paginas), "Debe ser mayor que 0");
+        }
+
+        Titulo = titulo;
+        Autor = autor;
+        Anio = anio;
+        Paginas = paginas;
+    }
+
+    // Orden natural: por título, con comparación cultural (lo lee una persona)
+    public int CompareTo(Libro otro)
+    {
+        if (otro is null) { return 1; }
+        return string.Compare(Titulo, otro.Titulo, StringComparison.CurrentCulture);
+    }
+
+    public override string ToString() => $"{Titulo,-24} {Autor,-10} {Anio}";
+}
+
+class PorAnio : IComparer<Libro>
+{
+    public int Compare(Libro a, Libro b)
+    {
+        if (a is null || b is null) { return 0; }
+        return b.Anio.CompareTo(a.Anio);         // invertido: del más reciente al más antiguo
+    }
+}
+
+class PorAutorYTitulo : IComparer<Libro>
+{
+    public int Compare(Libro a, Libro b)
+    {
+        if (a is null || b is null) { return 0; }
+
+        int porAutor = string.Compare(a.Autor, b.Autor, StringComparison.CurrentCulture);
+        return porAutor != 0
+            ? porAutor
+            : string.Compare(a.Titulo, b.Titulo, StringComparison.CurrentCulture);
+    }
+}
+` },
+                { titulo: "Ampliación: el SortedSet descarta los «empates»", nota: "Esta es una trampa real que sorprende a mucha gente: en un SortedSet o un SortedDictionary el comparador decide también qué es un duplicado. Un comparador para ordenar debe tener siempre un criterio de desempate si se va a usar en un conjunto.", noRun: true, codigo: r`List<Libro> libros = new List<Libro>
+{
+    new Libro("1984", "Orwell", 1949, 328),
+    new Libro("El hombre ilustrado", "Bradbury", 1951, 288),
+    new Libro("Bestiario", "Cortazar", 1951, 160),       // ¡mismo año que el anterior!
+};
+
+// Un SortedSet considera «iguales» los elementos cuyo comparador devuelve 0
+SortedSet<Libro> porAnio = new SortedSet<Libro>(new PorAnio());
+foreach (Libro l in libros)
+{
+    bool anadido = porAnio.Add(l);
+    Console.WriteLine($"{(anadido ? "añadido " : "RECHAZADO")}: {l.Titulo}");
+}
+
+Console.WriteLine($"\nEn el conjunto hay {porAnio.Count} libros de {libros.Count}:");
+foreach (Libro l in porAnio)
+{
+    Console.WriteLine($"  {l}");
+}
+
+Console.WriteLine("\nLección: el comparador de un SortedSet define a la vez el ORDEN y la IGUALDAD.");
+Console.WriteLine("Si dos elementos comparan 0, el conjunto los considera el mismo y descarta el segundo.");
+Console.WriteLine("Solución: que el comparador no devuelva 0 nunca para elementos distintos");
+Console.WriteLine("(añadiendo un criterio de desempate, como el título).");
+` },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "m13",
+      titulo: "Delegados, lambdas y LINQ",
+      lecciones: [
+        {
+          id: "delegados",
+          titulo: "Delegados: variables que guardan métodos",
+          duracion: "22 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Declarar y usar un delegado para pasar un método como parámetro", "Conocer los delegados genéricos de .NET: Action, Func y Predicate", "Entender los delegados multidifusión y su relación con los eventos"],
+          teoria: r`<p>Hasta ahora las variables guardaban <strong>datos</strong>: números,
+textos, objetos. Un <strong>delegado</strong> es una variable que guarda
+<strong>un método</strong>. Suena extraño, pero resuelve un problema muy
+concreto: escribir código que haga «algo» sin saber todavía qué es ese
+«algo», y decidirlo más tarde.</p>
+<p>Si has usado <code>lista.Sort((a, b) =&gt; ...)</code> o
+<code>lista.RemoveAll(x =&gt; x &lt; 0)</code> ya has usado delegados
+sin saberlo: a esos métodos les has pasado <strong>un trozo de
+comportamiento</strong>.</p>
+<h3 id="1-un-tipo-que-describe-métodos">1. Un tipo que describe
+métodos</h3>
+<p>Un delegado define <strong>la firma</strong> de los métodos que puede
+guardar: qué parámetros reciben y qué devuelven.</p>
+<pre><code>delegate double Operacion(double a, double b);   // cualquier método (double, double) -&gt; double
+
+double Sumar(double a, double b) =&gt; a + b;
+double Multiplicar(double a, double b) =&gt; a * b;
+
+Operacion op = Sumar;          // guardamos el método (sin paréntesis: no lo llamamos)
+Console.WriteLine(op(3, 4));   // 7   ← llamamos al método guardado
+op = Multiplicar;              // ahora la misma variable apunta a otro método
+Console.WriteLine(op(3, 4));   // 12</code></pre>
+<p>Si la firma no coincide, el compilador lo rechaza. Esa es la ventaja
+frente a mecanismos más primitivos: un delegado es <strong>seguro en
+tipos</strong>.</p>
+<h3 id="2-para-qué-sirve-de-verdad">2. ¿Para qué sirve de verdad?</h3>
+<p>Para <strong>parametrizar el comportamiento</strong>. Mira estos dos
+diseños del mismo problema:</p>
+<pre><code>// ❌ Un método por criterio: cada criterio nuevo obliga a tocar la clase
+List&lt;int&gt; FiltrarPares(List&lt;int&gt; datos) { ... }
+List&lt;int&gt; FiltrarNegativos(List&lt;int&gt; datos) { ... }
+List&lt;int&gt; FiltrarMayoresQue(List&lt;int&gt; datos, int limite) { ... }
+
+// ✅ Un solo método: el criterio llega de fuera
+List&lt;int&gt; Filtrar(List&lt;int&gt; datos, Predicate&lt;int&gt; criterio) { ... }</code></pre>
+<p>Con el segundo, quien usa el método decide el criterio sin modificar
+tu código. Es el <strong>principio abierto/cerrado</strong> del código
+limpio, aplicado con delegados.</p>
+<h3 id="3-los-delegados-que-ya-trae-net">3. Los delegados que ya trae
+.NET</h3>
+<p>Casi nunca hace falta declarar un delegado propio: la biblioteca
+define tres familias genéricas que cubren todos los casos.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Delegado</th>
+<th>Firma</th>
+<th>Para qué</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Action</code></td>
+<td>no recibe nada, no devuelve nada</td>
+<td>ejecutar algo</td>
+</tr>
+<tr class="even">
+<td><code>Action&lt;T&gt;</code></td>
+<td>recibe un <code>T</code>, no devuelve nada</td>
+<td>hacer algo con un dato</td>
+</tr>
+<tr class="odd">
+<td><code>Action&lt;T1,T2&gt;</code></td>
+<td>hasta 16 parámetros, sin devolver</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>Func&lt;TResult&gt;</code></td>
+<td>no recibe nada, devuelve <code>TResult</code></td>
+<td>calcular algo</td>
+</tr>
+<tr class="odd">
+<td><code>Func&lt;T,TResult&gt;</code></td>
+<td>recibe <code>T</code>, devuelve <code>TResult</code></td>
+<td>transformar</td>
+</tr>
+<tr class="even">
+<td><code>Func&lt;T1,T2,TResult&gt;</code></td>
+<td>hasta 16 parámetros + resultado</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>Predicate&lt;T&gt;</code></td>
+<td>recibe <code>T</code>, devuelve <code>bool</code></td>
+<td>decidir sí o no</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>La regla para leerlos:</strong> en
+<code>Func&lt;...&gt;</code> el <strong>último</strong> parámetro de
+tipo es siempre el valor devuelto.
+<code>Func&lt;int, string, bool&gt;</code> recibe un <code>int</code> y
+un <code>string</code>, y devuelve <code>bool</code>.</p>
+<pre><code>Action&lt;string&gt; mostrar = Console.WriteLine;
+Func&lt;double, double&gt; raiz = Math.Sqrt;
+Predicate&lt;int&gt; esPar = n =&gt; n % 2 == 0;</code></pre>
+<p><code>Predicate&lt;T&gt;</code> y <code>Func&lt;T, bool&gt;</code>
+son equivalentes en la práctica; los métodos de
+<code>List&lt;T&gt;</code> usan <code>Predicate&lt;T&gt;</code> y los de
+LINQ, <code>Func&lt;T, bool&gt;</code>.</p>
+<h3 id="4-delegados-multidifusión">4. Delegados multidifusión</h3>
+<p>Un delegado puede guardar <strong>varios</strong> métodos a la vez,
+que se ejecutan en orden al llamarlo:</p>
+<pre><code>Action aviso = MostrarEnConsola;
+aviso += GuardarEnFichero;      // ahora hace las dos cosas
+aviso += EnviarCorreo;
+aviso();                        // se ejecutan los tres, en orden
+aviso -= EnviarCorreo;          // y se pueden quitar</code></pre>
+<p>Esto es exactamente el mecanismo de los <strong>eventos</strong>: un
+botón guarda la lista de métodos que hay que avisar cuando se pulsa, y
+cada parte del programa se «suscribe» con <code>+=</code>. Con delegados
+que devuelven algo, solo se recibe el resultado del último, así que la
+multidifusión se usa con <code>Action</code>.</p>
+<h3 id="5-delegados-frente-a-interfaces">5. Delegados frente a
+interfaces</h3>
+<p>Un delegado y una interfaz de un solo método resuelven lo mismo.
+Cuándo elegir cada uno:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Usa un <strong>delegado</strong> si…</th>
+<th>Usa una <strong>interfaz</strong> si…</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>es <strong>un</strong> método suelto</td>
+<td>hacen falta <strong>varios</strong> métodos relacionados</td>
+</tr>
+<tr class="even">
+<td>el comportamiento es puntual (una lambda)</td>
+<td>la implementación tiene estado propio</td>
+</tr>
+<tr class="odd">
+<td>quieres varios suscriptores (eventos)</td>
+<td>quieres poder heredar y extender</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>IComparer&lt;T&gt;</code>, que viste en la lección anterior, es
+el ejemplo de interfaz; <code>Sort((a,b) =&gt; ...)</code> es el mismo
+trabajo con un delegado.</p>`,
+          ejemplos: [
+            { titulo: "Un delegado propio: calculadora configurable", explicacion: "El diccionario de delegados es un patrón muy útil: convierte un switch con veinte casos en una tabla donde añadir una operación es una línea. Fíjate en que Sumar se escribe sin paréntesis al guardarlo: con paréntesis lo llamaríamos.", codigo: r`// Una variable que guarda un método con esa firma exacta
+Operacion operacion = Sumar;
+Console.WriteLine($"Sumar(3, 4)       = {operacion(3, 4)}");
+
+operacion = Multiplicar;                 // la misma variable, otro método
+Console.WriteLine($"Multiplicar(3, 4) = {operacion(3, 4)}");
+
+// Pasar el método como PARÁMETRO: así se parametriza el comportamiento
+Console.WriteLine($"\nAplicar a 10 y 5:");
+Console.WriteLine($"  suma:    {Aplicar(10, 5, Sumar)}");
+Console.WriteLine($"  resta:   {Aplicar(10, 5, Restar)}");
+Console.WriteLine($"  división: {Aplicar(10, 5, Dividir)}");
+Console.WriteLine($"  división por cero: {Aplicar(10, 0, Dividir)}");
+
+// Una tabla de operaciones: el diccionario guarda métodos
+Dictionary<string, Operacion> calculadora = new Dictionary<string, Operacion>
+{
+    ["+"] = Sumar,
+    ["-"] = Restar,
+    ["*"] = Multiplicar,
+    ["/"] = Dividir,
+};
+
+Console.WriteLine("\nCalculadora dirigida por tabla:");
+foreach (string simbolo in new[] { "+", "-", "*", "/" })
+{
+    Console.WriteLine($"  8 {simbolo} 2 = {calculadora[simbolo](8, 2)}");
+}
+
+// Este patrón sustituye un switch gigante: añadir una operación es añadir una entrada
+if (calculadora.TryGetValue("%", out Operacion resto))
+{
+    Console.WriteLine(resto(8, 3));
+}
+else
+{
+    Console.WriteLine("\nLa operación % no está en la tabla (control de errores)");
+}
+
+double Aplicar(double a, double b, Operacion op) => op(a, b);
+
+double Sumar(double a, double b) => a + b;
+double Restar(double a, double b) => a - b;
+double Multiplicar(double a, double b) => a * b;
+double Dividir(double a, double b) => b == 0 ? double.NaN : a / b;
+
+delegate double Operacion(double a, double b);
+` },
+            { titulo: "Action, Func y Predicate", explicacion: "Un único método Filtrar sirve para cualquier criterio y cualquier tipo: eso es parametrizar el comportamiento. Es exactamente lo que hace el Where de LINQ, que veremos en la lección siguiente.", codigo: r`// ---------- Action: hace algo, no devuelve nada ----------
+Action saludar = () => Console.WriteLine("¡Hola!");
+Action<string> saludarA = nombre => Console.WriteLine($"¡Hola, {nombre}!");
+Action<string, int> repetir = (texto, veces) =>
+{
+    for (int i = 0; i < veces; i++) { Console.Write(texto + " "); }
+    Console.WriteLine();
+};
+
+saludar();
+saludarA("Ana");
+repetir("eco", 3);
+
+// ---------- Func: calcula y devuelve ----------
+Func<double> aleatorio = () => Math.Round(new Random(7).NextDouble(), 3);
+Func<double, double> cuadrado = x => x * x;
+Func<double, double, double> hipotenusa = (a, b) => Math.Sqrt(a * a + b * b);
+Func<int, string> describir = n => n < 0 ? "negativo" : n == 0 ? "cero" : "positivo";
+
+Console.WriteLine($"\nAleatorio: {aleatorio()}");
+Console.WriteLine($"Cuadrado de 7: {cuadrado(7)}");
+Console.WriteLine($"Hipotenusa 3,4: {hipotenusa(3, 4)}");
+Console.WriteLine($"-5 es {describir(-5)}");
+
+// ---------- Predicate: decide sí o no ----------
+Predicate<int> esPar = n => n % 2 == 0;
+Predicate<string> esLargo = s => s.Length > 5;
+
+Console.WriteLine($"\n¿8 es par? {esPar(8)}");
+Console.WriteLine($"¿«hola» es largo? {esLargo("hola")}");
+
+// Los métodos existentes también se pueden guardar directamente
+Func<double, double> raiz = Math.Sqrt;
+Action<string> escribir = Console.WriteLine;
+raiz(16);
+escribir($"La raíz de 16 es {raiz(16)}");
+
+// ---------- Un método genérico que recibe comportamiento ----------
+List<int> numeros = new List<int> { 1, -2, 3, -4, 5, -6 };
+Console.WriteLine($"\nPares:     {string.Join(", ", Filtrar(numeros, n => n % 2 == 0))}");
+Console.WriteLine($"Negativos: {string.Join(", ", Filtrar(numeros, n => n < 0))}");
+Console.WriteLine($"Mayores que 2: {string.Join(", ", Filtrar(numeros, n => n > 2))}");
+
+List<T> Filtrar<T>(List<T> datos, Predicate<T> criterio)
+{
+    List<T> resultado = new List<T>();
+    foreach (T elemento in datos)
+    {
+        if (criterio(elemento))
+        {
+            resultado.Add(elemento);
+        }
+    }
+    return resultado;
+}
+` },
+            { titulo: "Multidifusión: la base de los eventos", explicacion: "Este mecanismo es el de los eventos: un botón mantiene una lista de métodos que avisar al pulsarlo. El ?.Invoke es obligatorio al disparar un evento, porque si nadie se ha suscrito el delegado es null.", codigo: r`List<string> historial = new List<string>();
+
+// Un delegado puede guardar VARIOS métodos y ejecutarlos en orden
+Action<string> registrar = MostrarEnConsola;
+
+Console.WriteLine("--- Con un solo destino ---");
+registrar("Partida guardada");
+
+registrar += GuardarEnHistorial;          // se suscribe un segundo método
+registrar += AvisarAlJugador;
+
+Console.WriteLine("\n--- Con tres destinos ---");
+registrar("Nivel completado");
+
+registrar -= AvisarAlJugador;              // se da de baja
+Console.WriteLine("\n--- Tras dar de baja el aviso ---");
+registrar("Partida cerrada");
+
+Console.WriteLine($"\nMétodos suscritos: {registrar.GetInvocationList().Length}");
+Console.WriteLine($"Historial: {string.Join(" | ", historial)}");
+
+// Cuidado: al quitar el último método suscrito, el delegado se queda en null
+Action<string> vacio = MostrarEnConsola;
+vacio -= MostrarEnConsola;                 // ahora vale null
+
+// La invocación condicional ?. evita la NullReferenceException
+vacio?.Invoke("esto no se muestra, pero no falla");
+Console.WriteLine("\nTras invocar un delegado vacío con ?.Invoke: sin excepción");
+
+void MostrarEnConsola(string mensaje) => Console.WriteLine($"  [consola] {mensaje}");
+void GuardarEnHistorial(string mensaje) => historial.Add(mensaje);
+void AvisarAlJugador(string mensaje) => Console.WriteLine($"  [aviso] ¡{mensaje}!");
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Validador configurable",
+              nivel: 2,
+              pista: "Guarda cada regla como una tupla (descripción, predicado) dentro de una lista y recórrela con un foreach.",
+              enunciado: r`<p>Escribe un programa que valide una contraseña aplicando una
+<strong>lista de reglas</strong>, donde cada regla es un par formado por
+una descripción y un <code>Predicate&lt;string&gt;</code>.</p>
+<p>Reglas mínimas: al menos 8 caracteres, al menos una mayúscula, al
+menos un dígito y no contener espacios.</p>
+<p>El programa pide una contraseña y muestra <strong>cada regla</strong>
+con un ✓ o un ✗, y al final si es válida (todas cumplidas).</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Las reglas deben estar en una colección, <strong>no</strong> en un
+<code>if</code> encadenado: añadir una regla nueva debe ser añadir un
+elemento.</li>
+<li><strong>Control de errores:</strong> si la entrada es vacía, avísalo
+antes de evaluar.</li>
+<li>Usa <code>Predicate&lt;string&gt;</code> o
+<code>Func&lt;string, bool&gt;</code>.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> <code>texto.Any(char.IsUpper)</code> dice si
+hay alguna mayúscula (necesita <code>using System.Linq</code>).</p>
+<p>🏅 <strong>Ampliación:</strong> añade una regla que use una expresión
+regular y otra que prohíba las contraseñas de una lista negra, y muestra
+una «puntuación de seguridad» con el porcentaje de reglas cumplidas.</p>`,
+              soluciones: [
+                { titulo: "Versión con lista de reglas", nota: "La ventaja del diseño: añadir una regla es añadir una línea a la lista, sin tocar el bucle que la evalúa. Si las reglas estuvieran en un if encadenado, cada cambio obligaría a modificar la lógica.", codigo: r`// Cada regla: una descripción y el predicado que la comprueba
+List<(string descripcion, Predicate<string> comprobar)> reglas =
+    new List<(string, Predicate<string>)>
+{
+    ("Al menos 8 caracteres",     c => c.Length >= 8),
+    ("Al menos una mayúscula",    c => c.Any(char.IsUpper)),
+    ("Al menos una minúscula",    c => c.Any(char.IsLower)),
+    ("Al menos un dígito",        c => c.Any(char.IsDigit)),
+    ("Sin espacios",              c => !c.Contains(' ')),
+};
+
+Console.Write("Contraseña: ");
+string clave = Console.ReadLine() ?? "";
+
+if (clave.Length == 0)
+{
+    Console.WriteLine("No has escrito nada.");
+}
+else
+{
+    int cumplidas = 0;
+
+    Console.WriteLine();
+    foreach (var regla in reglas)
+    {
+        bool ok = regla.comprobar(clave);
+        if (ok) { cumplidas++; }
+        Console.WriteLine($"  {(ok ? "OK " : "NO ")} {regla.descripcion}");
+    }
+
+    Console.WriteLine($"\nCumple {cumplidas} de {reglas.Count} reglas " +
+                      $"({100 * cumplidas / reglas.Count} %)");
+    Console.WriteLine(cumplidas == reglas.Count
+        ? "Contraseña VÁLIDA"
+        : "Contraseña NO válida");
+}
+` },
+                { titulo: "Ampliación: regex, lista negra y puntuación", nota: "Añadir un peso a cada regla convierte la validación en una puntuación. Observa el HashSet creado con StringComparer.OrdinalIgnoreCase: así «PASSWORD» también se detecta, sin tener que pasar nada a minúsculas.", codigo: r`using System.Text.RegularExpressions;
+
+Regex tieneSimbolo = new Regex(@"[^A-Za-z0-9]", RegexOptions.Compiled);
+
+HashSet<string> listaNegra = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+{
+    "password", "123456", "qwerty", "admin", "contrasena",
+};
+
+List<(string descripcion, int peso, Predicate<string> comprobar)> reglas =
+    new List<(string, int, Predicate<string>)>
+{
+    ("Al menos 8 caracteres",      2, c => c.Length >= 8),
+    ("12 caracteres o más",        1, c => c.Length >= 12),
+    ("Al menos una mayúscula",     2, c => c.Any(char.IsUpper)),
+    ("Al menos un dígito",         2, c => c.Any(char.IsDigit)),
+    ("Al menos un símbolo",        2, c => tieneSimbolo.IsMatch(c)),
+    ("Sin espacios",               1, c => !c.Contains(' ')),
+    ("No está en la lista negra",  3, c => !listaNegra.Contains(c)),
+};
+
+string[] pruebas = { "password", "Secreta1", "Mi-Clave-Segura-2026!", "corta" };
+
+foreach (string clave in pruebas)
+{
+    int puntos = 0;
+    int total = 0;
+    List<string> fallos = new List<string>();
+
+    foreach (var regla in reglas)
+    {
+        total += regla.peso;
+        if (regla.comprobar(clave))
+        {
+            puntos += regla.peso;
+        }
+        else
+        {
+            fallos.Add(regla.descripcion);
+        }
+    }
+
+    int porcentaje = 100 * puntos / total;
+    string nivel = porcentaje >= 85 ? "FUERTE" : porcentaje >= 55 ? "MEDIA" : "DÉBIL";
+
+    Console.WriteLine($"\n«{clave}» -> {porcentaje} % ({nivel})");
+    if (fallos.Count > 0)
+    {
+        Console.WriteLine($"   Le falta: {string.Join("; ", fallos)}");
+    }
+}
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "lambdas",
+          titulo: "Métodos anónimos y expresiones lambda",
+          duracion: "20 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Escribir expresiones lambda con la sintaxis adecuada a cada caso", "Entender la captura de variables (clausuras) y sus trampas", "Decidir entre una lambda, un método local y un método con nombre"],
+          teoria: r`<p>En la lección anterior guardábamos métodos <strong>que ya
+existían</strong> en un delegado. Pero muchas veces el comportamiento es
+tan pequeño y tan específico que no merece un método con nombre. Para
+eso están las <strong>expresiones lambda</strong>: un método escrito
+<strong>en el sitio donde se usa</strong>, sin nombre.</p>
+<h3 id="1-la-evolución-en-tres-pasos">1. La evolución en tres pasos</h3>
+<pre><code>// 1. Método con nombre (C# 1.0)
+bool EsPar(int n) { return n % 2 == 0; }
+var pares = numeros.Where(EsPar);
+
+// 2. Método anónimo (C# 2.0) — hoy es historia
+var pares = numeros.Where(delegate(int n) { return n % 2 == 0; });
+
+// 3. Expresión lambda (C# 3.0) — la forma moderna
+var pares = numeros.Where(n =&gt; n % 2 == 0);</code></pre>
+<p>El símbolo <code>=&gt;</code> se lee <strong>«va a»</strong> o
+<strong>«devuelve»</strong>: <code>n =&gt; n % 2 == 0</code> es «dado un
+n, devuelve si es par».</p>
+<h3 id="2-las-formas-de-escribir-una-lambda">2. Las formas de escribir
+una lambda</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Caso</th>
+<th>Sintaxis</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Un parámetro, una expresión</td>
+<td><code>n =&gt; n * 2</code></td>
+</tr>
+<tr class="even">
+<td>Varios parámetros</td>
+<td><code>(a, b) =&gt; a + b</code></td>
+</tr>
+<tr class="odd">
+<td>Sin parámetros</td>
+<td><code>() =&gt; Console.WriteLine("hola")</code></td>
+</tr>
+<tr class="even">
+<td>Varias instrucciones</td>
+<td><code>n =&gt; { int x = n * 2; return x + 1; }</code></td>
+</tr>
+<tr class="odd">
+<td>Tipos explícitos</td>
+<td><code>(int a, int b) =&gt; a + b</code></td>
+</tr>
+<tr class="even">
+<td>Descartar un parámetro</td>
+<td><code>(_, e) =&gt; Cerrar()</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Cuando el cuerpo es <strong>una sola expresión</strong> no se
+escriben llaves ni <code>return</code>: el valor de la expresión es lo
+que se devuelve. Con llaves hay que poner <code>return</code>
+explícitamente.</p>
+<p>Los tipos casi nunca se escriben: el compilador los
+<strong>deduce</strong> del delegado esperado. Si <code>Where</code>
+espera un <code>Func&lt;int, bool&gt;</code>, entonces <code>n</code> es
+un <code>int</code>.</p>
+<h3 id="3-clausuras-la-lambda-recuerda-su-entorno">3. Clausuras: la
+lambda recuerda su entorno</h3>
+<p>Una lambda puede usar las variables del método donde se escribe. Y no
+se queda con una copia del <strong>valor</strong>: se queda con la
+<strong>variable misma</strong>.</p>
+<pre><code>int limite = 10;
+Func&lt;int, bool&gt; superaLimite = n =&gt; n &gt; limite;
+
+Console.WriteLine(superaLimite(15));   // true
+limite = 20;                           // ¡cambiamos la variable!
+Console.WriteLine(superaLimite(15));   // false — la lambda ve el valor nuevo</code></pre>
+<p>Esto se llama <strong>clausura</strong> (<em>closure</em>) y es muy
+potente: permite crear comportamiento configurado. Pero tiene una trampa
+famosa:</p>
+<pre><code>// ❌ La trampa clásica
+List&lt;Action&gt; acciones = new List&lt;Action&gt;();
+for (int i = 0; i &lt; 3; i++)
+{
+    acciones.Add(() =&gt; Console.WriteLine(i));
+}
+foreach (var a in acciones) { a(); }</code></pre>
+<p>En C#, la variable de un <code>for</code> es <strong>una
+sola</strong> para todo el bucle, así que las tres lambdas comparten la
+misma <code>i</code>, que al final vale 3: se imprime
+<code>3 3 3</code>. La solución es una variable <strong>nueva en cada
+vuelta</strong>:</p>
+<pre><code>for (int i = 0; i &lt; 3; i++)
+{
+    int copia = i;                       // variable nueva en cada iteración
+    acciones.Add(() =&gt; Console.WriteLine(copia));
+}</code></pre>
+<div class="callout">
+<p><strong>Con <code>foreach</code> no pasa.</strong> Desde C# 5 la
+variable del <code>foreach</code> es nueva en cada vuelta, precisamente
+porque este error era demasiado frecuente. Con <code>for</code>, sigue
+pasando.</p>
+</div>
+<h3 id="4-lambda-método-local-o-método-con-nombre">4. Lambda, método
+local o método con nombre</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Usa…</th>
+<th>Cuándo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Lambda</strong></td>
+<td>una o dos líneas, se usa una vez, en el sitio</td>
+</tr>
+<tr class="even">
+<td><strong>Método local</strong></td>
+<td>varias líneas, se usa dentro de un solo método, necesita nombre para
+leerse</td>
+</tr>
+<tr class="odd">
+<td><strong>Método con nombre</strong></td>
+<td>se reutiliza, se prueba por separado, o tiene documentación
+propia</td>
+</tr>
+</tbody>
+</table></div>
+<p>Una lambda de quince líneas dentro de un <code>Where</code> es código
+difícil de leer y de probar: eso ya es un método. El criterio del código
+limpio sigue mandando.</p>
+<h3 id="5-dos-detalles-modernos-útiles">5. Dos detalles modernos
+útiles</h3>
+<ul>
+<li><strong><code>static</code> en una lambda:</strong>
+<code>static n =&gt; n * 2</code> garantiza que la lambda <strong>no
+captura</strong> nada del entorno. Es una red de seguridad: si por error
+usas una variable externa, el compilador avisa.</li>
+<li><strong>Lambdas con tipos de retorno y atributos</strong> (C# 10+):
+se puede escribir
+<code>Func&lt;int,int&gt; f = static int (int x) =&gt; x * 2;</code>.
+Útil en casos avanzados.</li>
+</ul>
+<h3 id="6-y-el-rendimiento">6. ¿Y el rendimiento?</h3>
+<p>Una lambda se compila a un método normal (más, si captura variables,
+una clase oculta que las guarda). El coste es mínimo y, en un bucle muy
+caliente, el compilador suele poder optimizarlo. <strong>No evites las
+lambdas por rendimiento</strong>: evítalas cuando perjudiquen la
+legibilidad.</p>`,
+          ejemplos: [
+            { titulo: "Las formas de escribir una lambda", explicacion: "Mira la diferencia entre doble (una expresión, sin return) y clasificar (varias instrucciones, con llaves y return). Son las dos formas que usarás el 99 % de las veces.", codigo: r`// Un parámetro, una expresión: sin paréntesis, sin llaves, sin return
+Func<int, int> doble = n => n * 2;
+Func<int, bool> esPar = n => n % 2 == 0;
+
+// Varios parámetros: con paréntesis
+Func<int, int, int> suma = (a, b) => a + b;
+Func<string, int, string> repetir = (texto, veces) => string.Concat(Enumerable.Repeat(texto, veces));
+
+// Sin parámetros: paréntesis vacíos
+Action saludar = () => Console.WriteLine("¡Hola!");
+Func<DateTime> ahora = () => DateTime.Now;
+
+// Cuerpo con varias instrucciones: llaves y return explícito
+Func<int, string> clasificar = n =>
+{
+    if (n < 0) { return "negativo"; }
+    if (n == 0) { return "cero"; }
+    return n % 2 == 0 ? "positivo par" : "positivo impar";
+};
+
+// Tipos explícitos (raramente necesarios, pero legales)
+Func<double, double, double> media = (double a, double b) => (a + b) / 2;
+
+Console.WriteLine($"doble(7)        = {doble(7)}");
+Console.WriteLine($"esPar(7)        = {esPar(7)}");
+Console.WriteLine($"suma(3, 4)      = {suma(3, 4)}");
+Console.WriteLine($"repetir(«ab»,3) = {repetir("ab", 3)}");
+saludar();
+Console.WriteLine($"ahora()         = {ahora():HH:mm:ss}");
+Console.WriteLine($"clasificar(-5)  = {clasificar(-5)}");
+Console.WriteLine($"clasificar(8)   = {clasificar(8)}");
+Console.WriteLine($"media(4, 7)     = {media(4, 7)}");
+
+// Las lambdas se pasan directamente a los métodos que esperan un delegado
+List<int> numeros = new List<int> { 5, -3, 8, -1, 12 };
+Console.WriteLine($"\nPositivos: {string.Join(", ", numeros.FindAll(n => n > 0))}");
+numeros.Sort((a, b) => b.CompareTo(a));
+Console.WriteLine($"Descendente: {string.Join(", ", numeros)}");
+Console.WriteLine($"¿Hay alguno mayor que 10? {numeros.Exists(n => n > 10)}");
+` },
+            { titulo: "Clausuras: la lambda recuerda la variable, no el valor", explicacion: "Esta diferencia entre for y foreach es un clásico de las entrevistas y la causa de errores difíciles de encontrar. La regla práctica: si vas a guardar lambdas dentro de un for, copia la variable.", codigo: r`int limite = 10;
+Func<int, bool> superaLimite = n => n > limite;        // captura la VARIABLE limite
+
+Console.WriteLine($"¿15 > {limite}? {superaLimite(15)}");
+
+limite = 20;                                            // cambiamos la variable
+Console.WriteLine($"¿15 > {limite}? {superaLimite(15)}  ← la lambda ve el valor nuevo");
+
+// Esto permite crear funciones «configuradas»
+Func<int, Func<int, int>> multiplicadorPor = factor => n => n * factor;
+
+Func<int, int> porTres = multiplicadorPor(3);
+Func<int, int> porDiez = multiplicadorPor(10);
+Console.WriteLine($"\nporTres(7) = {porTres(7)}");
+Console.WriteLine($"porDiez(7) = {porDiez(7)}");
+
+// ---------- LA TRAMPA DEL for ----------
+List<Action> malas = new List<Action>();
+for (int i = 0; i < 3; i++)
+{
+    malas.Add(() => Console.Write($"{i} "));             // todas comparten la MISMA i
+}
+Console.Write("\nCon for y captura directa: ");
+foreach (Action a in malas) { a(); }
+Console.WriteLine("  ← ¡se esperaba 0 1 2!");
+
+// ---------- La solución: una variable nueva en cada vuelta ----------
+List<Action> buenas = new List<Action>();
+for (int i = 0; i < 3; i++)
+{
+    int copia = i;                                       // variable nueva en cada iteración
+    buenas.Add(() => Console.Write($"{copia} "));
+}
+Console.Write("Con una copia local:       ");
+foreach (Action a in buenas) { a(); }
+
+// ---------- Con foreach no hace falta: la variable ya es nueva cada vuelta ----------
+List<Action> conForeach = new List<Action>();
+foreach (int valor in new[] { 0, 1, 2 })
+{
+    conForeach.Add(() => Console.Write($"{valor} "));
+}
+Console.Write("\nCon foreach (desde C# 5):  ");
+foreach (Action a in conForeach) { a(); }
+Console.WriteLine();
+` },
+            { titulo: "Lambda, método local o método con nombre", explicacion: "El criterio es la legibilidad: una lambda de una línea se lee mejor incrustada; una condición con nombre (EsDestacado) documenta el código y se puede probar aparte. Las reglas del módulo de código limpio también valen aquí.", codigo: r`List<Alumno> alumnos = new List<Alumno>
+{
+    new Alumno("Ana", 8.5, 95),
+    new Alumno("Luis", 4.2, 60),
+    new Alumno("Marta", 7.0, 80),
+    new Alumno("Pau", 9.1, 45),
+};
+
+// ✅ LAMBDA: condición de una línea, usada una vez
+var aprobados = alumnos.Where(a => a.Nota >= 5);
+Console.WriteLine($"Aprobados: {string.Join(", ", aprobados.Select(a => a.Nombre))}");
+
+// ✅ MÉTODO LOCAL: varias líneas, con nombre para que se entienda, usado solo aquí
+var destacados = alumnos.Where(EsDestacado);
+Console.WriteLine($"Destacados: {string.Join(", ", destacados.Select(a => a.Nombre))}");
+
+bool EsDestacado(Alumno a)
+{
+    bool buenaNota = a.Nota >= 7;
+    bool buenaAsistencia = a.Asistencia >= 75;
+    return buenaNota && buenaAsistencia;
+}
+
+// ❌ Lo que NO hay que hacer: una lambda larga incrustada
+var mal = alumnos.Where(a =>
+{
+    bool buenaNota = a.Nota >= 7;
+    bool buenaAsistencia = a.Asistencia >= 75;
+    bool sinIncidencias = true;
+    // ...y así veinte líneas: nadie puede leer esto ni probarlo por separado
+    return buenaNota && buenaAsistencia && sinIncidencias;
+});
+Console.WriteLine($"(la versión ilegible da lo mismo: {mal.Count()} alumnos)");
+
+// static en la lambda: garantiza que no captura nada del entorno
+Func<double, double> redondear = static x => Math.Round(x, 1);
+Console.WriteLine($"\nRedondeo de 8,47: {redondear(8.47)}");
+
+class Alumno
+{
+    public string Nombre { get; }
+    public double Nota { get; }
+    public int Asistencia { get; }
+
+    public Alumno(string nombre, double nota, int asistencia)
+    {
+        Nombre = nombre;
+        Nota = nota;
+        Asistencia = asistencia;
+    }
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Transformaciones en cadena",
+              nivel: 1,
+              pista: "El diccionario guarda Func<string, string>: una función que recibe texto y devuelve texto.",
+              enunciado: r`<p>Escribe un programa que guarde en un
+<code>Dictionary&lt;string, Func&lt;string, string&gt;&gt;</code> varias
+<strong>transformaciones de texto</strong>: <code>mayusculas</code>,
+<code>minusculas</code>, <code>invertir</code>,
+<code>sin-espacios</code> y <code>capitalizar</code> (primera letra de
+cada palabra en mayúscula).</p>
+<p>El programa pide un texto y después, en un menú, deja aplicar
+transformaciones <strong>una tras otra</strong> sobre el resultado
+anterior, mostrando el texto actual cada vez. La opción
+<code>salir</code> termina.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Cada transformación debe ser una <strong>lambda</strong> guardada en
+el diccionario.</li>
+<li><strong>Control de errores:</strong> si el nombre de la
+transformación no existe, avisa con <code>TryGetValue</code> y no
+modifiques el texto.</li>
+<li>Usa <code>do-while</code> con la condición en la cabecera.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> para invertir,
+<code>new string(texto.Reverse().ToArray())</code>.</p>
+<p>🏅 <strong>Ampliación:</strong> añade una opción que aplique
+<strong>todas</strong> las transformaciones en cadena combinándolas en
+un solo <code>Func&lt;string,string&gt;</code>.</p>`,
+              soluciones: [
+                { titulo: "Versión con diccionario de lambdas", nota: "Guardar las lambdas en un diccionario convierte el menú en datos: añadir una transformación no toca la lógica del bucle. Es el mismo patrón que la tabla de operaciones de la lección anterior.", codigo: r`Dictionary<string, Func<string, string>> transformaciones =
+    new Dictionary<string, Func<string, string>>
+{
+    ["mayusculas"]  = t => t.ToUpper(),
+    ["minusculas"]  = t => t.ToLower(),
+    ["invertir"]    = t => new string(t.Reverse().ToArray()),
+    ["sin-espacios"] = t => t.Replace(" ", ""),
+    ["capitalizar"] = t => string.Join(" ",
+        t.Split(' ').Select(p => p.Length == 0 ? p : char.ToUpper(p[0]) + p.Substring(1).ToLower())),
+};
+
+Console.Write("Texto inicial: ");
+string texto = Console.ReadLine() ?? "";
+string orden;
+
+do
+{
+    Console.WriteLine($"\nTexto actual: «{texto}»");
+    Console.WriteLine($"Transformaciones: {string.Join(", ", transformaciones.Keys)}, salir");
+    Console.Write("¿Cuál aplico? ");
+    orden = (Console.ReadLine() ?? "").Trim().ToLower();
+
+    if (orden != "salir")
+    {
+        if (transformaciones.TryGetValue(orden, out Func<string, string> transformar))
+        {
+            texto = transformar(texto);              // se aplica sobre el resultado anterior
+            Console.WriteLine("Aplicada.");
+        }
+        else
+        {
+            Console.WriteLine($"No conozco «{orden}». El texto no cambia.");
+        }
+    }
+} while (orden != "salir");
+
+Console.WriteLine($"\nResultado final: «{texto}»");
+` },
+                { titulo: "Ampliación: combinar funciones", nota: "Combinar es una función que recibe funciones y devuelve una función: eso es programación funcional. Aggregate hace lo mismo en una línea y lo verás en la lección de operadores LINQ.", codigo: r`Func<string, string> mayusculas = t => t.ToUpper();
+Func<string, string> invertir = t => new string(t.Reverse().ToArray());
+Func<string, string> sinEspacios = t => t.Replace(" ", "");
+
+// Combinar: una función que aplica dos, una tras otra
+Func<string, string> Combinar(Func<string, string> primera, Func<string, string> segunda)
+{
+    return texto => segunda(primera(texto));
+}
+
+Func<string, string> todo = Combinar(Combinar(sinEspacios, mayusculas), invertir);
+
+string original = "hola mundo cruel";
+Console.WriteLine($"Original:  «{original}»");
+Console.WriteLine($"Combinada: «{todo(original)}»");
+
+// Combinar una lista entera de transformaciones
+List<Func<string, string>> cadena = new List<Func<string, string>>
+{
+    sinEspacios, mayusculas, invertir,
+};
+
+Func<string, string> todas = t => t;          // la función identidad: punto de partida
+foreach (Func<string, string> paso in cadena)
+{
+    todas = Combinar(todas, paso);
+}
+Console.WriteLine($"En cadena: «{todas(original)}»");
+
+// Lo mismo, con LINQ, en una línea
+string resultado = cadena.Aggregate(original, (texto, paso) => paso(texto));
+Console.WriteLine($"Con Aggregate: «{resultado}»");
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "linq-introduccion",
+          titulo: "LINQ: consultar colecciones",
+          duracion: "24 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Escribir consultas con las dos sintaxis de LINQ y saber traducir entre ellas", "Filtrar, proyectar y ordenar datos sin escribir bucles", "Entender la ejecución diferida y sus consecuencias"],
+          teoria: r`<p><strong>LINQ</strong> (<em>Language Integrated Query</em>, consulta
+integrada en el lenguaje) permite preguntar cosas a una colección con
+una sola expresión, en lugar de escribir bucles. Es, probablemente, la
+característica que más distingue a C# de otros lenguajes parecidos, y
+una de las que más productividad aporta.</p>
+<p>Y lo mejor: lo que escribes es <strong>lo mismo</strong> si los datos
+están en una lista, en un fichero XML o en una base de datos.</p>
+<h3 id="1-el-mismo-problema-con-y-sin-linq">1. El mismo problema, con y
+sin LINQ</h3>
+<p>«Los nombres de los alumnos aprobados, ordenados
+alfabéticamente»:</p>
+<pre><code>// Con bucles: 12 líneas que hay que leer para entender QUÉ se pide
+List&lt;string&gt; resultado = new List&lt;string&gt;();
+foreach (Alumno a in alumnos)
+{
+    if (a.Nota &gt;= 5)
+    {
+        resultado.Add(a.Nombre);
+    }
+}
+resultado.Sort();
+
+// Con LINQ: se lee el QUÉ, no el CÓMO
+var resultado = alumnos.Where(a =&gt; a.Nota &gt;= 5)
+                       .OrderBy(a =&gt; a.Nombre)
+                       .Select(a =&gt; a.Nombre);</code></pre>
+<p>La diferencia no es solo la longitud: el código con bucles describe
+<strong>el procedimiento</strong>; el de LINQ describe <strong>la
+intención</strong>. Eso es lo que lo hace más fácil de leer y de
+cambiar.</p>
+<h3 id="2-las-dos-sintaxis">2. Las dos sintaxis</h3>
+<p>LINQ tiene dos formas de escribirse, equivalentes y mezclables.</p>
+<h4 id="sintaxis-de-consulta-query-syntax">Sintaxis de consulta
+(<em>query syntax</em>)</h4>
+<p>Parecida a SQL. El orden es
+<code>from … where … orderby … select</code>:</p>
+<pre><code>var aprobados = from a in alumnos
+                where a.Nota &gt;= 5
+                orderby a.Nombre
+                select a.Nombre;</code></pre>
+<h4 id="sintaxis-de-métodos-fluent-syntax">Sintaxis de métodos
+(<em>fluent syntax</em>)</h4>
+<p>Llamadas encadenadas con lambdas:</p>
+<pre><code>var aprobados = alumnos.Where(a =&gt; a.Nota &gt;= 5)
+                       .OrderBy(a =&gt; a.Nombre)
+                       .Select(a =&gt; a.Nombre);</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Sintaxis de consulta</th>
+<th>Sintaxis de métodos</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Legibilidad con varios <code>join</code> y <code>group</code></td>
+<td>mejor</td>
+<td>peor</td>
+</tr>
+<tr class="even">
+<td>Operadores disponibles</td>
+<td>un subconjunto</td>
+<td><strong>todos</strong></td>
+</tr>
+<tr class="odd">
+<td>Operaciones como <code>Count</code>, <code>Any</code>,
+<code>First</code></td>
+<td>hay que envolver la consulta</td>
+<td>directas</td>
+</tr>
+<tr class="even">
+<td>Uso en la práctica</td>
+<td>menos frecuente</td>
+<td><strong>la habitual</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>El compilador <strong>traduce</strong> la sintaxis de consulta a la
+de métodos, así que no hay diferencia de rendimiento. En la industria
+predomina la de métodos; conviene saber leer las dos.</p>
+<h3 id="3-from-es-un-foreach-y-la-variable-es-el-elemento">3.
+<code>from</code> es un <code>foreach</code>, y la variable es el
+elemento</h3>
+<p>En <code>alumnos.Where(a =&gt; a.Nota &gt;= 5)</code>, la
+<code>a</code> es <strong>cada alumno</strong>, uno a uno. Es
+exactamente la variable del <code>foreach</code>. Si te pierdes en una
+consulta, traduce mentalmente cada operador a su bucle.</p>
+<h3 id="4-los-tres-operadores-que-lo-resuelven-casi-todo">4. Los tres
+operadores que lo resuelven casi todo</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Operador</th>
+<th>Qué hace</th>
+<th>Devuelve</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Where(cond)</code></td>
+<td><strong>filtra</strong>: se queda con los que cumplen</td>
+<td>los mismos elementos, menos</td>
+</tr>
+<tr class="even">
+<td><code>Select(transf)</code></td>
+<td><strong>proyecta</strong>: convierte cada elemento en otra cosa</td>
+<td>otros elementos, los mismos</td>
+</tr>
+<tr class="odd">
+<td><code>OrderBy(clave)</code></td>
+<td><strong>ordena</strong></td>
+<td>los mismos elementos, en otro orden</td>
+</tr>
+</tbody>
+</table></div>
+<p>La distinción entre <code>Where</code> y <code>Select</code> es la
+que cuesta al principio: <code>Where</code> decide
+<strong>cuáles</strong>, <code>Select</code> decide <strong>qué
+forma</strong> tienen.</p>
+<pre><code>numeros.Where(n =&gt; n &gt; 2)      // {3, 4, 5}      ← menos elementos
+numeros.Select(n =&gt; n * 10)    // {10,20,30,40,50} ← los mismos, transformados</code></pre>
+<p><code>Select</code> puede crear <strong>tipos anónimos</strong>, muy
+útiles para quedarse solo con lo que hace falta:</p>
+<pre><code>var resumen = alumnos.Select(a =&gt; new { a.Nombre, Aprobado = a.Nota &gt;= 5 });</code></pre>
+<h3 id="5-la-ejecución-diferida-la-trampa-que-hay-que-conocer">5. La
+ejecución diferida: la trampa que hay que conocer</h3>
+<p><strong>Una consulta LINQ no se ejecuta al escribirla.</strong> Se
+ejecuta cuando alguien recorre el resultado (<code>foreach</code>,
+<code>ToList</code>, <code>Count</code>…). Esto se llama
+<strong>ejecución diferida</strong> (<em>deferred execution</em>) y
+tiene dos consecuencias:</p>
+<pre><code>List&lt;int&gt; numeros = new List&lt;int&gt; { 1, 2, 3 };
+var consulta = numeros.Where(n =&gt; n &gt; 1);     // aquí NO se ha hecho nada
+
+numeros.Add(10);                              // cambiamos los datos
+
+Console.WriteLine(string.Join(&quot;,&quot;, consulta)); // 2,3,10  ← ¡incluye el nuevo!</code></pre>
+<p><strong>Ventaja:</strong> la consulta siempre trabaja con los datos
+actuales y no gasta memoria hasta que hace falta. Si pides
+<code>First()</code>, LINQ se detiene en el primer elemento que cumple,
+sin recorrer el resto.</p>
+<p><strong>Peligro:</strong> si recorres la consulta cinco veces, se
+ejecuta cinco veces. Con datos en memoria es solo lento; con una base de
+datos son cinco consultas al servidor.</p>
+<p>La solución es <strong>materializar</strong> el resultado con
+<code>ToList()</code>, <code>ToArray()</code> o
+<code>ToDictionary()</code> cuando vas a usarlo varias veces:</p>
+<pre><code>var aprobados = alumnos.Where(a =&gt; a.Nota &gt;= 5).ToList();   // ejecutado una vez</code></pre>
+<div class="callout">
+<p><strong>La regla práctica:</strong> deja la consulta diferida si solo
+vas a recorrerla una vez o si quieres que refleje los cambios; llama a
+<code>ToList()</code> si vas a usar el resultado varias veces, si vas a
+modificar la colección original mientras lo usas, o si lo devuelves
+desde un método.</p>
+</div>
+<h3 id="6-var-y-el-tipo-del-resultado">6. <code>var</code> y el tipo del
+resultado</h3>
+<p>El tipo de una consulta es <code>IEnumerable&lt;T&gt;</code> (o algo
+parecido, como <code>IOrderedEnumerable&lt;T&gt;</code>), y con tipos
+anónimos <strong>no tiene nombre escribible</strong>. Por eso con LINQ
+se usa <code>var</code>: no es pereza, es necesario.</p>
+<h3 id="7-using-systemlinq">7. <code>using System.Linq</code></h3>
+<p>Los operadores son <strong>métodos de extensión</strong> sobre
+<code>IEnumerable&lt;T&gt;</code>, definidos en
+<code>System.Linq</code>. En los proyectos modernos ese
+<code>using</code> viene implícito; si alguna vez <code>Where</code> «no
+existe», es que falta.</p>`,
+          ejemplos: [
+            { titulo: "Where, Select y OrderBy", explicacion: "Observa el tipo anónimo del último bloque: new { … } crea un objeto sin clase, útil para informes. Como su tipo no tiene nombre, es obligatorio usar var.", codigo: r`List<Alumno> alumnos = new List<Alumno>
+{
+    new Alumno("Marta", 7.5, "DAM"),
+    new Alumno("Ana", 9.0, "DAM"),
+    new Alumno("Luis", 4.0, "ASIX"),
+    new Alumno("Pau", 5.5, "DAM"),
+    new Alumno("Noa", 8.25, "ASIX"),
+};
+
+// WHERE: filtra (menos elementos, del mismo tipo)
+var aprobados = alumnos.Where(a => a.Nota >= 5);
+Console.WriteLine($"Aprobados: {aprobados.Count()} de {alumnos.Count}");
+
+// SELECT: proyecta (los mismos elementos, de otro tipo)
+var nombres = alumnos.Select(a => a.Nombre);
+Console.WriteLine($"Nombres: {string.Join(", ", nombres)}");
+
+// ORDERBY: ordena
+var porNota = alumnos.OrderByDescending(a => a.Nota);
+Console.WriteLine("\nRanking:");
+foreach (Alumno a in porNota)
+{
+    Console.WriteLine($"  {a.Nombre,-8} {a.Nota,5:F2}  {a.Ciclo}");
+}
+
+// Todo encadenado: filtrar, ordenar y proyectar
+var resultado = alumnos.Where(a => a.Nota >= 5)
+                       .OrderByDescending(a => a.Nota)
+                       .ThenBy(a => a.Nombre)
+                       .Select(a => $"{a.Nombre} ({a.Nota:F1})");
+
+Console.WriteLine($"\nAprobados por nota: {string.Join(" | ", resultado)}");
+
+// SELECT con un tipo anónimo: nos quedamos solo con lo necesario
+var fichas = alumnos.Select(a => new { a.Nombre, a.Ciclo, Aprobado = a.Nota >= 5 });
+Console.WriteLine("\nFichas:");
+foreach (var ficha in fichas)
+{
+    Console.WriteLine($"  {ficha.Nombre,-8} {ficha.Ciclo,-6} {(ficha.Aprobado ? "apto" : "no apto")}");
+}
+
+class Alumno
+{
+    public string Nombre { get; }
+    public double Nota { get; }
+    public string Ciclo { get; }
+
+    public Alumno(string nombre, double nota, string ciclo)
+    {
+        Nombre = nombre;
+        Nota = nota;
+        Ciclo = ciclo;
+    }
+}
+` },
+            { titulo: "Las dos sintaxis, lado a lado", explicacion: "La sintaxis de consulta gana con let y con los joins; la de métodos gana en todo lo demás y es la única que ofrece Count, Sum o Take directamente. Por eso es la que verás en el código real.", codigo: r`int[] numeros = { 5, 12, 8, 3, 19, 7, 14, 2 };
+
+// --------- Sintaxis de CONSULTA (parecida a SQL) ---------
+var consulta1 = from n in numeros
+                where n > 5
+                orderby n
+                select n * 10;
+
+// --------- Sintaxis de MÉTODOS (la habitual) ---------
+var consulta2 = numeros.Where(n => n > 5)
+                       .OrderBy(n => n)
+                       .Select(n => n * 10);
+
+Console.WriteLine($"Consulta: {string.Join(", ", consulta1)}");
+Console.WriteLine($"Métodos:  {string.Join(", ", consulta2)}");
+Console.WriteLine($"¿Iguales? {consulta1.SequenceEqual(consulta2)}");
+
+// La sintaxis de consulta permite variables intermedias con let
+var conLet = from n in numeros
+             let cuadrado = n * n
+             where cuadrado > 50
+             orderby cuadrado descending
+             select $"{n}^2 = {cuadrado}";
+
+Console.WriteLine($"\nCuadrados mayores que 50:");
+foreach (string s in conLet)
+{
+    Console.WriteLine($"  {s}");
+}
+
+// Hay operadores que SOLO existen en la sintaxis de métodos
+Console.WriteLine($"\nCuántos pares: {numeros.Count(n => n % 2 == 0)}");
+Console.WriteLine($"Suma total: {numeros.Sum()}");
+Console.WriteLine($"Los tres mayores: {string.Join(", ", numeros.OrderByDescending(n => n).Take(3))}");
+
+// Con la sintaxis de consulta habría que envolverla entre paréntesis:
+int cuantos = (from n in numeros where n % 2 == 0 select n).Count();
+Console.WriteLine($"Pares (sintaxis de consulta): {cuantos}");
+` },
+            { titulo: "Ejecución diferida: verla en acción", explicacion: "Las trazas demuestran las dos caras: la consulta se reevalúa en cada recorrido (cuidado con los bucles) y, a cambio, First solo recorre lo imprescindible.", codigo: r`List<int> numeros = new List<int> { 1, 2, 3 };
+
+// La consulta se DEFINE aquí, pero no se ejecuta
+var mayoresQueUno = numeros.Where(n =>
+{
+    Console.WriteLine($"    (evaluando {n})");     // esta traza delata cuándo se ejecuta
+    return n > 1;
+});
+
+Console.WriteLine("Consulta definida. ¿Se ha evaluado algo? No.\n");
+
+Console.WriteLine("Primer recorrido:");
+Console.WriteLine($"  resultado: {string.Join(", ", mayoresQueUno)}");
+
+Console.WriteLine("\nAñadimos un 10 a la lista ORIGINAL...");
+numeros.Add(10);
+
+Console.WriteLine("Segundo recorrido (la consulta se ejecuta otra vez):");
+Console.WriteLine($"  resultado: {string.Join(", ", mayoresQueUno)}   ← ¡incluye el 10!");
+
+// ToList() MATERIALIZA: ejecuta la consulta una vez y guarda el resultado
+Console.WriteLine("\nCon ToList():");
+List<int> materializado = numeros.Where(n => n > 1).ToList();
+numeros.Add(99);
+Console.WriteLine($"  resultado: {string.Join(", ", materializado)}   ← el 99 no aparece");
+
+// La ejecución diferida permite optimizaciones: First se detiene al primer acierto
+Console.WriteLine("\nFirst() se para en cuanto encuentra uno:");
+int primero = numeros.Where(n =>
+{
+    Console.WriteLine($"    (mirando {n})");
+    return n > 2;
+}).First();
+Console.WriteLine($"  primer mayor que 2: {primero}  (no ha mirado el resto)");
+` },
+            { titulo: "De bucles a LINQ: traducción directa", explicacion: "Esta tabla de equivalencias es la que conviene tener a mano al empezar. MaxBy (desde .NET 6) devuelve el ELEMENTO con el máximo; Max devolvería solo el precio.", codigo: r`List<Producto> productos = new List<Producto>
+{
+    new Producto("Teclado", 24.90m, 12),
+    new Producto("Ratón", 12.50m, 0),
+    new Producto("Monitor", 149.00m, 4),
+    new Producto("Webcam", 39.90m, 0),
+    new Producto("Alfombrilla", 7.50m, 25),
+};
+
+// ---------- 1. Filtrar ----------
+List<Producto> conBucle = new List<Producto>();
+foreach (Producto p in productos)
+{
+    if (p.Stock > 0) { conBucle.Add(p); }
+}
+var conLinq = productos.Where(p => p.Stock > 0);
+Console.WriteLine($"Con stock: bucle {conBucle.Count}, LINQ {conLinq.Count()}");
+
+// ---------- 2. Sumar ----------
+decimal totalBucle = 0;
+foreach (Producto p in productos) { totalBucle += p.Precio * p.Stock; }
+decimal totalLinq = productos.Sum(p => p.Precio * p.Stock);
+Console.WriteLine($"Valor del inventario: bucle {totalBucle:F2} €, LINQ {totalLinq:F2} €");
+
+// ---------- 3. Buscar el máximo ----------
+Producto masCaroBucle = productos[0];
+foreach (Producto p in productos)
+{
+    if (p.Precio > masCaroBucle.Precio) { masCaroBucle = p; }
+}
+Producto masCaroLinq = productos.MaxBy(p => p.Precio);
+Console.WriteLine($"Más caro: bucle {masCaroBucle.Nombre}, LINQ {masCaroLinq.Nombre}");
+
+// ---------- 4. ¿Existe alguno? ----------
+bool hayAgotadosBucle = false;
+foreach (Producto p in productos)
+{
+    if (p.Stock == 0) { hayAgotadosBucle = true; }
+}
+bool hayAgotadosLinq = productos.Any(p => p.Stock == 0);
+Console.WriteLine($"¿Hay agotados? bucle {hayAgotadosBucle}, LINQ {hayAgotadosLinq}");
+
+// ---------- 5. ¿Todos cumplen? ----------
+bool todosBaratos = productos.All(p => p.Precio < 200);
+Console.WriteLine($"¿Todos por debajo de 200 €? {todosBaratos}");
+
+// ---------- 6. Contar y medias ----------
+Console.WriteLine($"\nProductos: {productos.Count}");
+Console.WriteLine($"Agotados: {productos.Count(p => p.Stock == 0)}");
+Console.WriteLine($"Precio medio: {productos.Average(p => p.Precio):F2} €");
+Console.WriteLine($"Precio mínimo: {productos.Min(p => p.Precio):F2} €");
+
+class Producto
+{
+    public string Nombre { get; }
+    public decimal Precio { get; }
+    public int Stock { get; }
+
+    public Producto(string nombre, decimal precio, int stock)
+    {
+        Nombre = nombre;
+        Precio = precio;
+        Stock = stock;
+    }
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Informe de ventas con LINQ",
+              nivel: 1,
+              pista: "Sum, Average, Max y Count aceptan una lambda que dice QUÉ campo usar: ventas.Sum(v => v.Importe).",
+              enunciado: r`<p>Tienes una lista de ventas con <code>Producto</code>,
+<code>Unidades</code>, <code>PrecioUnitario</code> y <code>Fecha</code>.
+Escribe un programa que muestre un informe con:</p>
+<ol type="1">
+<li>El número total de ventas y el importe total.</li>
+<li>Las ventas de importe superior a 100 €, ordenadas de mayor a
+menor.</li>
+<li>El nombre de los productos vendidos, <strong>sin repetir</strong> y
+en orden alfabético.</li>
+<li>La venta de mayor importe.</li>
+<li>El importe medio por venta.</li>
+</ol>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Todo el informe debe hacerse con <strong>LINQ</strong>, sin bucles
+de cálculo (el <code>foreach</code> para mostrar sí).</li>
+<li>Si la lista está vacía, el informe no debe fallar: usa
+<code>Any()</code> antes de calcular medias o máximos.</li>
+<li>Calcula el importe de cada venta como
+<code>Unidades * PrecioUnitario</code>.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> <code>Distinct()</code> quita los repetidos
+y <code>MaxBy(v =&gt; ...)</code> devuelve el elemento con el valor
+máximo.</p>
+<p>🏅 <strong>Ampliación:</strong> añade el importe total por mes,
+mostrando el mes con más ventas.</p>`,
+              soluciones: [
+                { titulo: "Versión con LINQ", nota: "Dos detalles profesionales: la propiedad calculada Importe evita repetir la multiplicación por todo el programa, y el ToList() de las ventas grandes evita que la consulta se ejecute dos veces (una para Count y otra para el foreach).", codigo: r`List<Venta> ventas = new List<Venta>
+{
+    new Venta("Teclado", 2, 24.90m, new DateTime(2026, 10, 5)),
+    new Venta("Monitor", 1, 149.00m, new DateTime(2026, 10, 18)),
+    new Venta("Raton", 5, 12.50m, new DateTime(2026, 11, 2)),
+    new Venta("Teclado", 1, 24.90m, new DateTime(2026, 11, 9)),
+    new Venta("Monitor", 3, 149.00m, new DateTime(2026, 11, 20)),
+    new Venta("Webcam", 2, 39.90m, new DateTime(2026, 11, 25)),
+};
+
+Console.WriteLine("===== INFORME DE VENTAS =====\n");
+
+if (!ventas.Any())
+{
+    Console.WriteLine("No hay ventas registradas.");
+}
+else
+{
+    // 1. Totales
+    Console.WriteLine($"Ventas registradas: {ventas.Count}");
+    Console.WriteLine($"Importe total:      {ventas.Sum(v => v.Importe):F2} €");
+
+    // 2. Ventas grandes, de mayor a menor
+    var grandes = ventas.Where(v => v.Importe > 100)
+                        .OrderByDescending(v => v.Importe)
+                        .ToList();                  // ToList: la recorremos dos veces
+    Console.WriteLine($"\nVentas de más de 100 € ({grandes.Count}):");
+    foreach (Venta v in grandes)
+    {
+        Console.WriteLine($"  {v.Fecha:dd/MM/yyyy}  {v.Producto,-10} " +
+                          $"{v.Unidades,2} x {v.PrecioUnitario,7:F2} = {v.Importe,8:F2} €");
+    }
+
+    // 3. Productos distintos, ordenados
+    var productos = ventas.Select(v => v.Producto).Distinct().OrderBy(p => p);
+    Console.WriteLine($"\nProductos vendidos: {string.Join(", ", productos)}");
+
+    // 4. La venta mayor
+    Venta mayor = ventas.MaxBy(v => v.Importe);
+    Console.WriteLine($"\nVenta mayor: {mayor.Producto} el {mayor.Fecha:dd/MM/yyyy} " +
+                      $"por {mayor.Importe:F2} €");
+
+    // 5. Media
+    Console.WriteLine($"Importe medio por venta: {ventas.Average(v => v.Importe):F2} €");
+}
+
+class Venta
+{
+    public string Producto { get; }
+    public int Unidades { get; }
+    public decimal PrecioUnitario { get; }
+    public DateTime Fecha { get; }
+
+    // Propiedad calculada: no se guarda, se obtiene
+    public decimal Importe => Unidades * PrecioUnitario;
+
+    public Venta(string producto, int unidades, decimal precioUnitario, DateTime fecha)
+    {
+        Producto = producto;
+        Unidades = unidades;
+        PrecioUnitario = precioUnitario;
+        Fecha = fecha;
+    }
+}
+` },
+                { titulo: "Ampliación: totales por mes", nota: "GroupBy con una clave compuesta (un tipo anónimo con año y mes) es el patrón para cualquier informe por periodos. Lo veremos a fondo en la lección de agrupación.", codigo: r`List<Venta> ventas = new List<Venta>
+{
+    new Venta("Teclado", 2, 24.90m, new DateTime(2026, 10, 5)),
+    new Venta("Monitor", 1, 149.00m, new DateTime(2026, 10, 18)),
+    new Venta("Raton", 5, 12.50m, new DateTime(2026, 11, 2)),
+    new Venta("Monitor", 3, 149.00m, new DateTime(2026, 11, 20)),
+};
+
+// Agrupar por mes y calcular el total de cada grupo
+var porMes = ventas.GroupBy(v => new { v.Fecha.Year, v.Fecha.Month })
+                   .Select(g => new
+                   {
+                       Anio = g.Key.Year,
+                       Mes = g.Key.Month,
+                       Cuantas = g.Count(),
+                       Total = g.Sum(v => v.Importe),
+                   })
+                   .OrderBy(x => x.Anio).ThenBy(x => x.Mes)
+                   .ToList();
+
+Console.WriteLine($"{"MES",-10}{"VENTAS",8}{"TOTAL",12}");
+foreach (var mes in porMes)
+{
+    Console.WriteLine($"{mes.Mes:00}/{mes.Anio,-5}{mes.Cuantas,8}{mes.Total,12:F2}");
+}
+
+var mejor = porMes.MaxBy(m => m.Total);
+Console.WriteLine($"\nMejor mes: {mejor.Mes:00}/{mejor.Anio} con {mejor.Total:F2} €");
+
+class Venta
+{
+    public string Producto { get; }
+    public int Unidades { get; }
+    public decimal PrecioUnitario { get; }
+    public DateTime Fecha { get; }
+    public decimal Importe => Unidades * PrecioUnitario;
+
+    public Venta(string producto, int unidades, decimal precioUnitario, DateTime fecha)
+    {
+        Producto = producto;
+        Unidades = unidades;
+        PrecioUnitario = precioUnitario;
+        Fecha = fecha;
+    }
+}
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "linq-operadores",
+          titulo: "Operadores estándar de consulta",
+          duracion: "24 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Conocer las familias de operadores LINQ y para qué sirve cada una", "Elegir entre First, FirstOrDefault y Single según lo que se espere de los datos", "Usar los operadores de agregación, paginación y conjuntos"],
+          teoria: r`<p>LINQ define unos <strong>50 operadores estándar</strong>. No hay que
+memorizarlos, pero sí conocer <strong>las familias</strong>: así, cuando
+tengas un problema, sabrás qué buscar. Esta lección es el catálogo de
+referencia.</p>
+<h3 id="1-filtrado">1. Filtrado</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Operador</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Where(cond)</code></td>
+<td>se queda con los que cumplen la condición</td>
+</tr>
+<tr class="even">
+<td><code>OfType&lt;T&gt;()</code></td>
+<td>se queda con los elementos de ese tipo</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>Where</code> tiene una sobrecarga con el
+<strong>índice</strong>: <code>Where((x, i) =&gt; i % 2 == 0)</code> se
+queda con los de posición par.</p>
+<h3 id="2-proyección">2. Proyección</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Operador</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Select(transf)</code></td>
+<td>transforma cada elemento</td>
+</tr>
+<tr class="even">
+<td><code>SelectMany(transf)</code></td>
+<td>transforma cada elemento en una <strong>colección</strong> y las
+<strong>aplana</strong> en una sola</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>SelectMany</code> es el operador que más cuesta y el que más se
+agradece cuando se entiende: convierte una colección de colecciones en
+una lista plana.</p>
+<pre><code>// cursos es una lista de cursos, y cada curso tiene una lista de alumnos
+var todos = cursos.SelectMany(c =&gt; c.Alumnos);   // todos los alumnos, en una sola lista</code></pre>
+<h3 id="3-ordenación">3. Ordenación</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Operador</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>OrderBy(clave)</code> / <code>OrderByDescending</code></td>
+<td>ordena</td>
+</tr>
+<tr class="even">
+<td><code>ThenBy(clave)</code> / <code>ThenByDescending</code></td>
+<td>criterio de desempate (solo después de un OrderBy)</td>
+</tr>
+<tr class="odd">
+<td><code>Reverse()</code></td>
+<td>invierte el orden actual</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-elementos-individuales">4. Elementos individuales</h3>
+<p>Aquí está una de las decisiones que más errores provoca en
+producción:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Operador</th>
+<th>Si no hay ninguno</th>
+<th>Si hay varios</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>First()</code></td>
+<td><strong>excepción</strong></td>
+<td>devuelve el primero</td>
+</tr>
+<tr class="even">
+<td><code>FirstOrDefault()</code></td>
+<td><code>null</code> / <code>0</code></td>
+<td>devuelve el primero</td>
+</tr>
+<tr class="odd">
+<td><code>Single()</code></td>
+<td><strong>excepción</strong></td>
+<td><strong>excepción</strong></td>
+</tr>
+<tr class="even">
+<td><code>SingleOrDefault()</code></td>
+<td><code>null</code> / <code>0</code></td>
+<td><strong>excepción</strong></td>
+</tr>
+<tr class="odd">
+<td><code>Last()</code> / <code>LastOrDefault()</code></td>
+<td>igual, por el final</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>ElementAt(i)</code></td>
+<td>excepción si no existe</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p><strong>Cómo elegir.</strong> <code>Single</code> dice «estoy seguro
+de que hay <strong>exactamente uno</strong>»: si hubiera dos, es un
+error de datos y quieres saberlo. <code>First</code> dice «quiero el
+primero, puede haber más». Y la variante <code>…OrDefault</code> para
+cuando «ninguno» es un resultado normal. Usar <code>First()</code> donde
+debía ir <code>Single()</code> oculta errores de datos; usar
+<code>First()</code> donde debía ir <code>FirstOrDefault()</code>
+provoca excepciones en producción.</p>
+<p><code>FirstOrDefault</code> sobre una colección de números devuelve
+<strong>0</strong>, no <code>null</code>. Si 0 es un valor posible, no
+podrás distinguir «no hay» de «hay un 0»: usa <code>Any()</code>
+antes.</p>
+</div>
+<h3 id="5-agregación">5. Agregación</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Operador</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Count()</code> / <code>Count(cond)</code></td>
+<td>cuántos</td>
+</tr>
+<tr class="even">
+<td><code>Sum(sel)</code></td>
+<td>suma</td>
+</tr>
+<tr class="odd">
+<td><code>Average(sel)</code></td>
+<td>media</td>
+</tr>
+<tr class="even">
+<td><code>Min(sel)</code> / <code>Max(sel)</code></td>
+<td>mínimo / máximo del <strong>valor</strong></td>
+</tr>
+<tr class="odd">
+<td><code>MinBy(sel)</code> / <code>MaxBy(sel)</code></td>
+<td>el <strong>elemento</strong> con el mínimo / máximo (.NET 6+)</td>
+</tr>
+<tr class="even">
+<td><code>Aggregate(...)</code></td>
+<td>acumulación personalizada</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>Average</code>, <code>Min</code> y <code>Max</code>
+<strong>lanzan excepción con una colección vacía</strong>. Comprueba
+<code>Any()</code> antes, o usa <code>DefaultIfEmpty()</code>.</p>
+<p><code>Aggregate</code> es el operador general: recorre acumulando.
+<code>Sum</code> es <code>Aggregate((a, b) =&gt; a + b)</code>.</p>
+<h3 id="6-cuantificadores">6. Cuantificadores</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Operador</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Any()</code></td>
+<td>¿hay algún elemento?</td>
+</tr>
+<tr class="even">
+<td><code>Any(cond)</code></td>
+<td>¿hay alguno que cumpla?</td>
+</tr>
+<tr class="odd">
+<td><code>All(cond)</code></td>
+<td>¿lo cumplen todos?</td>
+</tr>
+<tr class="even">
+<td><code>Contains(x)</code></td>
+<td>¿está este elemento?</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong><code>Any()</code> es mejor que
+<code>Count() &gt; 0</code></strong>: se detiene en el primer elemento,
+mientras que <code>Count()</code> recorre toda la colección.</p>
+<p>Dato curioso que conviene saber: <code>All</code> sobre una colección
+<strong>vacía</strong> devuelve <code>true</code> (no hay ninguno que
+incumpla).</p>
+<h3 id="7-paginación">7. Paginación</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Operador</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Take(n)</code></td>
+<td>los <em>n</em> primeros</td>
+</tr>
+<tr class="even">
+<td><code>Skip(n)</code></td>
+<td>se salta los <em>n</em> primeros</td>
+</tr>
+<tr class="odd">
+<td><code>TakeLast(n)</code> / <code>SkipLast(n)</code></td>
+<td>lo mismo, por el final</td>
+</tr>
+<tr class="even">
+<td><code>TakeWhile(cond)</code></td>
+<td>va tomando <strong>mientras</strong> se cumpla; para al primer
+fallo</td>
+</tr>
+<tr class="odd">
+<td><code>SkipWhile(cond)</code></td>
+<td>se salta <strong>mientras</strong> se cumpla</td>
+</tr>
+<tr class="even">
+<td><code>Chunk(n)</code></td>
+<td>parte la secuencia en trozos de <em>n</em> (.NET 6+)</td>
+</tr>
+</tbody>
+</table></div>
+<p>La combinación <code>Skip(n).Take(m)</code> es la
+<strong>paginación</strong> de cualquier aplicación: página 3 con 10 por
+página es <code>Skip(20).Take(10)</code>.</p>
+<h3 id="8-conjuntos">8. Conjuntos</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Operador</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Distinct()</code></td>
+<td>quita los repetidos</td>
+</tr>
+<tr class="even">
+<td><code>DistinctBy(sel)</code></td>
+<td>quita los repetidos según una clave (.NET 6+)</td>
+</tr>
+<tr class="odd">
+<td><code>Union(otra)</code></td>
+<td>unión sin repetidos</td>
+</tr>
+<tr class="even">
+<td><code>Intersect(otra)</code></td>
+<td>los que están en las dos</td>
+</tr>
+<tr class="odd">
+<td><code>Except(otra)</code></td>
+<td>los de la primera que no están en la segunda</td>
+</tr>
+<tr class="even">
+<td><code>Concat(otra)</code></td>
+<td>pega las dos, <strong>con</strong> repetidos</td>
+</tr>
+<tr class="odd">
+<td><code>Zip(otra, f)</code></td>
+<td>combina elemento a elemento las dos secuencias</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="9-conversión">9. Conversión</h3>
+<p><code>ToList()</code>, <code>ToArray()</code>,
+<code>ToDictionary(clave, valor)</code>, <code>ToHashSet()</code>,
+<code>Cast&lt;T&gt;()</code>, <code>AsEnumerable()</code>.</p>
+<p><code>ToDictionary</code> <strong>lanza excepción si hay claves
+repetidas</strong>: es una fuente habitual de errores con datos
+reales.</p>
+<h3 id="10-generación">10. Generación</h3>
+<p><code>Enumerable.Range(desde, cuántos)</code>,
+<code>Enumerable.Repeat(valor, veces)</code>,
+<code>Enumerable.Empty&lt;T&gt;()</code>. <code>Range</code> sustituye
+muchos bucles <code>for</code> de ejemplo:
+<code>Enumerable.Range(1, 10).Select(n =&gt; n * n)</code>.</p>`,
+          ejemplos: [
+            { titulo: "First, FirstOrDefault y Single", explicacion: "La regla: Single cuando debe haber exactamente uno (y quieres enterarte si no), First cuando puede haber varios, y la variante OrDefault cuando «ninguno» es normal. Con números, cuidado con el 0.", codigo: r`List<int> numeros = new List<int> { 5, 12, 8, 12, 3 };
+
+// First: el primero que cumple. Excepción si no hay ninguno.
+Console.WriteLine($"First(>10)         = {numeros.First(n => n > 10)}");
+
+try
+{
+    numeros.First(n => n > 100);
+}
+catch (InvalidOperationException)
+{
+    Console.WriteLine("First(>100)        -> InvalidOperationException (no hay ninguno)");
+}
+
+// FirstOrDefault: valor por defecto si no hay
+Console.WriteLine($"FirstOrDefault(>100) = {numeros.FirstOrDefault(n => n > 100)}  ← ¡es 0, no null!");
+Console.WriteLine($"FirstOrDefault(>100, -1) = {numeros.FirstOrDefault(n => n > 100, -1)}  (valor propio)");
+
+// Single: exige que haya EXACTAMENTE uno
+Console.WriteLine($"Single(==8)        = {numeros.Single(n => n == 8)}");
+
+try
+{
+    numeros.Single(n => n == 12);          // hay dos doces
+}
+catch (InvalidOperationException)
+{
+    Console.WriteLine("Single(==12)       -> InvalidOperationException (hay más de uno)");
+}
+
+// El peligro del 0 en FirstOrDefault
+List<int> conCero = new List<int> { 0, 5, 9 };
+Console.WriteLine($"\nFirstOrDefault(<1) en {{0,5,9}} = {conCero.FirstOrDefault(n => n < 1)}");
+Console.WriteLine($"FirstOrDefault(<-5) en {{0,5,9}} = {conCero.FirstOrDefault(n => n < -5)}");
+Console.WriteLine("Los dos devuelven 0: no se puede distinguir «hay un 0» de «no hay ninguno».");
+Console.WriteLine($"La solución es preguntar primero: Any(<-5) = {conCero.Any(n => n < -5)}");
+
+// Con objetos, el valor por defecto es null
+List<string> vacia = new List<string>();
+string resultado = vacia.FirstOrDefault() ?? "(ninguno)";
+Console.WriteLine($"\nFirstOrDefault de una lista vacía de strings: {resultado}");
+` },
+            { titulo: "Agregación y cuantificadores", explicacion: "Dos detalles que sorprenden en los exámenes: All sobre una colección vacía es true, y Average o Max sobre una colección vacía lanzan excepción. DefaultIfEmpty es la red de seguridad.", codigo: r`int[] notas = { 7, 4, 9, 5, 8, 3, 10, 6 };
+
+Console.WriteLine($"Cuántas:          {notas.Count()}");
+Console.WriteLine($"Aprobadas:        {notas.Count(n => n >= 5)}");
+Console.WriteLine($"Suma:             {notas.Sum()}");
+Console.WriteLine($"Media:            {notas.Average():F2}");
+Console.WriteLine($"Máxima / mínima:  {notas.Max()} / {notas.Min()}");
+
+Console.WriteLine($"\n¿Hay algún 10?    {notas.Any(n => n == 10)}");
+Console.WriteLine($"¿Todas aprobadas? {notas.All(n => n >= 5)}");
+Console.WriteLine($"¿Contiene un 6?   {notas.Contains(6)}");
+
+// Any() frente a Count() > 0
+Console.WriteLine($"\nAny() se detiene en el primer elemento; Count() recorre todo.");
+Console.WriteLine($"  notas.Any()      = {notas.Any()}");
+Console.WriteLine($"  notas.Count() > 0 = {notas.Count() > 0}   (mismo resultado, más trabajo)");
+
+// All sobre una colección VACÍA devuelve true
+int[] vacio = Array.Empty<int>();
+Console.WriteLine($"\nAll sobre un array vacío: {vacio.All(n => n > 1000)}  ← true: no hay ninguno que lo incumpla");
+Console.WriteLine($"Any sobre un array vacío: {vacio.Any()}");
+
+// Average y Max fallan con colecciones vacías
+try
+{
+    vacio.Average();
+}
+catch (InvalidOperationException)
+{
+    Console.WriteLine("\nAverage de un array vacío -> InvalidOperationException");
+}
+Console.WriteLine($"Con DefaultIfEmpty: {vacio.DefaultIfEmpty(0).Average()}");
+
+// Aggregate: la acumulación general
+int producto = notas.Aggregate((acumulado, actual) => acumulado * actual);
+Console.WriteLine($"\nProducto de todas las notas (Aggregate): {producto}");
+
+string frase = new[] { "LINQ", "es", "potente" }
+    .Aggregate((a, b) => a + " " + b);
+Console.WriteLine($"Aggregate uniendo textos: {frase}");
+
+// Con semilla: el acumulador puede ser de otro tipo
+int sumaDeLongitudes = new[] { "uno", "dos", "cuatro" }
+    .Aggregate(0, (total, palabra) => total + palabra.Length);
+Console.WriteLine($"Aggregate con semilla (longitudes): {sumaDeLongitudes}");
+` },
+            { titulo: "Paginación y conjuntos", explicacion: "Skip + Take es la paginación de cualquier lista o tabla web. Y fíjate en la diferencia entre TakeWhile y Where: la primera se detiene, la segunda filtra todo.", codigo: r`List<string> alumnos = new List<string>
+{
+    "Ana", "Berta", "Carlos", "Diana", "Enric", "Fatima", "Gerard", "Helena", "Ivan",
+};
+
+// --- Paginación: el patrón Skip + Take ---
+int porPagina = 4;
+int paginas = (int)Math.Ceiling(alumnos.Count / (double)porPagina);
+
+for (int pagina = 1; pagina <= paginas; pagina++)
+{
+    var contenido = alumnos.Skip((pagina - 1) * porPagina).Take(porPagina);
+    Console.WriteLine($"Página {pagina}/{paginas}: {string.Join(", ", contenido)}");
+}
+
+// --- Chunk hace lo mismo de golpe (.NET 6+) ---
+Console.WriteLine("\nCon Chunk:");
+int numero = 1;
+foreach (string[] trozo in alumnos.Chunk(4))
+{
+    Console.WriteLine($"  trozo {numero}: {string.Join(", ", trozo)}");
+    numero++;
+}
+
+// --- TakeWhile y SkipWhile: paran en la primera condición falsa ---
+int[] temperaturas = { 18, 20, 23, 25, 19, 27, 30 };
+Console.WriteLine($"\nTakeWhile(<25): {string.Join(", ", temperaturas.TakeWhile(t => t < 25))}");
+Console.WriteLine($"Where(<25):     {string.Join(", ", temperaturas.Where(t => t < 25))}");
+Console.WriteLine("TakeWhile se detiene al llegar al 25; Where sigue y recoge también el 19.");
+
+// --- Operadores de conjuntos ---
+List<string> grupoA = new List<string> { "Ana", "Luis", "Marta", "Pau" };
+List<string> grupoB = new List<string> { "Marta", "Pau", "Noa" };
+
+Console.WriteLine($"\nUnion:     {string.Join(", ", grupoA.Union(grupoB))}");
+Console.WriteLine($"Intersect: {string.Join(", ", grupoA.Intersect(grupoB))}");
+Console.WriteLine($"Except:    {string.Join(", ", grupoA.Except(grupoB))}");
+Console.WriteLine($"Concat:    {string.Join(", ", grupoA.Concat(grupoB))}  ← con repetidos");
+Console.WriteLine($"Distinct del Concat: {string.Join(", ", grupoA.Concat(grupoB).Distinct())}");
+
+// --- Zip: combina dos secuencias en paralelo ---
+string[] nombres = { "Ana", "Luis", "Marta" };
+int[] puntos = { 95, 80, 72 };
+var combinado = nombres.Zip(puntos, (nombre, punto) => $"{nombre}: {punto}");
+Console.WriteLine($"\nZip: {string.Join(" | ", combinado)}");
+
+// --- Range y Repeat: generar secuencias sin bucles ---
+Console.WriteLine($"\nCuadrados del 1 al 10: " +
+                  $"{string.Join(", ", Enumerable.Range(1, 10).Select(n => n * n))}");
+Console.WriteLine($"Pares del 1 al 20: " +
+                  $"{string.Join(", ", Enumerable.Range(1, 20).Where(n => n % 2 == 0))}");
+Console.WriteLine($"Repeat: {string.Join("", Enumerable.Repeat("-", 20))}");
+` },
+            { titulo: "SelectMany y ToDictionary", explicacion: "SelectMany es el operador que convierte «una lista de listas» en «una lista». Y recuerda el aviso de ToDictionary: con datos reales, las claves repetidas aparecen antes o después.", codigo: r`List<Curso> cursos = new List<Curso>
+{
+    new Curso("1r DAM", new List<string> { "Ana", "Luis", "Marta" }),
+    new Curso("2n DAM", new List<string> { "Pau", "Noa" }),
+    new Curso("1r ASIX", new List<string> { "Marc", "Aina", "Pol" }),
+};
+
+// Select devuelve una colección DE COLECCIONES
+var porCurso = cursos.Select(c => c.Alumnos);
+Console.WriteLine($"Select: {porCurso.Count()} colecciones (una por curso)");
+
+// SelectMany las APLANA en una sola
+var todos = cursos.SelectMany(c => c.Alumnos);
+Console.WriteLine($"SelectMany: {todos.Count()} alumnos en una sola lista");
+Console.WriteLine($"  {string.Join(", ", todos)}");
+
+// SelectMany con el elemento original: muy útil para informes
+var fichas = cursos.SelectMany(c => c.Alumnos, (curso, alumno) => $"{alumno} ({curso.Nombre})");
+Console.WriteLine($"\nCon el curso al lado:");
+foreach (string ficha in fichas)
+{
+    Console.WriteLine($"  {ficha}");
+}
+
+// Otro uso típico: partir textos y aplanar
+string[] frases = { "hola mundo", "adios mundo cruel" };
+var palabras = frases.SelectMany(f => f.Split(' ')).Distinct().OrderBy(p => p);
+Console.WriteLine($"\nPalabras distintas: {string.Join(", ", palabras)}");
+
+// --- ToDictionary y el problema de las claves repetidas ---
+var porNombre = cursos.ToDictionary(c => c.Nombre, c => c.Alumnos.Count);
+Console.WriteLine($"\nAlumnos por curso:");
+foreach (var par in porNombre)
+{
+    Console.WriteLine($"  {par.Key,-8} {par.Value}");
+}
+
+// Si hay claves repetidas, ToDictionary lanza excepción
+List<Curso> conRepetido = new List<Curso>
+{
+    new Curso("1r DAM", new List<string> { "Ana" }),
+    new Curso("1r DAM", new List<string> { "Luis" }),     // ¡clave repetida!
+};
+
+try
+{
+    conRepetido.ToDictionary(c => c.Nombre);
+}
+catch (ArgumentException)
+{
+    Console.WriteLine("\nToDictionary con claves repetidas -> ArgumentException");
+}
+
+// Soluciones: agrupar antes, o DistinctBy
+var agrupado = conRepetido.GroupBy(c => c.Nombre)
+                          .ToDictionary(g => g.Key, g => g.SelectMany(c => c.Alumnos).ToList());
+Console.WriteLine($"Agrupando primero: 1r DAM tiene {agrupado["1r DAM"].Count} alumnos");
+
+class Curso
+{
+    public string Nombre { get; }
+    public List<string> Alumnos { get; }
+
+    public Curso(string nombre, List<string> alumnos)
+    {
+        Nombre = nombre;
+        Alumnos = alumnos;
+    }
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Catálogo de videojuegos consultable",
+              nivel: 2,
+              pista: "MaxBy devuelve el elemento; Max, solo el valor. Y ToList() si la consulta se recorre más de una vez.",
+              enunciado: r`<p>Crea una clase <code>Juego</code> con <code>Titulo</code>,
+<code>Genero</code>, <code>Anio</code>, <code>Nota</code> (0-10) y
+<code>Precio</code>, y una lista con al menos ocho juegos de varios
+géneros y años.</p>
+<p>Escribe un programa con un <strong>menú</strong> que responda a estas
+consultas, <strong>todas con LINQ</strong>:</p>
+<ol type="1">
+<li>Los juegos con nota mayor o igual a 8, ordenados por nota
+descendente.</li>
+<li>Los géneros distintos, ordenados alfabéticamente.</li>
+<li>El juego más caro y el más barato.</li>
+<li>La nota media y el precio medio.</li>
+<li>Los juegos de un género que pida el usuario (y avisar si no hay
+ninguno).</li>
+<li>Los tres mejores juegos (<code>Take</code>).</li>
+<li>Paginar el catálogo de 3 en 3.</li>
+</ol>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li><strong>Control de errores:</strong> valida la opción del menú; para
+el género usa <code>Any()</code> antes de mostrar; usa
+<code>FirstOrDefault</code> o <code>MaxBy</code> con cuidado si la lista
+pudiera estar vacía.</li>
+<li>Compara el género sin distinguir mayúsculas.</li>
+<li>Usa <code>do-while</code> con la condición en la cabecera.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> <code>MaxBy(j =&gt; j.Precio)</code>
+devuelve el juego; <code>Max(j =&gt; j.Precio)</code> devuelve solo el
+precio.</p>
+<p>🏅🏅 <strong>Ampliación avanzada:</strong> añade una consulta que
+muestre, por género, el número de juegos y su nota media, ordenado por
+nota media descendente.</p>`,
+              soluciones: [
+                { titulo: "Versión con menú y consultas LINQ", nota: "Fíjate en el ToList() de la opción 5: la consulta se recorre dos veces (Any y el foreach), así que materializarla evita ejecutarla dos veces. Y en Equals con OrdinalIgnoreCase, que es la forma correcta de comparar texto sin distinguir mayúsculas.", codigo: r`List<Juego> catalogo = new List<Juego>
+{
+    new Juego("Hollow Knight", "Metroidvania", 2017, 9.2, 14.99m),
+    new Juego("Celeste", "Plataformas", 2018, 9.0, 19.99m),
+    new Juego("Hades", "Roguelike", 2020, 9.3, 24.99m),
+    new Juego("Stardew Valley", "Simulacion", 2016, 8.9, 13.99m),
+    new Juego("Cuphead", "Plataformas", 2017, 8.6, 19.99m),
+    new Juego("Dead Cells", "Roguelike", 2018, 8.8, 24.99m),
+    new Juego("Undertale", "RPG", 2015, 9.1, 9.99m),
+    new Juego("Katana ZERO", "Plataformas", 2019, 8.2, 14.99m),
+};
+
+int opcion = 0;
+
+do
+{
+    Console.WriteLine($"\n--- CATÁLOGO ({catalogo.Count} juegos) ---");
+    Console.WriteLine("1) Notables   2) Géneros   3) Más caro y más barato");
+    Console.WriteLine("4) Medias     5) Por género   6) Top 3   7) Paginar   8) Salir");
+    Console.Write("Opción: ");
+
+    if (!int.TryParse(Console.ReadLine(), out opcion))
+    {
+        Console.WriteLine("Escribe un número del 1 al 8.");
+        opcion = 0;
+    }
+    else
+    {
+        switch (opcion)
+        {
+            case 1:
+                var notables = catalogo.Where(j => j.Nota >= 8).OrderByDescending(j => j.Nota);
+                foreach (Juego j in notables) { Console.WriteLine($"  {j}"); }
+                break;
+
+            case 2:
+                var generos = catalogo.Select(j => j.Genero).Distinct().OrderBy(g => g);
+                Console.WriteLine($"  {string.Join(", ", generos)}");
+                break;
+
+            case 3:
+                Console.WriteLine($"  Más caro:   {catalogo.MaxBy(j => j.Precio)}");
+                Console.WriteLine($"  Más barato: {catalogo.MinBy(j => j.Precio)}");
+                break;
+
+            case 4:
+                Console.WriteLine($"  Nota media:   {catalogo.Average(j => j.Nota):F2}");
+                Console.WriteLine($"  Precio medio: {catalogo.Average(j => j.Precio):F2} €");
+                Console.WriteLine($"  Año más antiguo: {catalogo.Min(j => j.Anio)}");
+                break;
+
+            case 5:
+                Console.Write("  Género: ");
+                string genero = (Console.ReadLine() ?? "").Trim();
+                var delGenero = catalogo
+                    .Where(j => j.Genero.Equals(genero, StringComparison.OrdinalIgnoreCase))
+                    .OrderBy(j => j.Titulo)
+                    .ToList();
+                if (!delGenero.Any())
+                {
+                    Console.WriteLine($"  No hay juegos del género «{genero}».");
+                }
+                else
+                {
+                    Console.WriteLine($"  {delGenero.Count} juegos:");
+                    foreach (Juego j in delGenero) { Console.WriteLine($"    {j}"); }
+                }
+                break;
+
+            case 6:
+                var top = catalogo.OrderByDescending(j => j.Nota).Take(3);
+                int puesto = 1;
+                foreach (Juego j in top)
+                {
+                    Console.WriteLine($"  {puesto}. {j}");
+                    puesto++;
+                }
+                break;
+
+            case 7:
+                const int porPagina = 3;
+                int paginas = (int)Math.Ceiling(catalogo.Count / (double)porPagina);
+                for (int pagina = 1; pagina <= paginas; pagina++)
+                {
+                    Console.WriteLine($"  --- página {pagina} de {paginas} ---");
+                    foreach (Juego j in catalogo.Skip((pagina - 1) * porPagina).Take(porPagina))
+                    {
+                        Console.WriteLine($"    {j}");
+                    }
+                }
+                break;
+
+            case 8:
+                Console.WriteLine("Hasta luego.");
+                break;
+
+            default:
+                Console.WriteLine("Opción fuera de rango.");
+                break;
+        }
+    }
+} while (opcion != 8);
+
+class Juego
+{
+    public string Titulo { get; }
+    public string Genero { get; }
+    public int Anio { get; }
+    public double Nota { get; }
+    public decimal Precio { get; }
+
+    public Juego(string titulo, string genero, int anio, double nota, decimal precio)
+    {
+        Titulo = titulo;
+        Genero = genero;
+        Anio = anio;
+        Nota = nota;
+        Precio = precio;
+    }
+
+    public override string ToString() =>
+        $"{Titulo,-16} {Genero,-14} {Anio}  nota {Nota:F1}  {Precio,6:F2} €";
+}
+` },
+                { titulo: "Ampliación: estadísticas por género", nota: "Este tipo de consulta (agrupar y calcular varias estadísticas por grupo en un tipo anónimo) es el pan de cada día de cualquier informe. La lección siguiente lo desarrolla.", codigo: r`List<Juego> catalogo = new List<Juego>
+{
+    new Juego("Hollow Knight", "Metroidvania", 2017, 9.2, 14.99m),
+    new Juego("Celeste", "Plataformas", 2018, 9.0, 19.99m),
+    new Juego("Hades", "Roguelike", 2020, 9.3, 24.99m),
+    new Juego("Cuphead", "Plataformas", 2017, 8.6, 19.99m),
+    new Juego("Dead Cells", "Roguelike", 2018, 8.8, 24.99m),
+};
+
+var estadisticas = catalogo
+    .GroupBy(j => j.Genero)
+    .Select(g => new
+    {
+        Genero = g.Key,
+        Cuantos = g.Count(),
+        NotaMedia = g.Average(j => j.Nota),
+        PrecioMedio = g.Average(j => j.Precio),
+        Mejor = g.MaxBy(j => j.Nota).Titulo,
+    })
+    .OrderByDescending(e => e.NotaMedia)
+    .ToList();
+
+Console.WriteLine($"{"GÉNERO",-14}{"N.º",4}{"NOTA",7}{"PRECIO",9}  MEJOR");
+Console.WriteLine(new string('-', 58));
+foreach (var e in estadisticas)
+{
+    Console.WriteLine($"{e.Genero,-14}{e.Cuantos,4}{e.NotaMedia,7:F2}{e.PrecioMedio,9:F2}  {e.Mejor}");
+}
+
+Console.WriteLine($"\nGénero mejor valorado: {estadisticas.First().Genero}");
+
+class Juego
+{
+    public string Titulo { get; }
+    public string Genero { get; }
+    public int Anio { get; }
+    public double Nota { get; }
+    public decimal Precio { get; }
+
+    public Juego(string titulo, string genero, int anio, double nota, decimal precio)
+    {
+        Titulo = titulo;
+        Genero = genero;
+        Anio = anio;
+        Nota = nota;
+        Precio = precio;
+    }
+}
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "linq-agrupacion",
+          titulo: "Agrupación, combinación y MapReduce",
+          duracion: "24 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Agrupar datos con GroupBy y calcular estadísticas por grupo", "Combinar dos colecciones relacionadas con Join y GroupJoin", "Reconocer el esquema map-filter-reduce en una consulta LINQ"],
+          teoria: r`<p>Con <code>Where</code>, <code>Select</code> y los agregados ya se
+resuelve mucho. Pero los informes de verdad piden
+<strong>agrupar</strong> («ventas por mes», «nota media por grupo») y
+<strong>combinar</strong> datos de dos sitios («el nombre del alumno
+junto a su nota»). Eso es lo que añaden <code>GroupBy</code> y
+<code>Join</code>.</p>
+<h3 id="1-groupby-partir-en-grupos">1. <code>GroupBy</code>: partir en
+grupos</h3>
+<p><code>GroupBy</code> reparte los elementos en grupos según una
+<strong>clave</strong>. El resultado es una secuencia de
+<code>IGrouping&lt;TKey, TElement&gt;</code>, que es a la vez la clave
+(<code>Key</code>) y la colección de sus elementos (se recorre como
+cualquier otra).</p>
+<pre><code>var porCiclo = alumnos.GroupBy(a =&gt; a.Ciclo);
+
+foreach (var grupo in porCiclo)
+{
+    Console.WriteLine($&quot;{grupo.Key}: {grupo.Count()} alumnos&quot;);
+    foreach (Alumno a in grupo) { Console.WriteLine($&quot;   {a.Nombre}&quot;); }
+}</code></pre>
+<p>Lo habitual es combinarlo con un <code>Select</code> para producir el
+resumen:</p>
+<pre><code>var resumen = alumnos.GroupBy(a =&gt; a.Ciclo)
+                     .Select(g =&gt; new
+                     {
+                         Ciclo = g.Key,
+                         Cuantos = g.Count(),
+                         Media = g.Average(a =&gt; a.Nota),
+                         Mejor = g.MaxBy(a =&gt; a.Nota).Nombre,
+                     })
+                     .OrderByDescending(x =&gt; x.Media);</code></pre>
+<p><strong>Esa consulta es el patrón de cualquier informe.</strong> Si
+entiendes esas seis líneas, puedes producir el 90 % de los informes que
+te pedirán.</p>
+<h4 id="claves-compuestas">Claves compuestas</h4>
+<p>Para agrupar por dos campos a la vez se usa un tipo anónimo como
+clave:</p>
+<pre><code>.GroupBy(v =&gt; new { v.Fecha.Year, v.Fecha.Month })</code></pre>
+<p>Funciona porque los tipos anónimos comparan por
+<strong>valor</strong> (implementan <code>Equals</code> y
+<code>GetHashCode</code> automáticamente).</p>
+<h4 id="tolookup"><code>ToLookup</code></h4>
+<p><code>ToLookup(clave)</code> hace lo mismo pero <strong>de forma
+inmediata</strong> (no diferida) y devuelve una estructura consultable
+por clave, como un diccionario de listas. Si vas a consultar los grupos
+varias veces, es mejor que <code>GroupBy</code>.</p>
+<h3 id="2-join-combinar-dos-colecciones">2. <code>Join</code>: combinar
+dos colecciones</h3>
+<p>Cuando los datos están repartidos (una lista de alumnos y otra de
+notas, relacionadas por un identificador), <code>Join</code> las une por
+la clave común. Es el <code>INNER JOIN</code> de SQL.</p>
+<pre><code>var resultado = alumnos.Join(
+    notas,                        // la otra colección
+    a =&gt; a.Id,                    // clave en la primera
+    n =&gt; n.AlumnoId,              // clave en la segunda
+    (a, n) =&gt; new { a.Nombre, n.Valor });   // qué construir con cada pareja</code></pre>
+<p>Los cuatro argumentos son siempre los mismos: <strong>la otra
+colección, la clave de aquí, la clave de allí y qué
+construir</strong>.</p>
+<p>Con la sintaxis de consulta se lee mejor:</p>
+<pre><code>var resultado = from a in alumnos
+                join n in notas on a.Id equals n.AlumnoId
+                select new { a.Nombre, n.Valor };</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Operador</th>
+<th>Equivalente en SQL</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Join</code></td>
+<td><code>INNER JOIN</code></td>
+<td>solo los que tienen pareja</td>
+</tr>
+<tr class="even">
+<td><code>GroupJoin</code></td>
+<td><code>LEFT JOIN</code></td>
+<td><strong>todos</strong> los de la primera, con su lista (quizá vacía)
+de coincidencias</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>GroupJoin</code> es la respuesta a «todos los alumnos, aunque
+no tengan notas».</p>
+<h3 id="3-el-esquema-map-filter-reduce">3. El esquema
+map-filter-reduce</h3>
+<p>Casi toda consulta LINQ se compone de tres fases, y reconocerlas
+ayuda a construirlas:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Fase</th>
+<th>Operadores</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>filter</strong></td>
+<td><code>Where</code></td>
+<td>descarta lo que no interesa</td>
+</tr>
+<tr class="even">
+<td><strong>map</strong></td>
+<td><code>Select</code>, <code>SelectMany</code></td>
+<td>transforma cada elemento</td>
+</tr>
+<tr class="odd">
+<td><strong>reduce</strong></td>
+<td><code>Sum</code>, <code>Count</code>, <code>Average</code>,
+<code>Aggregate</code>, <code>GroupBy</code></td>
+<td>combina muchos en pocos</td>
+</tr>
+</tbody>
+</table></div>
+<pre><code>decimal total = ventas.Where(v =&gt; v.Fecha.Year == 2026)   // filter
+                      .Select(v =&gt; v.Importe)             // map
+                      .Sum();                             // reduce</code></pre>
+<p>Este esquema es el mismo que se usa en el procesamiento de datos a
+gran escala: <strong>MapReduce</strong>, el modelo que popularizó Google
+y que está detrás de Hadoop y Spark. La idea es que, si la operación se
+expresa así, se puede <strong>repartir entre muchos
+ordenadores</strong>: cada uno hace el <em>map</em> de su trozo y
+después se combinan los resultados.</p>
+<p>En C# ese paralelismo está a una palabra de distancia, con
+<strong>PLINQ</strong>:</p>
+<pre><code>var resultado = datos.AsParallel().Where(...).Select(...).Sum();</code></pre>
+<p><code>AsParallel()</code> reparte el trabajo entre los núcleos del
+procesador. Solo compensa con muchos datos y operaciones costosas: con
+pocos elementos, coordinar los hilos cuesta más que el cálculo.</p>
+<h3 id="4-un-aviso-sobre-el-orden-de-los-operadores">4. Un aviso sobre
+el orden de los operadores</h3>
+<p>LINQ permite escribir los operadores en cualquier orden, pero
+<strong>el orden importa</strong> para el rendimiento:</p>
+<pre><code>datos.OrderBy(x =&gt; x.Nombre).Where(x =&gt; x.Activo)   // ordena TODO y luego filtra
+datos.Where(x =&gt; x.Activo).OrderBy(x =&gt; x.Nombre)   // ✅ filtra y ordena menos</code></pre>
+<p>La regla: <strong>filtra lo antes posible</strong>. El resultado es
+el mismo; el trabajo, mucho menor.</p>`,
+          ejemplos: [
+            { titulo: "GroupBy: de los grupos al informe", explicacion: "Observa la última línea: a diferencia de un diccionario, un Lookup devuelve una secuencia vacía al pedir una clave que no existe, en lugar de lanzar KeyNotFoundException. Es muy cómodo.", codigo: r`List<Alumno> alumnos = new List<Alumno>
+{
+    new Alumno("Ana", "DAM", 9.0),
+    new Alumno("Luis", "DAM", 4.5),
+    new Alumno("Marta", "ASIX", 7.5),
+    new Alumno("Pau", "DAM", 6.0),
+    new Alumno("Noa", "ASIX", 8.5),
+    new Alumno("Marc", "DAW", 5.5),
+};
+
+// Agrupar y recorrer los grupos
+Console.WriteLine("--- Alumnos por ciclo ---");
+foreach (var grupo in alumnos.GroupBy(a => a.Ciclo).OrderBy(g => g.Key))
+{
+    Console.WriteLine($"{grupo.Key} ({grupo.Count()} alumnos):");
+    foreach (Alumno a in grupo)
+    {
+        Console.WriteLine($"    {a.Nombre,-8} {a.Nota:F2}");
+    }
+}
+
+// El patrón de informe: GroupBy + Select a un tipo anónimo
+Console.WriteLine("\n--- Informe por ciclo ---");
+var informe = alumnos.GroupBy(a => a.Ciclo)
+                     .Select(g => new
+                     {
+                         Ciclo = g.Key,
+                         Cuantos = g.Count(),
+                         Media = g.Average(a => a.Nota),
+                         Aprobados = g.Count(a => a.Nota >= 5),
+                         Mejor = g.MaxBy(a => a.Nota).Nombre,
+                     })
+                     .OrderByDescending(x => x.Media);
+
+Console.WriteLine($"{"CICLO",-8}{"ALUM",6}{"MEDIA",8}{"APROB",7}  MEJOR");
+foreach (var fila in informe)
+{
+    Console.WriteLine($"{fila.Ciclo,-8}{fila.Cuantos,6}{fila.Media,8:F2}{fila.Aprobados,7}  {fila.Mejor}");
+}
+
+// Agrupar por una condición (no solo por un campo)
+Console.WriteLine("\n--- Por resultado ---");
+foreach (var grupo in alumnos.GroupBy(a => a.Nota >= 5 ? "Aprobados" : "Suspendidos"))
+{
+    Console.WriteLine($"{grupo.Key}: {string.Join(", ", grupo.Select(a => a.Nombre))}");
+}
+
+// ToLookup: inmediato y consultable por clave
+var porCiclo = alumnos.ToLookup(a => a.Ciclo);
+Console.WriteLine($"\nAlumnos de DAM (ToLookup): {string.Join(", ", porCiclo["DAM"].Select(a => a.Nombre))}");
+Console.WriteLine($"Alumnos de AFI (no existe): {porCiclo["AFI"].Count()}  ← devuelve vacío, no excepción");
+
+class Alumno
+{
+    public string Nombre { get; }
+    public string Ciclo { get; }
+    public double Nota { get; }
+
+    public Alumno(string nombre, string ciclo, double nota)
+    {
+        Nombre = nombre;
+        Ciclo = ciclo;
+        Nota = nota;
+    }
+}
+` },
+            { titulo: "Claves compuestas y agrupación por periodos", explicacion: "La clave compuesta con un tipo anónimo funciona porque esos tipos comparan por valor: dos claves con el mismo año y mes se consideran la misma. Con una clase normal habría que implementar Equals y GetHashCode.", codigo: r`List<Venta> ventas = new List<Venta>
+{
+    new Venta("Teclado", 49.80m, new DateTime(2026, 10, 5)),
+    new Venta("Monitor", 149.00m, new DateTime(2026, 10, 18)),
+    new Venta("Raton", 62.50m, new DateTime(2026, 11, 2)),
+    new Venta("Monitor", 447.00m, new DateTime(2026, 11, 20)),
+    new Venta("Webcam", 79.80m, new DateTime(2026, 11, 25)),
+    new Venta("Teclado", 24.90m, new DateTime(2025, 12, 1)),
+};
+
+// Clave compuesta: un tipo anónimo con dos campos
+var porMes = ventas.GroupBy(v => new { v.Fecha.Year, v.Fecha.Month })
+                   .Select(g => new
+                   {
+                       g.Key.Year,
+                       g.Key.Month,
+                       Cuantas = g.Count(),
+                       Total = g.Sum(v => v.Importe),
+                       Media = g.Average(v => v.Importe),
+                   })
+                   .OrderBy(x => x.Year).ThenBy(x => x.Month)
+                   .ToList();
+
+Console.WriteLine($"{"PERIODO",-10}{"VENTAS",8}{"TOTAL",12}{"MEDIA",10}");
+Console.WriteLine(new string('-', 40));
+foreach (var mes in porMes)
+{
+    Console.WriteLine($"{mes.Month:00}/{mes.Year,-5}{mes.Cuantas,8}{mes.Total,12:F2}{mes.Media,10:F2}");
+}
+
+var mejor = porMes.MaxBy(m => m.Total);
+Console.WriteLine($"\nMejor periodo: {mejor.Month:00}/{mejor.Year} con {mejor.Total:F2} €");
+
+// Agrupar por producto, con el detalle de cada grupo
+Console.WriteLine("\n--- Por producto ---");
+foreach (var g in ventas.GroupBy(v => v.Producto).OrderByDescending(g => g.Sum(v => v.Importe)))
+{
+    Console.WriteLine($"{g.Key,-10} {g.Count()} ventas, {g.Sum(v => v.Importe),9:F2} € " +
+                      $"(primera el {g.Min(v => v.Fecha):dd/MM/yyyy})");
+}
+
+class Venta
+{
+    public string Producto { get; }
+    public decimal Importe { get; }
+    public DateTime Fecha { get; }
+
+    public Venta(string producto, decimal importe, DateTime fecha)
+    {
+        Producto = producto;
+        Importe = importe;
+        Fecha = fecha;
+    }
+}
+` },
+            { titulo: "Join y GroupJoin", explicacion: "La diferencia entre los dos operadores está en Pau: con Join desaparece y con GroupJoin aparece con 0 notas. Es exactamente la diferencia entre INNER JOIN y LEFT JOIN de SQL, y la razón por la que un informe «pierde» filas cuando se usa el operador equivocado.", codigo: r`List<Alumno> alumnos = new List<Alumno>
+{
+    new Alumno(1, "Ana"),
+    new Alumno(2, "Luis"),
+    new Alumno(3, "Marta"),
+    new Alumno(4, "Pau"),          // este no tiene ninguna nota
+};
+
+List<Nota> notas = new List<Nota>
+{
+    new Nota(1, "Programación", 9.0),
+    new Nota(1, "Bases de datos", 8.0),
+    new Nota(2, "Programación", 4.5),
+    new Nota(3, "Programación", 7.5),
+    new Nota(5, "Programación", 6.0),   // de un alumno que no existe
+};
+
+// --- JOIN: solo las parejas que existen en las dos (INNER JOIN) ---
+Console.WriteLine("--- Join (solo con pareja) ---");
+var conNota = alumnos.Join(
+    notas,
+    a => a.Id,                 // clave en los alumnos
+    n => n.AlumnoId,           // clave en las notas
+    (a, n) => new { a.Nombre, n.Modulo, n.Valor });
+
+foreach (var fila in conNota)
+{
+    Console.WriteLine($"  {fila.Nombre,-8} {fila.Modulo,-16} {fila.Valor:F2}");
+}
+Console.WriteLine("  (Pau no aparece: no tiene notas. La nota del alumno 5 tampoco: no existe)");
+
+// Lo mismo con la sintaxis de consulta, que se lee mejor
+var conSintaxis = from a in alumnos
+                  join n in notas on a.Id equals n.AlumnoId
+                  orderby a.Nombre
+                  select $"{a.Nombre}: {n.Modulo} ({n.Valor:F1})";
+Console.WriteLine($"\nCon sintaxis de consulta: {conSintaxis.Count()} filas");
+
+// --- GROUPJOIN: todos los de la primera, con su lista de coincidencias (LEFT JOIN) ---
+Console.WriteLine("\n--- GroupJoin (todos los alumnos) ---");
+var todos = alumnos.GroupJoin(
+    notas,
+    a => a.Id,
+    n => n.AlumnoId,
+    (a, susNotas) => new
+    {
+        a.Nombre,
+        Cuantas = susNotas.Count(),
+        Media = susNotas.Any() ? susNotas.Average(n => n.Valor) : 0,
+    });
+
+foreach (var fila in todos)
+{
+    string media = fila.Cuantas > 0 ? $"{fila.Media:F2}" : "sin notas";
+    Console.WriteLine($"  {fila.Nombre,-8} {fila.Cuantas} notas, media {media}");
+}
+
+class Alumno
+{
+    public int Id { get; }
+    public string Nombre { get; }
+
+    public Alumno(int id, string nombre)
+    {
+        Id = id;
+        Nombre = nombre;
+    }
+}
+
+class Nota
+{
+    public int AlumnoId { get; }
+    public string Modulo { get; }
+    public double Valor { get; }
+
+    public Nota(int alumnoId, string modulo, double valor)
+    {
+        AlumnoId = alumnoId;
+        Modulo = modulo;
+        Valor = valor;
+    }
+}
+` },
+            { titulo: "Map-filter-reduce y el orden de los operadores", explicacion: "Dos lecciones medibles: filtrar antes de ordenar puede ser un orden de magnitud más rápido, y AsParallel aprovecha los núcleos pero no es gratis. Nunca optimices sin medir.", codigo: r`using System.Diagnostics;
+
+// Un conjunto grande para que se note
+int n = 2000000;
+int[] datos = new int[n];
+Random r = new Random(42);
+for (int i = 0; i < n; i++) { datos[i] = r.Next(1, 1000); }
+
+// --- El esquema map-filter-reduce ---
+long total = datos.Where(x => x % 7 == 0)      // filter: solo los múltiplos de 7
+                  .Select(x => (long)x * 2)    // map:    los duplicamos
+                  .Sum();                      // reduce: los sumamos
+Console.WriteLine($"Suma del doble de los múltiplos de 7: {total:N0}");
+
+// --- El orden importa: filtrar antes de ordenar ---
+Stopwatch reloj = Stopwatch.StartNew();
+var mal = datos.OrderBy(x => x).Where(x => x > 995).ToList();     // ordena 2 millones
+reloj.Stop();
+long tiempoMal = reloj.ElapsedMilliseconds;
+
+reloj.Restart();
+var bien = datos.Where(x => x > 995).OrderBy(x => x).ToList();    // ordena unos pocos
+reloj.Stop();
+long tiempoBien = reloj.ElapsedMilliseconds;
+
+Console.WriteLine($"\nOrdenar y luego filtrar: {tiempoMal,5} ms");
+Console.WriteLine($"Filtrar y luego ordenar: {tiempoBien,5} ms");
+Console.WriteLine($"Mismo resultado ({mal.Count} elementos): {mal.SequenceEqual(bien)}");
+
+// --- PLINQ: repartir el trabajo entre los núcleos ---
+reloj.Restart();
+long secuencial = datos.Where(x => x % 7 == 0).Sum(x => (long)EsCostoso(x));
+reloj.Stop();
+long tiempoSecuencial = reloj.ElapsedMilliseconds;
+
+reloj.Restart();
+long paralelo = datos.AsParallel().Where(x => x % 7 == 0).Sum(x => (long)EsCostoso(x));
+reloj.Stop();
+long tiempoParalelo = reloj.ElapsedMilliseconds;
+
+Console.WriteLine($"\nCálculo costoso en secuencial: {tiempoSecuencial,5} ms");
+Console.WriteLine($"El mismo con AsParallel():     {tiempoParalelo,5} ms");
+Console.WriteLine($"¿Mismo resultado? {secuencial == paralelo}");
+Console.WriteLine($"Núcleos disponibles: {Environment.ProcessorCount}");
+Console.WriteLine("\nAsParallel solo compensa con muchos datos y cálculos costosos:");
+Console.WriteLine("con pocos elementos, coordinar los hilos cuesta más que el propio cálculo.");
+
+int EsCostoso(int x)
+{
+    // Simulamos un cálculo que lleva trabajo
+    int acumulado = 0;
+    for (int i = 0; i < 40; i++) { acumulado += (x * i) % 97; }
+    return acumulado % 1000;
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Informe de notas por módulo y grupo",
+              nivel: 2,
+              pista: "Join pierde los elementos sin pareja; GroupJoin los conserva con una lista vacía.",
+              enunciado: r`<p>Tienes dos colecciones: <code>alumnos</code> (con <code>Id</code>,
+<code>Nombre</code>, <code>Grupo</code>) y <code>notas</code> (con
+<code>AlumnoId</code>, <code>Modulo</code>, <code>Valor</code>). Escribe
+un programa que muestre:</p>
+<ol type="1">
+<li>La <strong>nota media por módulo</strong>, ordenada de mayor a
+menor.</li>
+<li>La <strong>nota media por grupo</strong>, con el número de alumnos
+de cada uno.</li>
+<li>Para cada alumno, su nombre, cuántas notas tiene y su media
+(incluidos los alumnos <strong>sin notas</strong>).</li>
+<li>El mejor alumno de cada grupo.</li>
+<li>Los alumnos que tienen alguna nota por debajo de 5, con la lista de
+módulos suspendidos.</li>
+</ol>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Usa <code>Join</code> o <code>GroupJoin</code> según corresponda; el
+punto 3 <strong>debe</strong> incluir a los alumnos sin notas.</li>
+<li><strong>Control de errores:</strong> no calcules medias sobre grupos
+vacíos (usa <code>Any()</code> antes).</li>
+<li>Formatea la salida en columnas alineadas.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> para el punto 5, <code>GroupJoin</code> y
+después filtrar por
+<code>susNotas.Any(n =&gt; n.Valor &lt; 5)</code>.</p>
+<p>🏅🏅 <strong>Ampliación avanzada:</strong> añade un ranking general
+con la posición de cada alumno y marca con un asterisco a los que estén
+por encima de la media de su grupo.</p>`,
+              soluciones: [
+                { titulo: "Versión completa", nota: "Fíjate en el double? del punto 3: usar un nullable permite distinguir «media 0» de «sin notas», que son cosas muy distintas en un boletín. Y en que el punto 3 usa GroupJoin precisamente para que Noa aparezca.", codigo: r`List<Alumno> alumnos = new List<Alumno>
+{
+    new Alumno(1, "Ana", "1A"),
+    new Alumno(2, "Luis", "1A"),
+    new Alumno(3, "Marta", "1B"),
+    new Alumno(4, "Pau", "1B"),
+    new Alumno(5, "Noa", "1A"),       // sin notas
+};
+
+List<Nota> notas = new List<Nota>
+{
+    new Nota(1, "Programacion", 9.0), new Nota(1, "Bases de datos", 8.5),
+    new Nota(2, "Programacion", 4.5), new Nota(2, "Bases de datos", 6.0),
+    new Nota(3, "Programacion", 7.5), new Nota(3, "Bases de datos", 3.5),
+    new Nota(4, "Programacion", 6.5), new Nota(4, "Bases de datos", 7.0),
+};
+
+// ---------- 1. Media por módulo ----------
+Console.WriteLine("=== MEDIA POR MÓDULO ===");
+var porModulo = notas.GroupBy(n => n.Modulo)
+                     .Select(g => new { Modulo = g.Key, Media = g.Average(n => n.Valor),
+                                        Cuantas = g.Count() })
+                     .OrderByDescending(x => x.Media);
+foreach (var m in porModulo)
+{
+    Console.WriteLine($"  {m.Modulo,-16}{m.Media,6:F2}  ({m.Cuantas} notas)");
+}
+
+// ---------- 2. Media por grupo ----------
+Console.WriteLine("\n=== MEDIA POR GRUPO ===");
+var porGrupo = alumnos.GroupJoin(notas, a => a.Id, n => n.AlumnoId,
+                                 (a, sus) => new { a.Grupo, Notas = sus.ToList() })
+                      .GroupBy(x => x.Grupo)
+                      .Select(g => new
+                      {
+                          Grupo = g.Key,
+                          Alumnos = g.Count(),
+                          TodasLasNotas = g.SelectMany(x => x.Notas).ToList(),
+                      })
+                      .Select(g => new
+                      {
+                          g.Grupo,
+                          g.Alumnos,
+                          Media = g.TodasLasNotas.Any() ? g.TodasLasNotas.Average(n => n.Valor) : 0,
+                      })
+                      .OrderBy(g => g.Grupo);
+foreach (var g in porGrupo)
+{
+    Console.WriteLine($"  Grupo {g.Grupo}: {g.Alumnos} alumnos, media {g.Media:F2}");
+}
+
+// ---------- 3. Ficha de cada alumno (GroupJoin: también los que no tienen notas) ----------
+Console.WriteLine("\n=== FICHA POR ALUMNO ===");
+var fichas = alumnos.GroupJoin(notas, a => a.Id, n => n.AlumnoId,
+                               (a, sus) => new
+                               {
+                                   a.Nombre,
+                                   a.Grupo,
+                                   Cuantas = sus.Count(),
+                                   Media = sus.Any() ? sus.Average(n => n.Valor) : (double?)null,
+                               })
+                    .OrderBy(f => f.Grupo).ThenBy(f => f.Nombre);
+
+Console.WriteLine($"  {"ALUMNO",-8}{"GRUPO",7}{"NOTAS",7}{"MEDIA",8}");
+foreach (var f in fichas)
+{
+    string media = f.Media.HasValue ? f.Media.Value.ToString("F2") : "  --";
+    Console.WriteLine($"  {f.Nombre,-8}{f.Grupo,7}{f.Cuantas,7}{media,8}");
+}
+
+// ---------- 4. Mejor alumno de cada grupo ----------
+Console.WriteLine("\n=== MEJOR DE CADA GRUPO ===");
+var mejores = alumnos.Join(notas, a => a.Id, n => n.AlumnoId, (a, n) => new { a.Nombre, a.Grupo, n.Valor })
+                     .GroupBy(x => new { x.Grupo, x.Nombre })
+                     .Select(g => new { g.Key.Grupo, g.Key.Nombre, Media = g.Average(x => x.Valor) })
+                     .GroupBy(x => x.Grupo)
+                     .Select(g => g.MaxBy(x => x.Media))
+                     .OrderBy(x => x.Grupo);
+foreach (var m in mejores)
+{
+    Console.WriteLine($"  Grupo {m.Grupo}: {m.Nombre} ({m.Media:F2})");
+}
+
+// ---------- 5. Alumnos con suspensos ----------
+Console.WriteLine("\n=== CON ALGÚN SUSPENSO ===");
+var conSuspensos = alumnos.GroupJoin(notas, a => a.Id, n => n.AlumnoId,
+                                     (a, sus) => new { a.Nombre, Suspendidos = sus.Where(n => n.Valor < 5).ToList() })
+                          .Where(x => x.Suspendidos.Any());
+foreach (var x in conSuspensos)
+{
+    string modulos = string.Join(", ", x.Suspendidos.Select(n => $"{n.Modulo} ({n.Valor:F1})"));
+    Console.WriteLine($"  {x.Nombre}: {modulos}");
+}
+
+class Alumno
+{
+    public int Id { get; }
+    public string Nombre { get; }
+    public string Grupo { get; }
+
+    public Alumno(int id, string nombre, string grupo)
+    {
+        Id = id;
+        Nombre = nombre;
+        Grupo = grupo;
+    }
+}
+
+class Nota
+{
+    public int AlumnoId { get; }
+    public string Modulo { get; }
+    public double Valor { get; }
+
+    public Nota(int alumnoId, string modulo, double valor)
+    {
+        AlumnoId = alumnoId;
+        Modulo = modulo;
+        Valor = valor;
+    }
+}
+` },
+                { titulo: "Ampliación: ranking con marca de «por encima de la media»", nota: "Calcular las medias de grupo una sola vez y guardarlas en un diccionario evita recalcularlas para cada alumno. Es el mismo razonamiento que la caché de la lección de diccionarios.", codigo: r`List<Alumno> alumnos = new List<Alumno>
+{
+    new Alumno(1, "Ana", "1A"), new Alumno(2, "Luis", "1A"),
+    new Alumno(3, "Marta", "1B"), new Alumno(4, "Pau", "1B"),
+};
+List<Nota> notas = new List<Nota>
+{
+    new Nota(1, "Prog", 9.0), new Nota(2, "Prog", 4.5),
+    new Nota(3, "Prog", 7.5), new Nota(4, "Prog", 6.5),
+};
+
+// Media de cada alumno
+var medias = alumnos.GroupJoin(notas, a => a.Id, n => n.AlumnoId,
+                               (a, sus) => new
+                               {
+                                   a.Nombre,
+                                   a.Grupo,
+                                   Media = sus.Any() ? sus.Average(n => n.Valor) : 0,
+                               })
+                    .Where(x => x.Media > 0)
+                    .ToList();
+
+// Media de cada grupo, en un diccionario para consultarla rápido
+Dictionary<string, double> mediaDelGrupo = medias
+    .GroupBy(x => x.Grupo)
+    .ToDictionary(g => g.Key, g => g.Average(x => x.Media));
+
+Console.WriteLine($"{"POS",4}  {"ALUMNO",-8}{"GRUPO",7}{"MEDIA",8}   (* por encima de su grupo)");
+
+int posicion = 1;
+foreach (var a in medias.OrderByDescending(x => x.Media))
+{
+    bool destaca = a.Media > mediaDelGrupo[a.Grupo];
+    Console.WriteLine($"{posicion,4}. {a.Nombre,-8}{a.Grupo,7}{a.Media,8:F2} {(destaca ? "*" : "")}");
+    posicion++;
+}
+
+Console.WriteLine();
+foreach (var g in mediaDelGrupo.OrderBy(p => p.Key))
+{
+    Console.WriteLine($"Media del grupo {g.Key}: {g.Value:F2}");
+}
+
+class Alumno
+{
+    public int Id { get; }
+    public string Nombre { get; }
+    public string Grupo { get; }
+
+    public Alumno(int id, string nombre, string grupo)
+    {
+        Id = id;
+        Nombre = nombre;
+        Grupo = grupo;
+    }
+}
+
+class Nota
+{
+    public int AlumnoId { get; }
+    public string Modulo { get; }
+    public double Valor { get; }
+
+    public Nota(int alumnoId, string modulo, double valor)
+    {
+        AlumnoId = alumnoId;
+        Modulo = modulo;
+        Valor = valor;
+    }
+}
+` },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "m14",
+      titulo: "Interfaz gráfica y persistencia",
+      lecciones: [
+        {
+          id: "mvc-razor",
+          titulo: "Interfaces de usuario: el patrón MVC",
+          duracion: "20 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Entender por qué se separa la interfaz de la lógica", "Distinguir los papeles de modelo, vista y controlador", "Conocer las opciones de interfaz en .NET y situar Razor Pages"],
+          teoria: r`<p>Hasta ahora todos tus programas han hablado con el usuario por la
+consola, y la lógica y la presentación estaban mezcladas en el mismo
+sitio. Eso funciona para aprender, pero en una aplicación real es
+insostenible: si la interfaz cambia (de consola a web, de web a móvil),
+habría que reescribirlo todo.</p>
+<p>La solución es <strong>separar responsabilidades</strong>, y el
+patrón clásico para hacerlo es <strong>MVC</strong>.</p>
+<h3 id="1-por-qué-separar">1. Por qué separar</h3>
+<pre><code>// ❌ Todo mezclado: la lógica del descuento vive dentro de la presentación
+Console.Write(&quot;Importe: &quot;);
+double importe = double.Parse(Console.ReadLine());
+double total = importe &gt;= 50 ? importe * 0.9 * 1.21 : importe * 1.21;
+Console.WriteLine($&quot;Total: {total:F2}&quot;);</code></pre>
+<p>Los problemas no son estéticos:</p>
+<ul>
+<li><strong>No se puede probar.</strong> Para comprobar el cálculo del
+descuento hay que simular la consola.</li>
+<li><strong>No se puede reutilizar.</strong> Esa regla de negocio no
+sirve para la versión web.</li>
+<li><strong>No se puede cambiar la interfaz</strong> sin tocar la
+lógica, ni al revés.</li>
+</ul>
+<pre><code>// ✅ La regla vive en su sitio y no sabe nada de la consola
+public static class Calculadora
+{
+    public static decimal Total(decimal importe) { ... }
+}</code></pre>
+<h3 id="2-las-tres-partes-de-mvc">2. Las tres partes de MVC</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Parte</th>
+<th>Responsabilidad</th>
+<th>Qué <strong>no</strong> debe hacer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Modelo</strong></td>
+<td>los datos y las reglas de negocio</td>
+<td>saber nada de la interfaz</td>
+</tr>
+<tr class="even">
+<td><strong>Vista</strong></td>
+<td>mostrar la información al usuario</td>
+<td>contener reglas de negocio</td>
+</tr>
+<tr class="odd">
+<td><strong>Controlador</strong></td>
+<td>recibir la petición, pedir al modelo y elegir la vista</td>
+<td>calcular nada él mismo</td>
+</tr>
+</tbody>
+</table></div>
+<pre><code>   Usuario
+      │ 1. interactúa
+      ▼
+┌──────────────┐  2. pide datos  ┌──────────┐
+│ Controlador  │ ───────────────&gt; │  Modelo  │
+└──────────────┘ &lt;─────────────── └──────────┘
+      │ 3. elige la vista
+      ▼
+┌──────────────┐  4. se muestra al usuario
+│    Vista     │
+└──────────────┘</code></pre>
+<p><strong>La regla que resume el patrón:</strong> el modelo no sabe que
+existe la vista. Puedes cambiar la interfaz entera sin tocar una línea
+del modelo.</p>
+<h3 id="3-las-variantes-que-verás">3. Las variantes que verás</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Patrón</th>
+<th>Dónde se usa</th>
+<th>Idea</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>MVC</strong></td>
+<td>web clásica (ASP.NET Core MVC)</td>
+<td>controlador que coordina</td>
+</tr>
+<tr class="even">
+<td><strong>MVVM</strong></td>
+<td>WPF, MAUI, Avalonia</td>
+<td><em>view model</em> con enlace de datos bidireccional</td>
+</tr>
+<tr class="odd">
+<td><strong>MVP</strong></td>
+<td>aplicaciones de escritorio antiguas</td>
+<td>el presentador manda sobre la vista</td>
+</tr>
+<tr class="even">
+<td><strong>Page Model</strong></td>
+<td><strong>Razor Pages</strong></td>
+<td>una clase por página, más simple</td>
+</tr>
+</tbody>
+</table></div>
+<p>Todas separan lo mismo: <strong>datos, presentación y
+coordinación</strong>. Cambian los nombres y quién habla con quién.</p>
+<h3 id="4-las-opciones-de-interfaz-en-net">4. Las opciones de interfaz
+en .NET</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Tecnología</th>
+<th>Para qué</th>
+<th>Multiplataforma</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Consola</strong></td>
+<td>herramientas, aprendizaje, servicios</td>
+<td>sí</td>
+</tr>
+<tr class="even">
+<td><strong>Razor Pages</strong></td>
+<td>web, páginas centradas en formularios</td>
+<td>sí (servidor)</td>
+</tr>
+<tr class="odd">
+<td><strong>ASP.NET Core MVC</strong></td>
+<td>web con muchas rutas y lógica</td>
+<td>sí</td>
+</tr>
+<tr class="even">
+<td><strong>Blazor</strong></td>
+<td>web con C# en lugar de JavaScript</td>
+<td>sí</td>
+</tr>
+<tr class="odd">
+<td><strong>MAUI</strong></td>
+<td>móvil y escritorio con un solo código</td>
+<td>sí</td>
+</tr>
+<tr class="even">
+<td><strong>WPF / WinForms</strong></td>
+<td>escritorio</td>
+<td>solo Windows</td>
+</tr>
+<tr class="odd">
+<td><strong>Unity / Godot</strong></td>
+<td>videojuegos</td>
+<td>sí</td>
+</tr>
+</tbody>
+</table></div>
+<p>Para este módulo usamos <strong>Razor Pages</strong>, por tres
+razones: es la forma más sencilla de ver MVC funcionando, se crea con un
+solo comando y muestra de verdad cómo una interfaz se conecta con un
+modelo.</p>
+<h3 id="5-razor-pages-en-tres-ideas">5. Razor Pages en tres ideas</h3>
+<p>Cada página son <strong>dos ficheros</strong>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Fichero</th>
+<th>Qué contiene</th>
+<th>Papel en MVC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Index.cshtml</code></td>
+<td>HTML con trozos de C# precedidos de <code>@</code></td>
+<td>la <strong>vista</strong></td>
+</tr>
+<tr class="even">
+<td><code>Index.cshtml.cs</code></td>
+<td>la clase <code>IndexModel</code> con <code>OnGet</code> y
+<code>OnPost</code></td>
+<td>el <strong>controlador</strong> (+ datos de la página)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Y el <strong>modelo</strong> son tus clases de siempre
+(<code>Juego</code>, <code>Alumno</code>, <code>Pedido</code>), que no
+saben nada de la web.</p>
+<h4 id="la-sintaxis-razor-en-cinco-líneas">La sintaxis Razor, en cinco
+líneas</h4>
+<pre><code>@page                                  ← esta página responde a una URL
+@model IndexModel                      ← de qué clase es el modelo de la página
+&lt;h1&gt;@Model.Titulo&lt;/h1&gt;                 ← imprimir un valor
+@if (Model.Juegos.Count == 0) { ... }  ← condicional
+@foreach (var j in Model.Juegos) { ... }  ← bucle</code></pre>
+<p>Todo lo que empieza por <code>@</code> es C#; el resto es HTML. Y
+Razor <strong>escapa el HTML automáticamente</strong> al imprimir un
+valor, lo que evita el agujero de seguridad más común de las
+aplicaciones web (la inyección de código en la página, o
+<em>XSS</em>).</p>
+<h3 id="6-el-ciclo-de-una-petición">6. El ciclo de una petición</h3>
+<pre><code>1. El navegador pide  GET /juegos
+2. ASP.NET Core busca la página Juegos y crea JuegosModel
+3. Llama a OnGet()        ← aquí se cargan los datos del modelo
+4. Renderiza Juegos.cshtml con esos datos
+5. Devuelve el HTML al navegador
+
+Y si el usuario envía un formulario:
+6. El navegador manda   POST /juegos
+7. Se llama a OnPost()    ← aquí se valida y se guarda
+8. Si hay errores, se vuelve a mostrar la misma página con los mensajes
+9. Si va bien, se redirige (RedirectToPage) para no repetir el envío</code></pre>
+<p>Ese último punto tiene nombre, <strong>patrón
+POST-Redirect-GET</strong>, y resuelve un problema real: si no se
+redirige, al recargar la página el navegador reenvía el formulario y se
+duplica el pedido.</p>`,
+          ejemplos: [
+            { titulo: "Separar la lógica de la interfaz", explicacion: "Las tres «interfaces» (consola, informe y pruebas) usan la misma clase Caja sin que esta sepa nada de ellas. Si mañana hay que hacer la versión web, el modelo ya está hecho y probado. Eso es lo que compra la separación.", codigo: r`// El mismo cálculo, dos interfaces, UNA sola regla de negocio.
+// Esta es la idea central de MVC, y se puede practicar ya en consola.
+
+// --- INTERFAZ 1: consola interactiva ---
+Console.WriteLine("=== Interfaz de consola ===");
+Console.Write("Importe de la compra: ");
+if (!decimal.TryParse(Console.ReadLine(), out decimal importe) || importe < 0)
+{
+    Console.WriteLine("Importe no válido.");
+}
+else
+{
+    Factura factura = Caja.Cobrar(importe);     // el MODELO hace el trabajo
+    Console.WriteLine($"Base:      {factura.BaseImponible,8:F2} €");
+    Console.WriteLine($"Descuento: {factura.Descuento,8:F2} €");
+    Console.WriteLine($"IVA:       {factura.Iva,8:F2} €");
+    Console.WriteLine($"TOTAL:     {factura.Total,8:F2} €");
+}
+
+// --- INTERFAZ 2: informe para un listado (el mismo modelo, otra presentación) ---
+Console.WriteLine("\n=== Informe por lotes ===");
+decimal[] compras = { 10m, 49.99m, 50m, 120m };
+
+Console.WriteLine($"{"IMPORTE",10}{"DESCUENTO",11}{"TOTAL",10}");
+foreach (decimal c in compras)
+{
+    Factura f = Caja.Cobrar(c);                 // exactamente la misma regla
+    Console.WriteLine($"{c,10:F2}{f.Descuento,11:F2}{f.Total,10:F2}");
+}
+
+// --- Y una tercera «interfaz»: las PRUEBAS, que solo son posibles si está separado ---
+Console.WriteLine("\n=== Comprobación automática ===");
+(decimal importe, decimal esperado)[] casos =
+{
+    (0m, 0m), (10m, 12.10m), (50m, 54.45m), (100m, 108.90m),
+};
+foreach (var caso in casos)
+{
+    decimal obtenido = Caja.Cobrar(caso.importe).Total;
+    bool pasa = Math.Abs(obtenido - caso.esperado) < 0.005m;
+    Console.WriteLine($"  {(pasa ? "OK   " : "FALLA")} {caso.importe,7:F2} -> {obtenido:F2} " +
+                      $"(esperado {caso.esperado:F2})");
+}
+
+// ===== MODELO: no sabe nada de consolas, webs ni formatos =====
+static class Caja
+{
+    private const decimal MinimoDescuento = 50m;
+    private const decimal PorcentajeDescuento = 0.10m;
+    private const decimal TipoIva = 0.21m;
+
+    public static Factura Cobrar(decimal importe)
+    {
+        if (importe < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(importe), "No puede ser negativo");
+        }
+
+        decimal descuento = importe >= MinimoDescuento ? importe * PorcentajeDescuento : 0m;
+        decimal baseImponible = importe - descuento;
+        decimal iva = baseImponible * TipoIva;
+
+        return new Factura(baseImponible, descuento, iva);
+    }
+}
+
+class Factura
+{
+    public decimal BaseImponible { get; }
+    public decimal Descuento { get; }
+    public decimal Iva { get; }
+    public decimal Total => BaseImponible + Iva;
+
+    public Factura(decimal baseImponible, decimal descuento, decimal iva)
+    {
+        BaseImponible = baseImponible;
+        Descuento = descuento;
+        Iva = iva;
+    }
+}
+` },
+            { titulo: "Anatomía de una página Razor", explicacion: "Fíjate en el reparto: la vista solo tiene @if, @foreach y @Model (presentación); el page model solo pide datos y los deja listos; y el servicio tiene las reglas. El modelo se puede ejecutar y probar en consola, como aquí, sin levantar un servidor web.", codigo: r`// ╔════════════════════════════════════════════════════════════════════════╗
+// ║  Pages/Juegos.cshtml   —  LA VISTA                                     ║
+// ╚════════════════════════════════════════════════════════════════════════╝
+//
+// @page
+// @model JuegosModel
+// @{
+//     ViewData["Title"] = "Catálogo de juegos";
+// }
+//
+// <h1>@Model.Titulo</h1>
+//
+// @if (Model.Juegos.Count == 0)
+// {
+//     <p>No hay juegos en el catálogo.</p>
+// }
+// else
+// {
+//     <table class="table">
+//         <thead>
+//             <tr><th>Título</th><th>Género</th><th>Nota</th></tr>
+//         </thead>
+//         <tbody>
+//         @foreach (var juego in Model.Juegos)
+//         {
+//             <tr>
+//                 <td>@juego.Titulo</td>
+//                 <td>@juego.Genero</td>
+//                 <td>@juego.Nota.ToString("F1")</td>
+//             </tr>
+//         }
+//         </tbody>
+//     </table>
+//     <p>Nota media: <strong>@Model.NotaMedia.ToString("F2")</strong></p>
+// }
+//
+// ╔════════════════════════════════════════════════════════════════════════╗
+// ║  Pages/Juegos.cshtml.cs   —  EL CONTROLADOR (page model)               ║
+// ╚════════════════════════════════════════════════════════════════════════╝
+//
+// using Microsoft.AspNetCore.Mvc.RazorPages;
+//
+// public class JuegosModel : PageModel
+// {
+//     private readonly CatalogoService catalogo;      // inyectado
+//
+//     public JuegosModel(CatalogoService catalogo) => this.catalogo = catalogo;
+//
+//     public string Titulo => "Catálogo de juegos";
+//     public List<Juego> Juegos { get; private set; } = new List<Juego>();
+//     public double NotaMedia { get; private set; }
+//
+//     public void OnGet()
+//     {
+//         Juegos = catalogo.Todos();                  // pedir al MODELO
+//         NotaMedia = Juegos.Count > 0 ? Juegos.Average(j => j.Nota) : 0;
+//     }
+// }
+//
+// ╔════════════════════════════════════════════════════════════════════════╗
+// ║  Models/Juego.cs y Services/CatalogoService.cs   —  EL MODELO          ║
+// ╚════════════════════════════════════════════════════════════════════════╝
+//    Estas clases NO saben que existe la web: son C# normal, como el que ya
+//    escribes. Aquí las ejecutamos en consola para comprobar que funcionan.
+
+CatalogoService catalogo = new CatalogoService();
+
+Console.WriteLine($"Juegos en el catálogo: {catalogo.Todos().Count}");
+Console.WriteLine($"Nota media: {catalogo.Todos().Average(j => j.Nota):F2}\n");
+
+foreach (Juego j in catalogo.Buscar("plataformas"))
+{
+    Console.WriteLine($"  {j.Titulo,-16} {j.Genero,-14} {j.Nota:F1}");
+}
+
+Console.WriteLine($"\nAñadir uno nuevo: {catalogo.Anadir(new Juego("Tunic", "aventura", 8.7))}");
+Console.WriteLine($"Añadir uno sin título: {catalogo.Anadir(new Juego("", "aventura", 8.0))}");
+Console.WriteLine($"Ahora hay {catalogo.Todos().Count} juegos");
+
+class Juego
+{
+    public string Titulo { get; set; } = "";
+    public string Genero { get; set; } = "";
+    public double Nota { get; set; }
+
+    public Juego() { }
+
+    public Juego(string titulo, string genero, double nota)
+    {
+        Titulo = titulo;
+        Genero = genero;
+        Nota = nota;
+    }
+}
+
+// El servicio concentra las reglas: qué es válido y cómo se consulta
+class CatalogoService
+{
+    private readonly List<Juego> juegos = new List<Juego>
+    {
+        new Juego("Hollow Knight", "metroidvania", 9.2),
+        new Juego("Celeste", "plataformas", 9.0),
+        new Juego("Cuphead", "plataformas", 8.6),
+    };
+
+    public List<Juego> Todos() => new List<Juego>(juegos);     // copia: no exponemos la interna
+
+    public List<Juego> Buscar(string genero) =>
+        juegos.Where(j => j.Genero.Equals(genero, StringComparison.OrdinalIgnoreCase)).ToList();
+
+    public bool Anadir(Juego juego)
+    {
+        bool valido = juego is not null
+                      && !string.IsNullOrWhiteSpace(juego.Titulo)
+                      && juego.Nota >= 0 && juego.Nota <= 10;
+        if (!valido)
+        {
+            return false;
+        }
+        juegos.Add(juego);
+        return true;
+    }
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Refactoriza a MVC",
+              nivel: 2,
+              pista: "El modelo devuelve (bool ok, string motivo); el controlador decide el mensaje; la vista solo escribe.",
+              enunciado: r`<p>Te damos un programa de consola que lo tiene <strong>todo
+mezclado</strong>: un gestor de reservas de aulas donde la lógica, la
+validación y la presentación están en el mismo bloque.</p>
+<p>Tu tarea es <strong>refactorizarlo</strong> separando tres capas,
+<strong>sin cambiar lo que el usuario ve</strong>:</p>
+<ol type="1">
+<li><strong>Modelo:</strong> una clase <code>Reserva</code> y una clase
+<code>AgendaAulas</code> con las reglas (no se puede reservar un aula ya
+ocupada a esa hora; el aula debe existir; la hora debe estar entre 8 y
+20).</li>
+<li><strong>«Controlador»:</strong> una clase o unas funciones que
+reciban la entrada del usuario, llamen al modelo y decidan qué
+mostrar.</li>
+<li><strong>«Vista»:</strong> las funciones que escriben en la consola.
+<strong>Ninguna</strong> regla de negocio aquí.</li>
+</ol>
+<p>Además, escribe una <strong>comprobación automática</strong> del
+modelo (al menos cinco casos), que es lo que la separación hace
+posible.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>El modelo <strong>no</strong> puede contener ni un
+<code>Console.WriteLine</code>.</li>
+<li>La vista <strong>no</strong> puede contener ni un <code>if</code> de
+regla de negocio (sí los de presentación).</li>
+<li><strong>Control de errores:</strong> el modelo devuelve un resultado
+(bool o un objeto con el motivo); es el controlador quien decide el
+mensaje.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> que el modelo devuelva un
+<code>(bool ok, string motivo)</code> permite que el controlador elija
+el mensaje sin que el modelo sepa nada de la interfaz.</p>
+<p>🏅 <strong>Ampliación:</strong> añade una segunda «vista» que exporte
+la agenda a CSV reutilizando el mismo modelo. Si no has tenido que tocar
+el modelo, la refactorización es correcta.</p>`,
+              soluciones: [
+                { titulo: "Versión refactorizada en tres capas", nota: "La prueba de que la refactorización es correcta: el modelo no tiene ni un Console, la vista no tiene ni una regla, y las comprobaciones automáticas se pueden escribir sin simular la consola. Devolver (bool, string) en lugar de escribir el mensaje es lo que mantiene el modelo independiente de la interfaz.", codigo: r`// ===================== CONTROLADOR + VISTA (programa principal) =====================
+AgendaAulas agenda = new AgendaAulas(new[] { "A101", "A102", "LAB1" });
+
+ComprobarModelo(agenda);                   // las pruebas: solo posibles si está separado
+
+int opcion = 0;
+do
+{
+    VistaMenu();
+    if (!int.TryParse(Console.ReadLine(), out opcion))
+    {
+        VistaError("Escribe un número del 1 al 4.");
+        opcion = 0;
+    }
+    else
+    {
+        switch (opcion)
+        {
+            case 1: ControladorReservar(agenda); break;
+            case 2: VistaAgenda(agenda.Todas()); break;
+            case 3: ControladorAnular(agenda); break;
+            case 4: VistaMensaje("Hasta luego."); break;
+            default: VistaError("Opción fuera de rango."); break;
+        }
+    }
+} while (opcion != 4);
+
+// ---------- CONTROLADOR: recoge datos, llama al modelo, elige el mensaje ----------
+void ControladorReservar(AgendaAulas modelo)
+{
+    Console.Write("Aula: ");
+    string aula = (Console.ReadLine() ?? "").Trim().ToUpper();
+
+    Console.Write("Hora (8-20): ");
+    if (!int.TryParse(Console.ReadLine(), out int hora))
+    {
+        VistaError("La hora debe ser un número entero.");
+        return;
+    }
+
+    Console.Write("Profesor: ");
+    string profesor = (Console.ReadLine() ?? "").Trim();
+
+    // El modelo decide si se puede y por qué no; la vista solo muestra
+    (bool ok, string motivo) resultado = modelo.Reservar(aula, hora, profesor);
+
+    if (resultado.ok)
+    {
+        VistaMensaje($"Reserva confirmada: {aula} a las {hora}:00 ({profesor}).");
+    }
+    else
+    {
+        VistaError(resultado.motivo);
+    }
+}
+
+void ControladorAnular(AgendaAulas modelo)
+{
+    Console.Write("Aula: ");
+    string aula = (Console.ReadLine() ?? "").Trim().ToUpper();
+    Console.Write("Hora: ");
+    if (!int.TryParse(Console.ReadLine(), out int hora))
+    {
+        VistaError("Hora no válida.");
+        return;
+    }
+
+    (bool ok, string motivo) resultado = modelo.Anular(aula, hora);
+    if (resultado.ok) { VistaMensaje("Reserva anulada."); }
+    else { VistaError(resultado.motivo); }
+}
+
+// ---------- VISTA: solo presentación, ninguna regla ----------
+void VistaMenu()
+{
+    Console.WriteLine("\n--- AGENDA DE AULAS ---");
+    Console.WriteLine("1) Reservar   2) Ver agenda   3) Anular   4) Salir");
+    Console.Write("Opción: ");
+}
+
+void VistaAgenda(IReadOnlyList<Reserva> reservas)
+{
+    if (reservas.Count == 0)
+    {
+        Console.WriteLine("(no hay reservas)");
+    }
+    else
+    {
+        Console.WriteLine($"{"AULA",-8}{"HORA",6}  PROFESOR");
+        foreach (Reserva r in reservas.OrderBy(x => x.Aula).ThenBy(x => x.Hora))
+        {
+            Console.WriteLine($"{r.Aula,-8}{r.Hora,4}:00  {r.Profesor}");
+        }
+    }
+}
+
+void VistaMensaje(string texto) => Console.WriteLine(texto);
+void VistaError(string texto) => Console.WriteLine($"ERROR: {texto}");
+
+// ---------- Comprobación automática del MODELO ----------
+void ComprobarModelo(AgendaAulas modelo)
+{
+    AgendaAulas prueba = new AgendaAulas(new[] { "A101" });
+
+    (string descripcion, bool esperado, bool obtenido)[] casos =
+    {
+        ("reserva válida", true, prueba.Reservar("A101", 10, "Dani").ok),
+        ("aula ya ocupada", false, prueba.Reservar("A101", 10, "Otro").ok),
+        ("aula inexistente", false, prueba.Reservar("Z999", 10, "Dani").ok),
+        ("hora demasiado temprana", false, prueba.Reservar("A101", 7, "Dani").ok),
+        ("hora demasiado tardía", false, prueba.Reservar("A101", 21, "Dani").ok),
+        ("profesor vacío", false, prueba.Reservar("A101", 12, "").ok),
+        ("anular existente", true, prueba.Anular("A101", 10).ok),
+        ("anular inexistente", false, prueba.Anular("A101", 10).ok),
+    };
+
+    Console.WriteLine("--- Comprobación del modelo ---");
+    foreach (var caso in casos)
+    {
+        Console.WriteLine($"  {(caso.esperado == caso.obtenido ? "OK   " : "FALLA")} {caso.descripcion}");
+    }
+}
+
+// ===================== MODELO: ni un Console.WriteLine =====================
+class Reserva
+{
+    public string Aula { get; }
+    public int Hora { get; }
+    public string Profesor { get; }
+
+    public Reserva(string aula, int hora, string profesor)
+    {
+        Aula = aula;
+        Hora = hora;
+        Profesor = profesor;
+    }
+}
+
+class AgendaAulas
+{
+    private const int HoraMinima = 8;
+    private const int HoraMaxima = 20;
+
+    private readonly HashSet<string> aulas;
+    private readonly List<Reserva> reservas = new List<Reserva>();
+
+    public AgendaAulas(IEnumerable<string> aulasDisponibles) =>
+        aulas = new HashSet<string>(aulasDisponibles, StringComparer.OrdinalIgnoreCase);
+
+    public IReadOnlyList<Reserva> Todas() => reservas;
+
+    // Devuelve el resultado y el motivo: quien llama decide cómo comunicarlo
+    public (bool ok, string motivo) Reservar(string aula, int hora, string profesor)
+    {
+        if (!aulas.Contains(aula))
+        {
+            return (false, $"El aula «{aula}» no existe.");
+        }
+        if (hora < HoraMinima || hora > HoraMaxima)
+        {
+            return (false, $"La hora debe estar entre {HoraMinima} y {HoraMaxima}.");
+        }
+        if (string.IsNullOrWhiteSpace(profesor))
+        {
+            return (false, "Hay que indicar el profesor.");
+        }
+        if (reservas.Any(r => r.Aula.Equals(aula, StringComparison.OrdinalIgnoreCase)
+                              && r.Hora == hora))
+        {
+            return (false, $"El aula {aula} ya está reservada a las {hora}:00.");
+        }
+
+        reservas.Add(new Reserva(aula.ToUpper(), hora, profesor));
+        return (true, "");
+    }
+
+    public (bool ok, string motivo) Anular(string aula, int hora)
+    {
+        int quitadas = reservas.RemoveAll(r =>
+            r.Aula.Equals(aula, StringComparison.OrdinalIgnoreCase) && r.Hora == hora);
+
+        return quitadas > 0
+            ? (true, "")
+            : (false, $"No hay ninguna reserva de {aula} a las {hora}:00.");
+    }
+}
+` },
+                { titulo: "Ampliación: una segunda vista (CSV) sin tocar el modelo", nota: "Si para añadir la vista CSV no has tenido que tocar el modelo, la separación es correcta. Ese es el test definitivo de MVC, y el mismo razonamiento que permitiría añadir después una interfaz web con Razor Pages.", codigo: r`using System.Text;
+
+AgendaAulas agenda = new AgendaAulas(new[] { "A101", "A102" });
+agenda.Reservar("A101", 9, "Dani");
+agenda.Reservar("A102", 11, "Marta");
+agenda.Reservar("A101", 15, "Pau");
+
+// VISTA 1: consola
+Console.WriteLine("--- Vista de consola ---");
+foreach (Reserva r in agenda.Todas().OrderBy(x => x.Hora))
+{
+    Console.WriteLine($"{r.Aula,-8}{r.Hora,4}:00  {r.Profesor}");
+}
+
+// VISTA 2: CSV (el modelo no ha cambiado ni una línea)
+Console.WriteLine("\n--- Vista CSV ---");
+string csv = AgendaACsv(agenda.Todas());
+Console.WriteLine(csv);
+File.WriteAllText("agenda.csv", csv, Encoding.UTF8);
+Console.WriteLine($"Escrito agenda.csv ({new FileInfo("agenda.csv").Length} bytes)");
+
+string AgendaACsv(IReadOnlyList<Reserva> reservas)
+{
+    StringBuilder sb = new StringBuilder();
+    sb.AppendLine("aula;hora;profesor");
+    foreach (Reserva r in reservas.OrderBy(x => x.Aula).ThenBy(x => x.Hora))
+    {
+        sb.AppendLine($"{r.Aula};{r.Hora};{r.Profesor}");
+    }
+    return sb.ToString();
+}
+
+class Reserva
+{
+    public string Aula { get; }
+    public int Hora { get; }
+    public string Profesor { get; }
+
+    public Reserva(string aula, int hora, string profesor)
+    {
+        Aula = aula;
+        Hora = hora;
+        Profesor = profesor;
+    }
+}
+
+class AgendaAulas
+{
+    private readonly HashSet<string> aulas;
+    private readonly List<Reserva> reservas = new List<Reserva>();
+
+    public AgendaAulas(IEnumerable<string> aulasDisponibles) =>
+        aulas = new HashSet<string>(aulasDisponibles, StringComparer.OrdinalIgnoreCase);
+
+    public IReadOnlyList<Reserva> Todas() => reservas;
+
+    public (bool ok, string motivo) Reservar(string aula, int hora, string profesor)
+    {
+        if (!aulas.Contains(aula)) { return (false, "El aula no existe."); }
+        if (hora < 8 || hora > 20) { return (false, "Hora fuera de rango."); }
+        if (string.IsNullOrWhiteSpace(profesor)) { return (false, "Falta el profesor."); }
+        if (reservas.Any(r => r.Aula == aula.ToUpper() && r.Hora == hora))
+        {
+            return (false, "Ya está reservada.");
+        }
+        reservas.Add(new Reserva(aula.ToUpper(), hora, profesor));
+        return (true, "");
+    }
+}
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "razor-ejemplo",
+          titulo: "Una aplicación Razor Pages paso a paso",
+          duracion: "26 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Crear y ejecutar un proyecto Razor Pages desde la terminal", "Implementar un CRUD completo: listar, crear, editar y eliminar", "Validar datos con anotaciones y entender la inyección de dependencias"],
+          teoria: r`<p>Esta lección es una guía práctica: construir una aplicación web con
+<strong>listar, crear, editar y eliminar</strong> (lo que se conoce como
+<strong>CRUD</strong>: <em>Create, Read, Update, Delete</em>). Es el
+esqueleto del 90 % de las aplicaciones de gestión que existen.</p>
+<p>Los ejemplos de esta lección <strong>no se pueden ejecutar en el
+editor del curso</strong> (necesitan un servidor web): están para
+leerlos y reproducirlos en tu ordenador con Visual Studio o
+<code>dotnet</code>.</p>
+<h3 id="1-crear-el-proyecto">1. Crear el proyecto</h3>
+<pre><code>dotnet new razor -o GestorJuegos
+cd GestorJuegos
+dotnet run</code></pre>
+<p>Abre la dirección que indica la consola (algo como
+<code>https://localhost:7123</code>). Ya tienes una web funcionando. La
+estructura que importa:</p>
+<pre><code>GestorJuegos/
+├── Program.cs                 ← configuración y arranque
+├── Models/Juego.cs            ← el MODELO
+├── Services/JuegoService.cs   ← las reglas y el almacenamiento
+├── Pages/
+│   ├── Shared/_Layout.cshtml  ← la plantilla común (cabecera, menú, pie)
+│   ├── Index.cshtml(.cs)      ← la página de inicio
+│   └── Juegos/
+│       ├── Index.cshtml(.cs)  ← listar
+│       ├── Crear.cshtml(.cs)  ← crear
+│       ├── Editar.cshtml(.cs) ← editar
+│       └── Borrar.cshtml(.cs) ← eliminar
+└── wwwroot/                   ← CSS, JavaScript e imágenes</code></pre>
+<p><strong>La ruta la decide la carpeta:</strong>
+<code>Pages/Juegos/Crear.cshtml</code> responde a
+<code>/Juegos/Crear</code>. No hay que configurar nada.</p>
+<h3 id="2-el-modelo-con-validación-declarativa">2. El modelo, con
+validación declarativa</h3>
+<pre><code>using System.ComponentModel.DataAnnotations;
+
+public class Juego
+{
+    public int Id { get; set; }
+
+    [Required(ErrorMessage = &quot;El título es obligatorio&quot;)]
+    [StringLength(80, MinimumLength = 2)]
+    public string Titulo { get; set; } = &quot;&quot;;
+
+    [Required]
+    public string Genero { get; set; } = &quot;&quot;;
+
+    [Range(1950, 2100, ErrorMessage = &quot;El año debe estar entre 1950 y 2100&quot;)]
+    public int Anio { get; set; } = DateTime.Today.Year;
+
+    [Range(0, 10)]
+    [Display(Name = &quot;Nota (0-10)&quot;)]
+    public double Nota { get; set; }
+}</code></pre>
+<p>Las <strong>anotaciones de datos</strong> son atributos que declaran
+las reglas <strong>una sola vez</strong>, y ASP.NET Core las aplica en
+el servidor <strong>y</strong> genera la validación en el navegador. Es
+el principio DRY llevado a la validación: la regla no se repite en cada
+formulario.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Atributo</th>
+<th>Qué valida</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>[Required]</code></td>
+<td>no vacío</td>
+</tr>
+<tr class="even">
+<td><code>[StringLength(80, MinimumLength=2)]</code></td>
+<td>longitud</td>
+</tr>
+<tr class="odd">
+<td><code>[Range(0, 10)]</code></td>
+<td>rango numérico</td>
+</tr>
+<tr class="even">
+<td><code>[RegularExpression(@"...")]</code></td>
+<td>formato con expresión regular</td>
+</tr>
+<tr class="odd">
+<td><code>[EmailAddress]</code>, <code>[Phone]</code>,
+<code>[Url]</code></td>
+<td>formatos habituales</td>
+</tr>
+<tr class="even">
+<td><code>[Compare("Clave")]</code></td>
+<td>que coincida con otro campo</td>
+</tr>
+<tr class="odd">
+<td><code>[Display(Name="...")]</code></td>
+<td>la etiqueta que se muestra</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-el-servicio-y-la-inyección-de-dependencias">3. El servicio y
+la inyección de dependencias</h3>
+<pre><code>public class JuegoService
+{
+    private readonly List&lt;Juego&gt; juegos = new List&lt;Juego&gt;();
+    private int siguienteId = 1;
+
+    public List&lt;Juego&gt; Todos() =&gt; juegos.OrderBy(j =&gt; j.Titulo).ToList();
+
+    public Juego PorId(int id) =&gt; juegos.FirstOrDefault(j =&gt; j.Id == id);
+
+    public void Anadir(Juego juego)
+    {
+        juego.Id = siguienteId++;
+        juegos.Add(juego);
+    }
+
+    public bool Actualizar(Juego juego) { ... }
+    public bool Borrar(int id) { ... }
+}</code></pre>
+<p>En <code>Program.cs</code> se <strong>registra</strong> el
+servicio:</p>
+<pre><code>builder.Services.AddRazorPages();
+builder.Services.AddSingleton&lt;JuegoService&gt;();     // una única instancia para toda la app</code></pre>
+<p>Y cada página lo <strong>recibe por el constructor</strong>:</p>
+<pre><code>public class IndexModel : PageModel
+{
+    private readonly JuegoService servicio;
+    public IndexModel(JuegoService servicio) =&gt; this.servicio = servicio;
+}</code></pre>
+<p>Esto es la <strong>inyección de dependencias</strong>: la página no
+crea el servicio, lo <strong>recibe</strong>. Importa por dos razones
+muy prácticas: puedes cambiar la implementación (de lista en memoria a
+base de datos) sin tocar las páginas, y puedes probar la página
+pasándole un servicio falso.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Registro</th>
+<th>Vida de la instancia</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>AddSingleton</code></td>
+<td>una para toda la aplicación</td>
+</tr>
+<tr class="even">
+<td><code>AddScoped</code></td>
+<td>una por petición HTTP ← lo normal con bases de datos</td>
+</tr>
+<tr class="odd">
+<td><code>AddTransient</code></td>
+<td>una nueva cada vez que se pide</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-listar-read">4. Listar (Read)</h3>
+<pre><code>@page
+@model GestorJuegos.Pages.Juegos.IndexModel
+
+&lt;h1&gt;Catálogo&lt;/h1&gt;
+&lt;a class=&quot;btn btn-primary&quot; asp-page=&quot;Crear&quot;&gt;Nuevo juego&lt;/a&gt;
+
+&lt;table class=&quot;table&quot;&gt;
+  &lt;thead&gt;&lt;tr&gt;&lt;th&gt;Título&lt;/th&gt;&lt;th&gt;Género&lt;/th&gt;&lt;th&gt;Año&lt;/th&gt;&lt;th&gt;Nota&lt;/th&gt;&lt;th&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+  &lt;tbody&gt;
+  @foreach (var j in Model.Juegos)
+  {
+    &lt;tr&gt;
+      &lt;td&gt;@j.Titulo&lt;/td&gt;
+      &lt;td&gt;@j.Genero&lt;/td&gt;
+      &lt;td&gt;@j.Anio&lt;/td&gt;
+      &lt;td&gt;@j.Nota.ToString(&quot;F1&quot;)&lt;/td&gt;
+      &lt;td&gt;
+        &lt;a asp-page=&quot;Editar&quot; asp-route-id=&quot;@j.Id&quot;&gt;Editar&lt;/a&gt;
+        &lt;a asp-page=&quot;Borrar&quot; asp-route-id=&quot;@j.Id&quot;&gt;Borrar&lt;/a&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  }
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+<p><code>asp-page</code> y <code>asp-route-id</code> son <strong>tag
+helpers</strong>: generan la URL correcta sin escribirla a mano, así que
+si cambias el nombre de la página los enlaces siguen funcionando.</p>
+<h3 id="5-crear-create">5. Crear (Create)</h3>
+<pre><code>public class CrearModel : PageModel
+{
+    private readonly JuegoService servicio;
+    public CrearModel(JuegoService servicio) =&gt; this.servicio = servicio;
+
+    [BindProperty]                       // enlaza el formulario con esta propiedad
+    public Juego Juego { get; set; } = new Juego();
+
+    public void OnGet() { }              // mostrar el formulario vacío
+
+    public IActionResult OnPost()
+    {
+        if (!ModelState.IsValid)         // ¿cumple las anotaciones del modelo?
+        {
+            return Page();               // volver a mostrar el formulario con los errores
+        }
+
+        servicio.Anadir(Juego);
+        return RedirectToPage(&quot;Index&quot;);  // POST-Redirect-GET
+    }
+}</code></pre>
+<p>Y la vista del formulario:</p>
+<pre><code>&lt;form method=&quot;post&quot;&gt;
+  &lt;div asp-validation-summary=&quot;All&quot; class=&quot;text-danger&quot;&gt;&lt;/div&gt;
+
+  &lt;label asp-for=&quot;Juego.Titulo&quot;&gt;&lt;/label&gt;
+  &lt;input asp-for=&quot;Juego.Titulo&quot; class=&quot;form-control&quot; /&gt;
+  &lt;span asp-validation-for=&quot;Juego.Titulo&quot; class=&quot;text-danger&quot;&gt;&lt;/span&gt;
+
+  &lt;label asp-for=&quot;Juego.Nota&quot;&gt;&lt;/label&gt;
+  &lt;input asp-for=&quot;Juego.Nota&quot; class=&quot;form-control&quot; /&gt;
+  &lt;span asp-validation-for=&quot;Juego.Nota&quot; class=&quot;text-danger&quot;&gt;&lt;/span&gt;
+
+  &lt;button type=&quot;submit&quot; class=&quot;btn btn-primary&quot;&gt;Guardar&lt;/button&gt;
+  &lt;a asp-page=&quot;Index&quot; class=&quot;btn btn-secondary&quot;&gt;Cancelar&lt;/a&gt;
+&lt;/form&gt;</code></pre>
+<p>Fíjate en lo que <strong>no</strong> hay: ni un <code>if</code> de
+validación, ni el nombre del campo escrito a mano, ni mensajes de error
+repetidos. <code>asp-for</code> genera el <code>name</code>, el
+<code>id</code>, el tipo de <code>input</code> y los atributos de
+validación a partir del modelo y sus anotaciones.</p>
+<div class="callout">
+<p><strong>Nunca te fíes solo de la validación del navegador.</strong>
+Es comodidad para el usuario, no seguridad: cualquiera puede enviar una
+petición sin pasar por el formulario. La comprobación que cuenta es
+<code>ModelState.IsValid</code> en el servidor, y las reglas del
+modelo.</p>
+</div>
+<h3 id="6-editar-update">6. Editar (Update)</h3>
+<p>Igual que crear, pero con dos diferencias: <code>OnGet</code> recibe
+el <code>id</code> y carga el objeto, y hay que tratar el caso de que
+<strong>no exista</strong>.</p>
+<pre><code>public IActionResult OnGet(int id)
+{
+    Juego juego = servicio.PorId(id);
+    if (juego is null) { return NotFound(); }     // 404, no una excepción
+    Juego = juego;
+    return Page();
+}</code></pre>
+<h3 id="7-eliminar-delete">7. Eliminar (Delete)</h3>
+<p>La regla de oro: <strong>nunca borrar con un GET</strong>. Un enlace
+puede ser visitado por un buscador, un antivirus o el prefetch del
+navegador, y te borraría los datos. El patrón correcto es una página de
+confirmación con un formulario <code>POST</code>.</p>
+<pre><code>public IActionResult OnPost(int id)
+{
+    if (!servicio.Borrar(id)) { return NotFound(); }
+    return RedirectToPage(&quot;Index&quot;);
+}</code></pre>
+<h3 id="8-lo-que-falta-para-una-aplicación-de-verdad">8. Lo que falta
+para una aplicación de verdad</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Falta</th>
+<th>Se resuelve con</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Los datos se pierden al reiniciar</td>
+<td>base de datos (<strong>Entity Framework Core</strong>)</td>
+</tr>
+<tr class="even">
+<td>Cualquiera puede entrar</td>
+<td>autenticación (<strong>ASP.NET Core Identity</strong>)</td>
+</tr>
+<tr class="odd">
+<td>Solo algunos deberían editar</td>
+<td>autorización por papeles</td>
+</tr>
+<tr class="even">
+<td>Hay que validar en varios sitios</td>
+<td>ya está: las anotaciones del modelo</td>
+</tr>
+<tr class="odd">
+<td>Diseño propio</td>
+<td>CSS en <code>wwwroot</code> (el proyecto trae Bootstrap)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Las dos primeras son los temas siguientes de tu itinerario.</p>`,
+          ejemplos: [
+            { titulo: "El modelo y el servicio, probados en consola", explicacion: "Este es el núcleo de la aplicación web, y se puede desarrollar y probar entero en consola antes de escribir una sola línea de HTML. Es la mejor forma de abordar un proyecto web: primero el modelo con sus reglas, después la interfaz.", codigo: r`// El modelo y el servicio de una aplicación Razor son C# normal: se pueden
+// ejecutar y probar sin servidor web. Esto es exactamente el código que
+// usarían las páginas, con las reglas ya comprobadas.
+
+JuegoService servicio = new JuegoService();
+
+servicio.Anadir(new Juego { Titulo = "Hollow Knight", Genero = "metroidvania", Anio = 2017, Nota = 9.2 });
+servicio.Anadir(new Juego { Titulo = "Celeste", Genero = "plataformas", Anio = 2018, Nota = 9.0 });
+servicio.Anadir(new Juego { Titulo = "Hades", Genero = "roguelike", Anio = 2020, Nota = 9.3 });
+
+Console.WriteLine("--- Listar (Read) ---");
+foreach (Juego j in servicio.Todos())
+{
+    Console.WriteLine($"  {j.Id}. {j.Titulo,-16}{j.Genero,-14}{j.Anio}  {j.Nota:F1}");
+}
+
+Console.WriteLine("\n--- Consultar por id (Read) ---");
+Juego encontrado = servicio.PorId(2);
+Console.WriteLine($"  Id 2: {encontrado?.Titulo ?? "no existe"}");
+Console.WriteLine($"  Id 99: {servicio.PorId(99)?.Titulo ?? "no existe"}");
+
+Console.WriteLine("\n--- Actualizar (Update) ---");
+Juego aEditar = servicio.PorId(2);
+if (aEditar is not null)
+{
+    Juego modificado = new Juego
+    {
+        Id = aEditar.Id, Titulo = "Celeste (edición Farewell)",
+        Genero = aEditar.Genero, Anio = aEditar.Anio, Nota = 9.5,
+    };
+    Console.WriteLine($"  Actualizado: {servicio.Actualizar(modificado)}");
+    Console.WriteLine($"  Ahora: {servicio.PorId(2).Titulo} ({servicio.PorId(2).Nota:F1})");
+}
+
+Console.WriteLine("\n--- Eliminar (Delete) ---");
+Console.WriteLine($"  Borrar id 1: {servicio.Borrar(1)}");
+Console.WriteLine($"  Borrar id 1 otra vez: {servicio.Borrar(1)}");
+Console.WriteLine($"  Quedan {servicio.Todos().Count} juegos");
+
+// Las validaciones del modelo, comprobadas sin formulario
+Console.WriteLine("\n--- Validación del modelo ---");
+Comprobar(new Juego { Titulo = "", Genero = "rpg", Anio = 2020, Nota = 8 });
+Comprobar(new Juego { Titulo = "A", Genero = "rpg", Anio = 2020, Nota = 8 });
+Comprobar(new Juego { Titulo = "Tunic", Genero = "aventura", Anio = 1800, Nota = 8 });
+Comprobar(new Juego { Titulo = "Tunic", Genero = "aventura", Anio = 2022, Nota = 15 });
+Comprobar(new Juego { Titulo = "Tunic", Genero = "aventura", Anio = 2022, Nota = 8.7 });
+
+void Comprobar(Juego juego)
+{
+    List<string> errores = juego.Validar();
+    Console.WriteLine(errores.Count == 0
+        ? $"  OK    «{juego.Titulo}»"
+        : $"  ERROR «{juego.Titulo}»: {string.Join("; ", errores)}");
+}
+
+// En una aplicación Razor estas reglas se declararían con atributos:
+//   [Required] [StringLength(80, MinimumLength = 2)] public string Titulo { get; set; }
+//   [Range(1950, 2100)] public int Anio { get; set; }
+//   [Range(0, 10)] public double Nota { get; set; }
+// y ASP.NET Core las comprobaría solo, en el servidor y en el navegador.
+class Juego
+{
+    public int Id { get; set; }
+    public string Titulo { get; set; } = "";
+    public string Genero { get; set; } = "";
+    public int Anio { get; set; } = DateTime.Today.Year;
+    public double Nota { get; set; }
+
+    // Equivalente «a mano» de las anotaciones de datos
+    public List<string> Validar()
+    {
+        List<string> errores = new List<string>();
+
+        if (string.IsNullOrWhiteSpace(Titulo)) { errores.Add("el título es obligatorio"); }
+        else if (Titulo.Length < 2 || Titulo.Length > 80) { errores.Add("el título debe tener entre 2 y 80 caracteres"); }
+
+        if (string.IsNullOrWhiteSpace(Genero)) { errores.Add("el género es obligatorio"); }
+        if (Anio < 1950 || Anio > 2100) { errores.Add("el año debe estar entre 1950 y 2100"); }
+        if (Nota < 0 || Nota > 10) { errores.Add("la nota debe estar entre 0 y 10"); }
+
+        return errores;
+    }
+}
+
+class JuegoService
+{
+    private readonly List<Juego> juegos = new List<Juego>();
+    private int siguienteId = 1;
+
+    public List<Juego> Todos() => juegos.OrderBy(j => j.Titulo).ToList();
+
+    public Juego PorId(int id) => juegos.FirstOrDefault(j => j.Id == id);
+
+    public bool Anadir(Juego juego)
+    {
+        if (juego is null || juego.Validar().Count > 0)
+        {
+            return false;
+        }
+        juego.Id = siguienteId;
+        siguienteId++;
+        juegos.Add(juego);
+        return true;
+    }
+
+    public bool Actualizar(Juego juego)
+    {
+        if (juego is null || juego.Validar().Count > 0)
+        {
+            return false;
+        }
+
+        int posicion = juegos.FindIndex(j => j.Id == juego.Id);
+        if (posicion < 0)
+        {
+            return false;
+        }
+        juegos[posicion] = juego;
+        return true;
+    }
+
+    public bool Borrar(int id) => juegos.RemoveAll(j => j.Id == id) > 0;
+}
+` },
+            { titulo: "Los ficheros de la aplicación Razor", explicacion: "Los cuatro patrones del final son los que debes reconocer en cualquier aplicación ASP.NET Core que abras. El resto (el HTML, el CSS) cambia de un proyecto a otro; esos cuatro, no.", codigo: r`// ═══════════════════════════════════════════════════════════════════════
+//  Program.cs
+// ═══════════════════════════════════════════════════════════════════════
+// var builder = WebApplication.CreateBuilder(args);
+//
+// builder.Services.AddRazorPages();
+// builder.Services.AddSingleton<JuegoService>();   // inyección de dependencias
+//
+// var app = builder.Build();
+//
+// if (!app.Environment.IsDevelopment())
+// {
+//     app.UseExceptionHandler("/Error");
+//     app.UseHsts();
+// }
+// app.UseHttpsRedirection();
+// app.UseStaticFiles();
+// app.UseRouting();
+// app.MapRazorPages();
+// app.Run();
+//
+// ═══════════════════════════════════════════════════════════════════════
+//  Pages/Juegos/Index.cshtml.cs      (listar)
+// ═══════════════════════════════════════════════════════════════════════
+// public class IndexModel : PageModel
+// {
+//     private readonly JuegoService servicio;
+//     public IndexModel(JuegoService servicio) => this.servicio = servicio;
+//
+//     public List<Juego> Juegos { get; private set; } = new List<Juego>();
+//     public double NotaMedia { get; private set; }
+//
+//     public void OnGet()
+//     {
+//         Juegos = servicio.Todos();
+//         NotaMedia = Juegos.Count > 0 ? Juegos.Average(j => j.Nota) : 0;
+//     }
+// }
+//
+// ═══════════════════════════════════════════════════════════════════════
+//  Pages/Juegos/Crear.cshtml.cs      (crear)
+// ═══════════════════════════════════════════════════════════════════════
+// public class CrearModel : PageModel
+// {
+//     private readonly JuegoService servicio;
+//     public CrearModel(JuegoService servicio) => this.servicio = servicio;
+//
+//     [BindProperty]
+//     public Juego Juego { get; set; } = new Juego();
+//
+//     public void OnGet() { }
+//
+//     public IActionResult OnPost()
+//     {
+//         if (!ModelState.IsValid)
+//         {
+//             return Page();                      // vuelve con los mensajes de error
+//         }
+//         servicio.Anadir(Juego);
+//         return RedirectToPage("Index");         // POST-Redirect-GET
+//     }
+// }
+//
+// ═══════════════════════════════════════════════════════════════════════
+//  Pages/Juegos/Editar.cshtml.cs     (editar)
+// ═══════════════════════════════════════════════════════════════════════
+// public class EditarModel : PageModel
+// {
+//     private readonly JuegoService servicio;
+//     public EditarModel(JuegoService servicio) => this.servicio = servicio;
+//
+//     [BindProperty]
+//     public Juego Juego { get; set; } = new Juego();
+//
+//     public IActionResult OnGet(int id)
+//     {
+//         Juego juego = servicio.PorId(id);
+//         if (juego is null) { return NotFound(); }
+//         Juego = juego;
+//         return Page();
+//     }
+//
+//     public IActionResult OnPost()
+//     {
+//         if (!ModelState.IsValid) { return Page(); }
+//         if (!servicio.Actualizar(Juego)) { return NotFound(); }
+//         return RedirectToPage("Index");
+//     }
+// }
+//
+// ═══════════════════════════════════════════════════════════════════════
+//  Pages/Juegos/Borrar.cshtml.cs     (eliminar: SIEMPRE por POST)
+// ═══════════════════════════════════════════════════════════════════════
+// public class BorrarModel : PageModel
+// {
+//     private readonly JuegoService servicio;
+//     public BorrarModel(JuegoService servicio) => this.servicio = servicio;
+//
+//     public Juego Juego { get; private set; }
+//
+//     public IActionResult OnGet(int id)          // solo MUESTRA la confirmación
+//     {
+//         Juego = servicio.PorId(id);
+//         return Juego is null ? NotFound() : Page();
+//     }
+//
+//     public IActionResult OnPost(int id)         // aquí sí se borra
+//     {
+//         if (!servicio.Borrar(id)) { return NotFound(); }
+//         return RedirectToPage("Index");
+//     }
+// }
+//
+// ═══════════════════════════════════════════════════════════════════════
+//  Pages/Juegos/Borrar.cshtml
+// ═══════════════════════════════════════════════════════════════════════
+// @page "{id:int}"
+// @model BorrarModel
+//
+// <h1>¿Seguro que quieres borrar «@Model.Juego.Titulo»?</h1>
+// <p>Esta acción no se puede deshacer.</p>
+//
+// <form method="post">
+//     <input type="hidden" asp-for="Juego.Id" />
+//     <button type="submit" class="btn btn-danger">Sí, borrar</button>
+//     <a asp-page="Index" class="btn btn-secondary">Cancelar</a>
+// </form>
+
+Console.WriteLine("Los bloques de arriba son los ficheros de la aplicación Razor Pages.");
+Console.WriteLine("Para probarlos:\n");
+Console.WriteLine("  dotnet new razor -o GestorJuegos");
+Console.WriteLine("  cd GestorJuegos");
+Console.WriteLine("  (crea Models/Juego.cs, Services/JuegoService.cs y las páginas)");
+Console.WriteLine("  dotnet run\n");
+Console.WriteLine("Fíjate en los cuatro patrones que se repiten en TODA aplicación web:");
+Console.WriteLine("  1. Inyección de dependencias: la página recibe el servicio por el constructor.");
+Console.WriteLine("  2. [BindProperty]: enlaza los campos del formulario con una propiedad.");
+Console.WriteLine("  3. ModelState.IsValid: la validación que cuenta, la del servidor.");
+Console.WriteLine("  4. POST-Redirect-GET: tras guardar, se redirige para no duplicar el envío.");
+` },
+          ],
+          actividades: [
+            {
+              titulo: "CRUD completo en Razor Pages",
+              nivel: 2,
+              pista: "Desarrolla el modelo y el servicio en consola, pruébalos, y después monta las páginas.",
+              enunciado: r`<p>Crea una aplicación Razor Pages para gestionar una colección a tu
+elección (juegos, libros, películas, equipos). Debe tener las cuatro
+operaciones y funcionar en tu ordenador.</p>
+<p><strong>Requisitos:</strong></p>
+<ol type="1">
+<li>Una clase modelo con <strong>al menos cinco propiedades</strong> y
+sus <strong>anotaciones de validación</strong> (<code>[Required]</code>,
+<code>[StringLength]</code>, <code>[Range]</code>).</li>
+<li>Un servicio registrado con <code>AddSingleton</code> que guarde los
+datos en una <code>List&lt;T&gt;</code>.</li>
+<li>Las páginas: <code>Index</code> (listar con una tabla),
+<code>Crear</code>, <code>Editar</code> y <code>Borrar</code> (con
+confirmación).</li>
+<li>En <code>Index</code>, un pequeño <strong>resumen</strong> calculado
+con LINQ (cuántos hay, la media de algún campo, el mejor).</li>
+<li><strong>Persistencia en JSON</strong>: al arrancar, el servicio
+carga los datos de un fichero; al modificar, los guarda.</li>
+</ol>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>El borrado debe hacerse por <strong>POST</strong>, nunca por
+GET.</li>
+<li><code>OnGet(int id)</code> y <code>OnPost</code> deben devolver
+<code>NotFound()</code> si el elemento no existe.</li>
+<li>Después de guardar, <code>RedirectToPage</code>
+(POST-Redirect-GET).</li>
+<li><strong>Control de errores:</strong> <code>ModelState.IsValid</code>
+en el servidor; captura <code>JsonException</code> e
+<code>IOException</code> al leer y escribir el fichero.</li>
+<li>Las reglas de negocio van en el <strong>servicio o el
+modelo</strong>, nunca en el <code>.cshtml</code>.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> desarrolla y prueba primero el modelo y el
+servicio en un proyecto de consola, como el primer ejemplo de esta
+lección. Cuando funcionen, móntalos en la web.</p>
+<p>🏅 <strong>Ampliación:</strong> añade un buscador en
+<code>Index</code> (un formulario con
+<code>OnGet(string busqueda)</code>) y paginación con
+<code>Skip</code>/<code>Take</code>.</p>`,
+              soluciones: [
+                { titulo: "Pasos y estructura", nota: "El paso 6 es el que más nota aporta: son las comprobaciones que distinguen una aplicación acabada de una que «parece» funcionar.", noRun: true, codigo: r`# 1. Crear el proyecto
+dotnet new razor -o GestorColeccion
+cd GestorColeccion
+
+# 2. Crear las carpetas
+mkdir Models Services
+mkdir Pages/Elementos
+
+# 3. Ficheros a escribir
+#    Models/Elemento.cs              el modelo con anotaciones
+#    Services/ElementoService.cs     la lista + las reglas + el JSON
+#    Pages/Elementos/Index.cshtml(.cs)
+#    Pages/Elementos/Crear.cshtml(.cs)
+#    Pages/Elementos/Editar.cshtml(.cs)
+#    Pages/Elementos/Borrar.cshtml(.cs)
+
+# 4. Registrar el servicio en Program.cs
+#    builder.Services.AddSingleton<ElementoService>();
+
+# 5. Ejecutar
+dotnet run
+# y abrir https://localhost:PUERTO/Elementos
+
+# 6. Comprobaciones antes de entregar
+#    - Enviar el formulario vacio -> deben salir los mensajes de validacion
+#    - Editar un id que no existe (/Elementos/Editar?id=999) -> 404
+#    - Borrar -> pide confirmacion y solo borra al pulsar el boton
+#    - Reiniciar la aplicacion -> los datos siguen ahi (JSON)
+#    - Recargar despues de guardar -> NO se duplica el elemento
+` },
+                { titulo: "El servicio con persistencia en JSON", nota: "Observa que el servicio es el único que sabe que existe un fichero JSON: las páginas solo llaman a Todos, Anadir o Borrar. Si mañana cambias el JSON por una base de datos, las páginas no se enteran. Esa es la idea de la capa de persistencia, que es justo la lección siguiente.", noRun: true, codigo: r`// Services/ElementoService.cs
+using System.Text.Json;
+
+public class ElementoService
+{
+    private const string Ruta = "elementos.json";
+
+    private static readonly JsonSerializerOptions Opciones = new JsonSerializerOptions
+    {
+        WriteIndented = true,
+        PropertyNameCaseInsensitive = true,
+        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+    };
+
+    private readonly List<Elemento> elementos;
+    private int siguienteId;
+
+    public ElementoService()
+    {
+        elementos = Cargar();
+        siguienteId = elementos.Count > 0 ? elementos.Max(e => e.Id) + 1 : 1;
+    }
+
+    public List<Elemento> Todos() => elementos.OrderBy(e => e.Titulo).ToList();
+
+    public List<Elemento> Buscar(string texto)
+    {
+        if (string.IsNullOrWhiteSpace(texto))
+        {
+            return Todos();
+        }
+        return elementos
+            .Where(e => e.Titulo.Contains(texto, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(e => e.Titulo)
+            .ToList();
+    }
+
+    public Elemento PorId(int id) => elementos.FirstOrDefault(e => e.Id == id);
+
+    public void Anadir(Elemento elemento)
+    {
+        elemento.Id = siguienteId;
+        siguienteId++;
+        elementos.Add(elemento);
+        Guardar();
+    }
+
+    public bool Actualizar(Elemento elemento)
+    {
+        int posicion = elementos.FindIndex(e => e.Id == elemento.Id);
+        if (posicion < 0)
+        {
+            return false;
+        }
+        elementos[posicion] = elemento;
+        Guardar();
+        return true;
+    }
+
+    public bool Borrar(int id)
+    {
+        if (elementos.RemoveAll(e => e.Id == id) == 0)
+        {
+            return false;
+        }
+        Guardar();
+        return true;
+    }
+
+    // ---------- persistencia ----------
+    private List<Elemento> Cargar()
+    {
+        if (!File.Exists(Ruta))
+        {
+            return new List<Elemento>();
+        }
+
+        try
+        {
+            List<Elemento> lista =
+                JsonSerializer.Deserialize<List<Elemento>>(File.ReadAllText(Ruta), Opciones);
+            return lista ?? new List<Elemento>();
+        }
+        catch (JsonException)
+        {
+            // El fichero está corrupto: empezamos vacíos en lugar de tirar la aplicación
+            return new List<Elemento>();
+        }
+        catch (IOException)
+        {
+            return new List<Elemento>();
+        }
+    }
+
+    private void Guardar()
+    {
+        try
+        {
+            File.WriteAllText(Ruta, JsonSerializer.Serialize(elementos, Opciones));
+        }
+        catch (IOException)
+        {
+            // En una aplicación real esto iría a un registro (log), no a la consola
+        }
+    }
+}
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "persistencia-dao",
+          titulo: "La capa de persistencia: el patrón DAO",
+          duracion: "22 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Entender el problema del mapeo objeto-relacional", "Separar el acceso a los datos del resto de la aplicación con DAO o repositorio", "Programar contra una interfaz para poder cambiar el almacenamiento"],
+          teoria: r`<p>Tus objetos viven en memoria y desaparecen al cerrar el programa.
+<strong>Persistir</strong> es guardarlos de forma que sobrevivan: en un
+fichero, en una base de datos, en la nube. Ya has visto los ficheros
+CSV, JSON y XML; ahora toca la pregunta de diseño: <strong>¿dónde pones
+ese código?</strong></p>
+<h3 id="1-el-problema-del-mapeo-objeto-relacional">1. El problema del
+mapeo objeto-relacional</h3>
+<p>Los objetos y las tablas son dos formas distintas de organizar la
+información, y no encajan del todo. A esto se le llama el <em>impedance
+mismatch</em>, el <strong>desajuste de impedancias</strong>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>En objetos</th>
+<th>En una base de datos relacional</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Herencia (<code>Coche : Vehiculo</code>)</td>
+<td>no existe</td>
+</tr>
+<tr class="even">
+<td>Referencias entre objetos</td>
+<td>claves ajenas</td>
+</tr>
+<tr class="odd">
+<td>Colecciones dentro de un objeto</td>
+<td>otra tabla con una clave ajena</td>
+</tr>
+<tr class="even">
+<td>Identidad (es el <strong>mismo</strong> objeto)</td>
+<td>igualdad por clave primaria</td>
+</tr>
+<tr class="odd">
+<td>Navegar: <code>pedido.Cliente.Nombre</code></td>
+<td>un <code>JOIN</code></td>
+</tr>
+<tr class="even">
+<td>Tipos: <code>DateOnly</code>, <code>enum</code>,
+<code>record</code></td>
+<td><code>DATE</code>, <code>INT</code>, columnas</td>
+</tr>
+</tbody>
+</table></div>
+<p>Traducir entre los dos mundos es un trabajo repetitivo y mecánico:
+justo lo que conviene que haga una biblioteca. Las herramientas que lo
+hacen se llaman <strong>ORM</strong> (<em>Object-Relational
+Mapping</em>), y en .NET la principal es <strong>Entity Framework
+Core</strong>.</p>
+<h3 id="2-el-patrón-dao-aislar-el-acceso-a-los-datos">2. El patrón DAO:
+aislar el acceso a los datos</h3>
+<p><strong>DAO</strong> (<em>Data Access Object</em>) es un objeto cuya
+<strong>única</strong> responsabilidad es leer y escribir una entidad en
+el almacenamiento. El resto de la aplicación no sabe si hay detrás un
+fichero, una base de datos o un servicio web.</p>
+<pre><code>┌─────────────────────┐
+│    Presentación     │   páginas Razor, consola, móvil
+└──────────┬──────────┘
+┌──────────▼──────────┐
+│  Lógica de negocio  │   las reglas: qué es válido, qué se puede hacer
+└──────────┬──────────┘
+┌──────────▼──────────┐
+│   DAO / Repositorio │   ← la única capa que sabe CÓMO se guardan los datos
+└──────────┬──────────┘
+┌──────────▼──────────┐
+│  Fichero / BBDD     │
+└─────────────────────┘</code></pre>
+<p><strong>La regla:</strong> cada capa solo habla con la de debajo. La
+presentación nunca escribe SQL ni abre ficheros.</p>
+<h3 id="3-la-interfaz-es-lo-importante">3. La interfaz es lo
+importante</h3>
+<pre><code>public interface IJuegoDao
+{
+    List&lt;Juego&gt; ObtenerTodos();
+    Juego ObtenerPorId(int id);
+    void Insertar(Juego juego);
+    bool Actualizar(Juego juego);
+    bool Borrar(int id);
+}</code></pre>
+<p>Esas cinco operaciones son el <strong>CRUD</strong> de siempre. Lo
+valioso es que la aplicación dependa de la <strong>interfaz</strong> y
+no de una implementación concreta:</p>
+<pre><code>IJuegoDao dao = new JuegoDaoJson(&quot;juegos.json&quot;);   // hoy
+// IJuegoDao dao = new JuegoDaoSqlite(conexion);   // mañana, sin tocar nada más</code></pre>
+<p>Tres ventajas muy concretas:</p>
+<ol type="1">
+<li><strong>Se puede cambiar el almacenamiento</strong> sin tocar la
+lógica ni la interfaz de usuario.</li>
+<li><strong>Se puede probar</strong> la lógica con un DAO falso en
+memoria, sin base de datos.</li>
+<li><strong>El código queda ordenado</strong>: si hay que arreglar algo
+de la persistencia, se sabe dónde está.</li>
+</ol>
+<h3 id="4-dao-o-repositorio">4. DAO o repositorio</h3>
+<p>Verás los dos nombres y en la práctica se usan casi como sinónimos.
+La diferencia de intención:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th></th>
+<th>DAO</th>
+<th>Repositorio</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Nivel</td>
+<td>cercano a la tabla</td>
+<td>cercano al dominio</td>
+</tr>
+<tr class="even">
+<td>Operaciones</td>
+<td>CRUD de una tabla</td>
+<td>consultas con sentido de negocio</td>
+</tr>
+<tr class="odd">
+<td>Ejemplo</td>
+<td><code>ObtenerPorId(5)</code></td>
+<td><code>BuscarPendientesDeEntrega()</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>El patrón <strong>repositorio</strong> suele añadir métodos que
+expresan intenciones del negocio, no solo accesos a la tabla. Para lo
+que haréis en el ciclo, la distinción es menor que el hecho de
+<strong>tener la capa</strong>.</p>
+<h3 id="5-un-aviso-no-abstraigas-por-abstraer">5. Un aviso: no
+abstraigas por abstraer</h3>
+<p>Si tu aplicación es pequeña y nunca va a cambiar de almacenamiento,
+una interfaz con una sola implementación puede ser complicar sin
+beneficio. El criterio honesto:</p>
+<ul>
+<li><strong>Vale la pena</strong> si vas a tener varias implementaciones
+(una de verdad y una de pruebas, por ejemplo) o si prevés cambiar de
+almacenamiento.</li>
+<li><strong>No vale la pena</strong> si el ORM ya te da la abstracción
+(Entity Framework <strong>ya es</strong> una capa de acceso a datos:
+envolverla en otro repositorio es, muchas veces, trabajo
+duplicado).</li>
+</ul>
+<p>Ese debate existe de verdad en la industria. Lo que nadie discute es
+lo de abajo: <strong>el SQL y el acceso a ficheros no deben estar
+repartidos por toda la aplicación</strong>.</p>`,
+          ejemplos: [
+            { titulo: "Una interfaz, dos implementaciones", explicacion: "La función Probar es el argumento entero de la lección: funciona igual con las dos implementaciones porque solo conoce la interfaz. Cambiar de almacenamiento es cambiar una línea en el arranque del programa.", codigo: r`using System.Text.Json;
+
+// La aplicación trabaja SOLO con la interfaz: no sabe dónde se guardan los datos
+Console.WriteLine("=== Con el DAO en memoria (para pruebas) ===");
+Probar(new JuegoDaoMemoria());
+
+Console.WriteLine("\n=== Con el DAO de JSON (para producción) ===");
+Probar(new JuegoDaoJson("juegos_dao.json"));
+
+// Fíjate: esta función NO cambia al cambiar el almacenamiento
+void Probar(IJuegoDao dao)
+{
+    dao.Insertar(new Juego { Titulo = "Hollow Knight", Nota = 9.2 });
+    dao.Insertar(new Juego { Titulo = "Celeste", Nota = 9.0 });
+    dao.Insertar(new Juego { Titulo = "Hades", Nota = 9.3 });
+
+    Console.WriteLine($"  Guardados: {dao.ObtenerTodos().Count}");
+    Console.WriteLine($"  Id 2: {dao.ObtenerPorId(2)?.Titulo ?? "no existe"}");
+    Console.WriteLine($"  Id 99: {dao.ObtenerPorId(99)?.Titulo ?? "no existe"}");
+
+    Juego aEditar = dao.ObtenerPorId(2);
+    if (aEditar is not null)
+    {
+        aEditar.Nota = 9.5;
+        Console.WriteLine($"  Actualizar id 2: {dao.Actualizar(aEditar)}");
+    }
+
+    Console.WriteLine($"  Borrar id 1: {dao.Borrar(1)}");
+    Console.WriteLine($"  Borrar id 1 otra vez: {dao.Borrar(1)}");
+    Console.WriteLine($"  Quedan: {string.Join(", ", dao.ObtenerTodos().Select(j => j.Titulo))}");
+    Console.WriteLine($"  Nota media: {dao.ObtenerTodos().Average(j => j.Nota):F2}");
+}
+
+class Juego
+{
+    public int Id { get; set; }
+    public string Titulo { get; set; } = "";
+    public double Nota { get; set; }
+}
+
+// El contrato: qué se puede hacer, sin decir cómo
+interface IJuegoDao
+{
+    List<Juego> ObtenerTodos();
+    Juego ObtenerPorId(int id);
+    void Insertar(Juego juego);
+    bool Actualizar(Juego juego);
+    bool Borrar(int id);
+}
+
+// ---------- Implementación 1: en memoria (rápida, ideal para las pruebas) ----------
+class JuegoDaoMemoria : IJuegoDao
+{
+    private readonly List<Juego> datos = new List<Juego>();
+    private int siguienteId = 1;
+
+    public List<Juego> ObtenerTodos() => new List<Juego>(datos);
+
+    public Juego ObtenerPorId(int id) => datos.FirstOrDefault(j => j.Id == id);
+
+    public void Insertar(Juego juego)
+    {
+        juego.Id = siguienteId;
+        siguienteId++;
+        datos.Add(juego);
+    }
+
+    public bool Actualizar(Juego juego)
+    {
+        int posicion = datos.FindIndex(j => j.Id == juego.Id);
+        if (posicion < 0) { return false; }
+        datos[posicion] = juego;
+        return true;
+    }
+
+    public bool Borrar(int id) => datos.RemoveAll(j => j.Id == id) > 0;
+}
+
+// ---------- Implementación 2: en un fichero JSON ----------
+class JuegoDaoJson : IJuegoDao
+{
+    private static readonly JsonSerializerOptions Opciones =
+        new JsonSerializerOptions { WriteIndented = true };
+
+    private readonly string ruta;
+
+    public JuegoDaoJson(string ruta)
+    {
+        this.ruta = ruta;
+        if (File.Exists(ruta))
+        {
+            File.Delete(ruta);          // solo para que el ejemplo empiece limpio
+        }
+    }
+
+    public List<Juego> ObtenerTodos()
+    {
+        if (!File.Exists(ruta))
+        {
+            return new List<Juego>();
+        }
+
+        try
+        {
+            List<Juego> lista =
+                JsonSerializer.Deserialize<List<Juego>>(File.ReadAllText(ruta), Opciones);
+            return lista ?? new List<Juego>();
+        }
+        catch (JsonException)
+        {
+            return new List<Juego>();       // fichero corrupto
+        }
+    }
+
+    public Juego ObtenerPorId(int id) => ObtenerTodos().FirstOrDefault(j => j.Id == id);
+
+    public void Insertar(Juego juego)
+    {
+        List<Juego> todos = ObtenerTodos();
+        juego.Id = todos.Count > 0 ? todos.Max(j => j.Id) + 1 : 1;
+        todos.Add(juego);
+        Escribir(todos);
+    }
+
+    public bool Actualizar(Juego juego)
+    {
+        List<Juego> todos = ObtenerTodos();
+        int posicion = todos.FindIndex(j => j.Id == juego.Id);
+        if (posicion < 0) { return false; }
+        todos[posicion] = juego;
+        Escribir(todos);
+        return true;
+    }
+
+    public bool Borrar(int id)
+    {
+        List<Juego> todos = ObtenerTodos();
+        if (todos.RemoveAll(j => j.Id == id) == 0) { return false; }
+        Escribir(todos);
+        return true;
+    }
+
+    private void Escribir(List<Juego> datos)
+    {
+        try
+        {
+            File.WriteAllText(ruta, JsonSerializer.Serialize(datos, Opciones));
+        }
+        catch (IOException ex)
+        {
+            Console.WriteLine($"  (no se ha podido escribir: {ex.Message})");
+        }
+    }
+}
+` },
+            { titulo: "Las tres capas trabajando juntas", explicacion: "Observa el reparto de responsabilidades: la validación está en el negocio (no en el DAO, que solo guarda, ni en la presentación, que solo muestra). Esta estructura de tres capas es la que encontrarás en cualquier aplicación profesional.", codigo: r`// Presentación -> Negocio -> DAO -> almacenamiento.
+// Cada capa habla solo con la de debajo.
+
+IJuegoDao dao = new JuegoDaoMemoria();
+CatalogoNegocio negocio = new CatalogoNegocio(dao);
+
+// La PRESENTACIÓN llama al negocio y muestra el resultado; no sabe nada del DAO
+Console.WriteLine("--- Alta de juegos ---");
+Mostrar(negocio.Anadir("Hollow Knight", "metroidvania", 9.2));
+Mostrar(negocio.Anadir("", "rpg", 8.0));                 // título vacío
+Mostrar(negocio.Anadir("Celeste", "plataformas", 15));   // nota fuera de rango
+Mostrar(negocio.Anadir("Celeste", "plataformas", 9.0));
+Mostrar(negocio.Anadir("Celeste", "plataformas", 9.0));  // repetido
+
+Console.WriteLine("\n--- Catálogo ---");
+foreach (Juego j in negocio.Todos())
+{
+    Console.WriteLine($"  {j.Id}. {j.Titulo,-16}{j.Genero,-14}{j.Nota:F1}");
+}
+
+Console.WriteLine($"\nNota media: {negocio.NotaMedia():F2}");
+Console.WriteLine($"Notables: {string.Join(", ", negocio.Notables().Select(j => j.Titulo))}");
+
+void Mostrar((bool ok, string mensaje) resultado) =>
+    Console.WriteLine($"  {(resultado.ok ? "OK   " : "ERROR")} {resultado.mensaje}");
+
+// ===== CAPA DE NEGOCIO: las reglas. No sabe cómo se guardan los datos =====
+class CatalogoNegocio
+{
+    private readonly IJuegoDao dao;          // recibe el DAO: inyección de dependencias
+
+    public CatalogoNegocio(IJuegoDao dao) => this.dao = dao;
+
+    public (bool ok, string mensaje) Anadir(string titulo, string genero, double nota)
+    {
+        if (string.IsNullOrWhiteSpace(titulo))
+        {
+            return (false, "El título es obligatorio.");
+        }
+        if (nota < 0 || nota > 10)
+        {
+            return (false, $"La nota {nota} está fuera del rango 0-10.");
+        }
+        if (dao.ObtenerTodos().Any(j => j.Titulo.Equals(titulo, StringComparison.OrdinalIgnoreCase)))
+        {
+            return (false, $"«{titulo}» ya está en el catálogo.");
+        }
+
+        dao.Insertar(new Juego { Titulo = titulo, Genero = genero, Nota = nota });
+        return (true, $"«{titulo}» añadido.");
+    }
+
+    public List<Juego> Todos() => dao.ObtenerTodos().OrderBy(j => j.Titulo).ToList();
+
+    public List<Juego> Notables() => dao.ObtenerTodos().Where(j => j.Nota >= 9).ToList();
+
+    public double NotaMedia()
+    {
+        List<Juego> todos = dao.ObtenerTodos();
+        return todos.Count > 0 ? todos.Average(j => j.Nota) : 0;
+    }
+}
+
+class Juego
+{
+    public int Id { get; set; }
+    public string Titulo { get; set; } = "";
+    public string Genero { get; set; } = "";
+    public double Nota { get; set; }
+}
+
+interface IJuegoDao
+{
+    List<Juego> ObtenerTodos();
+    Juego ObtenerPorId(int id);
+    void Insertar(Juego juego);
+    bool Actualizar(Juego juego);
+    bool Borrar(int id);
+}
+
+class JuegoDaoMemoria : IJuegoDao
+{
+    private readonly List<Juego> datos = new List<Juego>();
+    private int siguienteId = 1;
+
+    public List<Juego> ObtenerTodos() => new List<Juego>(datos);
+    public Juego ObtenerPorId(int id) => datos.FirstOrDefault(j => j.Id == id);
+
+    public void Insertar(Juego juego)
+    {
+        juego.Id = siguienteId;
+        siguienteId++;
+        datos.Add(juego);
+    }
+
+    public bool Actualizar(Juego juego)
+    {
+        int p = datos.FindIndex(j => j.Id == juego.Id);
+        if (p < 0) { return false; }
+        datos[p] = juego;
+        return true;
+    }
+
+    public bool Borrar(int id) => datos.RemoveAll(j => j.Id == id) > 0;
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Capa de persistencia intercambiable",
+              nivel: 2,
+              pista: "Escribe la interfaz primero, luego la implementación en memoria y la batería de pruebas; después las de fichero.",
+              enunciado: r`<p>Diseña e implementa una capa de persistencia para una entidad a tu
+elección (socios de un gimnasio, libros, tareas) con
+<strong>tres</strong> implementaciones del mismo DAO:</p>
+<ol type="1">
+<li><code>XxxDaoMemoria</code>: una <code>List&lt;T&gt;</code> (sirve
+para las pruebas).</li>
+<li><code>XxxDaoCsv</code>: un fichero CSV.</li>
+<li><code>XxxDaoJson</code>: un fichero JSON.</li>
+</ol>
+<p>Después escribe un programa que ejecute <strong>la misma batería de
+operaciones</strong> con las tres y compruebe que todas dan el mismo
+resultado.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Las tres deben implementar la <strong>misma interfaz</strong>, con
+las cinco operaciones del CRUD.</li>
+<li>La batería de pruebas debe recibir un parámetro de tipo
+<strong>interfaz</strong>, no de un tipo concreto.</li>
+<li><strong>Control de errores:</strong> si el fichero no existe,
+<code>ObtenerTodos</code> devuelve una lista vacía (no falla). Captura
+<code>IOException</code> y <code>JsonException</code>.</li>
+<li>Los decimales del CSV se escriben con
+<code>CultureInfo.InvariantCulture</code>.</li>
+<li><code>Actualizar</code> y <code>Borrar</code> devuelven
+<code>false</code> si el id no existe.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> escribe primero la implementación en memoria
+y la batería de pruebas. Si las otras dos pasan la misma batería, están
+bien.</p>
+<p>🏅🏅 <strong>Ampliación avanzada:</strong> añade una cuarta
+implementación que <strong>envuelva</strong> a otra y añada una caché en
+memoria (el patrón decorador): la primera lectura va al fichero y las
+siguientes, a la memoria. Comprueba con un contador que el fichero se
+lee una sola vez.</p>`,
+              soluciones: [
+                { titulo: "Interfaz, implementación en memoria y batería de pruebas", nota: "Lo potente de este diseño: la batería de pruebas se escribe una vez y vale para las tres implementaciones. Si una falla una comprobación que las otras pasan, ya sabes exactamente qué arreglar. Es la base de las pruebas de integración.", codigo: r`// --- Programa: las sentencias de nivel superior van SIEMPRE antes de los tipos ---
+int fallosTotales = 0;
+fallosTotales += ProbarDao("Memoria", new TareaDaoMemoria());
+// fallosTotales += ProbarDao("CSV", new TareaDaoCsv("tareas.csv"));
+// fallosTotales += ProbarDao("JSON", new TareaDaoJson("tareas.json"));
+
+Console.WriteLine($"\nFallos totales: {fallosTotales}");
+
+// --- La batería: funciona con CUALQUIER implementación ---
+int ProbarDao(string nombre, ITareaDao dao)
+{
+    int fallos = 0;
+
+    void Comprobar(string que, bool condicion)
+    {
+        if (!condicion) { fallos++; }
+        Console.WriteLine($"    {(condicion ? "OK   " : "FALLA")} {que}");
+    }
+
+    Console.WriteLine($"  --- {nombre} ---");
+
+    Comprobar("empieza vacío", dao.ObtenerTodas().Count == 0);
+
+    dao.Insertar(new Tarea { Descripcion = "Estudiar LINQ", Horas = 2.5 });
+    dao.Insertar(new Tarea { Descripcion = "Entregar práctica", Horas = 1.25 });
+
+    List<Tarea> todas = dao.ObtenerTodas();
+    Comprobar("hay dos tareas", todas.Count == 2);
+    Comprobar("los ids son distintos", todas[0].Id != todas[1].Id);
+    Comprobar("conserva los decimales", Math.Abs(todas[0].Horas - 2.5) < 0.001);
+
+    Tarea primera = dao.ObtenerPorId(todas[0].Id);
+    Comprobar("se recupera por id", primera is not null);
+    Comprobar("id inexistente devuelve null", dao.ObtenerPorId(9999) is null);
+
+    primera.Hecha = true;
+    Comprobar("se actualiza", dao.Actualizar(primera));
+    Comprobar("la actualización persiste", dao.ObtenerPorId(primera.Id).Hecha);
+
+    Tarea inventada = new Tarea { Id = 9999, Descripcion = "No existe" };
+    Comprobar("actualizar un id inexistente devuelve false", !dao.Actualizar(inventada));
+
+    Comprobar("se borra", dao.Borrar(primera.Id));
+    Comprobar("borrar dos veces devuelve false", !dao.Borrar(primera.Id));
+    Comprobar("queda una tarea", dao.ObtenerTodas().Count == 1);
+
+    return fallos;
+}
+
+// --- El contrato ---
+interface ITareaDao
+{
+    List<Tarea> ObtenerTodas();
+    Tarea ObtenerPorId(int id);
+    void Insertar(Tarea tarea);
+    bool Actualizar(Tarea tarea);
+    bool Borrar(int id);
+}
+
+class Tarea
+{
+    public int Id { get; set; }
+    public string Descripcion { get; set; } = "";
+    public bool Hecha { get; set; }
+    public double Horas { get; set; }
+}
+
+// --- Implementación en memoria ---
+class TareaDaoMemoria : ITareaDao
+{
+    private readonly List<Tarea> datos = new List<Tarea>();
+    private int siguienteId = 1;
+
+    public List<Tarea> ObtenerTodas() => new List<Tarea>(datos);
+
+    public Tarea ObtenerPorId(int id) => datos.FirstOrDefault(t => t.Id == id);
+
+    public void Insertar(Tarea tarea)
+    {
+        tarea.Id = siguienteId;
+        siguienteId++;
+        datos.Add(tarea);
+    }
+
+    public bool Actualizar(Tarea tarea)
+    {
+        int p = datos.FindIndex(t => t.Id == tarea.Id);
+        if (p < 0) { return false; }
+        datos[p] = tarea;
+        return true;
+    }
+
+    public bool Borrar(int id) => datos.RemoveAll(t => t.Id == id) > 0;
+}
+` },
+                { titulo: "Ampliación: el DAO con caché (patrón decorador)", nota: "El decorador funciona porque implementa la misma interfaz que envuelve: para el resto del programa es un DAO cualquiera. Y fíjate en la parte difícil de toda caché: invalidarla cuando los datos cambian. «Hay dos problemas difíciles en informática: invalidar cachés y dar nombre a las cosas».", noRun: true, codigo: r`// Un DAO que ENVUELVE a otro y le añade una caché, sin modificarlo.
+// Es el patrón decorador: misma interfaz, comportamiento añadido.
+
+class TareaDaoConCache : ITareaDao
+{
+    private readonly ITareaDao interno;        // el DAO de verdad
+    private List<Tarea> cache;
+    private int lecturasReales;
+
+    public int LecturasReales => lecturasReales;
+
+    public TareaDaoConCache(ITareaDao interno) => this.interno = interno;
+
+    public List<Tarea> ObtenerTodas()
+    {
+        if (cache is null)                     // primera vez: vamos al almacenamiento
+        {
+            cache = interno.ObtenerTodas();
+            lecturasReales++;
+        }
+        return new List<Tarea>(cache);         // copia: nadie modifica la caché por fuera
+    }
+
+    public Tarea ObtenerPorId(int id) => ObtenerTodas().FirstOrDefault(t => t.Id == id);
+
+    // Toda escritura INVALIDA la caché: si no, quedaría desactualizada
+    public void Insertar(Tarea tarea)
+    {
+        interno.Insertar(tarea);
+        cache = null;
+    }
+
+    public bool Actualizar(Tarea tarea)
+    {
+        bool ok = interno.Actualizar(tarea);
+        if (ok) { cache = null; }
+        return ok;
+    }
+
+    public bool Borrar(int id)
+    {
+        bool ok = interno.Borrar(id);
+        if (ok) { cache = null; }
+        return ok;
+    }
+}
+
+// Uso: se envuelve el DAO real y el resto de la aplicación no se entera
+TareaDaoConCache dao = new TareaDaoConCache(new TareaDaoMemoria());
+
+dao.Insertar(new Tarea { Descripcion = "Leer el tema", Horas = 1 });
+
+dao.ObtenerTodas();
+dao.ObtenerTodas();
+dao.ObtenerTodas();
+Console.WriteLine($"Tres llamadas a ObtenerTodas -> {dao.LecturasReales} lectura real");
+
+dao.Insertar(new Tarea { Descripcion = "Hacer la práctica", Horas = 3 });
+dao.ObtenerTodas();
+Console.WriteLine($"Tras insertar y volver a leer -> {dao.LecturasReales} lecturas reales");
+Console.WriteLine("La escritura invalida la caché: si no, se devolverían datos viejos.");
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "entity-framework",
+          titulo: "Entity Framework Core",
+          duracion: "26 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Entender qué hace un ORM y los enfoques code first y database first", "Definir entidades y un DbContext, y crear la base de datos con migraciones", "Hacer operaciones CRUD y consultas LINQ sobre la base de datos"],
+          teoria: r`<p><strong>Entity Framework Core</strong> (EF Core) es el ORM de .NET:
+traduce automáticamente entre tus clases de C# y las tablas de una base
+de datos. Escribes LINQ y EF Core genera el SQL.</p>
+<p>Los ejemplos de esta lección <strong>no se pueden ejecutar en el
+editor del curso</strong> (necesitan los paquetes de EF Core y una base
+de datos): están para leerlos y reproducirlos en tu ordenador.</p>
+<h3 id="1-qué-te-ahorra">1. Qué te ahorra</h3>
+<p>Sin ORM, guardar un objeto es esto:</p>
+<pre><code>using SqliteConnection conexion = new SqliteConnection(&quot;Data Source=juegos.db&quot;);
+conexion.Open();
+SqliteCommand comando = conexion.CreateCommand();
+comando.CommandText = &quot;INSERT INTO Juegos (Titulo, Genero, Nota) VALUES ($t, $g, $n)&quot;;
+comando.Parameters.AddWithValue(&quot;$t&quot;, juego.Titulo);
+comando.Parameters.AddWithValue(&quot;$g&quot;, juego.Genero);
+comando.Parameters.AddWithValue(&quot;$n&quot;, juego.Nota);
+comando.ExecuteNonQuery();</code></pre>
+<p>Con EF Core:</p>
+<pre><code>contexto.Juegos.Add(juego);
+contexto.SaveChanges();</code></pre>
+<p>Y una consulta con filtro, orden y proyección es LINQ normal: EF Core
+la convierte en <code>SELECT ... WHERE ... ORDER BY</code>.</p>
+<h3 id="2-los-dos-enfoques">2. Los dos enfoques</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Enfoque</th>
+<th>De qué se parte</th>
+<th>Cuándo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Code first</strong></td>
+<td>de las <strong>clases</strong>; EF genera la base de datos</td>
+<td>proyecto nuevo ← <strong>lo habitual hoy</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Database first</strong></td>
+<td>de una base de datos <strong>ya existente</strong>; EF genera las
+clases</td>
+<td>integrar con un sistema que ya está</td>
+</tr>
+</tbody>
+</table></div>
+<p>Con <em>database first</em> se usa
+<code>dotnet ef dbcontext scaffold</code>, que genera las entidades a
+partir del esquema.</p>
+<h3 id="3-los-componentes">3. Los componentes</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Componente</th>
+<th>Qué es</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Entidad</strong></td>
+<td>una clase que representa una fila (<code>Juego</code>)</td>
+</tr>
+<tr class="even">
+<td><strong><code>DbSet&lt;T&gt;</code></strong></td>
+<td>representa una tabla; se consulta con LINQ</td>
+</tr>
+<tr class="odd">
+<td><strong><code>DbContext</code></strong></td>
+<td>la sesión con la base de datos: contiene los <code>DbSet</code> y
+guarda los cambios</td>
+</tr>
+<tr class="even">
+<td><strong>Migración</strong></td>
+<td>un cambio en el esquema, versionado como código</td>
+</tr>
+<tr class="odd">
+<td><strong>Proveedor</strong></td>
+<td>el paquete de cada motor: SQLite, SQL Server, PostgreSQL, MySQL</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-preparar-el-proyecto">4. Preparar el proyecto</h3>
+<pre><code>dotnet new console -o TiendaJuegos
+cd TiendaJuegos
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite
+dotnet add package Microsoft.EntityFrameworkCore.Design
+dotnet tool install --global dotnet-ef</code></pre>
+<p><strong>SQLite</strong> es ideal para aprender: la base de datos
+entera es <strong>un fichero</strong>, no hay que instalar ningún
+servidor.</p>
+<h3 id="5-las-entidades-y-el-contexto">5. Las entidades y el
+contexto</h3>
+<pre><code>public class Juego
+{
+    public int Id { get; set; }                 // convención: Id o JuegoId → clave primaria
+    public string Titulo { get; set; } = &quot;&quot;;
+    public double Nota { get; set; }
+
+    public int GeneroId { get; set; }           // clave ajena
+    public Genero Genero { get; set; }          // propiedad de navegación
+}
+
+public class Genero
+{
+    public int Id { get; set; }
+    public string Nombre { get; set; } = &quot;&quot;;
+    public List&lt;Juego&gt; Juegos { get; set; } = new List&lt;Juego&gt;();   // el otro lado
+}
+
+public class TiendaContext : DbContext
+{
+    public DbSet&lt;Juego&gt; Juegos { get; set; }
+    public DbSet&lt;Genero&gt; Generos { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder opciones) =&gt;
+        opciones.UseSqlite(&quot;Data Source=tienda.db&quot;);
+}</code></pre>
+<p>EF Core trabaja <strong>por convención</strong>: una propiedad
+llamada <code>Id</code> es la clave primaria, <code>GeneroId</code> +
+<code>Genero</code> es una clave ajena, y <code>List&lt;Juego&gt;</code>
+en <code>Genero</code> es el lado «muchos» de la relación. Cuando la
+convención no basta, se configura con atributos
+(<code>[Required]</code>, <code>[MaxLength(80)]</code>) o con la API
+fluida en <code>OnModelCreating</code>.</p>
+<h3 id="6-migraciones-el-esquema-versionado">6. Migraciones: el esquema,
+versionado</h3>
+<pre><code>dotnet ef migrations add Inicial      # genera el código de creación de las tablas
+dotnet ef database update             # lo aplica a la base de datos</code></pre>
+<p>Al cambiar las entidades, otra migración:</p>
+<pre><code>dotnet ef migrations add AnadeAnioDeLanzamiento
+dotnet ef database update</code></pre>
+<p>Las migraciones son <strong>ficheros de código</strong> que van a
+Git: el esquema de la base de datos queda versionado junto a la
+aplicación, y cualquiera puede reconstruirla desde cero. Es lo que evita
+el clásico «en mi máquina funciona».</p>
+<h3 id="7-el-crud">7. El CRUD</h3>
+<pre><code>using TiendaContext contexto = new TiendaContext();
+
+// CREATE
+contexto.Juegos.Add(new Juego { Titulo = &quot;Hades&quot;, Nota = 9.3, GeneroId = 1 });
+contexto.SaveChanges();              // hasta aquí no se ha tocado la base de datos
+
+// READ
+List&lt;Juego&gt; todos = contexto.Juegos.ToList();
+Juego uno = contexto.Juegos.Find(1);                      // por clave primaria
+List&lt;Juego&gt; buenos = contexto.Juegos.Where(j =&gt; j.Nota &gt;= 9).ToList();
+
+// UPDATE: se modifica el objeto y se guarda
+Juego aEditar = contexto.Juegos.Find(1);
+if (aEditar is not null)
+{
+    aEditar.Nota = 9.5;
+    contexto.SaveChanges();          // EF detecta el cambio él solo
+}
+
+// DELETE
+Juego aBorrar = contexto.Juegos.Find(2);
+if (aBorrar is not null)
+{
+    contexto.Juegos.Remove(aBorrar);
+    contexto.SaveChanges();
+}</code></pre>
+<p>La clave que hay que entender: <strong><code>SaveChanges</code> es el
+momento en que se escribe</strong>. EF Core lleva la cuenta de los
+cambios (<em>change tracking</em>) y los manda todos juntos, en una
+transacción.</p>
+<h3 id="8-consultas-con-relaciones">8. Consultas con relaciones</h3>
+<pre><code>// Include: traer también los datos relacionados (hace el JOIN)
+var juegos = contexto.Juegos
+                     .Include(j =&gt; j.Genero)
+                     .Where(j =&gt; j.Nota &gt;= 8)
+                     .OrderByDescending(j =&gt; j.Nota)
+                     .ToList();
+
+// Agrupar: EF lo traduce a GROUP BY
+var porGenero = contexto.Juegos
+    .GroupBy(j =&gt; j.Genero.Nombre)
+    .Select(g =&gt; new { Genero = g.Key, Cuantos = g.Count(), Media = g.Average(j =&gt; j.Nota) })
+    .ToList();</code></pre>
+<div class="callout">
+<p><strong>El problema N+1.</strong> Si recorres los juegos y accedes a
+<code>j.Genero.Nombre</code> <strong>sin</strong> <code>Include</code>,
+EF hará una consulta extra por cada juego: 1 + N consultas. Con 1 000
+juegos, 1 001 viajes a la base de datos. Es el error de rendimiento más
+común con cualquier ORM, y la solución es <code>Include</code>.</p>
+</div>
+<h3 id="9-lo-que-hay-que-tener-presente">9. Lo que hay que tener
+presente</h3>
+<ul>
+<li><strong><code>AsNoTracking()</code></strong> para consultas de solo
+lectura: EF no vigila los cambios y va más rápido.</li>
+<li><strong>La ejecución es diferida</strong>, como en LINQ: la consulta
+se envía al llamar a <code>ToList</code>, <code>First</code>,
+<code>Count</code>…</li>
+<li><strong>Un <code>DbContext</code> es de corta vida</strong>: se
+crea, se usa y se desecha (en web, <code>AddScoped</code>: uno por
+petición).</li>
+<li><strong>No hay inyección de SQL</strong> si usas LINQ: EF
+parametriza las consultas. Al escribir SQL a mano, usa
+<code>FromSqlInterpolated</code>, nunca concatenes texto.</li>
+<li><strong>Mira el SQL generado</strong> cuando algo va lento: se puede
+registrar con <code>LogTo(Console.WriteLine)</code>. Un ORM no exime de
+entender qué consulta se está ejecutando.</li>
+</ul>`,
+          ejemplos: [
+            { titulo: "Entidades, contexto y CRUD", explicacion: "Fíjate en la correspondencia con lo que ya sabes: las consultas son LINQ exactamente igual que sobre una lista, y las validaciones son las mismas anotaciones de datos que en Razor Pages. EF Core traduce ese LINQ a SQL.", codigo: r`// ═══════════════════════════════════════════════════════════════════════
+//  Models/Genero.cs y Models/Juego.cs    (las ENTIDADES)
+// ═══════════════════════════════════════════════════════════════════════
+// using System.ComponentModel.DataAnnotations;
+//
+// public class Genero
+// {
+//     public int Id { get; set; }                       // clave primaria por convención
+//
+//     [Required, MaxLength(40)]
+//     public string Nombre { get; set; } = "";
+//
+//     public List<Juego> Juegos { get; set; } = new List<Juego>();   // lado «muchos»
+// }
+//
+// public class Juego
+// {
+//     public int Id { get; set; }
+//
+//     [Required, MaxLength(80)]
+//     public string Titulo { get; set; } = "";
+//
+//     [Range(1950, 2100)]
+//     public int Anio { get; set; }
+//
+//     [Range(0, 10)]
+//     public double Nota { get; set; }
+//
+//     public int GeneroId { get; set; }                 // clave ajena
+//     public Genero Genero { get; set; }                // propiedad de navegación
+// }
+//
+// ═══════════════════════════════════════════════════════════════════════
+//  Data/TiendaContext.cs    (el CONTEXTO)
+// ═══════════════════════════════════════════════════════════════════════
+// using Microsoft.EntityFrameworkCore;
+//
+// public class TiendaContext : DbContext
+// {
+//     public DbSet<Juego> Juegos { get; set; }
+//     public DbSet<Genero> Generos { get; set; }
+//
+//     protected override void OnConfiguring(DbContextOptionsBuilder opciones)
+//     {
+//         opciones.UseSqlite("Data Source=tienda.db");
+//         // opciones.LogTo(Console.WriteLine);        // para ver el SQL generado
+//     }
+//
+//     protected override void OnModelCreating(ModelBuilder modelo)
+//     {
+//         // Configuración que las convenciones no cubren
+//         modelo.Entity<Juego>()
+//               .HasIndex(j => j.Titulo)
+//               .IsUnique();
+//
+//         modelo.Entity<Juego>()
+//               .HasOne(j => j.Genero)
+//               .WithMany(g => g.Juegos)
+//               .HasForeignKey(j => j.GeneroId)
+//               .OnDelete(DeleteBehavior.Restrict);     // no borrar un género con juegos
+//     }
+// }
+//
+// ═══════════════════════════════════════════════════════════════════════
+//  Program.cs    (el CRUD)
+// ═══════════════════════════════════════════════════════════════════════
+// using Microsoft.EntityFrameworkCore;
+//
+// using TiendaContext contexto = new TiendaContext();
+// contexto.Database.EnsureCreated();          // para pruebas; en serio, migraciones
+//
+// // ---------- CREATE ----------
+// if (!contexto.Generos.Any())
+// {
+//     Genero plataformas = new Genero { Nombre = "plataformas" };
+//     Genero roguelike = new Genero { Nombre = "roguelike" };
+//     contexto.Generos.AddRange(plataformas, roguelike);
+//
+//     contexto.Juegos.AddRange(
+//         new Juego { Titulo = "Celeste", Anio = 2018, Nota = 9.0, Genero = plataformas },
+//         new Juego { Titulo = "Cuphead", Anio = 2017, Nota = 8.6, Genero = plataformas },
+//         new Juego { Titulo = "Hades", Anio = 2020, Nota = 9.3, Genero = roguelike });
+//
+//     contexto.SaveChanges();                  // AQUÍ se escribe en la base de datos
+//     Console.WriteLine("Datos iniciales creados.");
+// }
+//
+// // ---------- READ ----------
+// Console.WriteLine($"Juegos: {contexto.Juegos.Count()}");
+//
+// // Include hace el JOIN: sin él, j.Genero.Nombre provocaría el problema N+1
+// foreach (Juego j in contexto.Juegos.Include(j => j.Genero).OrderBy(j => j.Titulo))
+// {
+//     Console.WriteLine($"  {j.Titulo,-12}{j.Genero.Nombre,-14}{j.Anio}  {j.Nota:F1}");
+// }
+//
+// Juego uno = contexto.Juegos.Find(1);                       // por clave primaria
+// Juego porTitulo = contexto.Juegos.FirstOrDefault(j => j.Titulo == "Hades");
+//
+// // Solo lectura: AsNoTracking va más rápido
+// var notables = contexto.Juegos.AsNoTracking()
+//                               .Where(j => j.Nota >= 9)
+//                               .Select(j => new { j.Titulo, j.Nota })
+//                               .ToList();
+//
+// // ---------- UPDATE ----------
+// Juego aEditar = contexto.Juegos.Find(1);
+// if (aEditar is not null)
+// {
+//     aEditar.Nota = 9.5;                     // basta modificar el objeto
+//     contexto.SaveChanges();                 // EF detecta el cambio él solo
+// }
+//
+// // ---------- DELETE ----------
+// Juego aBorrar = contexto.Juegos.FirstOrDefault(j => j.Titulo == "Cuphead");
+// if (aBorrar is not null)
+// {
+//     contexto.Juegos.Remove(aBorrar);
+//     contexto.SaveChanges();
+// }
+//
+// // ---------- Consultas de informe: EF las traduce a GROUP BY ----------
+// var porGenero = contexto.Juegos
+//     .GroupBy(j => j.Genero.Nombre)
+//     .Select(g => new { Genero = g.Key, Cuantos = g.Count(), Media = g.Average(j => j.Nota) })
+//     .OrderByDescending(x => x.Media)
+//     .ToList();
+
+Console.WriteLine("Los bloques de arriba son el código de un proyecto con Entity Framework Core.");
+Console.WriteLine("Para reproducirlo:\n");
+Console.WriteLine("  dotnet new console -o TiendaJuegos");
+Console.WriteLine("  cd TiendaJuegos");
+Console.WriteLine("  dotnet add package Microsoft.EntityFrameworkCore.Sqlite");
+Console.WriteLine("  dotnet add package Microsoft.EntityFrameworkCore.Design");
+Console.WriteLine("  dotnet tool install --global dotnet-ef");
+Console.WriteLine("  (escribe las entidades y el contexto)");
+Console.WriteLine("  dotnet ef migrations add Inicial");
+Console.WriteLine("  dotnet ef database update");
+Console.WriteLine("  dotnet run\n");
+Console.WriteLine("Las cuatro ideas que hay que llevarse:");
+Console.WriteLine("  1. Las clases son las tablas; DbSet<T> es la tabla; DbContext es la sesión.");
+Console.WriteLine("  2. SaveChanges() es el momento en que se escribe de verdad.");
+Console.WriteLine("  3. Include evita el problema N+1 (1 consulta en lugar de 1+N).");
+Console.WriteLine("  4. Las migraciones versionan el esquema junto al código, en Git.");
+` },
+            { titulo: "Simular EF Core en memoria para entender el modelo", explicacion: "Esta simulación no es EF Core, pero reproduce sus tres ideas: tablas como colecciones, relaciones por clave ajena y una unidad de trabajo que acumula cambios hasta SaveChanges. Cuando montes el proyecto real reconocerás cada pieza.", codigo: r`// EF Core no se puede ejecutar aquí, pero sí podemos reproducir su MODELO
+// con listas: entidades relacionadas por clave ajena, consultas con «join»
+// y una «unidad de trabajo» que guarda todos los cambios de golpe.
+
+Contexto contexto = new Contexto();
+
+// Datos iniciales (como un Seed)
+Genero plataformas = contexto.AnadirGenero("plataformas");
+Genero roguelike = contexto.AnadirGenero("roguelike");
+
+contexto.AnadirJuego("Celeste", 2018, 9.0, plataformas.Id);
+contexto.AnadirJuego("Cuphead", 2017, 8.6, plataformas.Id);
+contexto.AnadirJuego("Hades", 2020, 9.3, roguelike.Id);
+Console.WriteLine($"Cambios pendientes: {contexto.Pendientes}");
+contexto.SaveChanges();
+Console.WriteLine($"Tras SaveChanges: {contexto.Pendientes} pendientes\n");
+
+// READ con «Include»: unimos el juego con su género (lo que EF hace con un JOIN)
+Console.WriteLine("--- Catálogo (con el género) ---");
+var conGenero = contexto.Juegos
+    .Join(contexto.Generos, j => j.GeneroId, g => g.Id, (j, g) => new { Juego = j, Genero = g })
+    .OrderBy(x => x.Juego.Titulo);
+
+foreach (var x in conGenero)
+{
+    Console.WriteLine($"  {x.Juego.Titulo,-12}{x.Genero.Nombre,-14}" +
+                      $"{x.Juego.Anio}  {x.Juego.Nota:F1}");
+}
+
+// Informe con agrupación (lo que EF traduce a GROUP BY)
+Console.WriteLine("\n--- Media por género ---");
+var porGenero = contexto.Juegos
+    .Join(contexto.Generos, j => j.GeneroId, g => g.Id, (j, g) => new { j.Nota, g.Nombre })
+    .GroupBy(x => x.Nombre)
+    .Select(g => new { Genero = g.Key, Cuantos = g.Count(), Media = g.Average(x => x.Nota) })
+    .OrderByDescending(x => x.Media);
+
+foreach (var g in porGenero)
+{
+    Console.WriteLine($"  {g.Genero,-14}{g.Cuantos,3} juegos, media {g.Media:F2}");
+}
+
+// UPDATE y DELETE con la misma idea: modificar y guardar
+Juego hades = contexto.Juegos.FirstOrDefault(j => j.Titulo == "Hades");
+if (hades is not null)
+{
+    hades.Nota = 9.5;
+    contexto.MarcarModificado();
+}
+
+Juego cuphead = contexto.Juegos.FirstOrDefault(j => j.Titulo == "Cuphead");
+if (cuphead is not null)
+{
+    contexto.Borrar(cuphead);
+}
+
+Console.WriteLine($"\nCambios pendientes antes de guardar: {contexto.Pendientes}");
+contexto.SaveChanges();
+Console.WriteLine($"Juegos tras guardar: {contexto.Juegos.Count}");
+Console.WriteLine($"  {string.Join(", ", contexto.Juegos.Select(j => $"{j.Titulo} ({j.Nota:F1})"))}");
+
+// --- Las «entidades» ---
+class Genero
+{
+    public int Id { get; set; }
+    public string Nombre { get; set; } = "";
+}
+
+class Juego
+{
+    public int Id { get; set; }
+    public string Titulo { get; set; } = "";
+    public int Anio { get; set; }
+    public double Nota { get; set; }
+    public int GeneroId { get; set; }          // clave ajena
+}
+
+// --- El «contexto»: las tablas y la unidad de trabajo ---
+class Contexto
+{
+    public List<Juego> Juegos { get; } = new List<Juego>();       // como un DbSet<Juego>
+    public List<Genero> Generos { get; } = new List<Genero>();    // como un DbSet<Genero>
+
+    private int pendientes;
+    private int siguienteJuego = 1;
+    private int siguienteGenero = 1;
+
+    public int Pendientes => pendientes;
+
+    public Genero AnadirGenero(string nombre)
+    {
+        Genero genero = new Genero { Id = siguienteGenero, Nombre = nombre };
+        siguienteGenero++;
+        Generos.Add(genero);
+        pendientes++;
+        return genero;
+    }
+
+    public Juego AnadirJuego(string titulo, int anio, double nota, int generoId)
+    {
+        if (!Generos.Any(g => g.Id == generoId))
+        {
+            throw new InvalidOperationException($"No existe el género {generoId}");
+        }
+
+        Juego juego = new Juego
+        {
+            Id = siguienteJuego, Titulo = titulo, Anio = anio, Nota = nota, GeneroId = generoId,
+        };
+        siguienteJuego++;
+        Juegos.Add(juego);
+        pendientes++;
+        return juego;
+    }
+
+    public void MarcarModificado() => pendientes++;
+
+    public void Borrar(Juego juego)
+    {
+        Juegos.Remove(juego);
+        pendientes++;
+    }
+
+    // Como SaveChanges: aquí se escribiría todo de golpe, en una transacción
+    public int SaveChanges()
+    {
+        int guardados = pendientes;
+        pendientes = 0;
+        return guardados;
+    }
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Base de datos con EF Core y SQLite",
+              nivel: 2,
+              pista: "Entidades, contexto, migración, datos iniciales y menú. Include en las consultas que muestren las dos entidades.",
+              enunciado: r`<p>Crea una aplicación de consola con <strong>Entity Framework Core y
+SQLite</strong> que gestione <strong>dos entidades relacionadas</strong>
+a tu elección (por ejemplo <code>Autor</code> y <code>Libro</code>,
+<code>Equipo</code> y <code>Jugador</code>, <code>Genero</code> y
+<code>Juego</code>).</p>
+<p><strong>Requisitos:</strong></p>
+<ol type="1">
+<li>Las dos entidades con su clave primaria, una <strong>clave
+ajena</strong> y las propiedades de navegación en los dos sentidos.</li>
+<li>Un <code>DbContext</code> con los dos <code>DbSet</code> y la cadena
+de conexión a SQLite.</li>
+<li>Una <strong>migración inicial</strong> aplicada con
+<code>dotnet ef database update</code>.</li>
+<li>Datos iniciales: al menos 3 elementos de la entidad «padre» y 8 de
+la «hija».</li>
+<li>Un menú con: listar todo (con <code>Include</code>), buscar por un
+campo, añadir, modificar, borrar y <strong>un informe agrupado</strong>
+(cuántos y la media por cada elemento padre).</li>
+<li>Una <strong>segunda migración</strong> que añada un campo nuevo a
+una de las entidades.</li>
+</ol>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li><strong>Control de errores:</strong> comprueba que la clave ajena
+existe antes de insertar; <code>Find</code> puede devolver
+<code>null</code>; captura <code>DbUpdateException</code> al
+guardar.</li>
+<li>Usa <code>Include</code> en las consultas que muestren datos de las
+dos entidades (evita el problema N+1).</li>
+<li>Usa <code>AsNoTracking()</code> en las consultas de solo
+lectura.</li>
+<li>Sube las migraciones al repositorio: <strong>forman parte del
+código</strong>.</li>
+<li>No pongas la cadena de conexión con contraseñas en el repositorio
+(con SQLite no hay, pero conviene saberlo).</li>
+</ul>
+<p>💡 <strong>TIP:</strong> <code>dotnet ef migrations list</code>
+muestra las migraciones y <code>dotnet ef database drop</code> borra la
+base de datos para empezar de cero.</p>
+<p>🏅🏅 <strong>Ampliación avanzada:</strong> activa
+<code>LogTo(Console.WriteLine)</code> y compara el SQL generado por la
+misma consulta <strong>con</strong> y <strong>sin</strong>
+<code>Include</code>. Pega las dos consultas en el README y explica el
+problema N+1 con tus datos.</p>`,
+              soluciones: [
+                { titulo: "Comandos y estructura", nota: "Las migraciones van al repositorio y la base de datos no: con las migraciones, cualquiera puede reconstruir la base de datos desde cero con un solo comando.", noRun: true, codigo: r`# 1. Proyecto y paquetes
+dotnet new console -o GestorBiblioteca
+cd GestorBiblioteca
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite
+dotnet add package Microsoft.EntityFrameworkCore.Design
+dotnet tool install --global dotnet-ef      # solo la primera vez en el ordenador
+
+# 2. Ficheros
+#    Models/Autor.cs
+#    Models/Libro.cs
+#    Data/BibliotecaContext.cs
+#    Program.cs
+
+# 3. Primera migracion
+dotnet ef migrations add Inicial
+dotnet ef database update
+#    -> aparece la carpeta Migrations/ y el fichero biblioteca.db
+
+# 4. Ejecutar
+dotnet run
+
+# 5. Segunda migracion (tras anadir, por ejemplo, Libro.Paginas)
+dotnet ef migrations add AnadePaginas
+dotnet ef database update
+
+# 6. Comandos utiles
+dotnet ef migrations list        # ver las migraciones
+dotnet ef migrations remove      # quitar la ultima (si no se ha aplicado)
+dotnet ef database drop          # borrar la base de datos y empezar de cero
+
+# 7. gitignore: la base de datos NO se sube; las migraciones SI
+#    *.db
+#    *.db-shm
+#    *.db-wal
+` },
+                { titulo: "Entidades, contexto y menú", nota: "Observa los tres detalles que marcan la diferencia: AsNoTracking en las consultas de solo lectura, Include para evitar el N+1 y la comprobación de la clave ajena antes de insertar. Sin el último, el error llegaría como una DbUpdateException con un mensaje incomprensible para el usuario.", noRun: true, codigo: r`// ---------- Models/Autor.cs ----------
+using System.ComponentModel.DataAnnotations;
+
+public class Autor
+{
+    public int Id { get; set; }
+
+    [Required, MaxLength(60)]
+    public string Nombre { get; set; } = "";
+
+    public string Pais { get; set; } = "";
+
+    // Lado «muchos» de la relación
+    public List<Libro> Libros { get; set; } = new List<Libro>();
+}
+
+// ---------- Models/Libro.cs ----------
+public class Libro
+{
+    public int Id { get; set; }
+
+    [Required, MaxLength(120)]
+    public string Titulo { get; set; } = "";
+
+    [Range(1400, 2100)]
+    public int Anio { get; set; }
+
+    [Range(1, 10000)]
+    public int Paginas { get; set; }              // añadido en la segunda migración
+
+    public int AutorId { get; set; }              // clave ajena
+    public Autor Autor { get; set; }              // propiedad de navegación
+}
+
+// ---------- Data/BibliotecaContext.cs ----------
+using Microsoft.EntityFrameworkCore;
+
+public class BibliotecaContext : DbContext
+{
+    public DbSet<Autor> Autores { get; set; }
+    public DbSet<Libro> Libros { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder opciones)
+    {
+        opciones.UseSqlite("Data Source=biblioteca.db");
+        // Descomenta para ver el SQL que genera EF Core:
+        // opciones.LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information);
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelo)
+    {
+        modelo.Entity<Libro>()
+              .HasOne(l => l.Autor)
+              .WithMany(a => a.Libros)
+              .HasForeignKey(l => l.AutorId)
+              .OnDelete(DeleteBehavior.Cascade);   // al borrar un autor, sus libros
+    }
+}
+
+// ---------- Program.cs (fragmentos clave) ----------
+using Microsoft.EntityFrameworkCore;
+
+using BibliotecaContext contexto = new BibliotecaContext();
+
+// Datos iniciales solo si la base de datos está vacía
+if (!contexto.Autores.Any())
+{
+    Autor cervantes = new Autor { Nombre = "Miguel de Cervantes", Pais = "España" };
+    Autor cortazar = new Autor { Nombre = "Julio Cortázar", Pais = "Argentina" };
+    contexto.Autores.AddRange(cervantes, cortazar);
+
+    contexto.Libros.AddRange(
+        new Libro { Titulo = "El Quijote", Anio = 1605, Paginas = 863, Autor = cervantes },
+        new Libro { Titulo = "Rayuela", Anio = 1963, Paginas = 635, Autor = cortazar },
+        new Libro { Titulo = "Bestiario", Anio = 1951, Paginas = 160, Autor = cortazar });
+
+    try
+    {
+        contexto.SaveChanges();
+        Console.WriteLine("Datos iniciales creados.");
+    }
+    catch (DbUpdateException ex)
+    {
+        Console.WriteLine($"No se han podido guardar: {ex.InnerException?.Message}");
+    }
+}
+
+// LISTAR con Include (una sola consulta con JOIN)
+void Listar()
+{
+    var libros = contexto.Libros
+                         .AsNoTracking()                 // solo lectura: más rápido
+                         .Include(l => l.Autor)
+                         .OrderBy(l => l.Autor.Nombre)
+                         .ThenBy(l => l.Anio)
+                         .ToList();
+
+    Console.WriteLine($"{"TÍTULO",-24}{"AUTOR",-24}{"AÑO",6}{"PÁGS",7}");
+    foreach (Libro l in libros)
+    {
+        Console.WriteLine($"{l.Titulo,-24}{l.Autor.Nombre,-24}{l.Anio,6}{l.Paginas,7}");
+    }
+}
+
+// INFORME agrupado (EF lo traduce a GROUP BY)
+void Informe()
+{
+    var porAutor = contexto.Libros
+        .GroupBy(l => l.Autor.Nombre)
+        .Select(g => new
+        {
+            Autor = g.Key,
+            Cuantos = g.Count(),
+            MediaPaginas = g.Average(l => l.Paginas),
+            MasAntiguo = g.Min(l => l.Anio),
+        })
+        .OrderByDescending(x => x.Cuantos)
+        .ToList();
+
+    foreach (var a in porAutor)
+    {
+        Console.WriteLine($"{a.Autor,-24}{a.Cuantos,3} libros, " +
+                          $"{a.MediaPaginas:F0} págs de media, el más antiguo de {a.MasAntiguo}");
+    }
+}
+
+// AÑADIR con comprobación de la clave ajena
+void Anadir(string titulo, int anio, int paginas, int autorId)
+{
+    if (!contexto.Autores.Any(a => a.Id == autorId))
+    {
+        Console.WriteLine($"No existe el autor con id {autorId}.");
+        return;
+    }
+
+    contexto.Libros.Add(new Libro
+    {
+        Titulo = titulo, Anio = anio, Paginas = paginas, AutorId = autorId,
+    });
+
+    try
+    {
+        contexto.SaveChanges();
+        Console.WriteLine("Libro añadido.");
+    }
+    catch (DbUpdateException ex)
+    {
+        Console.WriteLine($"Error al guardar: {ex.InnerException?.Message}");
+    }
+}
+` },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
       id: "m8",
       titulo: "Código limpio (Clean Code)",
       lecciones: [
@@ -12694,6 +30460,156 @@ rango; es donde suelen esconderse los errores.</li>
 verde (pasa) → refactorizar.</li>
 <li><strong>Olor del código (code smell):</strong> síntoma de un posible
 mal diseño aunque el programa funcione.</li>
+</ul>`,
+          ejemplos: [
+          ],
+          actividades: [
+          ],
+        },
+        {
+          id: "glosario-avanzado",
+          titulo: "Glosario de los módulos avanzados",
+          duracion: "12 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Repasar el vocabulario de colecciones, LINQ, UML, ficheros y persistencia"],
+          teoria: r`<p>Vocabulario de los módulos de genéricos y colecciones, delegados y
+LINQ, UML, ficheros estructurados e interfaz y persistencia.</p>
+<h4 id="genéricos-y-colecciones">Genéricos y colecciones</h4>
+<ul>
+<li><strong>Genérico:</strong> tipo o método con un parámetro de tipo
+(<code>List&lt;T&gt;</code>) que se concreta al usarlo.</li>
+<li><strong>Parámetro de tipo:</strong> el «hueco» (<code>T</code>) de
+un tipo genérico.</li>
+<li><strong>Restricción (<code>where</code>):</strong> condición que
+debe cumplir el tipo recibido para poder operar con él.</li>
+<li><strong>Boxing:</strong> envolver un tipo por valor en un objeto del
+montón; los genéricos lo evitan.</li>
+<li><strong><code>IEnumerable&lt;T&gt;</code>:</strong> lo mínimo para
+poder recorrer una colección con <code>foreach</code>.</li>
+<li><strong>Tabla hash:</strong> estructura que calcula la posición a
+partir del valor; base de <code>Dictionary</code> y
+<code>HashSet</code>.</li>
+<li><strong>Colisión:</strong> dos claves distintas que caen en la misma
+posición de la tabla hash.</li>
+<li><strong>FIFO / LIFO:</strong> el primero o el último que entra es el
+primero que sale (cola / pila).</li>
+<li><strong><code>IComparable&lt;T&gt;</code>:</strong> orden natural
+del tipo, definido dentro de la clase con <code>CompareTo</code>.</li>
+<li><strong><code>IComparer&lt;T&gt;</code>:</strong> comparador
+externo; permite varios criterios y clases ajenas.</li>
+<li><strong>Estable:</strong> una ordenación es estable si los elementos
+empatados conservan su orden previo.</li>
+</ul>
+<h4 id="delegados-lambdas-y-linq">Delegados, lambdas y LINQ</h4>
+<ul>
+<li><strong>Delegado:</strong> variable que guarda uno o varios métodos
+con una firma concreta.</li>
+<li><strong><code>Action</code> / <code>Func</code> /
+<code>Predicate</code>:</strong> delegados genéricos de .NET (sin
+resultado / con resultado / que devuelve <code>bool</code>).</li>
+<li><strong>Multidifusión:</strong> delegado con varios métodos
+suscritos; base de los eventos.</li>
+<li><strong>Lambda:</strong> método escrito en el sitio donde se usa,
+sin nombre (<code>n =&gt; n * 2</code>).</li>
+<li><strong>Clausura:</strong> lambda que captura variables del entorno
+(la variable, no su valor).</li>
+<li><strong>LINQ:</strong> consultas integradas en el lenguaje sobre
+cualquier <code>IEnumerable&lt;T&gt;</code>.</li>
+<li><strong>Ejecución diferida:</strong> la consulta no se ejecuta hasta
+que se recorre el resultado.</li>
+<li><strong>Materializar:</strong> forzar la ejecución con
+<code>ToList</code>, <code>ToArray</code> o
+<code>ToDictionary</code>.</li>
+<li><strong>Proyección:</strong> transformar cada elemento
+(<code>Select</code>); <strong>filtrado:</strong> quedarse con algunos
+(<code>Where</code>).</li>
+<li><strong><code>SelectMany</code>:</strong> aplanar una colección de
+colecciones en una sola.</li>
+<li><strong>Map-filter-reduce:</strong> el esquema de toda consulta; es
+el modelo de MapReduce.</li>
+<li><strong>PLINQ:</strong> <code>AsParallel()</code>, que reparte la
+consulta entre los núcleos del procesador.</li>
+<li><strong>Problema N+1:</strong> una consulta extra por elemento al
+acceder a datos relacionados sin <code>Include</code>.</li>
+</ul>
+<h4 id="textos-fechas-y-ficheros-estructurados">Textos, fechas y
+ficheros estructurados</h4>
+<ul>
+<li><strong>Inmutable:</strong> un <code>string</code> no se puede
+modificar; cada cambio crea una cadena nueva.</li>
+<li><strong><code>StringBuilder</code>:</strong> búfer mutable para
+construir texto en bucles; evita el coste O(n²).</li>
+<li><strong>Expresión regular:</strong> patrón que describe un conjunto
+de textos.</li>
+<li><strong>Ancla (<code>^</code>, <code>$</code>):</strong> marca el
+principio y el final del texto; imprescindible al validar.</li>
+<li><strong>ReDoS:</strong> ataque por una expresión regular con
+retroceso catastrófico; se evita con un límite de tiempo.</li>
+<li><strong><code>InvariantCulture</code>:</strong> formato fijo,
+independiente del ordenador; obligatorio al guardar datos.</li>
+<li><strong>CSV:</strong> una línea por registro y campos separados;
+formato plano.</li>
+<li><strong>JSON:</strong> formato con objetos y listas anidadas; el
+estándar de las API web.</li>
+<li><strong>XML:</strong> formato con elementos y atributos; admite
+comentarios y validación con XSD.</li>
+<li><strong>Serializar / deserializar:</strong> convertir un objeto en
+texto y recuperarlo.</li>
+</ul>
+<h4 id="uml-y-modelado">UML y modelado</h4>
+<ul>
+<li><strong>UML:</strong> lenguaje estándar de diagramas para modelar y
+comunicar el diseño.</li>
+<li><strong>Diagrama de clases:</strong> qué clases hay y cómo se
+relacionan.</li>
+<li><strong>Asociación / agregación / composición:</strong> conocer /
+contener sin dependencia de vida / contener con dependencia de
+vida.</li>
+<li><strong>Multiplicidad:</strong> cuántos elementos participan en cada
+extremo de una relación (<code>1</code>, <code>0..1</code>,
+<code>*</code>, <code>1..*</code>).</li>
+<li><strong>Caso de uso:</strong> algo que el sistema hace para un actor
+y le aporta valor.</li>
+<li><strong>Actor:</strong> papel que desempeña quien usa el sistema
+(nunca una parte interna).</li>
+<li><strong><code>«include»</code> / <code>«extend»</code>:</strong>
+siempre ocurre / ocurre solo en ciertas condiciones.</li>
+<li><strong>Diagrama de secuencia:</strong> orden en el tiempo de los
+mensajes entre objetos.</li>
+<li><strong>Diagrama de estados:</strong> situaciones de un objeto y
+transiciones entre ellas.</li>
+<li><strong>Mermaid:</strong> diagramas escritos como texto; GitHub los
+dibuja en los <code>README.md</code>.</li>
+</ul>
+<h4 id="interfaz-y-persistencia">Interfaz y persistencia</h4>
+<ul>
+<li><strong>MVC:</strong> separación en modelo (datos y reglas), vista
+(presentación) y controlador (coordinación).</li>
+<li><strong>Razor Pages:</strong> páginas web con dos ficheros: la vista
+<code>.cshtml</code> y la clase <code>PageModel</code>.</li>
+<li><strong>Tag helper:</strong> etiqueta de Razor
+(<code>asp-for</code>, <code>asp-page</code>) que genera HTML a partir
+del modelo.</li>
+<li><strong>Anotaciones de datos:</strong> atributos de validación
+(<code>[Required]</code>, <code>[Range]</code>) aplicados en servidor y
+cliente.</li>
+<li><strong>POST-Redirect-GET:</strong> redirigir tras procesar un
+formulario para que al recargar no se reenvíe.</li>
+<li><strong>Inyección de dependencias:</strong> la clase recibe los
+servicios que necesita en lugar de crearlos.</li>
+<li><strong>DAO / repositorio:</strong> capa cuya única responsabilidad
+es leer y escribir los datos.</li>
+<li><strong>ORM:</strong> biblioteca que traduce entre objetos y tablas
+(Entity Framework Core).</li>
+<li><strong><code>DbContext</code> /
+<code>DbSet&lt;T&gt;</code>:</strong> la sesión con la base de datos /
+una tabla consultable con LINQ.</li>
+<li><strong>Migración:</strong> cambio del esquema de la base de datos,
+versionado como código.</li>
+<li><strong><code>SaveChanges</code>:</strong> el momento en que EF Core
+escribe los cambios acumulados.</li>
+<li><strong><code>AsNoTracking</code>:</strong> consulta de solo
+lectura, sin seguimiento de cambios.</li>
 </ul>`,
           ejemplos: [
           ],

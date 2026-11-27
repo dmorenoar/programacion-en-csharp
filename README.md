@@ -202,7 +202,24 @@ Los programas **sencillos** (sin clases propias ni sintaxis moderna; los decimal
 
 ## Estructura del curso y autoevaluación
 
-El curso tiene **9 módulos**: Fundamentos · Control de flujo · Arrays y matrices · Modularidad · Clases, bibliotecas y textos · Ficheros · Programación orientada a objetos · **Código limpio (Clean Code)** · Autoevaluación y repaso. Cada lección tiene pestañas de **Teoría**, **Ejemplos**, **Actividades** (con soluciones de menos a más profesionales) y **✅ Autoevaluación**.
+El curso tiene **14 módulos** y **83 lecciones**, en este orden:
+
+1. **Fundamentos** — lenguajes y .NET, primer programa, variables, operadores, entrada/salida, conversiones, sistemas de numeración, diseño de algoritmos.
+2. **Herramientas: Git y metodologías** — Git, GitHub (ramas, *pull requests*, *forks*, *projects*), Scrum y Kanban.
+3. **Control de flujo** — condicionales, repetición, saltos, excepciones, depuración.
+4. **Arrays y matrices** — arrays, matrices, *jagged arrays*, referencias.
+5. **Modularidad** — funciones, procedimientos, parámetros, retorno, recursividad, algoritmos de ordenación, *backtracking*.
+6. **Clases, bibliotecas y textos** — clases estáticas, *namespaces*, modificadores de acceso, `Math`/`Random`, cadenas, `StringBuilder`, expresiones regulares, fechas y horas.
+7. **Ficheros** — conceptos, secuencial, rutas y acceso directo, CSV, JSON, XML.
+8. **Programación orientada a objetos** — clases y objetos, constructores, composición, encapsulamiento, herencia, `Object`, `enum`/`struct`/`record`, polimorfismo, abstractas e interfaces.
+9. **UML y modelado** — introducción, diagramas de clases, casos de uso, diagramas dinámicos (con Mermaid).
+10. **Genéricos y colecciones** — genéricos, panorama de colecciones, `List<T>`, `Dictionary`/`HashSet`, `Queue`/`Stack`, `IComparable`/`IComparer`.
+11. **Delegados, lambdas y LINQ** — delegados, lambdas y clausuras, LINQ, operadores estándar, agrupación y *joins*.
+12. **Interfaz gráfica y persistencia** — MVC, Razor Pages paso a paso, patrón DAO, Entity Framework Core.
+13. **Código limpio (Clean Code)** — nombres, funciones, comentarios, formato, errores, clases, pruebas, *code smells*.
+14. **Autoevaluación y repaso** — test de iniciación, test global y dos glosarios.
+
+Cada lección tiene pestañas de **Teoría**, **Ejemplos**, **Actividades** (con soluciones de menos a más profesionales) y **✅ Autoevaluación**.
 
 - Las preguntas de cada lección viven en `data/tests.js` (`TESTS[idLección] = [{ p, o, c, e }]`: pregunta, opciones, índice de la correcta y explicación). Las opciones se barajan solas.
 - Las lecciones con `testAleatorio: N` (módulo «Autoevaluación y repaso») sacan N preguntas al azar de todo el curso.
