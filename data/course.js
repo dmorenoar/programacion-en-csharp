@@ -1565,31 +1565,33 @@ while (i <= 10)                  // condición
               pista: "No sabes cuántas vueltas habrá, así que for no es lo ideal. Necesitas un contador de intentos y una condición de salida cuando intento == secreto.",
               soluciones: [
                 {
-                  titulo: "Versión con while (true) y break",
+                  titulo: "Versión con while y una variable bandera",
                   codigo: r`Random rnd = new Random();
 int secreto = rnd.Next(1, 101);   // el 101 no está incluido
 int intentos = 0;
+bool acertado = false;
 
-while (true)                      // bucle "infinito" controlado con break
+while (!acertado)                 // la condición dice claramente cuándo termina el bucle
 {
     Console.Write("Adivina el número (1-100): ");
     if (!int.TryParse(Console.ReadLine(), out int intento))
     {
-        Console.WriteLine("Escribe un número entero");
-        continue;                 // vuelve al inicio sin contar el intento
+        Console.WriteLine("Escribe un número entero");     // no cuenta como intento
     }
-
-    intentos++;
-
-    if (intento < secreto) Console.WriteLine("Más alto");
-    else if (intento > secreto) Console.WriteLine("Más bajo");
     else
     {
-        Console.WriteLine($"¡Correcto! Lo has conseguido en {intentos} intentos");
-        break;                    // salimos del bucle
+        intentos++;
+
+        if (intento < secreto) Console.WriteLine("Más alto");
+        else if (intento > secreto) Console.WriteLine("Más bajo");
+        else
+        {
+            acertado = true;
+            Console.WriteLine($"¡Correcto! Lo has conseguido en {intentos} intentos");
+        }
     }
 }`,
-                  nota: "break y continue permiten estructurar la lógica sin variables auxiliares, pero abusar de ellos puede dificultar la lectura.",
+                  nota: "Una variable booleana (bandera) hace que la condición del while diga cuándo termina el bucle, sin break ni continue: la lógica se lee de arriba abajo.",
                 },
                 {
                   titulo: "Versión con do-while",
@@ -3908,6 +3910,323 @@ int Fibonacci(int n)
             },
           ],
         },
+        {
+          id: "recursividad-clasica",
+          titulo: "Recursividad clásica y complejidad",
+          duracion: "20 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Aplicar las tres normas de la recursividad a problemas clásicos", "Resolver las Torres de Hanói y la búsqueda binaria", "Comparar algoritmos con la notación Big O"],
+          teoria: r`<p>En la lección anterior vimos qué es la recursividad. Ahora la usamos
+en tres problemas clásicos y aprendemos a <strong>comparar la
+eficiencia</strong> de los algoritmos.</p>
+<h3 id="1-las-tres-normas-de-la-recursividad">1. Las tres normas de la
+recursividad</h3>
+<p>Toda función recursiva correcta cumple <strong>tres
+normas</strong>:</p>
+<ol type="1">
+<li><strong>Caso base</strong>: tiene una situación sencilla que se
+resuelve <strong>sin</strong> volver a llamarse (es lo que detiene la
+recursión).</li>
+<li><strong>Progreso</strong>: en cada llamada el problema se hace
+<strong>más pequeño</strong> y se acerca al caso base.</li>
+<li><strong>Llamada recursiva</strong>: se llama a sí misma con ese
+problema más pequeño y <strong>confía</strong> en que funciona.</li>
+</ol>
+<p>Si falta alguna, el programa se queda llamándose sin fin y termina
+con un <code>StackOverflowException</code>.</p>
+<h3 id="2-recursividad-frente-a-iteración">2. Recursividad frente a
+iteración</h3>
+<p>Todo lo que se resuelve con recursividad se puede resolver con un
+bucle (<strong>iteración</strong>) y al revés.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Recursividad</th>
+<th>Iteración</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Legibilidad</td>
+<td>Muy clara en problemas que se dividen en subproblemas iguales</td>
+<td>Clara en repeticiones simples</td>
+</tr>
+<tr class="even">
+<td>Memoria</td>
+<td>Cada llamada ocupa espacio en la pila</td>
+<td>Constante</td>
+</tr>
+<tr class="odd">
+<td>Velocidad</td>
+<td>Más lenta (cada llamada tiene un coste)</td>
+<td>Normalmente más rápida</td>
+</tr>
+<tr class="even">
+<td>Riesgo</td>
+<td><code>StackOverflowException</code></td>
+<td>Bucles infinitos si la condición está mal</td>
+</tr>
+</tbody>
+</table></div>
+<p>Regla práctica: usa recursividad cuando el problema <strong>se define
+a sí mismo</strong> (árboles, carpetas, divide y vencerás) y bucles para
+repeticiones simples.</p>
+<h3 id="3-las-torres-de-hanói">3. Las Torres de Hanói</h3>
+<p>Tenemos tres varillas (origen, auxiliar y destino) y <strong>n
+discos</strong> de distinto tamaño apilados en el origen. Hay que
+pasarlos todos al destino <strong>moviendo un disco cada vez</strong> y
+<strong>sin poner nunca un disco grande sobre uno pequeño</strong>.</p>
+<p>La idea recursiva: para mover <em>n</em> discos de A a C usando
+B:</p>
+<ol type="1">
+<li>Mueve <em>n − 1</em> discos de A a B (usando C).</li>
+<li>Mueve el disco grande de A a C.</li>
+<li>Mueve los <em>n − 1</em> discos de B a C (usando A).</li>
+</ol>
+<p>El caso base es mover <strong>0 discos</strong>: no hay nada que
+hacer.</p>
+<!--ex:0-->
+
+<p>El número de movimientos crece rapidísimo: <strong>2ⁿ − 1</strong>.
+Con 3 discos son 7 movimientos; con 20 discos, más de un millón; con 64,
+más años de los que tiene el universo.</p>
+<h3 id="4-búsqueda-binaria">4. Búsqueda binaria</h3>
+<p>Buscar un valor en un array <strong>ordenado</strong> mirando uno a
+uno es lento. La <strong>búsqueda binaria</strong> mira el elemento del
+medio: si es el que buscamos, hemos terminado; si el buscado es menor,
+seguimos <strong>solo en la mitad izquierda</strong>; si es mayor, en la
+<strong>derecha</strong>. En cada paso se descarta la mitad de los
+datos.</p>
+<!--ex:1-->
+
+<h3 id="5-qué-tan-eficiente-es-un-algoritmo-la-notación-big-o">5. ¿Qué
+tan eficiente es un algoritmo? La notación Big O</h3>
+<p>La <strong>complejidad</strong> mide <strong>cómo crece el
+tiempo</strong> que tarda un algoritmo cuando crece el tamaño <em>n</em>
+de los datos. Se expresa con la notación <strong>Big O</strong>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Complejidad</th>
+<th>Nombre</th>
+<th>Ejemplo</th>
+<th>Con 1.000.000 de datos</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>O(1)</strong></td>
+<td>Constante</td>
+<td>Leer <code>array[i]</code></td>
+<td>1 paso</td>
+</tr>
+<tr class="even">
+<td><strong>O(log n)</strong></td>
+<td>Logarítmica</td>
+<td>Búsqueda binaria</td>
+<td>~20 pasos</td>
+</tr>
+<tr class="odd">
+<td><strong>O(n)</strong></td>
+<td>Lineal</td>
+<td>Recorrer un array</td>
+<td>1.000.000 de pasos</td>
+</tr>
+<tr class="even">
+<td><strong>O(n log n)</strong></td>
+<td>Lineal-logarítmica</td>
+<td>Ordenar bien (QuickSort, MergeSort)</td>
+<td>~20 millones</td>
+</tr>
+<tr class="odd">
+<td><strong>O(n²)</strong></td>
+<td>Cuadrática</td>
+<td>Dos bucles anidados (burbuja)</td>
+<td>10¹² (¡un billón!)</td>
+</tr>
+<tr class="even">
+<td><strong>O(2ⁿ)</strong></td>
+<td>Exponencial</td>
+<td>Fibonacci recursivo, Hanói</td>
+<td>Imposible</td>
+</tr>
+</tbody>
+</table></div>
+<p>Se ignoran las constantes: recorrer un array dos veces sigue siendo
+O(n). Para calcular la complejidad <strong>cuenta los bucles</strong>:
+uno sobre <em>n</em> datos → O(n); dos anidados → O(n²); cada vez que
+<strong>divides a la mitad</strong> → O(log n).</p>
+<!--ex:2-->
+
+<div class="callout">
+
+<p><strong>Resumen.</strong> Caso base · progreso · llamada recursiva.
+Hanói: 2ⁿ − 1 movimientos. Búsqueda binaria: O(log n), pero solo en
+datos <strong>ordenados</strong>. Compara siempre algoritmos con Big O
+antes de optimizar «a ojo».</p>
+</div>`,
+          ejemplos: [
+            { titulo: "Torres de Hanói", explicacion: "Cambia el 3 por 4 y comprueba que los movimientos son 15 (2⁴ − 1).", codigo: r`int movimientos = 0;
+
+Hanoi(3, 'A', 'C', 'B');                    // 3 discos: de A a C usando B
+Console.WriteLine($"Total de movimientos: {movimientos}");     // 7 = 2^3 - 1
+
+void Hanoi(int discos, char origen, char destino, char auxiliar)
+{
+    if (discos == 0)                        // caso base: nada que mover
+    {
+        return;
+    }
+    Hanoi(discos - 1, origen, auxiliar, destino);                         // 1. aparta los n-1 discos pequeños
+    Console.WriteLine($"Mueve el disco {discos} de {origen} a {destino}");
+    movimientos++;                                                         // 2. mueve el disco grande
+    Hanoi(discos - 1, auxiliar, destino, origen);                         // 3. coloca los pequeños encima
+}
+` },
+            { titulo: "Búsqueda binaria recursiva", explicacion: "Con 10 elementos como mucho miramos 4. Con un millón, unos 20: eso es O(log n).", codigo: r`int[] numeros = { 2, 5, 8, 12, 16, 23, 38, 56, 72, 91 };       // ¡tiene que estar ORDENADO!
+
+Console.WriteLine(BuscarBinario(numeros, 23, 0, numeros.Length - 1));   // 5  (posición)
+Console.WriteLine(BuscarBinario(numeros, 7, 0, numeros.Length - 1));    // -1 (no está)
+
+// Devuelve la posición de 'buscado' o -1 si no existe
+int BuscarBinario(int[] datos, int buscado, int inicio, int fin)
+{
+    if (inicio > fin)                       // caso base 1: no quedan elementos donde mirar
+    {
+        return -1;
+    }
+
+    int medio = (inicio + fin) / 2;
+    if (datos[medio] == buscado)            // caso base 2: encontrado
+    {
+        return medio;
+    }
+    if (buscado < datos[medio])             // seguimos solo en la mitad izquierda
+    {
+        return BuscarBinario(datos, buscado, inicio, medio - 1);
+    }
+    return BuscarBinario(datos, buscado, medio + 1, fin);     // o solo en la derecha
+}
+` },
+            { titulo: "Medir la diferencia: Fibonacci recursivo (O(2ⁿ)) frente a iterativo (O(n))", explicacion: "Los tiempos dependen del equipo, pero el iterativo marcará 0 ms y el recursivo varios milisegundos. Prueba con N = 40 (¡el recursivo ya tarda segundos!).", codigo: r`using System.Diagnostics;
+
+const int N = 32;
+
+Stopwatch reloj = Stopwatch.StartNew();
+long resultadoRecursivo = FibonacciRecursivo(N);
+reloj.Stop();
+Console.WriteLine($"Recursivo: fib({N}) = {resultadoRecursivo} en {reloj.ElapsedMilliseconds} ms");
+
+reloj.Restart();
+long resultadoIterativo = FibonacciIterativo(N);
+reloj.Stop();
+Console.WriteLine($"Iterativo: fib({N}) = {resultadoIterativo} en {reloj.ElapsedMilliseconds} ms");
+
+long FibonacciRecursivo(int n)
+{
+    if (n < 2)
+    {
+        return n;
+    }
+    return FibonacciRecursivo(n - 1) + FibonacciRecursivo(n - 2);     // repite muchísimos cálculos
+}
+
+long FibonacciIterativo(int n)
+{
+    long anterior = 0;
+    long actual = 1;
+    for (int i = 0; i < n; i++)
+    {
+        long siguiente = anterior + actual;
+        anterior = actual;
+        actual = siguiente;
+    }
+    return anterior;
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Suma de dígitos recursiva",
+              nivel: 2,
+              enunciado: r`<p>Escribe una función recursiva
+<strong><code>int SumaDigitos(int n)</code></strong> que devuelva la
+<strong>suma de las cifras</strong> de un número entero positivo (por
+ejemplo, <code>SumaDigitos(472)</code> → <code>13</code>). <strong>No
+uses bucles ni <code>string</code>.</strong></p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li><strong>Caso base:</strong> un número de una sola cifra
+(<code>n &lt; 10</code>) vale lo que él mismo.</li>
+<li><strong>Paso recursivo:</strong> la última cifra es
+<code>n % 10</code> y el resto del número es <code>n / 10</code>.</li>
+<li><strong>Control de errores:</strong> lee el número con
+<code>int.TryParse</code> y exige que sea mayor o igual que 0.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> haz el esquema en papel con 472 → 47 → 4
+antes de programar.</p>
+<p>🏅 <strong>Ampliación:</strong> escribe
+<code>int Invertir(int n)</code> que devuelva el número al revés (472 →
+274) de forma recursiva.</p>`,
+              soluciones: [
+                { titulo: "Solución", nota: "472 → 2 + SumaDigitos(47) → 2 + (7 + SumaDigitos(4)) → 2 + 7 + 4 = 13.", codigo: r`int numero;
+Console.Write("Escribe un número entero (0 o mayor): ");
+while (!int.TryParse(Console.ReadLine(), out numero) || numero < 0)
+{
+    Console.Write("Valor no válido. Escribe un número entero (0 o mayor): ");
+}
+Console.WriteLine($"La suma de sus dígitos es {SumaDigitos(numero)}");
+
+int SumaDigitos(int n)
+{
+    if (n < 10)                              // caso base: una sola cifra
+    {
+        return n;
+    }
+    return n % 10 + SumaDigitos(n / 10);     // última cifra + suma del resto
+}
+` },
+              ],
+            },
+            {
+              titulo: "Hanói contando",
+              nivel: 3,
+              enunciado: r`<p>Modifica las Torres de Hanói para que la función <strong>devuelva el
+número de movimientos</strong> en lugar de usar una variable externa:
+<strong><code>int Hanoi(int discos)</code></strong>. Comprueba que el
+resultado coincide con <strong>2ⁿ − 1</strong> para 1 a 10 discos.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li><strong>Caso base:</strong> 0 discos → 0 movimientos.</li>
+<li><strong>Paso recursivo:</strong> movimientos de <em>n</em> discos =
+2 · movimientos de <em>n − 1</em> discos + 1.</li>
+<li>Usa <code>Math.Pow</code> o desplazamiento de bits
+(<code>1 &lt;&lt; n</code>) para comparar con la fórmula.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> no hace falta simular los movimientos para
+contarlos.</p>`,
+              soluciones: [
+                { titulo: "Solución", nota: "1 << n desplaza un bit n posiciones: es 2ⁿ en un solo paso.", codigo: r`for (int discos = 1; discos <= 10; discos++)
+{
+    int contados = ContarMovimientos(discos);
+    int formula = (1 << discos) - 1;                     // 2^n - 1
+    Console.WriteLine($"{discos} discos → {contados} movimientos (fórmula: {formula})");
+}
+
+int ContarMovimientos(int discos)
+{
+    if (discos == 0)
+    {
+        return 0;
+    }
+    return 2 * ContarMovimientos(discos - 1) + 1;
+}
+` },
+              ],
+            },
+          ],
+        },
       ],
     },
     {
@@ -5576,7 +5895,10 @@ using (StreamWriter escritor = new StreamWriter(rutaDocumento))
 File.AppendAllText("a.txt", "\nOtra línea al final");           // añade al final
 File.WriteAllLines("b.txt", new[] { "uno", "dos", "tres" });    // una línea por elemento del array
 ` },
-            { titulo: "Ejemplo: leer la primera línea del documento y mostrarla", codigo: r`string rutaDocumento = "ejemplo.txt";
+            { titulo: "Ejemplo: leer la primera línea del documento y mostrarla", codigo: r`// Preparación: creamos el archivo de ejemplo (en la web cada ejecución empieza desde cero)
+File.WriteAllLines("ejemplo.txt", new[] { "Primera línea", "Segunda línea", "Tercera línea" });
+
+string rutaDocumento = "ejemplo.txt";
 
 using (StreamReader lector = new StreamReader(rutaDocumento))
 {
@@ -5584,7 +5906,10 @@ using (StreamReader lector = new StreamReader(rutaDocumento))
     Console.WriteLine(linea);                          // mostramos el texto leído
 }
 ` },
-            { titulo: "Ejemplo 4", codigo: r`using (StreamReader lector = new StreamReader("ejemplo.txt"))
+            { titulo: "Ejemplo 4", codigo: r`// Preparación: creamos el archivo de ejemplo (en la web cada ejecución empieza desde cero)
+File.WriteAllLines("ejemplo.txt", new[] { "Primera línea", "Segunda línea", "Tercera línea" });
+
+using (StreamReader lector = new StreamReader("ejemplo.txt"))
 {
     // Empezamos leyendo la primera línea; seguimos mientras no sea null
     for (string? linea = lector.ReadLine(); linea != null; linea = lector.ReadLine())
@@ -5593,7 +5918,10 @@ using (StreamReader lector = new StreamReader(rutaDocumento))
     }
 }
 ` },
-            { titulo: "Otra forma, con EndOfStream", codigo: r`using (StreamReader lector = new StreamReader("ejemplo.txt"))
+            { titulo: "Otra forma, con EndOfStream", codigo: r`// Preparación: creamos el archivo de ejemplo (en la web cada ejecución empieza desde cero)
+File.WriteAllLines("ejemplo.txt", new[] { "Primera línea", "Segunda línea", "Tercera línea" });
+
+using (StreamReader lector = new StreamReader("ejemplo.txt"))
 {
     while (!lector.EndOfStream)
     {
@@ -5602,7 +5930,10 @@ using (StreamReader lector = new StreamReader(rutaDocumento))
     }
 }
 ` },
-            { titulo: "Atajos de la clase File para leer", codigo: r`string todo = File.ReadAllText("ejemplo.txt");         // todo el archivo en un único texto
+            { titulo: "Atajos de la clase File para leer", codigo: r`// Preparación: creamos el archivo de ejemplo (en la web cada ejecución empieza desde cero)
+File.WriteAllLines("ejemplo.txt", new[] { "Primera línea", "Segunda línea", "Tercera línea" });
+
+string todo = File.ReadAllText("ejemplo.txt");         // todo el archivo en un único texto
 string[] lineas = File.ReadAllLines("ejemplo.txt");    // un array con una posición por línea
 
 foreach (string linea in lineas)
@@ -8066,6 +8397,299 @@ class Punto
           ],
         },
         {
+          id: "poo-enum-struct-record",
+          titulo: "Enumeraciones, estructuras, records y null",
+          duracion: "20 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Definir enumeraciones para conjuntos cerrados de valores", "Diferenciar clases (referencia) y estructuras (valor)", "Usar records y manejar valores nulos con ?, ?? y ?."],
+          teoria: r`<p>Además de las clases, C# ofrece otros tipos que conviene conocer.
+Cada uno resuelve un problema concreto.</p>
+<h3 id="1-enumeraciones-enum">1. Enumeraciones (<code>enum</code>)</h3>
+<p>Una <strong>enumeración</strong> es un tipo cuyos valores son
+<strong>un conjunto cerrado de nombres</strong>: días de la semana,
+estados de un pedido, direcciones de movimiento. Es mucho más seguro que
+usar números o textos sueltos (<code>"Norte"</code>, <code>1</code>...),
+porque el compilador <strong>no deja usar un valor que no
+existe</strong>.</p>
+<!--ex:0-->
+
+<p>Internamente cada nombre es un <code>int</code> (empieza en 0),
+aunque se puede cambiar. Una enumeración combina muy bien con
+<code>switch</code>.</p>
+<h3 id="2-estructuras-struct-frente-a-clases">2. Estructuras
+(<code>struct</code>) frente a clases</h3>
+<p>Una <strong>estructura</strong> parece una clase, pero es un
+<strong>tipo de valor</strong>: al asignarla o pasarla a una función se
+<strong>copia</strong> entera. Una clase es un <strong>tipo de
+referencia</strong>: se copia solo la «dirección» y los dos nombres
+apuntan al <strong>mismo objeto</strong>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th></th>
+<th><code>class</code></th>
+<th><code>struct</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Tipo</td>
+<td>De <strong>referencia</strong></td>
+<td>De <strong>valor</strong></td>
+</tr>
+<tr class="even">
+<td>Al asignar <code>b = a</code></td>
+<td><code>a</code> y <code>b</code> son el <strong>mismo</strong>
+objeto</td>
+<td><code>b</code> es una <strong>copia</strong> independiente</td>
+</tr>
+<tr class="odd">
+<td>Dónde suele vivir</td>
+<td>En el <strong>montón</strong> (<em>heap</em>)</td>
+<td>En la <strong>pila</strong> (<em>stack</em>) cuando es una variable
+local</td>
+</tr>
+<tr class="even">
+<td>Herencia</td>
+<td>Sí</td>
+<td>No (solo implementa interfaces)</td>
+</tr>
+<tr class="odd">
+<td>Úsalo para</td>
+<td>Entidades con comportamiento</td>
+<td>Datos pequeños e inmutables (un punto, un color)</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p><strong>Pila y montón, en una frase.</strong> La
+<strong>pila</strong> guarda las variables locales y las llamadas a
+funciones (rápida, de tamaño limitado); el <strong>montón</strong>
+guarda los objetos creados con <code>new</code> (más grande, lo limpia
+el recolector de basura).</p>
+</div>
+<!--ex:1-->
+
+<h3 id="3-records">3. Records</h3>
+<p>Un <strong><code>record</code></strong> es una forma muy corta de
+crear un tipo que <strong>solo guarda datos</strong>. El compilador
+escribe por ti el constructor, las propiedades, <code>ToString()</code>
+y la <strong>igualdad por valor</strong> (dos records con los mismos
+datos son iguales). Además se pueden <strong>copiar con cambios</strong>
+usando <code>with</code>.</p>
+<!--ex:2-->
+
+<p>Usa <code>record</code> para datos que <strong>no cambian</strong>
+(resultados, mensajes, coordenadas); usa <code>class</code> para objetos
+con <strong>estado y comportamiento</strong>.</p>
+<h3 id="4-valores-nulos">4. Valores nulos</h3>
+<p><code>null</code> significa «ninguna referencia». Intentar usar algo
+que es <code>null</code> provoca la famosa
+<strong><code>NullReferenceException</code></strong>. C# ayuda con tres
+herramientas:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Operador</th>
+<th>Nombre</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>string?</code></td>
+<td>Tipo anulable</td>
+<td>Declara que <strong>puede ser null</strong> (sin <code>?</code>, el
+compilador avisa si le das null)</td>
+</tr>
+<tr class="even">
+<td><code>??</code></td>
+<td>Coalescencia nula</td>
+<td>«Si es null, usa este valor por defecto»</td>
+</tr>
+<tr class="odd">
+<td><code>?.</code></td>
+<td>Acceso condicional</td>
+<td>«Si no es null, sigue; si es null, devuelve null»</td>
+</tr>
+</tbody>
+</table></div>
+<p>También existen los <strong>tipos de valor anulables</strong>:
+<code>int?</code>, <code>double?</code>, <code>bool?</code> (un
+<code>int?</code> puede valer un entero o <code>null</code>).</p>
+<!--ex:3-->
+
+<div class="callout">
+
+<p><strong>Resumen.</strong> <code>enum</code> para opciones cerradas ·
+<code>struct</code> para datos pequeños que se copian ·
+<code>record</code> para datos inmutables con igualdad por valor ·
+<code>?</code>, <code>??</code> y <code>?.</code> para trabajar con null
+sin sustos.</p>
+</div>`,
+          ejemplos: [
+            { titulo: "Enumeración con switch", explicacion: "Si escribes Direccion.Arriba, el compilador da error: el conjunto de valores es cerrado.", codigo: r`Direccion direccion = Direccion.Este;
+Console.WriteLine($"Vas hacia el {direccion} (valor interno: {(int)direccion})");     // Este, 1
+
+int x = 0, y = 0;
+Mover(direccion);
+Console.WriteLine($"Posición: ({x}, {y})");
+
+// Convertir un texto del usuario a enum de forma segura
+if (Enum.TryParse("Norte", ignoreCase: true, out Direccion elegida))
+{
+    Console.WriteLine($"Has elegido {elegida}");
+}
+
+void Mover(Direccion d)
+{
+    switch (d)
+    {
+        case Direccion.Norte: y++; break;
+        case Direccion.Este: x++; break;
+        case Direccion.Sur: y--; break;
+        case Direccion.Oeste: x--; break;
+    }
+}
+
+enum Direccion { Norte, Este, Sur, Oeste }      // Norte = 0, Este = 1...
+` },
+            { titulo: "struct (valor) frente a class (referencia)", explicacion: "Es la misma diferencia que vimos con los arrays: son tipos de referencia. int, double, bool o char son structs.", codigo: r`PuntoStruct s1 = new PuntoStruct { X = 1 };
+PuntoStruct s2 = s1;                // COPIA: s2 es independiente
+s2.X = 99;
+Console.WriteLine($"struct: s1.X = {s1.X}, s2.X = {s2.X}");     // 1 y 99
+
+PuntoClase c1 = new PuntoClase { X = 1 };
+PuntoClase c2 = c1;                 // MISMA referencia: c1 y c2 son el mismo objeto
+c2.X = 99;
+Console.WriteLine($"class:  c1.X = {c1.X}, c2.X = {c2.X}");     // 99 y 99
+
+struct PuntoStruct { public int X; }
+class PuntoClase { public int X; }
+` },
+            { titulo: "record: datos inmutables con igualdad por valor", explicacion: "Con una sola línea tenemos constructor, propiedades de solo lectura, ToString(), Equals() y GetHashCode().", codigo: r`Jugador a = new Jugador("Ana", 100);
+Jugador b = new Jugador("Ana", 100);
+
+Console.WriteLine(a);                      // Jugador { Nombre = Ana, Vida = 100 }: ToString() automático
+Console.WriteLine(a == b);                 // True: igualdad por VALOR (con una class daría False)
+
+Jugador herido = a with { Vida = 60 };     // copia con cambios: 'a' no se modifica
+Console.WriteLine($"{a.Vida} → {herido.Vida}");        // 100 → 60
+
+record Jugador(string Nombre, int Vida);
+` },
+            { titulo: "Trabajar con null: ?, ?? y ?.", explicacion: "?? y ?. evitan decenas de if (x != null) y hacen el código mucho más claro.", codigo: r`string? apodo = null;                              // el ? declara que puede ser null
+
+Console.WriteLine(apodo ?? "sin apodo");           // ?? → valor por defecto si es null
+Console.WriteLine(apodo?.Length);                  // ?. → no falla: devuelve null (no muestra nada)
+Console.WriteLine(apodo?.ToUpper() ?? "(vacío)");  // se pueden combinar
+
+int? puntuacion = null;                            // tipo de valor anulable
+Console.WriteLine(puntuacion.HasValue);            // False
+puntuacion = 80;
+Console.WriteLine(puntuacion.Value);               // 80
+
+// ❌ Sin protección: lanzaría NullReferenceException
+// Console.WriteLine(apodo.Length);
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Estados de un pedido",
+              nivel: 2,
+              enunciado: r`<p>Crea una enumeración <strong><code>EstadoPedido</code></strong> con
+los valores <code>Pendiente</code>, <code>Enviado</code>,
+<code>Entregado</code> y <code>Cancelado</code>. Escribe una función
+<strong><code>string Describir(EstadoPedido estado)</code></strong> (con
+un <code>switch</code>) que devuelva un texto distinto para cada estado,
+y recorre <strong>todos los valores</strong> de la enumeración mostrando
+su descripción.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Para recorrer todos los valores:
+<code>Enum.GetValues&lt;EstadoPedido&gt;()</code> y un
+<code>foreach</code>.</li>
+<li><strong>Control de errores:</strong> pide al usuario un estado en
+texto y conviértelo con <code>Enum.TryParse</code>; si no existe,
+muestra los valores válidos y vuelve a preguntar.</li>
+<li>El <code>switch</code> debe cubrir <strong>todos</strong> los casos;
+pon un <code>default</code> que devuelva «Estado desconocido».</li>
+</ul>
+<p>💡 <strong>TIP:</strong>
+<code>Enum.TryParse&lt;EstadoPedido&gt;(texto, true, out var estado)</code>
+ignora mayúsculas y minúsculas.</p>`,
+              soluciones: [
+                { titulo: "Solución", nota: "Enum.IsDefined evita que pasen números sueltos como «7», que Enum.TryParse aceptaría aunque no sean un estado.", codigo: r`foreach (EstadoPedido estado in Enum.GetValues<EstadoPedido>())
+{
+    Console.WriteLine($"{estado}: {Describir(estado)}");
+}
+
+EstadoPedido elegido;
+Console.Write("Escribe un estado: ");
+while (!Enum.TryParse(Console.ReadLine(), true, out elegido) || !Enum.IsDefined(elegido))
+{
+    Console.WriteLine("Estado no válido. Opciones: " + string.Join(", ", Enum.GetNames<EstadoPedido>()));
+    Console.Write("Escribe un estado: ");
+}
+Console.WriteLine($"Descripción: {Describir(elegido)}");
+
+string Describir(EstadoPedido estado)
+{
+    switch (estado)
+    {
+        case EstadoPedido.Pendiente: return "Esperando a ser preparado";
+        case EstadoPedido.Enviado: return "En camino";
+        case EstadoPedido.Entregado: return "Recibido por el cliente";
+        case EstadoPedido.Cancelado: return "Pedido anulado";
+        default: return "Estado desconocido";
+    }
+}
+
+enum EstadoPedido { Pendiente, Enviado, Entregado, Cancelado }
+` },
+              ],
+            },
+            {
+              titulo: "Copia con cambios",
+              nivel: 2,
+              enunciado: r`<p>Crea un
+<strong><code>record Producto(string Nombre, decimal Precio)</code></strong>.
+Crea un producto, haz una <strong>copia con un 10 % de
+descuento</strong> usando <code>with</code> y muestra ambos. Comprueba
+que dos productos con los mismos datos son <strong>iguales</strong> con
+<code>==</code>.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>El original <strong>no debe modificarse</strong>.</li>
+<li>Para dinero se usa <strong><code>decimal</code></strong>.</li>
+<li><strong>Control de errores:</strong> el precio debe ser mayor que 0;
+en el programa principal, pídelo con <code>decimal.TryParse</code> y
+repite si no es válido.</li>
+</ul>
+<p>💡 <strong>TIP:</strong>
+<code>producto with { Precio = producto.Precio * 0.9m }</code>.</p>`,
+              soluciones: [
+                { titulo: "Solución", nota: "El record es inmutable: la «modificación» crea un objeto nuevo y el original queda intacto.", codigo: r`decimal precio;
+Console.Write("Precio del producto: ");
+while (!decimal.TryParse(Console.ReadLine(), out precio) || precio <= 0)
+{
+    Console.Write("Precio no válido (debe ser mayor que 0): ");
+}
+
+Producto original = new Producto("Teclado", precio);
+Producto conDescuento = original with { Precio = original.Precio * 0.9m };
+
+Console.WriteLine(original);
+Console.WriteLine(conDescuento);
+Console.WriteLine(original == new Producto("Teclado", precio));      // True: igualdad por valor
+
+record Producto(string Nombre, decimal Precio);
+` },
+              ],
+            },
+          ],
+        },
+        {
           id: "poo-polimorfismo",
           titulo: "Polimorfismo",
           duracion: "14 min",
@@ -9101,6 +9725,2690 @@ class Avion : IVolador
     },
     {
       id: "m8",
+      titulo: "Código limpio (Clean Code)",
+      lecciones: [
+        {
+          id: "cc-por-que",
+          titulo: "¿Por qué importa el código limpio?",
+          duracion: "14 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Entender el coste real del código difícil de leer", "Conocer la regla del boy scout y el concepto de refactorización", "Aplicar las convenciones de nomenclatura de C#"],
+          teoria: r`<p>Hasta ahora hemos conseguido que nuestros programas
+<strong>funcionen</strong>. En esta sección damos un paso más: que
+además sean <strong>fáciles de leer, de cambiar y de ampliar</strong>.
+Eso es el <strong>código limpio</strong> (<em>clean code</em>).</p>
+<h3 id="1-el-código-se-escribe-una-vez-y-se-lee-cien">1. El código se
+escribe una vez... y se lee cien</h3>
+<p>Piensa en el último programa que hiciste. ¿Cuánto tiempo pasaste
+<strong>escribiendo</strong> código nuevo y cuánto
+<strong>leyendo</strong> el que ya existía para saber dónde cambiar
+algo? En un proyecto real se lee <strong>muchísimo más de lo que se
+escribe</strong>: para añadir una línea hay que entender las que la
+rodean. Por eso, hacer el código fácil de leer es hacer más rápido
+<strong>todo</strong> el trabajo futuro.</p>
+<div class="callout">
+
+<p><strong>Deuda técnica.</strong> Cada vez que escribimos algo «deprisa
+y corriendo» pedimos un préstamo: hoy ahorramos tiempo, pero mañana
+pagamos <strong>intereses</strong> (cuesta más cambiar el código,
+aparecen más errores). Si no se devuelve, llega un momento en que el
+proyecto es tan difícil de tocar que es más barato empezar de cero.</p>
+</div>
+
+<h3 id="2-qué-es-código-limpio">2. ¿Qué es código limpio?</h3>
+<p>No hay una definición única, pero los buenos programadores coinciden
+en que el código limpio:</p>
+<ul>
+<li><strong>Se lee casi como una frase</strong>: se entiende lo que hace
+sin tener que descifrarlo.</li>
+<li><strong>Es simple y directo</strong>: no tiene adornos ni trucos
+innecesarios.</li>
+<li><strong>No repite lo mismo en varios sitios</strong> (principio
+<strong>DRY</strong>: <em>Don't Repeat Yourself</em>).</li>
+<li><strong>Tiene pruebas</strong> que demuestran que funciona.</li>
+<li><strong>Está cuidado</strong>: se nota que alguien se tomó el tiempo
+de dejarlo bien.</li>
+</ul>
+<h3 id="3-la-regla-del-boy-scout">3. La regla del <em>boy
+scout</em></h3>
+<p>Los <em>boy scouts</em> tienen una norma: dejar el campamento
+<strong>más limpio de como lo encontraron</strong>. En programación
+significa: cada vez que toques un archivo, déjalo <strong>un poquito
+mejor</strong> (un nombre más claro, una función extraída, un comentario
+inútil menos). No hace falta una gran limpieza: mil pequeñas mejoras
+mantienen el proyecto sano.</p>
+<h3 id="4-refactorizar-limpiar-sin-romper">4. Refactorizar: limpiar sin
+romper</h3>
+<p><strong>Refactorizar</strong> es cambiar la <strong>estructura
+interna</strong> del código <strong>sin cambiar su comportamiento
+externo</strong>: el programa hace exactamente lo mismo, pero está mejor
+escrito. Las acciones más habituales son:</p>
+<ul>
+<li>Cambiar el nombre de variables o métodos por otros más
+descriptivos.</li>
+<li>Convertir código repetido en un método.</li>
+<li>Eliminar código muerto o redundante.</li>
+<li>Sustituir comentarios por código que se explica solo.</li>
+</ul>
+<p>Para refactorizar con seguridad necesitamos poder <strong>comprobar
+que seguimos haciendo lo mismo</strong>: por eso en este módulo veremos
+también las <strong>pruebas</strong>.</p>
+<h3 id="5-convenciones-de-nomenclatura-en-c">5. Convenciones de
+nomenclatura en C#</h3>
+<p>Cada lenguaje tiene sus costumbres, y seguirlas hace que cualquier
+programador entienda tu código. En C# (guías de Microsoft):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Elemento</th>
+<th>Estilo</th>
+<th>Ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Clases, estructuras, enumeraciones, interfaces</td>
+<td><code>PascalCase</code> (las interfaces empiezan por
+<code>I</code>)</td>
+<td><code>Jugador</code>, <code>IVolador</code></td>
+</tr>
+<tr class="even">
+<td>Métodos y propiedades</td>
+<td><code>PascalCase</code></td>
+<td><code>CalcularMedia()</code>, <code>Nombre</code></td>
+</tr>
+<tr class="odd">
+<td>Variables locales y parámetros</td>
+<td><code>camelCase</code></td>
+<td><code>notaFinal</code>, <code>edadMaxima</code></td>
+</tr>
+<tr class="even">
+<td>Atributos privados</td>
+<td><code>camelCase</code> o <code>_camelCase</code> (elige uno y sé
+coherente)</td>
+<td><code>saldo</code>, <code>_saldo</code></td>
+</tr>
+<tr class="odd">
+<td>Constantes</td>
+<td><code>PascalCase</code></td>
+<td><code>MaximoIntentos</code></td>
+</tr>
+</tbody>
+</table></div>
+<!--ex:0-->
+
+<h3 id="6-un-ejemplo-para-empezar">6. Un ejemplo para empezar</h3>
+<p>El siguiente programa <strong>funciona</strong>, pero hace sufrir a
+quien lo lee. Fíjate en cómo cambia al limpiarlo: <strong>la salida es
+idéntica</strong>, solo mejora la forma.</p>
+<!--ex:1-->
+
+<div class="callout">
+
+<p><strong>Cómo seguir este módulo.</strong> Cada lección tiene una idea
+principal del libro <em>Clean Code</em> (R. C. Martin) adaptada a C#:
+nombres, funciones, comentarios, formato, errores, clases, pruebas y
+refactorización. Al final tendrás una lista de «olores» (<em>code
+smells</em>) para detectar código mejorable.</p>
+</div>`,
+          ejemplos: [
+            { titulo: "❌ Antes: funciona, pero cuesta leerlo", explicacion: "Tres notas, su media y el veredicto. Con nombres como a, b, c, d y números sueltos hay que adivinar qué significa cada cosa.", codigo: r`int a = 7;
+int b = 5;
+int c = 0;
+for (int i = 0; i < 3; i++)
+{
+    if (i == 0) c = c + a;
+    if (i == 1) c = c + b;
+    if (i == 2) c = c + 9;
+}
+double d = c / 3.0;
+if (d >= 5) Console.WriteLine("APROBADO " + d);
+else Console.WriteLine("SUSPENDIDO " + d);
+` },
+            { titulo: "✅ Después: mismo resultado, mucho más claro", explicacion: "Misma salida (APROBADO 7), pero ahora los nombres cuentan la historia: no necesitamos comentarios para entenderlo.", codigo: r`const double NotaMinimaAprobado = 5;
+
+int[] notas = { 7, 5, 9 };                    // los datos son visibles de un vistazo
+double media = CalcularMedia(notas);
+
+if (media >= NotaMinimaAprobado)
+{
+    Console.WriteLine("APROBADO " + media);
+}
+else
+{
+    Console.WriteLine("SUSPENDIDO " + media);
+}
+
+double CalcularMedia(int[] valores)
+{
+    int suma = 0;
+    foreach (int valor in valores)
+    {
+        suma += valor;
+    }
+    return (double)suma / valores.Length;
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Detective de código sucio",
+              nivel: 1,
+              pista: "Los números sueltos con significado (como el 21) se llaman «números mágicos».",
+              enunciado: r`<p>El siguiente programa funciona pero está <strong>muy mal
+escrito</strong>. <strong>Reescríbelo</strong> para que haga lo mismo
+con <strong>nombres descriptivos</strong>, <strong>sin números
+mágicos</strong> y con la <strong>lógica en una función</strong>.</p>
+<pre><code>int x = int.Parse(Console.ReadLine() ?? &quot;0&quot;);
+int y = x * 21 / 100;
+double z = x + y;
+Console.WriteLine(z);</code></pre>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>El programa calcula el <strong>precio con IVA</strong> (21 %) de un
+producto. La <strong>salida debe ser la misma</strong> que la del
+original.</li>
+<li><strong>Control de errores:</strong> usa
+<code>decimal.TryParse</code> y vuelve a pedir el dato si no es un
+número.</li>
+<li>Una constante bien nombrada vale más que un comentario.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> pregúntate «¿qué significa este número?» y
+ponle nombre.</p>
+<p>🏅 <strong>Ampliación:</strong> pide también el porcentaje de IVA y
+haz que la función lo reciba como parámetro con un valor por defecto de
+21.</p>`,
+              soluciones: [
+                { titulo: "Solución", nota: "Los nombres (precioBase, importeIva…) y la constante PorcentajeIva hacen innecesarios los comentarios sobre qué es cada número.", codigo: r`const decimal PorcentajeIva = 21;
+
+decimal precioBase = LeerPrecio("Precio sin IVA: ");
+Console.WriteLine($"Precio con IVA: {CalcularPrecioConIva(precioBase, PorcentajeIva)}");
+
+// Devuelve el precio incrementado con el porcentaje de IVA indicado
+decimal CalcularPrecioConIva(decimal precio, decimal porcentajeIva)
+{
+    decimal importeIva = precio * porcentajeIva / 100;
+    return precio + importeIva;
+}
+
+// Repite la pregunta hasta que se escribe un número válido
+decimal LeerPrecio(string mensaje)
+{
+    decimal valor;
+    Console.Write(mensaje);
+    while (!decimal.TryParse(Console.ReadLine(), out valor))
+    {
+        Console.Write("Número no válido. " + mensaje);
+    }
+    return valor;
+}
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "cc-nombres",
+          titulo: "Nombres con significado",
+          duracion: "16 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Elegir nombres que revelen la intención", "Evitar nombres engañosos, ruidosos o imposibles de buscar", "Sustituir los números mágicos por constantes"],
+          teoria: r`<p>Nombramos <strong>todo</strong>: variables, funciones, clases,
+proyectos, archivos. Por eso elegir bien los nombres es la mejora de
+legibilidad que <strong>más barata y más rentable</strong> resulta. Un
+buen nombre te ahorra un comentario.</p>
+<h3 id="1-que-el-nombre-revele-la-intención">1. Que el nombre revele la
+intención</h3>
+<p>El nombre debe responder por sí solo a <strong>qué es</strong>,
+<strong>para qué sirve</strong> y <strong>cómo se usa</strong>. Si hace
+falta un comentario para explicarlo, el nombre es mejorable.</p>
+<!--ex:0-->
+
+<h3 id="2-evita-los-nombres-engañosos">2. Evita los nombres
+engañosos</h3>
+<ul>
+<li>No llames <code>listaCuentas</code> a algo que <strong>no es una
+<code>List</code></strong> (¿es un array? ¿un diccionario?). Mejor
+<code>cuentas</code>.</li>
+<li>Cuidado con letras que se confunden con números: <code>l</code>
+(ele) y <code>O</code> (o mayúscula) parecen <code>1</code> y
+<code>0</code>.</li>
+<li>No uses nombres casi iguales en el mismo ámbito
+(<code>ControladorParaGestionDeCuentas</code> y
+<code>ControladorParaGestionDeCuentasAlmacenadas</code>).</li>
+</ul>
+<h3 id="3-haz-distinciones-con-sentido">3. Haz distinciones con
+sentido</h3>
+<p>Si dos cosas son distintas, que sus nombres lo sean <strong>de
+verdad</strong>. Palabras de relleno como <code>Info</code>,
+<code>Data</code>, <code>Objeto</code> no distinguen nada:
+<code>ClienteInfo</code> y <code>ClienteData</code> ¿en qué se
+diferencian? Tampoco numeres: <code>jugador1</code>,
+<code>jugador2</code> es señal de que falta un array o una
+colección.</p>
+<h3 id="4-nombres-pronunciables-y-fáciles-de-buscar">4. Nombres
+pronunciables y fáciles de buscar</h3>
+<ul>
+<li>Si no puedes decir el nombre en voz alta en una reunión, es mala
+señal: <code>fchNacimCli</code> frente a
+<code>fechaNacimientoCliente</code>.</li>
+<li>Los nombres de <strong>una letra</strong> y los <strong>números
+sueltos</strong> no se pueden buscar (<code>5</code> aparece en cientos
+de sitios). Un nombre largo y claro, sí.</li>
+<li>Una letra está bien solo en <strong>bucles cortos</strong>
+(<code>i</code>, <code>j</code>) o en lambdas muy pequeñas.</li>
+</ul>
+<h3 id="5-nada-de-codificaciones-ni-prefijos">5. Nada de codificaciones
+ni prefijos</h3>
+<p>Antiguamente se escribía el tipo en el nombre (notación húngara:
+<code>strNombre</code>, <code>iEdad</code>). Los lenguajes modernos y
+los IDE ya te dicen el tipo: <strong>no hace falta</strong>. Lo mismo
+con prefijos como <code>m_</code>. (La excepción habitual en C# es la
+<code>I</code> de las interfaces: <code>IVolador</code>.)</p>
+<h3 id="6-cada-tipo-de-elemento-su-tipo-de-palabra">6. Cada tipo de
+elemento, su tipo de palabra</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Elemento</th>
+<th>Qué debe ser</th>
+<th>Ejemplos</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Clases y objetos</strong></td>
+<td><strong>Sustantivos</strong></td>
+<td><code>Jugador</code>, <code>CuentaBancaria</code>,
+<code>GeneradorDeInformes</code></td>
+</tr>
+<tr class="even">
+<td><strong>Métodos y funciones</strong></td>
+<td><strong>Verbos</strong></td>
+<td><code>CalcularMedia</code>, <code>GuardarPartida</code>,
+<code>EsMayorDeEdad</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Booleanos</strong></td>
+<td>Pregunta que se responde con sí/no</td>
+<td><code>estaVivo</code>, <code>tieneLlave</code>,
+<code>EsValido</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Evita nombres de clase vagos como <code>Manager</code>,
+<code>Processor</code> o <code>Data</code>. Y <strong>una palabra por
+concepto</strong>: si en un sitio usas <code>Obtener</code> y en otro
+<code>Traer</code> o <code>Recuperar</code> para lo mismo, confundes a
+quien lee.</p>
+<!--ex:1-->
+
+<h3 id="7-los-números-mágicos">7. Los números mágicos</h3>
+<p>Un <strong>número mágico</strong> es un valor literal que aparece en
+el código sin explicación. Dale nombre con una
+<strong>constante</strong> (<code>const</code>):</p>
+<!--ex:2-->
+
+<h3 id="8-pero-sin-pasarse">8. Pero sin pasarse</h3>
+<ul>
+<li>Usa nombres <strong>tan largos como haga falta, tan cortos como sea
+posible</strong>.</li>
+<li>El contexto cuenta: dentro de la clase <code>Jugador</code>, el
+atributo puede llamarse <code>Vida</code> (no hace falta
+<code>VidaDelJugador</code>).</li>
+<li>No añadas información inútil (<code>JugadorClase</code>,
+<code>nombreString</code>).</li>
+</ul>
+<div class="callout">
+
+<p><strong>Regla de oro.</strong> Si tienes que <strong>pensar</strong>
+para saber qué hace una variable, el nombre no es lo bastante bueno. Y
+si renombrar te cuesta, tu IDE te ayuda: en Visual Studio,
+<code>Ctrl + R, R</code> renombra <strong>en todo el proyecto</strong>
+sin romper nada.</p>
+</div>`,
+          ejemplos: [
+            { titulo: "Nombres que revelan la intención", explicacion: "Con 'd' y 'S' haría falta un comentario. Con nombres que dicen la unidad (días, segundos) no hace falta ninguno.", codigo: r`// ❌ ¿Qué significa d? ¿Y 86400?
+int d = 3;
+int s = d * 86400;
+
+// ✅ El nombre explica la unidad y la constante explica el número
+const int SegundosPorDia = 24 * 60 * 60;
+int diasTranscurridos = 3;
+int segundosTranscurridos = diasTranscurridos * SegundosPorDia;
+
+Console.WriteLine($"Han pasado {segundosTranscurridos} segundos");
+` },
+            { titulo: "Nombres de métodos con verbos y de booleanos con pregunta", explicacion: "Comparar: if (m(e) && p) frente a if (EsMayorDeEdad(edad) && tienePermiso).", codigo: r`int edad = 20;
+bool tienePermiso = true;
+
+if (EsMayorDeEdad(edad) && tienePermiso)        // se lee casi como una frase
+{
+    Console.WriteLine("Puede conducir");
+}
+
+// Un método que responde sí/no se nombra como una pregunta (Es..., Tiene..., Puede...)
+bool EsMayorDeEdad(int edadPersona)
+{
+    const int EdadMayoria = 18;
+    return edadPersona >= EdadMayoria;
+}
+` },
+            { titulo: "Números mágicos → constantes", explicacion: "Si el descuento sube al 20 %, solo cambiamos una línea.", codigo: r`// ❌ Antes: ¿qué es 3? ¿y 0.15? Si cambia, hay que buscarlo por todo el código
+// if (intentos > 3) ...    precio = precio - precio * 0.15;
+
+// ✅ Después: cada valor tiene nombre y vive en un solo sitio
+const int MaximoIntentos = 3;
+const double DescuentoEstudiante = 0.15;
+
+int intentos = 4;
+double precio = 20;
+
+if (intentos > MaximoIntentos)
+{
+    Console.WriteLine("Demasiados intentos");
+}
+precio = precio - precio * DescuentoEstudiante;
+Console.WriteLine($"Precio con descuento: {precio}");     // 17
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Bautiza el código",
+              nivel: 1,
+              enunciado: r`<p>Este programa de un videojuego usa <strong>nombres muy
+pobres</strong>. <strong>Renómbralo todo</strong> (variables, función y
+constantes) para que se entienda sin comentarios.</p>
+<pre><code>int v = 100;
+int d = 35;
+int e = 2;
+v = f(v, d, e);
+Console.WriteLine(v);
+
+int f(int a, int b, int c)
+{
+    return a - b * c;
+}</code></pre>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Lo que hace: a una vida de 100 puntos se le resta el daño de un
+ataque (35) multiplicado por el número de impactos (2).</li>
+<li><strong>La salida debe seguir siendo 30.</strong></li>
+<li>Convierte en <strong>constantes</strong> los valores que no
+cambian.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> una función se nombra con un verbo; un
+booleano, como una pregunta.</p>
+<p>🏅 <strong>Ampliación:</strong> evita que la vida quede por debajo de
+0 con <code>Math.Max</code>.</p>`,
+              soluciones: [
+                { titulo: "Solución", nota: "Cada nombre responde a «¿qué es?». Además, hemos dado un nombre (danioTotal) al cálculo intermedio.", codigo: r`const int VidaInicial = 100;
+const int DanioPorImpacto = 35;
+const int NumeroImpactos = 2;
+
+int vidaRestante = CalcularVidaRestante(VidaInicial, DanioPorImpacto, NumeroImpactos);
+Console.WriteLine(vidaRestante);          // 30
+
+int CalcularVidaRestante(int vida, int danioPorImpacto, int impactos)
+{
+    int danioTotal = danioPorImpacto * impactos;
+    return Math.Max(0, vida - danioTotal);      // ampliación: nunca por debajo de 0
+}
+` },
+              ],
+            },
+            {
+              titulo: "Caza los números mágicos",
+              nivel: 2,
+              enunciado: r`<p>Dado este programa, <strong>identifica los números mágicos</strong> y
+sustitúyelos por constantes con un buen nombre.</p>
+<pre><code>Console.Write(&quot;Horas trabajadas: &quot;);
+int horas = int.Parse(Console.ReadLine() ?? &quot;0&quot;);
+double sueldo = horas * 12.5;
+if (horas &gt; 40) sueldo = sueldo + (horas - 40) * 12.5 * 0.5;
+Console.WriteLine(sueldo);</code></pre>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Hay tres números con significado: la <strong>tarifa por
+hora</strong>, las <strong>horas normales</strong> y el
+<strong>recargo</strong> por hora extra.</li>
+<li><strong>Control de errores:</strong> sustituye
+<code>int.Parse</code> por <code>int.TryParse</code> y repite la
+pregunta si no es un número ≥ 0.</li>
+<li>Mueve el cálculo a una función
+<code>CalcularSueldo(int horas)</code>.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> una hora extra se paga con un 50 % de
+recargo, es decir, 1,5 veces la tarifa.</p>`,
+              soluciones: [
+                { titulo: "Solución", nota: "Ahora cambiar la tarifa o el recargo es tocar una línea. Y las horasExtra explican el cálculo mejor que (horas - 40).", codigo: r`const double TarifaPorHora = 12.5;
+const int HorasNormales = 40;
+const double RecargoHoraExtra = 0.5;
+
+int horas = LeerHoras("Horas trabajadas: ");
+Console.WriteLine($"Sueldo: {CalcularSueldo(horas)}");
+
+double CalcularSueldo(int horasTrabajadas)
+{
+    double sueldo = horasTrabajadas * TarifaPorHora;
+    if (horasTrabajadas > HorasNormales)
+    {
+        int horasExtra = horasTrabajadas - HorasNormales;
+        sueldo += horasExtra * TarifaPorHora * RecargoHoraExtra;
+    }
+    return sueldo;
+}
+
+int LeerHoras(string mensaje)
+{
+    int valor;
+    Console.Write(mensaje);
+    while (!int.TryParse(Console.ReadLine(), out valor) || valor < 0)
+    {
+        Console.Write("Valor no válido. " + mensaje);
+    }
+    return valor;
+}
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "cc-funciones",
+          titulo: "Funciones pequeñas que hacen una sola cosa",
+          duracion: "20 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Escribir funciones cortas con una única responsabilidad", "Limitar los parámetros y evitar efectos secundarios", "Simplificar condicionales con cláusulas de guarda"],
+          teoria: r`<p>Las funciones son la <strong>primera línea de organización</strong>
+de cualquier programa. Hacerlas bien es el 80 % del trabajo de dejar el
+código limpio.</p>
+<h3 id="1-pequeñas-y-más-pequeñas-todavía">1. Pequeñas, y más pequeñas
+todavía</h3>
+<p>La primera regla: <strong>las funciones deben ser cortas</strong>. No
+hay un número mágico, pero si no cabe en la pantalla o ves bloques
+separados por líneas en blanco y comentarios del tipo «// ahora hacemos
+X», está pidiendo trocearse. Una función que se lee de un vistazo es una
+función que se entiende y se prueba bien.</p>
+<ul>
+<li>Los bloques de un <code>if</code>, <code>else</code> o
+<code>while</code> deberían ser <strong>una línea</strong> (normalmente
+la llamada a otra función con un nombre descriptivo).</li>
+<li>Evita <strong>más de uno o dos niveles de indentación</strong>
+dentro de una función.</li>
+</ul>
+<h3 id="2-haz-una-sola-cosa">2. Haz una sola cosa</h3>
+<div class="callout">
+<p>Una función debe hacer <strong>una cosa</strong>, hacerla
+<strong>bien</strong> y hacer <strong>solo eso</strong>.</p>
+</div>
+<p>¿Cómo saber si hace más de una cosa? Si puedes
+<strong>extraer</strong> otra función con un nombre que <strong>no sea
+una simple repetición</strong> del que ya tiene, está haciendo más de
+una cosa. Es el <strong>principio de responsabilidad única</strong>
+(SRP) aplicado a las funciones: una función, una razón para cambiar.</p>
+<!--ex:0-->
+
+<h3 id="3-un-solo-nivel-de-abstracción">3. Un solo nivel de
+abstracción</h3>
+<p>Dentro de una función no mezcles <strong>ideas de alto nivel</strong>
+(«procesa el pedido») con <strong>detalles de bajo nivel</strong> («suma
+los bytes, concatena con +…»). Una función debe leerse como un
+<strong>párrafo de arriba abajo</strong>: primero lo importante y, al
+bajar, los detalles en funciones llamadas desde ahí (<strong>regla
+descendente</strong>).</p>
+<h3 id="4-pocos-parámetros">4. Pocos parámetros</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Nº de parámetros</th>
+<th>Nombre</th>
+<th>Consejo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>niládica</td>
+<td>Lo ideal</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>monádica</td>
+<td>Muy bien</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>diádica</td>
+<td>Aceptable</td>
+</tr>
+<tr class="even">
+<td>3 o más</td>
+<td>poliádica</td>
+<td>Evítalo; si hace falta, agrupa en una clase/<code>record</code></td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>Evita los parámetros booleanos</strong>
+(<code>Dibujar(true)</code>): la llamada no se entiende y, además,
+indica que la función hace dos cosas (una para <code>true</code>, otra
+para <code>false</code>). Crea dos funciones.</li>
+<li><strong>Evita los parámetros de salida</strong> (<code>out</code>)
+cuando puedas devolver un valor o una tupla.</li>
+<li>Si necesitas más de 3, <strong>agrúpalos</strong> en un objeto:</li>
+</ul>
+<!--ex:1-->
+
+<h3 id="5-sin-efectos-secundarios">5. Sin efectos secundarios</h3>
+<p>Un <strong>efecto secundario</strong> es hacer algo oculto que no
+dice el nombre: por ejemplo, una función
+<code>ComprobarContrasena</code> que además <strong>inicia la
+sesión</strong>. Quien la llame no lo espera. Si hay que hacer las dos
+cosas, <strong>dos funciones</strong> (o un nombre que lo diga:
+<code>ComprobarContrasenaEIniciarSesion</code>).</p>
+<p><strong>Separa consultas y comandos:</strong> una función o
+<strong>cambia</strong> algo (comando) o <strong>responde</strong> algo
+(consulta), pero no las dos a la vez.</p>
+<h3 id="6-cláusulas-de-guarda-guard-clauses">6. Cláusulas de guarda
+(<em>guard clauses</em>)</h3>
+<p>En vez de anidar <code>if</code> dentro de <code>if</code>,
+<strong>descarta primero los casos raros</strong> al principio de la
+función y deja el camino principal sin anidar:</p>
+<!--ex:2-->
+
+<h3 id="7-no-te-repitas-dry">7. No te repitas (DRY)</h3>
+<p>La duplicación es la raíz de muchos males: si hay que cambiarla, hay
+que acordarse de hacerlo en <strong>todos</strong> los sitios. Cuando
+veas el mismo bloque dos veces, <strong>extráelo a una
+función</strong>.</p>
+<!--ex:3-->
+
+<h3 id="8-cómo-se-escribe-una-función-así">8. ¿Cómo se escribe una
+función así?</h3>
+<p>Nadie escribe funciones perfectas a la primera. Lo normal es:
+escribir una versión que <strong>funcione</strong>, y
+<strong>después</strong> pulirla (trocear, renombrar, quitar duplicados)
+con la ayuda de las <strong>pruebas</strong> para asegurar que no se
+rompe nada. Es lo que haremos en las próximas lecciones.</p>
+<div class="callout">
+
+<p><strong>Resumen.</strong> Pequeña · una sola cosa · un nivel de
+abstracción · pocos parámetros · sin efectos ocultos · sin repetición ·
+casos raros al principio.</p>
+</div>`,
+          ejemplos: [
+            { titulo: "❌ Una función que hace demasiadas cosas", explicacion: "Hace tres cosas: validar, calcular y mostrar. Además recibe 4 parámetros y mezcla niveles de detalle.", codigo: r`// Valida, calcula, imprime... todo mezclado
+void ProcesarAlumno(string nombre, int nota1, int nota2, int nota3)
+{
+    if (nombre == "" || nota1 < 0 || nota1 > 10 || nota2 < 0 || nota2 > 10 || nota3 < 0 || nota3 > 10)
+    {
+        Console.WriteLine("Datos no válidos");
+    }
+    else
+    {
+        double media = (nota1 + nota2 + nota3) / 3.0;
+        string estado;
+        if (media >= 5) { estado = "aprobado"; } else { estado = "suspendido"; }
+        Console.WriteLine($"{nombre}: media {media:F2} ({estado})");
+    }
+}
+
+ProcesarAlumno("Ana", 7, 5, 9);
+ProcesarAlumno("Luis", 4, 3, 5);
+ProcesarAlumno("", 4, 3, 5);
+` },
+            { titulo: "✅ Funciones pequeñas, cada una con su responsabilidad", explicacion: "La salida es idéntica, pero cada función cabe en pocas líneas, tiene un nombre claro y se puede probar por separado.", codigo: r`const double NotaMinimaAprobado = 5;
+
+MostrarResultado("Ana", new[] { 7, 5, 9 });
+MostrarResultado("Luis", new[] { 4, 3, 5 });
+MostrarResultado("", new[] { 4, 3, 5 });
+
+void MostrarResultado(string nombre, int[] notas)
+{
+    if (!SonDatosValidos(nombre, notas))                     // cláusula de guarda
+    {
+        Console.WriteLine("Datos no válidos");
+        return;
+    }
+    double media = CalcularMedia(notas);
+    Console.WriteLine($"{nombre}: media {media:F2} ({ObtenerEstado(media)})");
+}
+
+bool SonDatosValidos(string nombre, int[] notas)
+{
+    return nombre != "" && notas.All(EsNotaValida);
+}
+
+bool EsNotaValida(int nota) => nota >= 0 && nota <= 10;
+
+double CalcularMedia(int[] notas) => notas.Average();
+
+string ObtenerEstado(double media) => media >= NotaMinimaAprobado ? "aprobado" : "suspendido";
+` },
+            { titulo: "Demasiados parámetros → agrúpalos", explicacion: "La firma pasa de 5 parámetros a 2 y cada uno tiene un significado claro.", codigo: r`// ❌ CrearFactura(string cliente, string direccion, string ciudad, decimal importe, int numero) → cinco parámetros
+// ✅ Agrupamos los datos relacionados en un tipo propio
+
+var cliente = new Cliente("Ana Pérez", "C/ Mayor 5", "Barcelona");
+var factura = new Factura(1001, 250.50m);
+
+Console.WriteLine(CrearResumen(cliente, factura));
+
+string CrearResumen(Cliente cliente, Factura factura)
+{
+    return $"Factura {factura.Numero} para {cliente.Nombre} ({cliente.Ciudad}): {factura.Importe} €";
+}
+
+// record: una forma corta de crear tipos que solo guardan datos (veremos más sobre ellos en POO)
+record Cliente(string Nombre, string Direccion, string Ciudad);
+record Factura(int Numero, decimal Importe);
+` },
+            { titulo: "❌ Antes y ✅ Después: cláusulas de guarda", explicacion: "Las dos versiones dan el mismo resultado; la segunda se lee de arriba abajo sin sangrías.", codigo: r`Console.WriteLine(ObtenerPrecioAnidado(100, true, 10));
+Console.WriteLine(ObtenerPrecioGuardas(100, true, 10));
+Console.WriteLine(ObtenerPrecioGuardas(-5, true, 10));
+
+// ❌ Anidado: hay que seguir tres niveles para llegar a lo importante
+decimal ObtenerPrecioAnidado(decimal precio, bool esCliente, int descuento)
+{
+    decimal resultado = 0;
+    if (precio >= 0)
+    {
+        if (esCliente)
+        {
+            resultado = precio - precio * descuento / 100;
+        }
+        else
+        {
+            resultado = precio;
+        }
+    }
+    return resultado;
+}
+
+// ✅ Con guardas: primero se descartan los casos raros, luego sigue el camino principal
+decimal ObtenerPrecioGuardas(decimal precio, bool esCliente, int descuento)
+{
+    if (precio < 0)
+    {
+        return 0;                      // caso raro: salimos pronto
+    }
+    if (!esCliente)
+    {
+        return precio;                 // caso simple: salimos pronto
+    }
+    return precio - precio * descuento / 100;    // camino principal, sin anidar
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Trocea la función",
+              nivel: 2,
+              enunciado: r`<p>Esta función <strong>hace demasiadas cosas a la vez</strong>.
+<strong>Divídela</strong> en funciones pequeñas con nombres claros y haz
+que el programa principal solo las combine.</p>
+<pre><code>void Partida()
+{
+    Console.Write(&quot;Vida del jugador: &quot;);
+    int vida = int.Parse(Console.ReadLine() ?? &quot;0&quot;);
+    Console.Write(&quot;Daño del enemigo: &quot;);
+    int danio = int.Parse(Console.ReadLine() ?? &quot;0&quot;);
+    vida = vida - danio;
+    if (vida &lt; 0) vida = 0;
+    if (vida == 0) Console.WriteLine(&quot;Has perdido&quot;);
+    else Console.WriteLine(&quot;Te quedan &quot; + vida + &quot; puntos de vida&quot;);
+}</code></pre>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Debe haber funciones separadas para <strong>leer un entero</strong>,
+<strong>calcular la vida restante</strong> y <strong>mostrar el
+resultado</strong>.</li>
+<li><strong>Control de errores:</strong> la lectura debe usar
+<code>int.TryParse</code> y pedir de nuevo si el dato es incorrecto o
+negativo.</li>
+<li>Cada función debe hacer <strong>una sola cosa</strong> y tener un
+nombre con <strong>verbo</strong>.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> si un bloque se separa con un comentario
+(«// ahora calculamos»), es un candidato a función.</p>`,
+              soluciones: [
+                { titulo: "Solución", nota: "Cada función se puede entender y probar sola. El «programa principal» son tres líneas que cuentan la historia.", codigo: r`int vida = LeerEnteroPositivo("Vida del jugador: ");
+int danio = LeerEnteroPositivo("Daño del enemigo: ");
+
+int vidaRestante = CalcularVidaRestante(vida, danio);
+MostrarEstado(vidaRestante);
+
+// Repite la pregunta hasta que se escribe un entero mayor o igual que 0
+int LeerEnteroPositivo(string mensaje)
+{
+    int valor;
+    Console.Write(mensaje);
+    while (!int.TryParse(Console.ReadLine(), out valor) || valor < 0)
+    {
+        Console.Write("Valor no válido. " + mensaje);
+    }
+    return valor;
+}
+
+// La vida nunca baja de 0
+int CalcularVidaRestante(int vida, int danio)
+{
+    return Math.Max(0, vida - danio);
+}
+
+void MostrarEstado(int vidaRestante)
+{
+    if (vidaRestante == 0)
+    {
+        Console.WriteLine("Has perdido");
+    }
+    else
+    {
+        Console.WriteLine($"Te quedan {vidaRestante} puntos de vida");
+    }
+}
+` },
+              ],
+            },
+            {
+              titulo: "Aplana los if",
+              nivel: 2,
+              enunciado: r`<p>Reescribe esta función usando <strong>cláusulas de guarda</strong>
+para eliminar la anidación. El comportamiento debe ser
+<strong>exactamente el mismo</strong>.</p>
+<pre><code>string Clasificar(int edad)
+{
+    string resultado;
+    if (edad &gt;= 0)
+    {
+        if (edad &lt; 18)
+        {
+            resultado = &quot;menor&quot;;
+        }
+        else
+        {
+            if (edad &lt; 65) resultado = &quot;adulto&quot;;
+            else resultado = &quot;jubilado&quot;;
+        }
+    }
+    else
+    {
+        resultado = &quot;edad no válida&quot;;
+    }
+    return resultado;
+}</code></pre>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Prueba con las edades -1, 0, 17, 18, 64 y 65 (valores límite) antes
+y después.</li>
+<li>Cada <code>return</code> debe estar <strong>fuera de bloques
+<code>else</code></strong>.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> descarta primero el caso raro (edad
+negativa) y sigue con los demás de arriba abajo.</p>
+<p>🏅 <strong>Ampliación:</strong> convierte la función en una expresión
+<code>switch</code> con rangos.</p>`,
+              soluciones: [
+                { titulo: "Solución con cláusulas de guarda", nota: "Cada condición se lee en una línea y el orden de las comprobaciones cuenta la historia.", codigo: r`foreach (int edad in new[] { -1, 0, 17, 18, 64, 65 })
+{
+    Console.WriteLine($"{edad}: {Clasificar(edad)}");
+}
+
+string Clasificar(int edad)
+{
+    if (edad < 0)
+    {
+        return "edad no válida";
+    }
+    if (edad < 18)
+    {
+        return "menor";
+    }
+    if (edad < 65)
+    {
+        return "adulto";
+    }
+    return "jubilado";
+}
+` },
+                { titulo: "Ampliación: expresión switch", nota: "Los patrones relacionales (< 18) llegaron en C# 9. Es la forma más compacta, pero la anterior es perfectamente válida y más sencilla de entender al empezar.", codigo: r`foreach (int edad in new[] { -1, 0, 17, 18, 64, 65 })
+{
+    Console.WriteLine($"{edad}: {Clasificar(edad)}");
+}
+
+string Clasificar(int edad) => edad switch
+{
+    < 0 => "edad no válida",
+    < 18 => "menor",
+    < 65 => "adulto",
+    _ => "jubilado"
+};
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "cc-comentarios",
+          titulo: "Comentarios: los justos y necesarios",
+          duracion: "14 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Saber cuándo un comentario es útil y cuándo es ruido", "Sustituir comentarios por código que se explica solo", "Documentar con comentarios XML (///)"],
+          teoria: r`<p>Los comentarios <strong>no son malos</strong>, pero tampoco son
+buenos por sí mismos. Un comentario suele ser <strong>una
+disculpa</strong>: «no he sabido escribir el código con claridad, así
+que te lo explico aparte». Y hay un problema añadido: <strong>el código
+cambia y los comentarios se quedan viejos</strong> y acaban
+mintiendo.</p>
+<div class="callout">
+<p><strong>El mejor comentario es el que no hace falta escribir</strong>
+porque el código ya se explica solo.</p>
+</div>
+<h3 id="1-explícate-con-código">1. Explícate con código</h3>
+<!--ex:0-->
+
+<h3 id="2-comentarios-que-sí-valen-la-pena">2. Comentarios que SÍ valen
+la pena</h3>
+<ul>
+<li><strong>Explicar la intención</strong> o el «por qué» de una
+decisión que no es obvia (el <em>qué</em> lo cuenta el código).</li>
+<li><strong>Advertir de consecuencias</strong> («este test tarda 10
+minutos»).</li>
+<li><strong>Aclarar</strong> una expresión difícil que no se puede
+simplificar (una expresión regular, una fórmula).</li>
+<li><strong><code>// TODO:</code></strong> para tareas pendientes
+(revísalos de vez en cuando: los editores los listan).</li>
+<li><strong>Documentación pública</strong> de métodos y clases con
+<strong>comentarios XML</strong> (<code>///</code>), que el IDE muestra
+al usar el método.</li>
+</ul>
+<!--ex:1-->
+
+<h3 id="3-comentarios-que-sobran">3. Comentarios que sobran</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Tipo</th>
+<th>Por qué sobra</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Redundantes</strong>: <code>i++; // incrementa i</code></td>
+<td>Repite lo que ya dice el código</td>
+</tr>
+<tr class="even">
+<td><strong>Engañosos o desfasados</strong></td>
+<td>El código cambió y el comentario no: miente</td>
+</tr>
+<tr class="odd">
+<td><strong>Ruido</strong>: <code>// constructor</code>,
+<code>// getter</code></td>
+<td>No aportan nada</td>
+</tr>
+<tr class="even">
+<td><strong>Marcadores y banderas</strong>:
+<code>//////// FIN //////////</code></td>
+<td>Ensucian</td>
+</tr>
+<tr class="odd">
+<td><strong>Diario de cambios</strong>:
+<code>// 12/03 Pepe cambió esto</code></td>
+<td>Para eso está <strong>Git</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Autoría</strong>: <code>// Hecho por Ana</code></td>
+<td>Git también lo sabe</td>
+</tr>
+<tr class="odd">
+<td><strong>Código comentado</strong></td>
+<td>Estorba y nadie se atreve a borrarlo. <strong>Bórralo</strong>: si
+lo necesitas, está en el historial de Git</td>
+</tr>
+</tbody>
+</table></div>
+<!--ex:2-->
+
+<h3 id="4-comentarios-xml-en-c">4. Comentarios XML en C#</h3>
+<p>Si escribes <code>///</code> encima de un método, Visual Studio
+genera una plantilla. Es <strong>documentación</strong> que se muestra
+al pasar el ratón sobre el método y que se puede convertir en un
+manual:</p>
+<ul>
+<li><code>&lt;summary&gt;</code>: qué hace.</li>
+<li><code>&lt;param name="x"&gt;</code>: qué es cada parámetro.</li>
+<li><code>&lt;returns&gt;</code>: qué devuelve.</li>
+<li><code>&lt;exception cref="..."&gt;</code>: qué excepciones puede
+lanzar.</li>
+</ul>
+<p>Úsalos en lo que <strong>otros van a utilizar</strong> (bibliotecas,
+clases públicas), no en cada función interna.</p>
+<h3 id="5-resumen">5. Resumen</h3>
+<ol type="1">
+<li>Intenta <strong>primero</strong> expresarte con el código (nombres,
+funciones pequeñas).</li>
+<li>Si aun así hace falta, comenta el <strong>porqué</strong>, no el
+<em>qué</em>.</li>
+<li>Mantén los comentarios <strong>al día</strong> o bórralos.</li>
+<li><strong>Nunca</strong> dejes código comentado.</li>
+</ol>`,
+          ejemplos: [
+            { titulo: "Sustituir un comentario por una función con buen nombre", explicacion: "El nombre de la función hace el trabajo del comentario, y si la regla cambia, solo se toca un sitio.", codigo: r`const int MinimoMayorEdad = 18;
+int edad = 20;
+bool tieneCarnet = true;
+
+// ❌ Antes: hay que leer el comentario para entender la condición
+// Comprueba si el empleado puede conducir la furgoneta
+if (edad >= 18 && tieneCarnet)
+{
+    Console.WriteLine("Puede conducir");
+}
+
+// ✅ Después: la condición se explica sola, el comentario sobra
+if (PuedeConducir(edad, tieneCarnet))
+{
+    Console.WriteLine("Puede conducir");
+}
+
+bool PuedeConducir(int edadPersona, bool tieneCarnetVigente)
+{
+    return edadPersona >= MinimoMayorEdad && tieneCarnetVigente;
+}
+` },
+            { titulo: "Comentarios útiles: intención, advertencia, TODO y documentación XML", explicacion: "Solo hay comentarios que aportan: el porqué del descuento (regla de negocio no obvia), un TODO y la documentación XML para quien use el método.", codigo: r`Console.WriteLine(CalcularPrecioFinal(100m, 3));
+
+/// <summary>
+/// Calcula el precio final de un pedido aplicando el descuento por volumen.
+/// </summary>
+/// <param name="precioUnitario">Precio de una unidad, en euros.</param>
+/// <param name="unidades">Número de unidades. Debe ser mayor que 0.</param>
+/// <returns>El precio total con el descuento aplicado.</returns>
+/// <exception cref="ArgumentOutOfRangeException">Si las unidades no son positivas.</exception>
+decimal CalcularPrecioFinal(decimal precioUnitario, int unidades)
+{
+    ArgumentOutOfRangeException.ThrowIfNegativeOrZero(unidades);
+
+    // Por acuerdo comercial, a partir de 3 unidades se descuenta un 10 % de TODO el pedido
+    // (no solo de las unidades que superan las 3).
+    const int UnidadesParaDescuento = 3;
+    const decimal Descuento = 0.10m;
+
+    decimal total = precioUnitario * unidades;
+    if (unidades >= UnidadesParaDescuento)
+    {
+        total -= total * Descuento;
+    }
+
+    // TODO: aplicar también el IVA cuando se decida la política de precios
+    return total;
+}
+` },
+            { titulo: "❌ Comentarios que sobran", explicacion: "Compara con el ejemplo anterior: cuando el código ya es claro, cada línea de comentario es una línea más que mantener.", codigo: r`// ❌ Todo esto es ruido o mentira. ¡Cuántas líneas inútiles!
+
+// Variable que guarda la edad
+int edad = 20;       // edad del usuario
+
+// Bucle for que recorre del 0 al 2
+for (int i = 0; i < 3; i++)    // aumenta i
+{
+    // Muestra el número
+    Console.WriteLine(i);      // imprime i
+}
+
+// Console.WriteLine("Esto ya no se usa");    ← código comentado: bórralo, Git lo recuerda
+
+/* Creado por Ana el 12/03/2025
+   Modificado por Luis el 15/03/2025 */
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Poda de comentarios",
+              nivel: 1,
+              enunciado: r`<p>Limpia el siguiente programa: <strong>elimina los comentarios que
+sobran</strong>, <strong>sustituye por código claro</strong> los que
+explican lo que hace el código y <strong>conserva</strong> solo los que
+expliquen el <strong>porqué</strong>.</p>
+<pre><code>// Programa principal
+// variable x
+int x = 17;
+// si x es mayor o igual que 18
+if (x &gt;= 18) // mayor de edad
+{
+    Console.WriteLine(&quot;Mayor&quot;); // muestra Mayor
+}
+else // si no
+{
+    // Console.WriteLine(&quot;Menor&quot;);
+    Console.WriteLine(&quot;Menor&quot;); // muestra Menor
+}
+// La edad se compara con 18 porque es la mayoría de edad legal en España</code></pre>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>La salida debe seguir siendo <code>Menor</code>.</li>
+<li>Pon nombres con significado en lugar de comentarios.</li>
+<li><strong>Control de errores:</strong> lee la edad con
+<code>int.TryParse</code> y pide de nuevo si no es válida (entre 0 y
+150).</li>
+</ul>
+<p>💡 <strong>TIP:</strong> el último comentario sí tiene valor: explica
+de dónde sale el número 18. Mejor aún si el número es una constante con
+nombre.</p>`,
+              soluciones: [
+                { titulo: "Solución", nota: "Solo queda un comentario: el que explica el origen de una regla de negocio. La constante hace de documentación de lo demás.", codigo: r`// La mayoría de edad legal en España son 18 años
+const int EdadMayoriaLegal = 18;
+
+int edad = LeerEdad("Edad: ");
+Console.WriteLine(edad >= EdadMayoriaLegal ? "Mayor" : "Menor");
+
+int LeerEdad(string mensaje)
+{
+    int valor;
+    Console.Write(mensaje);
+    while (!int.TryParse(Console.ReadLine(), out valor) || valor < 0 || valor > 150)
+    {
+        Console.Write("Edad no válida. " + mensaje);
+    }
+    return valor;
+}
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "cc-formato",
+          titulo: "Formato y estilo del código",
+          duracion: "12 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Aplicar reglas de formato que mejoran la lectura", "Ordenar el código verticalmente (concepto, distancia, orden)", "Automatizar el formato con el IDE y .editorconfig"],
+          teoria: r`<p>El formato <strong>es comunicación</strong>: la primera impresión de
+un archivo ordenado y coherente es que alguien lo ha cuidado, y eso
+invita a seguir cuidándolo. Además, el estilo que fijas hoy es el que
+seguirá el equipo mañana.</p>
+<h3 id="1-formato-vertical">1. Formato vertical</h3>
+<h4 id="un-archivo--una-idea-y-de-tamaño-razonable">Un archivo = una
+idea (y de tamaño razonable)</h4>
+<p>Los archivos pequeños se entienden mejor que los gigantes. Si tu
+clase tiene miles de líneas, probablemente hace demasiado. En C#,
+además: <strong>una clase por archivo</strong> y con el mismo nombre
+(<code>Jugador.cs</code>).</p>
+<h4 id="apertura-vertical-separa-ideas-con-líneas-en-blanco">Apertura
+vertical: separa ideas con líneas en blanco</h4>
+<p>Dentro de un archivo, cada <strong>concepto</strong> (importaciones,
+atributos, constructor, cada método) va separado por una línea en
+blanco, como los párrafos de un texto. Lo que va <strong>junto</strong>
+está <strong>relacionado</strong>.</p>
+<h4 id="densidad-y-distancia-vertical">Densidad y distancia
+vertical</h4>
+<ul>
+<li>Las líneas <strong>estrechamente relacionadas</strong> deben estar
+<strong>juntas</strong> (sin líneas en blanco ni comentarios entre
+ellas).</li>
+<li>Declara las variables <strong>cerca de donde se usan</strong> (no
+todas al principio).</li>
+<li>Si una función <strong>llama</strong> a otra, ponlas
+<strong>cerca</strong> y que la llamante esté <strong>por
+encima</strong> de la llamada (se lee de arriba abajo, como un
+periódico: titular primero, detalles después).</li>
+</ul>
+<!--ex:0-->
+
+<h3 id="2-formato-horizontal">2. Formato horizontal</h3>
+<ul>
+<li><strong>Líneas cortas</strong>: evita pasar de unos 100–120
+caracteres. Se leen sin desplazarse.</li>
+<li><strong>Espacios</strong> alrededor de los operadores de asignación
+y comparación (<code>a = b + c</code>), pero no entre el nombre de la
+función y sus paréntesis (<code>Sumar(a, b)</code>).</li>
+<li><strong>Indentación</strong> coherente: cada bloque dentro de
+<code>{ }</code> se mete un nivel (4 espacios). Nunca la saltes aunque
+el bloque sea de una línea.</li>
+<li><strong>Llaves siempre</strong>, incluso con un <code>if</code> de
+una sola línea. Evita errores tontos al añadir una segunda línea.</li>
+</ul>
+<!--ex:1-->
+
+<h3 id="3-estilo-de-llaves">3. Estilo de llaves</h3>
+<p>En C# el estilo habitual es el <strong>de Allman</strong>: la llave
+de apertura va en <strong>una línea propia</strong>. En otros lenguajes
+(Java, JavaScript) es común abrir en la misma línea. Lo importante no es
+cuál eliges, sino <strong>que todo el equipo use el mismo</strong>.</p>
+<h3 id="4-el-equipo-manda-y-las-máquinas-ayudan">4. El equipo manda, y
+las máquinas ayudan</h3>
+<ul>
+<li>Un equipo debe acordar <strong>reglas comunes</strong> y que todos
+las sigan; el código debe parecer escrito por una sola persona.</li>
+<li><strong>No lo hagas a mano</strong>: en Visual Studio,
+<code>Ctrl + K, Ctrl + D</code> formatea el documento; en VS Code,
+<code>Shift + Alt + F</code>.</li>
+<li>El archivo <strong><code>.editorconfig</code></strong> (en la raíz
+del proyecto) fija las reglas del equipo (indentación, estilo de llaves,
+nomenclatura) y los editores las aplican y avisan solos.</li>
+<li>Desde la terminal: <code>dotnet format</code> reformatea todo el
+proyecto según esas reglas.</li>
+</ul>
+<div class="callout">
+
+<p><strong>Resumen.</strong> Líneas en blanco entre ideas · lo
+relacionado, junto · variables cerca de su uso · de arriba abajo, de lo
+general al detalle · llaves siempre · mismo estilo en todo el equipo ·
+que lo formatee la herramienta.</p>
+</div>`,
+          ejemplos: [
+            { titulo: "❌ Sin formato y ✅ con formato", explicacion: "La segunda versión usa las mismas instrucciones. Solo cambia el formato (y nombres de constantes)... y se lee sin esfuerzo.", codigo: r`// ❌ Un muro de texto: todo seguido, sin aire
+int notaFinal(int examen,int practicas){int n=(int)(examen*0.6+practicas*0.4);if(n>=5)return n;else return 0;}
+
+// ✅ Mismo código, con formato legible
+Console.WriteLine(CalcularNotaFinal(8, 6));      // 7
+Console.WriteLine(CalcularNotaFinal(2, 6));      // 0
+
+int CalcularNotaFinal(int examen, int practicas)
+{
+    const double PesoExamen = 0.6;
+    const double PesoPracticas = 0.4;
+
+    int nota = (int)(examen * PesoExamen + practicas * PesoPracticas);
+
+    if (nota >= 5)
+    {
+        return nota;
+    }
+    return 0;
+}
+` },
+            { titulo: "Siempre con llaves: el error del segundo if", explicacion: "La indentación engaña al lector, pero el compilador solo mira las llaves. Poner llaves siempre evita este clásico.", codigo: r`int vida = 0;
+bool estaVivo = true;
+
+// ❌ Sin llaves: parece que las dos líneas dependen del if, pero SOLO la primera lo hace
+if (vida > 0)
+    Console.WriteLine("Sigues en pie");
+    estaVivo = true;            // ← ¡esto se ejecuta SIEMPRE!
+
+// ✅ Con llaves queda claro qué pertenece al if
+if (vida > 0)
+{
+    Console.WriteLine("Sigues en pie");
+    estaVivo = true;
+}
+Console.WriteLine(estaVivo);
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Pon orden",
+              nivel: 1,
+              enunciado: r`<p><strong>Formatea</strong> correctamente este programa (indentación,
+llaves, líneas en blanco, espacios) <strong>sin cambiar su
+comportamiento</strong> y sin renombrar nada. Después, usa el
+formateador automático de tu IDE para comprobar que no cambia nada
+más.</p>
+<pre><code>int Mayor(int a,int b){if(a&gt;b)return a;else return b;}
+int[] numeros={4,9,2,7};int maximo=numeros[0];
+for(int i=1;i&lt;numeros.Length;i++){if(Mayor(numeros[i],maximo)==numeros[i])maximo=numeros[i];}
+Console.WriteLine(&quot;El mayor es &quot;+maximo);</code></pre>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>La salida debe seguir siendo <code>El mayor es 9</code>.</li>
+<li>Una instrucción por línea, llaves siempre, 4 espacios de
+indentación.</li>
+<li>Línea en blanco para separar los datos, el recorrido y la
+función.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> en Visual Studio,
+<code>Ctrl + K, Ctrl + D</code> formatea el archivo entero.</p>`,
+              soluciones: [
+                { titulo: "Solución", nota: "Mismo programa, ahora con aire y sangrías. (Se podría simplificar con Math.Max, pero eso ya es refactorizar).", codigo: r`int[] numeros = { 4, 9, 2, 7 };
+int maximo = numeros[0];
+
+for (int i = 1; i < numeros.Length; i++)
+{
+    if (Mayor(numeros[i], maximo) == numeros[i])
+    {
+        maximo = numeros[i];
+    }
+}
+Console.WriteLine("El mayor es " + maximo);
+
+int Mayor(int a, int b)
+{
+    if (a > b)
+    {
+        return a;
+    }
+    return b;
+}
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "cc-errores",
+          titulo: "Manejo limpio de errores",
+          duracion: "18 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Preferir excepciones a los códigos de error", "Validar con cláusulas de guarda y excepciones del sistema", "Evitar null y usar tipos anulables y el patrón Try"],
+          teoria: r`<p>Los errores <strong>van a ocurrir</strong>: el usuario escribe letras
+donde esperábamos un número, el archivo no existe, la red falla. Lo
+importante es que el manejo de errores <strong>no ensucie</strong> la
+lógica principal del programa.</p>
+<h3 id="1-excepciones-mejor-que-códigos-de-error">1. Excepciones mejor
+que códigos de error</h3>
+<p>Una forma antigua de avisar de un fallo es <strong>devolver un
+código</strong> (<code>-1</code>, <code>0</code>, <code>"ERROR"</code>).
+Obliga a quien llama a comprobarlo <strong>siempre</strong> y mezcla la
+lógica normal con la de errores. Las <strong>excepciones</strong>
+separan los dos caminos:</p>
+<!--ex:0-->
+
+<h3 id="2-escribe-primero-el-try">2. Escribe primero el
+<code>try</code></h3>
+<p>Un bloque <code>try</code> define un <strong>ámbito</strong>: lo que
+pase dentro, si falla, se resuelve en el <code>catch</code>. Pensar
+primero en qué puede fallar y envolverlo ayuda a decidir <strong>qué
+estado debe quedar</strong> pase lo que pase (<code>finally</code>).</p>
+<h3 id="3-lanza-excepciones-con-información">3. Lanza excepciones con
+información</h3>
+<p>Una excepción debe decir <strong>qué ha fallado y dónde</strong>:
+incluye un mensaje con el contexto (qué operación, qué valor). Usa los
+tipos que ya existen en .NET antes de inventar los tuyos:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Situación</th>
+<th>Excepción</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Un argumento no tiene un valor válido</td>
+<td><code>ArgumentException</code></td>
+</tr>
+<tr class="even">
+<td>Un argumento es <code>null</code></td>
+<td><code>ArgumentNullException</code></td>
+</tr>
+<tr class="odd">
+<td>Un argumento está fuera de rango</td>
+<td><code>ArgumentOutOfRangeException</code></td>
+</tr>
+<tr class="even">
+<td>La operación no es válida en el estado actual</td>
+<td><code>InvalidOperationException</code></td>
+</tr>
+<tr class="odd">
+<td>Funcionalidad sin implementar</td>
+<td><code>NotImplementedException</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Desde .NET 6/8 existen <strong>métodos auxiliares</strong> muy
+cómodos: <code>ArgumentNullException.ThrowIfNull(x)</code>,
+<code>ArgumentOutOfRangeException.ThrowIfNegative(n)</code>,
+<code>ArgumentException.ThrowIfNullOrEmpty(s)</code>. Son
+<strong>cláusulas de guarda</strong> de una línea.</p>
+<!--ex:1-->
+
+<h3 id="4-no-te-tragues-los-errores">4. No te tragues los errores</h3>
+<p>Un <code>catch</code> vacío es de lo peor que se puede escribir: el
+error ocurre y <strong>nadie se entera</strong>. En un
+<code>catch</code> debes: <strong>arreglarlo</strong>,
+<strong>registrarlo</strong> (log) o <strong>relanzarlo</strong>
+(<code>throw;</code>). Y captura el tipo <strong>más concreto</strong>
+posible, no <code>Exception</code> a todo.</p>
+<!--ex:2-->
+
+<h3 id="5-no-devuelvas-null-no-pases-null">5. No devuelvas
+<code>null</code>, no pases <code>null</code></h3>
+<p>Cada vez que devuelves <code>null</code> obligas a quien llama a
+comprobarlo, y el día que se olvide:
+<code>NullReferenceException</code>. Alternativas:</p>
+<ul>
+<li>Devolver una <strong>colección vacía</strong> en lugar de
+<code>null</code>.</li>
+<li><strong>Lanzar una excepción</strong> si es un caso verdaderamente
+excepcional.</li>
+<li>Usar <strong>tipos anulables</strong> (<code>int?</code>,
+<code>string?</code>) para <strong>declarar</strong> que un valor puede
+faltar; el compilador (con <em>nullable reference types</em>, activado
+por defecto en .NET 6+) te avisa si no lo compruebas.</li>
+<li>El <strong>patrón Try</strong>:
+<code>bool TryX(..., out resultado)</code>, como hace
+<code>int.TryParse</code>. No lanza excepción: devuelve
+<code>false</code> si falla.</li>
+</ul>
+<!--ex:3-->
+
+<h3 id="6-excepciones-para-lo-excepcional">6. Excepciones para lo
+excepcional</h3>
+<p>Las excepciones son <strong>lentas</strong> y sirven para situaciones
+<strong>que no esperamos</strong>. Lo que puedas comprobar antes
+(¿existe el archivo? ¿es un número?), compruébalo con un <code>if</code>
+o un <code>TryParse</code>. Recuerda además la norma del curso:
+<strong>todo dato del usuario se valida</strong>.</p>
+<div class="callout">
+
+<p><strong>Resumen.</strong> Excepciones, no códigos · mensajes con
+contexto · tipos concretos · nunca <code>catch</code> vacío · no
+devuelvas <code>null</code> · <code>TryParse</code> para datos del
+usuario.</p>
+</div>`,
+          ejemplos: [
+            { titulo: "❌ Códigos de error frente a ✅ excepciones", explicacion: "Con el código -1 hay una ambigüedad: 5 / -5 también vale -1. La excepción no se confunde con un resultado válido.", codigo: r`// ❌ Con código de error: quien llama debe acordarse de comprobar -1
+int resultado = DividirCodigo(10, 0);
+if (resultado == -1)
+{
+    Console.WriteLine("Error al dividir");
+}
+
+// ✅ Con excepción: el camino normal queda limpio y el error no se puede ignorar sin querer
+try
+{
+    Console.WriteLine(Dividir(10, 0));
+}
+catch (DivideByZeroException ex)
+{
+    Console.WriteLine($"Error: {ex.Message}");
+}
+
+int DividirCodigo(int a, int b) => b == 0 ? -1 : a / b;     // ¿y si la división da de verdad -1?
+
+int Dividir(int a, int b)
+{
+    if (b == 0)
+    {
+        throw new DivideByZeroException("El divisor no puede ser 0");
+    }
+    return a / b;
+}
+` },
+            { titulo: "Guardas con excepciones de .NET", explicacion: "Dos líneas de validación y el resto de la función puede suponer que los datos son correctos.", codigo: r`try
+{
+    Console.WriteLine(CrearSaludo("Ana", 20));
+    Console.WriteLine(CrearSaludo("Ana", -3));
+}
+catch (ArgumentOutOfRangeException ex)
+{
+    Console.WriteLine($"Error: {ex.Message}");
+}
+
+string CrearSaludo(string nombre, int edad)
+{
+    ArgumentException.ThrowIfNullOrEmpty(nombre);                // guarda 1: nombre obligatorio
+    ArgumentOutOfRangeException.ThrowIfNegative(edad);           // guarda 2: edad >= 0
+
+    return $"Hola, {nombre}. Tienes {edad} años.";
+}
+` },
+            { titulo: "❌ Un catch vacío esconde errores  →  ✅ qué hacer en su lugar", explicacion: "Cada catch debe hacer algo con el error: corregirlo, informar o relanzarlo con throw;", codigo: r`string ruta = "no-existe.txt";
+
+// ❌ El archivo falla y no se entera nadie. El programa sigue como si nada.
+try
+{
+    string texto = File.ReadAllText(ruta);
+}
+catch (Exception)
+{
+}
+
+// ✅ Capturamos el error concreto y avisamos al usuario
+try
+{
+    string texto = File.ReadAllText(ruta);
+    Console.WriteLine(texto);
+}
+catch (FileNotFoundException)
+{
+    Console.WriteLine($"No se encuentra el archivo «{ruta}». Comprueba la ruta.");
+}
+` },
+            { titulo: "Evitar null: el patrón Try y los tipos anulables", explicacion: "Dos formas de no devolver null: out + bool y colecciones vacías.", codigo: r`// Patrón Try: devuelve true/false y el resultado en el parámetro out (como int.TryParse)
+if (TryBuscarNombre(2, out string? nombre))
+{
+    Console.WriteLine($"Jugador 2: {nombre}");
+}
+if (!TryBuscarNombre(9, out _))
+{
+    Console.WriteLine("El jugador 9 no existe");
+}
+
+// Colección vacía en vez de null: el foreach funciona igual sin comprobar nada
+foreach (string amigo in BuscarAmigos("Luis"))
+{
+    Console.WriteLine(amigo);
+}
+Console.WriteLine("Fin (Luis no tiene amigos, y no ha fallado nada)");
+
+bool TryBuscarNombre(int id, out string? nombre)
+{
+    string[] nombres = { "Ana", "Luis", "Mia" };
+    if (id >= 1 && id <= nombres.Length)
+    {
+        nombre = nombres[id - 1];
+        return true;
+    }
+    nombre = null;
+    return false;
+}
+
+string[] BuscarAmigos(string persona)
+{
+    return Array.Empty<string>();         // lista vacía: nadie tiene que comprobar si es null
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Dividir con estilo",
+              nivel: 2,
+              enunciado: r`<p>Escribe una función
+<strong><code>decimal Dividir(decimal dividendo, decimal divisor)</code></strong>
+que <strong>lance una excepción</strong>
+(<code>DivideByZeroException</code> con un mensaje claro) si el divisor
+es 0. En el programa principal, <strong>pide dos números</strong> y
+muestra el resultado o el mensaje de error.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li><strong>Control de errores:</strong> lee los números con
+<code>decimal.TryParse</code> (repite la pregunta si no son válidos) y
+<strong>captura la excepción</strong> de la división.</li>
+<li>La función <strong>no debe imprimir nada</strong>: solo calcula o
+lanza.</li>
+<li>Usa una <strong>cláusula de guarda</strong> al principio de la
+función.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> separa «calcular» (función) de «mostrar»
+(programa principal).</p>
+<p>🏅 <strong>Ampliación:</strong> crea también
+<code>bool TryDividir(decimal a, decimal b, out decimal resultado)</code>
+y compara ambos estilos.</p>`,
+              soluciones: [
+                { titulo: "Solución con excepción", nota: "La función solo se ocupa de dividir; quien la usa decide qué hacer si falla.", codigo: r`decimal dividendo = LeerDecimal("Dividendo: ");
+decimal divisor = LeerDecimal("Divisor: ");
+
+try
+{
+    Console.WriteLine($"{dividendo} / {divisor} = {Dividir(dividendo, divisor)}");
+}
+catch (DivideByZeroException ex)
+{
+    Console.WriteLine($"Error: {ex.Message}");
+}
+
+decimal Dividir(decimal dividendo, decimal divisor)
+{
+    if (divisor == 0)
+    {
+        throw new DivideByZeroException("El divisor no puede ser 0");     // guarda
+    }
+    return dividendo / divisor;
+}
+
+decimal LeerDecimal(string mensaje)
+{
+    decimal valor;
+    Console.Write(mensaje);
+    while (!decimal.TryParse(Console.ReadLine(), out valor))
+    {
+        Console.Write("Número no válido. " + mensaje);
+    }
+    return valor;
+}
+` },
+                { titulo: "Ampliación: patrón Try", nota: "Sin excepciones: ideal cuando el fallo es algo esperable (datos del usuario) y no verdaderamente excepcional.", codigo: r`if (TryDividir(10, 4, out decimal resultado))
+{
+    Console.WriteLine($"10 / 4 = {resultado}");
+}
+if (!TryDividir(10, 0, out _))
+{
+    Console.WriteLine("No se puede dividir entre 0");
+}
+
+bool TryDividir(decimal a, decimal b, out decimal resultado)
+{
+    if (b == 0)
+    {
+        resultado = 0;
+        return false;
+    }
+    resultado = a / b;
+    return true;
+}
+` },
+              ],
+            },
+            {
+              titulo: "Sin catch vacío",
+              nivel: 2,
+              enunciado: r`<p>El siguiente fragmento «funciona» pero esconde los errores.
+<strong>Arréglalo</strong> para que, si el archivo no existe o no se
+puede leer, <strong>el programa informe</strong> con un mensaje distinto
+para cada caso.</p>
+<pre><code>try
+{
+    string[] lineas = File.ReadAllLines(&quot;notas.txt&quot;);
+    Console.WriteLine(&quot;Líneas leídas: &quot; + lineas.Length);
+}
+catch (Exception)
+{
+}</code></pre>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Distingue <strong><code>FileNotFoundException</code></strong> (no
+existe) de <strong><code>IOException</code></strong> (otro problema de
+lectura).</li>
+<li>El orden de los <code>catch</code> importa: ¡el más concreto,
+<strong>primero</strong>!</li>
+<li>Añade un bloque <code>finally</code> que muestre
+<code>Fin de la lectura</code>.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> <code>FileNotFoundException</code> hereda de
+<code>IOException</code>.</p>`,
+              soluciones: [
+                { titulo: "Solución", nota: "Si pusiéramos IOException antes, el compilador avisaría de que el catch de FileNotFoundException es inalcanzable.", codigo: r`try
+{
+    string[] lineas = File.ReadAllLines("notas.txt");
+    Console.WriteLine("Líneas leídas: " + lineas.Length);
+}
+catch (FileNotFoundException)
+{
+    Console.WriteLine("El archivo notas.txt no existe.");
+}
+catch (IOException ex)
+{
+    Console.WriteLine($"No se ha podido leer el archivo: {ex.Message}");
+}
+finally
+{
+    Console.WriteLine("Fin de la lectura");
+}
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "cc-clases",
+          titulo: "Clases limpias y objetos",
+          duracion: "20 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Aplicar el principio de responsabilidad única a las clases", "Diferenciar objetos y estructuras de datos", "Reducir el acoplamiento con la ley de Demeter"],
+          teoria: r`<p>Las funciones limpias se agrupan en <strong>clases</strong>, y las
+clases también pueden ser limpias... o un desastre. Esta lección conecta
+lo que ya sabes de POO (encapsulamiento, herencia, interfaces) con las
+buenas prácticas.</p>
+<h3 id="1-organización-de-una-clase">1. Organización de una clase</h3>
+<p>El orden habitual dentro de una clase en C# es:</p>
+<ol type="1">
+<li><strong>Constantes</strong> y campos estáticos.</li>
+<li><strong>Atributos</strong> (campos) privados.</li>
+<li><strong>Constructores</strong>.</li>
+<li><strong>Propiedades</strong> públicas.</li>
+<li><strong>Métodos</strong> públicos.</li>
+<li><strong>Métodos privados</strong> (los ayudantes), justo después del
+público que los usa.</li>
+</ol>
+<p>Las variables y funciones <strong>privadas</strong> son detalles de
+implementación: ocúltalas (<strong>encapsulamiento</strong>) y expón lo
+mínimo.</p>
+<h3 id="2-las-clases-deben-ser-pequeñas">2. Las clases deben ser
+pequeñas</h3>
+<p>Con las funciones medíamos las <strong>líneas</strong>. Con las
+clases medimos las <strong>responsabilidades</strong>. Una clase pequeña
+tiene <strong>un nombre que la describe</strong> sin usar palabras vagas
+(<code>Gestor</code>, <code>Manager</code>, <code>Procesador</code>...).
+Si para describirla tienes que usar «<strong>y</strong>» o
+«<strong>o</strong>» (<em>«guarda al jugador <strong>y</strong> pinta la
+pantalla <strong>y</strong> calcula puntuaciones»</em>), hace
+demasiado.</p>
+<h4 id="principio-de-responsabilidad-única-srp">Principio de
+responsabilidad única (SRP)</h4>
+<div class="callout">
+<p>Una clase debe tener <strong>una única razón para
+cambiar</strong>.</p>
+</div>
+<p>Si cambiar la forma de <strong>guardar</strong> una partida te obliga
+a tocar la clase <code>Jugador</code>, y cambiar cómo se
+<strong>dibuja</strong> también, la clase tiene varias responsabilidades
+y habría que repartirlas.</p>
+<!--ex:0-->
+
+<h3 id="3-cohesión">3. Cohesión</h3>
+<p>Una clase es <strong>cohesiva</strong> cuando sus métodos usan
+<strong>muchos de sus atributos</strong>. Si la mitad de tus métodos no
+usan la mitad de los atributos, probablemente son dos clases pegadas. Al
+dividir una clase grande en otras pequeñas y cohesivas, el programa se
+ordena solo.</p>
+<h3 id="4-abierto-a-ampliar-cerrado-a-modificar-ocp">4. Abierto a
+ampliar, cerrado a modificar (OCP)</h3>
+<p>Un buen diseño permite <strong>añadir</strong> funcionalidades
+<strong>sin tocar</strong> el código que ya funciona. Por ejemplo: si
+añadir un nuevo tipo de enemigo obliga a editar un <code>switch</code>
+gigante en 10 sitios, el diseño es frágil. Con <strong>herencia o
+interfaces</strong> y <strong>polimorfismo</strong>, basta crear una
+clase nueva:</p>
+<!--ex:1-->
+
+<h3 id="5-objetos-frente-a-estructuras-de-datos">5. Objetos frente a
+estructuras de datos</h3>
+<p>Son dos cosas distintas y complementarias:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Objeto</strong></th>
+<th><strong>Estructura de datos</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Esconde</td>
+<td>Sus datos (privados)</td>
+<td>Nada: expone los datos</td>
+</tr>
+<tr class="even">
+<td>Expone</td>
+<td><strong>Comportamiento</strong> (métodos)</td>
+<td>Los datos (propiedades públicas)</td>
+</tr>
+<tr class="odd">
+<td>Ejemplo en C#</td>
+<td><code>CuentaBancaria</code> con <code>Ingresar()</code></td>
+<td><code>record Punto(int X, int Y)</code></td>
+</tr>
+<tr class="even">
+<td>Facilita</td>
+<td>Añadir <strong>nuevos tipos</strong> sin tocar el resto</td>
+<td>Añadir <strong>nuevas operaciones</strong> sobre los datos</td>
+</tr>
+</tbody>
+</table></div>
+<p>Una clase <strong>no debe ser un híbrido</strong>: a medias oculta
+datos y a medias los expone. Si solo transporta datos, usa un
+<strong><code>record</code></strong> (o <code>struct</code>); si tiene
+lógica, <strong>encapsula</strong>.</p>
+<h3 id="6-la-ley-de-demeter-habla-solo-con-tus-amigos">6. La ley de
+Demeter («habla solo con tus amigos»)</h3>
+<p>Un método solo debería llamar a:</p>
+<ul>
+<li>Métodos de <strong>su propia clase</strong>.</li>
+<li>Métodos de <strong>objetos que recibe como parámetro</strong>.</li>
+<li>Métodos de <strong>objetos que crea</strong> él mismo.</li>
+<li>Métodos de <strong>sus atributos</strong>.</li>
+</ul>
+<p>Evita las <strong>cadenas de llamadas</strong>
+<code>a.ObtenerB().ObtenerC().HacerAlgo()</code>: tu clase queda
+acoplada a la estructura interna de las otras. Mejor <strong>pídele a
+<code>a</code> que lo haga por ti</strong>.</p>
+<!--ex:2-->
+
+<h3
+id="7-prefiere-la-composición-a-la-herencia-cuando-no-es-un-es-un">7.
+Prefiere la composición a la herencia (cuando no es un «es un»)</h3>
+<p>La herencia es potente pero crea una unión muy fuerte entre clases.
+Si lo que expresas es «<strong>tiene un</strong>» (un coche
+<strong>tiene</strong> un motor), usa <strong>composición</strong> (un
+atributo), no herencia. Reserva la herencia para relaciones «<strong>es
+un</strong>» (un orco <strong>es un</strong> enemigo).</p>
+<div class="callout">
+
+<p><strong>Resumen.</strong> Clases pequeñas · una responsabilidad ·
+cohesivas · abiertas a ampliar · objetos que ocultan datos y estructuras
+que los exponen · sin cadenas de llamadas · composición antes que
+herencia.</p>
+</div>`,
+          ejemplos: [
+            { titulo: "❌ Una clase con demasiadas responsabilidades → ✅ repartidas", explicacion: "Antes, una sola clase Jugador tendría los métodos Guardar() y Mostrar(): tres razones para cambiar en un solo sitio.", codigo: r`var jugador = new Jugador("Ana", 100);
+var guardado = new GuardadoDePartida();
+var pantalla = new Pantalla();
+
+guardado.Guardar(jugador);
+pantalla.Mostrar(jugador);
+
+// ✅ Cada clase tiene una única razón para cambiar
+
+// Se ocupa SOLO de los datos y reglas del jugador
+class Jugador
+{
+    public string Nombre { get; }
+    public int Vida { get; private set; }
+
+    public Jugador(string nombre, int vida)
+    {
+        Nombre = nombre;
+        Vida = vida;
+    }
+
+    public void RecibirDanio(int puntos) => Vida = Math.Max(0, Vida - puntos);
+}
+
+// Si cambia el formato de guardado, solo se toca esta clase
+class GuardadoDePartida
+{
+    public void Guardar(Jugador jugador)
+    {
+        Console.WriteLine($"[guardado] {jugador.Nombre};{jugador.Vida}");
+    }
+}
+
+// Si cambia cómo se dibuja, solo se toca esta clase
+class Pantalla
+{
+    public void Mostrar(Jugador jugador)
+    {
+        Console.WriteLine($"[pantalla] {jugador.Nombre} ♥ {jugador.Vida}");
+    }
+}
+` },
+            { titulo: "Abierto a ampliar: nuevo tipo de enemigo sin tocar lo anterior", explicacion: "Con un switch por tipo habría que tocar el bucle (y todos los demás switch) cada vez que se añade un enemigo.", codigo: r`Enemigo[] enemigos = { new Orco(), new Mago(), new Dragon() };
+
+foreach (Enemigo enemigo in enemigos)
+{
+    Console.WriteLine($"{enemigo.Nombre} ataca con {enemigo.Atacar()} de daño");
+}
+
+// Para añadir un enemigo nuevo basta con crear una clase: el bucle de arriba NO cambia
+abstract class Enemigo
+{
+    public abstract string Nombre { get; }
+    public abstract int Atacar();
+}
+
+class Orco : Enemigo
+{
+    public override string Nombre => "Orco";
+    public override int Atacar() => 12;
+}
+
+class Mago : Enemigo
+{
+    public override string Nombre => "Mago";
+    public override int Atacar() => 20;
+}
+
+class Dragon : Enemigo           // ← lo nuevo: no hemos modificado nada de lo anterior
+{
+    public override string Nombre => "Dragón";
+    public override int Atacar() => 50;
+}
+` },
+            { titulo: "Ley de Demeter: no atravieses los objetos", explicacion: "Si mañana Cliente pasa a tener varias direcciones, solo habrá que cambiar ObtenerCiudadDeEnvio(), no cada sitio donde se pedía la ciudad.", codigo: r`var pedido = new Pedido(new Cliente(new Direccion("Barcelona")));
+
+// ❌ Cadena de llamadas: este código conoce la estructura interna de Pedido, Cliente y Direccion
+Console.WriteLine(pedido.Cliente.Direccion.Ciudad);
+
+// ✅ Le pedimos a Pedido lo que necesitamos: si cambia la estructura interna, esta línea no se entera
+Console.WriteLine(pedido.ObtenerCiudadDeEnvio());
+
+class Direccion
+{
+    public string Ciudad { get; }
+    public Direccion(string ciudad) => Ciudad = ciudad;
+}
+
+class Cliente
+{
+    public Direccion Direccion { get; }
+    public Cliente(Direccion direccion) => Direccion = direccion;
+}
+
+class Pedido
+{
+    public Cliente Cliente { get; }
+    public Pedido(Cliente cliente) => Cliente = cliente;
+
+    // El pedido sabe cómo llegar a la ciudad: los demás no necesitan saberlo
+    public string ObtenerCiudadDeEnvio() => Cliente.Direccion.Ciudad;
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Una clase, una responsabilidad",
+              nivel: 2,
+              enunciado: r`<p>La clase <code>Informe</code> de abajo <strong>calcula</strong>,
+<strong>formatea</strong> y <strong>guarda</strong> a la vez.
+<strong>Divídela</strong> en tres clases pequeñas
+(<code>CalculadoraDeInforme</code>, <code>FormateadorDeInforme</code> y
+<code>GuardadorDeInforme</code>) y haz que el programa principal las
+use.</p>
+<pre><code>class Informe
+{
+    public int[] Ventas = { 120, 80, 200 };
+
+    public int CalcularTotal() { /* suma las ventas */ }
+    public string Formatear() { /* devuelve «Total: X» */ }
+    public void Guardar() { /* escribe el texto en un archivo */ }
+}</code></pre>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Cada clase debe tener <strong>una única razón para
+cambiar</strong>.</li>
+<li><strong>Control de errores:</strong> al guardar, captura
+<code>IOException</code> y <code>UnauthorizedAccessException</code> y
+muestra un mensaje claro.</li>
+<li>Que el programa principal solo <strong>combine</strong> las clases:
+nada de lógica suelta.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> dale a cada clase solo los datos que
+necesita (por parámetro o en el constructor).</p>
+<p>🏅 <strong>Ampliación:</strong> haz que el guardado sea una
+<strong>interfaz</strong> <code>IGuardador</code> con dos
+implementaciones (<code>GuardadorEnConsola</code> y
+<code>GuardadorEnArchivo</code>).</p>`,
+              soluciones: [
+                { titulo: "Solución", nota: "Si mañana el informe se guarda en una base de datos, solo cambia GuardadorDeInforme.", codigo: r`int[] ventas = { 120, 80, 200 };
+
+int total = new CalculadoraDeInforme().CalcularTotal(ventas);
+string texto = new FormateadorDeInforme().Formatear(total);
+new GuardadorDeInforme().Guardar(texto, "informe.txt");
+
+class CalculadoraDeInforme
+{
+    public int CalcularTotal(int[] ventas)
+    {
+        int suma = 0;
+        foreach (int venta in ventas)
+        {
+            suma += venta;
+        }
+        return suma;
+    }
+}
+
+class FormateadorDeInforme
+{
+    public string Formatear(int total) => $"Total: {total}";
+}
+
+class GuardadorDeInforme
+{
+    public void Guardar(string texto, string ruta)
+    {
+        try
+        {
+            File.WriteAllText(ruta, texto);
+            Console.WriteLine($"Informe guardado en {ruta}");
+        }
+        catch (IOException ex)
+        {
+            Console.WriteLine($"No se pudo guardar: {ex.Message}");
+        }
+        catch (UnauthorizedAccessException)
+        {
+            Console.WriteLine("No tienes permiso para escribir ahí.");
+        }
+    }
+}
+` },
+                { titulo: "Ampliación: interfaz IGuardador", nota: "El código que usa IGuardador no sabe ni le importa dónde se guarda: es el principio abierto/cerrado en acción.", codigo: r`string texto = "Total: 400";
+
+IGuardador[] guardadores = { new GuardadorEnConsola(), new GuardadorEnArchivo("informe.txt") };
+foreach (IGuardador guardador in guardadores)
+{
+    guardador.Guardar(texto);
+}
+
+interface IGuardador
+{
+    void Guardar(string texto);
+}
+
+class GuardadorEnConsola : IGuardador
+{
+    public void Guardar(string texto) => Console.WriteLine($"[consola] {texto}");
+}
+
+class GuardadorEnArchivo : IGuardador
+{
+    private readonly string ruta;
+
+    public GuardadorEnArchivo(string ruta) => this.ruta = ruta;
+
+    public void Guardar(string texto)
+    {
+        try
+        {
+            File.WriteAllText(ruta, texto);
+            Console.WriteLine($"[archivo] guardado en {ruta}");
+        }
+        catch (IOException ex)
+        {
+            Console.WriteLine($"No se pudo guardar: {ex.Message}");
+        }
+    }
+}
+` },
+              ],
+            },
+            {
+              titulo: "Rompe la cadena",
+              nivel: 2,
+              enunciado: r`<p>En este código el programa principal <strong>conoce
+demasiado</strong> sobre las clases. <strong>Aplica la ley de
+Demeter</strong>: añade un método a <code>Jugador</code> para que el
+programa principal <strong>no atraviese</strong> los objetos.</p>
+<pre><code>Jugador jugador = new Jugador(&quot;Ana&quot;, new Arma(&quot;Espada&quot;, 30));
+Console.WriteLine(jugador.Arma.Danio);
+jugador.Arma.Danio = jugador.Arma.Danio + 5;</code></pre>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Crea en <code>Jugador</code> los métodos
+<strong><code>ObtenerDanio()</code></strong> y
+<strong><code>MejorarArma(int puntos)</code></strong>.</li>
+<li><code>Arma.Danio</code> debe pasar a ser <strong>de solo lectura
+desde fuera</strong> (<code>private set</code>) y modificarse a través
+de un método de <code>Arma</code>.</li>
+<li><strong>Control de errores:</strong> <code>MejorarArma</code> debe
+rechazar valores no positivos (lanza
+<code>ArgumentOutOfRangeException</code>).</li>
+</ul>
+<p>💡 <strong>TIP:</strong> «dile, no preguntes»: pídele al jugador que
+mejore el arma, no abras el arma tú.</p>`,
+              soluciones: [
+                { titulo: "Solución", nota: "El programa principal ya no sabe que el jugador usa un «Arma»: mañana podría tener dos y el código que lo usa no cambiaría.", codigo: r`var jugador = new Jugador("Ana", new Arma("Espada", 30));
+
+Console.WriteLine(jugador.ObtenerDanio());          // 30
+jugador.MejorarArma(5);
+Console.WriteLine(jugador.ObtenerDanio());          // 35
+
+try
+{
+    jugador.MejorarArma(-2);
+}
+catch (ArgumentOutOfRangeException ex)
+{
+    Console.WriteLine($"Error: {ex.ParamName}");
+}
+
+class Arma
+{
+    public string Nombre { get; }
+    public int Danio { get; private set; }          // solo se puede cambiar desde dentro
+
+    public Arma(string nombre, int danio)
+    {
+        Nombre = nombre;
+        Danio = danio;
+    }
+
+    public void Mejorar(int puntos)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(puntos);
+        Danio += puntos;
+    }
+}
+
+class Jugador
+{
+    public string Nombre { get; }
+    private readonly Arma arma;                     // ahora es privada: nadie de fuera la atraviesa
+
+    public Jugador(string nombre, Arma arma)
+    {
+        Nombre = nombre;
+        this.arma = arma;
+    }
+
+    public int ObtenerDanio() => arma.Danio;
+
+    public void MejorarArma(int puntos) => arma.Mejorar(puntos);
+}
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "cc-pruebas",
+          titulo: "Pruebas: cómo saber que no hemos roto nada",
+          duracion: "20 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Entender para qué sirven las pruebas unitarias", "Escribir pruebas siguiendo el patrón Arrange-Act-Assert", "Elegir casos de prueba con clases de equivalencia y valores límite"],
+          teoria: r`<p>Refactorizar sin pruebas es como hacer <strong>malabares sin
+red</strong>: puedes hacerlo, pero cualquier despiste lo paga el
+usuario. Las <strong>pruebas</strong> (<em>tests</em>) son la red que te
+permite mejorar el código con confianza.</p>
+<h3 id="1-qué-es-una-prueba-unitaria">1. ¿Qué es una prueba
+unitaria?</h3>
+<p>Una <strong>prueba unitaria</strong> (<em>unit test</em>) es un
+pequeño programa que <strong>ejecuta una pieza concreta del
+código</strong> (una función, un método de una clase) con unos datos
+conocidos y <strong>comprueba que el resultado es el esperado</strong>.
+Se ejecutan en segundos y de forma automática.</p>
+<p>Beneficios:</p>
+<ul>
+<li>Detectan <strong>errores al instante</strong>, justo después de
+cometerlos.</li>
+<li>Permiten <strong>refactorizar sin miedo</strong>: si todo sigue en
+verde, no hemos roto nada.</li>
+<li>Sirven de <strong>documentación viva</strong>: un test muestra cómo
+se usa una función.</li>
+<li>Obligan a diseñar <strong>funciones pequeñas e
+independientes</strong> (lo difícil de probar suele ser código mal
+diseñado).</li>
+</ul>
+<h3 id="2-anatomía-de-un-test-arrange--act--assert">2. Anatomía de un
+test: Arrange – Act – Assert</h3>
+<p>Todos los tests limpios siguen tres pasos:</p>
+<ol type="1">
+<li><strong>Arrange</strong> (preparar): crear los datos y objetos.</li>
+<li><strong>Act</strong> (actuar): llamar a la función que se
+prueba.</li>
+<li><strong>Assert</strong> (comprobar): verificar que el resultado es
+el esperado.</li>
+</ol>
+<p>En un proyecto real usaríamos un <strong>framework</strong> (en .NET:
+<strong>xUnit</strong>, <strong>NUnit</strong> o
+<strong>MSTest</strong>). Con xUnit un test se escribe así:</p>
+<pre><code>[Fact]
+public void Suma_DosNumeros_DevuelveLaSuma()
+{
+    int resultado = Calculadora.Sumar(2, 3);       // Act
+    Assert.Equal(5, resultado);                    // Assert
+}</code></pre>
+<p>En el editor de esta web no podemos instalar xUnit, así que usaremos
+una <strong>mini-herramienta casera</strong> (una función
+<code>Comprobar</code>) para practicar la idea:</p>
+<!--ex:0-->
+
+<h3 id="3-qué-casos-probar">3. ¿Qué casos probar?</h3>
+<p>No se puede probar todo. Se eligen los datos con cabeza:</p>
+<ul>
+<li><strong>Clases de equivalencia</strong>: agrupa los valores que se
+comportan igual y prueba <strong>uno de cada grupo</strong>. (Si una
+nota va de 0 a 10: válidas, menores que 0, mayores que 10.)</li>
+<li><strong>Valores límite</strong>: los errores se esconden en los
+bordes. Prueba <strong>justo en el límite</strong>, <strong>un poco
+antes</strong> y <strong>un poco después</strong> (4, 5 y 6 si el
+aprobado es el 5).</li>
+<li><strong>Casos especiales</strong>: lista vacía, texto vacío,
+<code>null</code>, el cero, números negativos.</li>
+<li><strong>Camino feliz y caminos de error</strong>: lo que debe salir
+bien y lo que debe fallar (¿lanza la excepción esperada?).</li>
+</ul>
+<!--ex:1-->
+
+<h3 id="4-reglas-para-tests-limpios-first">4. Reglas para tests limpios
+(F.I.R.S.T.)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Letra</th>
+<th>Regla</th>
+<th>Significa</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>F</strong></td>
+<td><em>Fast</em> (rápidos)</td>
+<td>Se ejecutan en milisegundos, si no nadie los pasa</td>
+</tr>
+<tr class="even">
+<td><strong>I</strong></td>
+<td><em>Independent</em></td>
+<td>Un test no depende de otro ni del orden</td>
+</tr>
+<tr class="odd">
+<td><strong>R</strong></td>
+<td><em>Repeatable</em></td>
+<td>Da el mismo resultado en cualquier equipo, siempre</td>
+</tr>
+<tr class="even">
+<td><strong>S</strong></td>
+<td><em>Self-validating</em></td>
+<td>Dicen «pasa» o «falla» solos; no hay que leer una salida</td>
+</tr>
+<tr class="odd">
+<td><strong>T</strong></td>
+<td><em>Timely</em></td>
+<td>Se escriben <strong>a tiempo</strong> (justo antes o después del
+código)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Y además:</p>
+<ul>
+<li><strong>Un concepto por test</strong>: si un test falla, debe quedar
+claro qué falló.</li>
+<li>Los <strong>nombres</strong> cuentan:
+<code>Dividir_ConDivisorCero_LanzaExcepcion</code> explica el caso sin
+abrir el código.</li>
+<li>El código de test también hay que mantenerlo
+<strong>limpio</strong>.</li>
+</ul>
+<h3 id="5-tdd-la-idea-de-moda">5. TDD, la idea de moda</h3>
+<p>En el <strong>desarrollo guiado por pruebas</strong> (<em>Test-Driven
+Development</em>) se hace al revés: se escribe <strong>primero el
+test</strong> (falla, «rojo»), luego el <strong>código mínimo</strong>
+para que pase («verde») y por último se <strong>refactoriza</strong>.
+Ciclo: <strong>rojo → verde → refactorizar</strong>. No es obligatorio,
+pero entrenar este orden mejora mucho el diseño.</p>
+<h3 id="6-pruebas-de-caja-negra-y-de-caja-blanca">6. Pruebas de caja
+negra y de caja blanca</h3>
+<ul>
+<li><strong>Caja negra</strong>: pruebas <strong>sin mirar el
+código</strong>, solo entradas y salidas esperadas (lo que hacemos
+aquí).</li>
+<li><strong>Caja blanca</strong>: pruebas diseñadas <strong>mirando el
+código</strong> para cubrir todos sus caminos (<code>if</code>,
+bucles...).</li>
+</ul>
+<div class="callout">
+
+<p><strong>Resumen.</strong> Tests automáticos · Arrange-Act-Assert · un
+concepto por test · clases de equivalencia y valores límite · rápidos,
+independientes y repetibles · red de seguridad para refactorizar.</p>
+</div>`,
+          ejemplos: [
+            { titulo: "Un mini «framework» de pruebas casero", explicacion: "Fíjate en que el último test falla a propósito para ver cómo se informa. Los nombres de los tests describen el caso.", codigo: r`// Mini herramienta: compara el resultado con lo esperado e imprime PASA / FALLA
+int pruebasFalladas = 0;
+
+void Comprobar(string nombre, object esperado, object obtenido)
+{
+    bool pasa = Equals(esperado, obtenido);
+    Console.WriteLine($"{(pasa ? "PASA " : "FALLA")} · {nombre}");
+    if (!pasa)
+    {
+        Console.WriteLine($"        esperado: {esperado}  ·  obtenido: {obtenido}");
+        pruebasFalladas++;
+    }
+}
+
+// Tests: Arrange (datos) → Act (llamar) → Assert (comprobar)
+Comprobar("Doble de 4 es 8", 8, Doble(4));
+Comprobar("Doble de 0 es 0", 0, Doble(0));
+Comprobar("Doble de -3 es -6", -6, Doble(-3));
+Comprobar("Un test que falla a propósito", 100, Doble(10));
+
+Console.WriteLine($"\nPruebas falladas: {pruebasFalladas}");
+
+int Doble(int n) => n * 2;
+` },
+            { titulo: "Probar con clases de equivalencia y valores límite", explicacion: "Siete pruebas bien elegidas cubren las tres clases de equivalencia (inválida baja, válida, inválida alta) y los bordes 0, 4-5-6, 10-11.", codigo: r`void Comprobar(string nombre, object esperado, object obtenido)
+{
+    Console.WriteLine($"{(Equals(esperado, obtenido) ? "PASA " : "FALLA")} · {nombre}");
+}
+
+// Regla: nota de 0 a 10; aprobado desde 5; fuera de rango = "no válida"
+Comprobar("Nota negativa (inválida)", "no válida", Clasificar(-1));
+Comprobar("Límite inferior 0", "suspenso", Clasificar(0));
+Comprobar("Justo por debajo del aprobado (4)", "suspenso", Clasificar(4));
+Comprobar("Justo en el aprobado (5)", "aprobado", Clasificar(5));
+Comprobar("Justo por encima (6)", "aprobado", Clasificar(6));
+Comprobar("Límite superior 10", "aprobado", Clasificar(10));
+Comprobar("Por encima del máximo (11)", "no válida", Clasificar(11));
+
+string Clasificar(int nota)
+{
+    if (nota < 0 || nota > 10)
+    {
+        return "no válida";
+    }
+    return nota >= 5 ? "aprobado" : "suspenso";
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Pruebas para una función",
+              nivel: 2,
+              enunciado: r`<p>Escribe las pruebas de la función
+<strong><code>EsPar(int n)</code></strong> (devuelve <code>true</code>
+si el número es par) usando la herramienta <code>Comprobar</code> de la
+lección. Elige <strong>al menos 6 casos</strong>: pares, impares, cero y
+negativos.</p>
+<pre><code>bool EsPar(int n)
+{
+    return n % 2 == 0;
+}</code></pre>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Da a cada prueba un <strong>nombre descriptivo</strong> que explique
+el caso.</li>
+<li>Incluye el <strong>0</strong> y un <strong>número negativo
+impar</strong> (¡en C#, <code>-3 % 2</code> vale <code>-1</code>, no
+<code>1</code>!).</li>
+<li>Después, <strong>rompe la función a propósito</strong> (por ejemplo
+<code>n % 2 == 1</code>) y comprueba que tus pruebas lo detectan.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> si cambias la función y ninguna prueba
+falla, tus pruebas son demasiado pocas.</p>
+<p>🏅 <strong>Ampliación:</strong> crea una función
+<code>Comprobar</code> genérica
+<code>Comprobar&lt;T&gt;(string nombre, T esperado, T obtenido)</code>.</p>`,
+              soluciones: [
+                { titulo: "Solución", nota: "Si cambias la función por n % 2 == 1, fallarán varias pruebas. Con n % 2 == 1 el -3 daría false (-3 % 2 vale -1) y un test ingenuo lo pasaría por casualidad: por eso interesa el caso negativo.", codigo: r`void Comprobar<T>(string nombre, T esperado, T obtenido)
+{
+    bool pasa = Equals(esperado, obtenido);
+    Console.WriteLine($"{(pasa ? "PASA " : "FALLA")} · {nombre}");
+}
+
+Comprobar("4 es par", true, EsPar(4));
+Comprobar("7 es impar", false, EsPar(7));
+Comprobar("0 es par", true, EsPar(0));
+Comprobar("1 es impar (valor límite pequeño)", false, EsPar(1));
+Comprobar("-4 es par", true, EsPar(-4));
+Comprobar("-3 es impar", false, EsPar(-3));
+
+bool EsPar(int n)
+{
+    return n % 2 == 0;
+}
+` },
+              ],
+            },
+            {
+              titulo: "Primero el test (mini TDD)",
+              nivel: 3,
+              enunciado: r`<p>Practica el ciclo <strong>rojo → verde → refactorizar</strong> con la
+función
+<strong><code>EsContrasenaSegura(string contrasena)</code></strong>. Una
+contraseña es segura si tiene <strong>al menos 8 caracteres</strong>,
+<strong>una mayúscula</strong> y <strong>un dígito</strong>.</p>
+<p><strong>Pasos:</strong></p>
+<ol type="1">
+<li><strong>Rojo:</strong> escribe primero <strong>8 pruebas</strong>
+(con la herramienta <code>Comprobar</code>) y deja la función
+devolviendo siempre <code>false</code>: algunas fallarán.</li>
+<li><strong>Verde:</strong> programa el código <strong>mínimo</strong>
+para que todas pasen.</li>
+<li><strong>Refactorizar:</strong> limpia la función (nombres, funciones
+auxiliares) comprobando que sigue en verde.</li>
+</ol>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Casos mínimos: vacía, muy corta, sin mayúscula, sin dígito, justo 8
+caracteres válidos, 7 caracteres, muy larga válida, solo mayúsculas y
+dígitos.</li>
+<li><strong>Control de errores:</strong> una contraseña
+<code>null</code> debe devolver <code>false</code>, no lanzar
+excepción.</li>
+<li>No uses <code>break</code> ni <code>continue</code>:
+<code>string.Any(...)</code> y <code>char.IsUpper / char.IsDigit</code>
+bastan.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> <code>contrasena.Any(char.IsUpper)</code>
+comprueba si hay alguna mayúscula.</p>`,
+              soluciones: [
+                { titulo: "Solución", nota: "Las ocho pruebas son nuestra red: podemos reescribir la función de otra forma y saber al instante si hemos roto algo.", codigo: r`void Comprobar(string nombre, bool esperado, bool obtenido)
+{
+    Console.WriteLine($"{(esperado == obtenido ? "PASA " : "FALLA")} · {nombre}");
+}
+
+Comprobar("null no es segura", false, EsContrasenaSegura(null));
+Comprobar("vacía no es segura", false, EsContrasenaSegura(""));
+Comprobar("7 caracteres válidos NO basta", false, EsContrasenaSegura("Abcde12"));
+Comprobar("8 caracteres válidos SÍ", true, EsContrasenaSegura("Abcdef12"));
+Comprobar("sin mayúscula", false, EsContrasenaSegura("abcdefg1"));
+Comprobar("sin dígito", false, EsContrasenaSegura("Abcdefgh"));
+Comprobar("larga y válida", true, EsContrasenaSegura("ContrasenaMuyLarga2026"));
+Comprobar("solo mayúsculas y dígitos", true, EsContrasenaSegura("ABCDEFG1"));
+
+// Refactorizada: una condición por regla, con nombres que se leen solos
+bool EsContrasenaSegura(string? contrasena)
+{
+    if (string.IsNullOrEmpty(contrasena))        // cláusula de guarda
+    {
+        return false;
+    }
+
+    bool tieneLongitudMinima = contrasena.Length >= 8;
+    bool tieneMayuscula = contrasena.Any(char.IsUpper);
+    bool tieneDigito = contrasena.Any(char.IsDigit);
+
+    return tieneLongitudMinima && tieneMayuscula && tieneDigito;
+}
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "cc-olores",
+          titulo: "Olores del código y refactorización paso a paso",
+          duracion: "24 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Reconocer los «olores» (code smells) más habituales", "Aplicar refactorizaciones pequeñas y seguras", "Limpiar un programa real paso a paso"],
+          teoria: r`<p>Los <strong>olores del código</strong> (<em>code smells</em>) son
+<strong>síntomas</strong> de que algo puede estar mal diseñado. No
+siempre son errores (el programa funciona), pero <strong>huelen
+mal</strong> y, con el tiempo, el código que huele se pudre. Aprender a
+<strong>olerlos</strong> es lo que distingue a un buen programador.</p>
+<h3 id="1-catálogo-de-olores-y-su-remedio">1. Catálogo de olores y su
+remedio</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Olor</th>
+<th>Cómo se detecta</th>
+<th>Remedio habitual</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Funciones largas</strong></td>
+<td>No caben en pantalla; hay comentarios «// ahora hacemos...»</td>
+<td>Extraer funciones</td>
+</tr>
+<tr class="even">
+<td><strong>Código duplicado</strong></td>
+<td>Mismo bloque en varios sitios</td>
+<td>Extraer a una función (DRY)</td>
+</tr>
+<tr class="odd">
+<td><strong>Nombres crípticos</strong></td>
+<td><code>a</code>, <code>tmp</code>, <code>data2</code>,
+<code>Proc</code></td>
+<td>Renombrar</td>
+</tr>
+<tr class="even">
+<td><strong>Números mágicos</strong></td>
+<td>Literales sin explicación</td>
+<td>Constantes con nombre</td>
+</tr>
+<tr class="odd">
+<td><strong>Demasiados parámetros</strong></td>
+<td>Más de 3</td>
+<td>Agrupar en un objeto/<code>record</code></td>
+</tr>
+<tr class="even">
+<td><strong>Anidación profunda</strong></td>
+<td>Muchos <code>if</code> dentro de <code>if</code></td>
+<td>Cláusulas de guarda</td>
+</tr>
+<tr class="odd">
+<td><strong>Condiciones complejas</strong></td>
+<td><code>if (a &amp;&amp; !b || c &amp;&amp; ...)</code></td>
+<td>Función con nombre de pregunta</td>
+</tr>
+<tr class="even">
+<td><strong>Comentarios que explican el <em>qué</em></strong></td>
+<td><code>// suma 1</code></td>
+<td>Código autoexplicativo</td>
+</tr>
+<tr class="odd">
+<td><strong>Código muerto / comentado</strong></td>
+<td>Variables sin usar, funciones que nadie llama</td>
+<td><strong>Borrarlo</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Clases «Dios»</strong></td>
+<td>Una clase que lo hace todo</td>
+<td>Dividir (SRP)</td>
+</tr>
+<tr class="odd">
+<td><strong>Envidia de funcionalidades</strong></td>
+<td>Un método usa más los datos de <em>otra</em> clase que los de la
+suya</td>
+<td>Mover el método a esa clase</td>
+</tr>
+<tr class="even">
+<td><strong>Cadenas de llamadas</strong></td>
+<td><code>a.B.C.D</code></td>
+<td>Ley de Demeter</td>
+</tr>
+<tr class="odd">
+<td><strong>Primitivos en todas partes</strong></td>
+<td>Un <code>string</code> para un DNI, un <code>int</code> para un
+dinero</td>
+<td>Crear un tipo propio (<code>record</code>)</td>
+</tr>
+<tr class="even">
+<td><strong><code>switch</code> repetidos por tipo</strong></td>
+<td>El mismo <code>switch</code> en varios sitios</td>
+<td>Polimorfismo</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-refactorizar-sin-perderse-pasos-pequeños">2. Refactorizar sin
+perderse: pasos pequeños</h3>
+<p>La regla de oro: <strong>un cambio pequeño cada vez, y probar después
+de cada uno</strong>. Una refactorización suele seguir este método:</p>
+<ol type="1">
+<li><strong>Asegura una red</strong>: escribe pruebas (o compara la
+salida antes y después).</li>
+<li><strong>Elige un olor</strong> y aplica <strong>un solo</strong>
+remedio.</li>
+<li><strong>Ejecuta</strong> las pruebas: ¿siguen pasando? Entonces
+sigue. ¿Fallan? <strong>Deshaz</strong> el último paso (Git te ayuda:
+haz un <em>commit</em> tras cada paso verde).</li>
+<li>Repite hasta que no huela.</li>
+</ol>
+<p>Tu IDE te ayuda: <strong>Extraer método</strong>
+(<code>Ctrl + .</code> en Visual Studio), <strong>Renombrar</strong>
+(<code>Ctrl + R, R</code>)... hacen el cambio <strong>sin romper
+nada</strong>.</p>
+<h3 id="3-un-ejemplo-completo-paso-a-paso">3. Un ejemplo completo, paso
+a paso</h3>
+<p>Partimos de un programa que calcula el <strong>importe de una
+factura</strong>. Funciona, pero huele fatal. Vamos a limpiarlo
+<strong>en cuatro pasos</strong>, comprobando que la salida no
+cambia:</p>
+<!--ex:0-->
+
+<p><strong>Paso 1 · Renombrar y quitar los números mágicos.</strong></p>
+<!--ex:1-->
+
+<p><strong>Paso 2 · Extraer funciones.</strong></p>
+<!--ex:2-->
+
+<p><strong>Paso 3 · Cláusulas de guarda, eliminar duplicados y código
+muerto.</strong> Resultado final:</p>
+<!--ex:3-->
+
+<h3 id="4-cuándo-parar">4. ¿Cuándo parar?</h3>
+<p>Refactorizar no es perfeccionismo infinito. Pregúntate: «¿el
+siguiente cambio hace el código <strong>más fácil de entender o de
+cambiar</strong>?». Si no, para. Y recuerda: <strong>los tests en verde
+antes de empezar y al terminar</strong>.</p>
+<div class="callout">
+
+<p><strong>Para terminar.</strong> El código limpio no es un destino, es
+un <strong>hábito</strong>: nombres que cuentan la historia, funciones
+pequeñas, clases con una responsabilidad, errores bien gestionados y
+pruebas que te dejan dormir tranquilo. Cada vez que abras un archivo,
+aplica la regla del boy scout. 🏕️</p>
+<p>Para seguir aprendiendo: <em>Clean Code</em> (Robert C. Martin),
+<em>Refactoring</em> (Martin Fowler) y las guías de estilo de Microsoft
+para C#.</p>
+</div>`,
+          ejemplos: [
+            { titulo: "Paso 0 · El programa original (huele mal)", explicacion: "Guarda la salida que muestra (Total: 80,465 aprox.): es nuestra «red» para comprobar que no rompemos nada.", codigo: r`// Calcula el importe de una factura: 3 productos con IVA y descuento
+double p1 = 10.5, p2 = 20, p3 = 7.25;
+int c1 = 2, c2 = 1, c3 = 4;
+double t = 0;
+t = t + p1 * c1;
+t = t + p2 * c2;
+t = t + p3 * c3;
+double d = 0;
+if (t > 50) { if (t > 100) { d = t * 0.1; } else { d = t * 0.05; } }
+double x = t - d;
+double iva = x * 0.21;
+double r = x + iva;
+// double o = r * 1.0;
+Console.WriteLine("Total: " + r);
+` },
+            { titulo: "Paso 1 · Nombres claros y constantes", explicacion: "Eliminamos también la línea comentada (código muerto). Misma salida que el paso 0.", codigo: r`const double LimiteDescuentoAlto = 100;
+const double LimiteDescuentoBajo = 50;
+const double DescuentoAlto = 0.10;
+const double DescuentoBajo = 0.05;
+const double Iva = 0.21;
+
+double precioProducto1 = 10.5, precioProducto2 = 20, precioProducto3 = 7.25;
+int unidadesProducto1 = 2, unidadesProducto2 = 1, unidadesProducto3 = 4;
+
+double subtotal = 0;
+subtotal = subtotal + precioProducto1 * unidadesProducto1;
+subtotal = subtotal + precioProducto2 * unidadesProducto2;
+subtotal = subtotal + precioProducto3 * unidadesProducto3;
+
+double descuento = 0;
+if (subtotal > LimiteDescuentoBajo) { if (subtotal > LimiteDescuentoAlto) { descuento = subtotal * DescuentoAlto; } else { descuento = subtotal * DescuentoBajo; } }
+
+double baseImponible = subtotal - descuento;
+double importeIva = baseImponible * Iva;
+double total = baseImponible + importeIva;
+Console.WriteLine("Total: " + total);           // sin cambios: misma salida
+` },
+            { titulo: "Paso 2 · Extraer funciones", explicacion: "Las tres líneas repetidas de «subtotal = subtotal + ...» pasan a un bucle: los datos viven en arrays.", codigo: r`const double Iva = 0.21;
+
+double[] precios = { 10.5, 20, 7.25 };
+int[] unidades = { 2, 1, 4 };
+
+double subtotal = CalcularSubtotal(precios, unidades);
+double baseImponible = subtotal - CalcularDescuento(subtotal);
+double total = baseImponible + baseImponible * Iva;
+Console.WriteLine("Total: " + total);
+
+double CalcularSubtotal(double[] precios, int[] unidades)
+{
+    double suma = 0;
+    for (int i = 0; i < precios.Length; i++)
+    {
+        suma += precios[i] * unidades[i];
+    }
+    return suma;
+}
+
+double CalcularDescuento(double subtotal)
+{
+    const double LimiteDescuentoAlto = 100;
+    const double LimiteDescuentoBajo = 50;
+    double descuento = 0;
+    if (subtotal > LimiteDescuentoBajo) { if (subtotal > LimiteDescuentoAlto) { descuento = subtotal * 0.10; } else { descuento = subtotal * 0.05; } }
+    return descuento;
+}
+` },
+            { titulo: "Paso 3 · Resultado final: guardas, sin anidación y sin duplicados", explicacion: "De 14 líneas confusas a funciones de 3–8 líneas que se entienden solas. La salida es idéntica en los cuatro pasos.", codigo: r`const double Iva = 0.21;
+
+double[] precios = { 10.5, 20, 7.25 };
+int[] unidades = { 2, 1, 4 };
+
+double total = CalcularTotalConIva(precios, unidades);
+Console.WriteLine("Total: " + total);           // misma salida que el programa original
+
+double CalcularTotalConIva(double[] precios, int[] unidades)
+{
+    double subtotal = CalcularSubtotal(precios, unidades);
+    double baseImponible = subtotal - CalcularDescuento(subtotal);
+    return baseImponible * (1 + Iva);
+}
+
+double CalcularSubtotal(double[] precios, int[] unidades)
+{
+    double suma = 0;
+    for (int i = 0; i < precios.Length; i++)
+    {
+        suma += precios[i] * unidades[i];
+    }
+    return suma;
+}
+
+double CalcularDescuento(double subtotal)
+{
+    const double LimiteDescuentoAlto = 100;
+    const double LimiteDescuentoBajo = 50;
+    const double DescuentoAlto = 0.10;
+    const double DescuentoBajo = 0.05;
+
+    if (subtotal > LimiteDescuentoAlto)           // guardas: de mayor a menor, sin anidar
+    {
+        return subtotal * DescuentoAlto;
+    }
+    if (subtotal > LimiteDescuentoBajo)
+    {
+        return subtotal * DescuentoBajo;
+    }
+    return 0;
+}
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Refactoriza paso a paso",
+              nivel: 3,
+              enunciado: r`<p>El siguiente programa <strong>funciona</strong>, pero acumula muchos
+olores. <strong>Refactorízalo</strong> aplicando lo aprendido en el
+módulo: nombres, constantes, funciones pequeñas, cláusulas de guarda y
+eliminación de código muerto. <strong>Antes de empezar, apunta la
+salida</strong>: debe ser <strong>idéntica</strong> al terminar.</p>
+<pre><code>int a = 3; int b = 0; int c = 7;
+int r = 0;
+if (a &gt; 0) { if (b == 0) { r = c * 2; } else { r = c * b; } }
+string s = &quot;&quot;;
+if (r &gt; 10) s = &quot;alto&quot;; else if (r &gt; 5) s = &quot;medio&quot;; else s = &quot;bajo&quot;;
+int unused = 99;
+Console.WriteLine(&quot;Resultado: &quot; + r + &quot; (&quot; + s + &quot;)&quot;);
+// Console.WriteLine(unused);</code></pre>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Haz <strong>cada mejora por separado</strong> y comprueba la salida
+tras cada una: es la forma segura de refactorizar.</li>
+<li>Inventa un contexto para los datos (por ejemplo, puntos de un
+videojuego: <code>nivel</code>, <code>bonus</code>,
+<code>puntosBase</code>) y <strong>usa esos nombres</strong>.</li>
+<li>Extrae al menos <strong>dos funciones</strong>: una que calcule el
+valor y otra que lo clasifique (<code>"alto"</code>,
+<code>"medio"</code>, <code>"bajo"</code>).</li>
+<li>Usa <strong>cláusulas de guarda</strong> en lugar de los
+<code>if</code> anidados y <strong>elimina</strong> el código
+muerto.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> si Git está a mano, haz un <em>commit</em>
+después de cada paso verde.</p>
+<p>🏅 <strong>Ampliación:</strong> añade pruebas con la herramienta
+<code>Comprobar</code> para las dos funciones nuevas y verifica los
+valores límite (5, 6, 10, 11).</p>`,
+              soluciones: [
+                { titulo: "Solución", nota: "La salida es la del original: «Resultado: 14 (alto)». Desaparecen la variable unused y el comentario con código muerto, y las condiciones se leen de arriba abajo.", codigo: r`const int NivelMinimo = 1;
+const int Multiplicador = 2;
+const int LimiteAlto = 10;
+const int LimiteMedio = 5;
+
+int nivel = 3;
+int bonus = 0;
+int puntosBase = 7;
+
+int puntos = CalcularPuntos(nivel, bonus, puntosBase);
+Console.WriteLine($"Resultado: {puntos} ({ClasificarPuntos(puntos)})");      // Resultado: 14 (alto)
+
+int CalcularPuntos(int nivel, int bonus, int puntosBase)
+{
+    if (nivel < NivelMinimo)             // guarda: sin nivel no hay puntos
+    {
+        return 0;
+    }
+    if (bonus == 0)
+    {
+        return puntosBase * Multiplicador;
+    }
+    return puntosBase * bonus;
+}
+
+string ClasificarPuntos(int puntos)
+{
+    if (puntos > LimiteAlto)
+    {
+        return "alto";
+    }
+    if (puntos > LimiteMedio)
+    {
+        return "medio";
+    }
+    return "bajo";
+}
+` },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "m9",
       titulo: "Autoevaluación y repaso",
       lecciones: [
         {
@@ -9348,7 +12656,45 @@ objeto hijo en una variable de la clase madre.</li>
 <li><strong><code>is</code> / <code>as</code>:</strong> operadores para
 consultar o convertir al tipo real de un objeto.</li>
 </ul>
-<hr />`,
+<hr />
+<h4 id="código-limpio">Código limpio</h4>
+<ul>
+<li><strong>Código limpio (clean code):</strong> código fácil de leer,
+de entender y de cambiar, sin repeticiones y con pruebas.</li>
+<li><strong>Deuda técnica:</strong> coste futuro de haber escrito código
+rápido pero de mala calidad.</li>
+<li><strong>Regla del boy scout:</strong> dejar el código un poco mejor
+de como lo encontraste.</li>
+<li><strong>Refactorizar:</strong> mejorar la estructura interna del
+código sin cambiar su comportamiento externo.</li>
+<li><strong>DRY (Don't Repeat Yourself):</strong> no repetir el mismo
+código o conocimiento en varios sitios.</li>
+<li><strong>Número mágico:</strong> valor literal sin explicación; se
+sustituye por una constante con nombre.</li>
+<li><strong>Cláusula de guarda:</strong> condición al inicio de una
+función que descarta los casos raros y sale pronto.</li>
+<li><strong>SRP (responsabilidad única):</strong> una función o clase
+debe tener una única razón para cambiar.</li>
+<li><strong>Cohesión:</strong> grado en que los métodos de una clase
+usan sus atributos.</li>
+<li><strong>Ley de Demeter:</strong> un método solo debe hablar con sus
+«amigos» directos, sin cadenas de llamadas.</li>
+<li><strong>Efecto secundario:</strong> algo que hace una función y que
+no dice su nombre.</li>
+<li><strong>Patrón Try:</strong>
+<code>bool TryX(..., out resultado)</code>: indica el fallo con un bool
+sin lanzar excepciones.</li>
+<li><strong>Prueba unitaria:</strong> pequeño programa automático que
+comprueba una pieza del código.</li>
+<li><strong>Arrange-Act-Assert:</strong> preparar, actuar y comprobar:
+los tres pasos de un test.</li>
+<li><strong>Valor límite:</strong> dato situado justo en el borde de un
+rango; es donde suelen esconderse los errores.</li>
+<li><strong>TDD:</strong> desarrollo guiado por pruebas: rojo (falla) →
+verde (pasa) → refactorizar.</li>
+<li><strong>Olor del código (code smell):</strong> síntoma de un posible
+mal diseño aunque el programa funcione.</li>
+</ul>`,
           ejemplos: [
           ],
           actividades: [

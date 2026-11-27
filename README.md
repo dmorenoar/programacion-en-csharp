@@ -199,3 +199,21 @@ Los programas **sencillos** (sin clases propias ni sintaxis moderna; los decimal
 **Diagnóstico:** abre `diagnostico.html` (junto a la web) para ejecutar todos los ejemplos y soluciones en Mono y en .NET, comparar las salidas y ver qué bloques salen igual. Sirve para ajustar el filtro de la vía rápida con datos reales.
 
 **Nuevos módulos:** sigue `docs/checklist-nuevos-modulos.md` y ejecuta `node tools/auditar-ejemplos.js` para que los ejemplos vayan por la vía rápida siempre que sea posible.
+
+## Estructura del curso y autoevaluación
+
+El curso tiene **9 módulos**: Fundamentos · Control de flujo · Arrays y matrices · Modularidad · Clases, bibliotecas y textos · Ficheros · Programación orientada a objetos · **Código limpio (Clean Code)** · Autoevaluación y repaso. Cada lección tiene pestañas de **Teoría**, **Ejemplos**, **Actividades** (con soluciones de menos a más profesionales) y **✅ Autoevaluación**.
+
+- Las preguntas de cada lección viven en `data/tests.js` (`TESTS[idLección] = [{ p, o, c, e }]`: pregunta, opciones, índice de la correcta y explicación). Las opciones se barajan solas.
+- Las lecciones con `testAleatorio: N` (módulo «Autoevaluación y repaso») sacan N preguntas al azar de todo el curso.
+
+## Comprobar que todos los ejemplos compilan (.NET 10)
+
+Con el SDK de .NET 10 instalado:
+
+```bash
+node tools/net10/dump.js              # extrae todos los ejemplos y soluciones de data/course.js
+python3 tools/net10/compilar.py --run # los compila y ejecuta; avisa de los que fallan
+```
+
+Úsalo antes de cada commit con contenido nuevo. (El servidor público de Judge0 llega a .NET 8; todo el código es compatible con C# 12.)
