@@ -1676,13 +1676,13 @@ de un compañero y salúdalo.</p>
 <li>Usa <code>Console.WriteLine</code> para mostrar y
 <code>Console.ReadLine</code> para leer.</li>
 <li>El texto debe quedar así (con tus datos): <code>Nombre: Ana</code>,
-<code>Ciclo: DAMv</code>, <code>Lenguaje: C#</code>.</li>
+<code>Ciclo: DAM</code>, <code>Lenguaje: C#</code>.</li>
 </ul>
 <p>💡 <strong>TIP:</strong> <code>Console.Write</code> no añade salto de
 línea, así que es ideal para las preguntas.</p>`,
               soluciones: [
                 { titulo: "Versión básica: concatenación", nota: "Se une el texto con +. Funciona, pero con muchas variables se vuelve difícil de leer.", codigo: r`Console.WriteLine("Nombre: Ana");
-Console.WriteLine("Ciclo: DAMv");
+Console.WriteLine("Ciclo: DAM");
 Console.WriteLine("Lenguaje: C#");
 
 Console.Write("¿Cómo se llama tu compañero? ");
@@ -1690,7 +1690,7 @@ string companero = Console.ReadLine() ?? "";      // ?? "" evita null si no se e
 Console.WriteLine("¡Hola, " + companero + "!");
 ` },
                 { titulo: "Versión recomendada: interpolación", nota: "Guardar los datos en variables permite cambiarlos en un único sitio.", codigo: r`string nombre = "Ana";
-string ciclo = "DAMv";
+string ciclo = "DAM";
 string lenguaje = "C#";
 
 Console.WriteLine($"Nombre: {nombre}");       // $"..." permite meter variables entre llaves
@@ -2673,7 +2673,7 @@ una operación «hacia delante» y no rompe el trabajo de los demás.</p>
 <h3 id="6-configuración-inicial-una-sola-vez-por-ordenador">6.
 Configuración inicial (una sola vez por ordenador)</h3>
 <pre><code>git config --global user.name &quot;Tu Nombre&quot;
-git config --global user.email &quot;tu.correo@example.com&quot;
+git config --global user.email &quot;tu-correo@dominio.com&quot;
 git config --global init.defaultBranch main</code></pre>
 <p>Sin esto, tus commits aparecerán con el autor equivocado y en la
 corrección no constará que son tuyos.</p>`,
@@ -5130,7 +5130,7 @@ long Factorial(int numero) => numero <= 1 ? 1 : numero * Factorial(numero - 1);`
             {
               titulo: "Un procedimiento con parámetro",
               codigo: r`MostrarBienvenida("Ana");
-MostrarBienvenida("1r DAM");        // reutilizamos el mismo código
+MostrarBienvenida("1º DAM");        // reutilizamos el mismo código
 
 void MostrarBienvenida(string quien)
 {
@@ -9455,7 +9455,7 @@ Regex clave = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$", RegexOptions.C
 Comprobar("Código postal", codigoPostal, new[] { "08001", "0800", "08A01" });
 Comprobar("DNI", dni, new[] { "12345678Z", "1234567Z", "12345678" });
 Comprobar("Hora", hora, new[] { "09:30", "23:59", "24:00", "9:30" });
-Comprobar("Correo", correo, new[] { "ana@example.com", "ana@example", "a@@b.cat" });
+Comprobar("Correo", correo, new[] { "usuario@dominio.com", "usuario@dominio", "a@@b.com" });
 Comprobar("Contraseña", clave, new[] { "Secreta1", "secreta1", "Corta1" });
 
 void Comprobar(string nombre, Regex patron, string[] valores)
@@ -11704,7 +11704,7 @@ dentro de objetos y listas dentro de objetos.</p>
   &quot;nombre&quot;: &quot;Ana Puig&quot;,
   &quot;activo&quot;: true,
   &quot;notas&quot;: [9.0, 8.5, 7.25],
-  &quot;tutor&quot;: { &quot;nombre&quot;: &quot;Dani&quot;, &quot;correo&quot;: &quot;dani@example.com&quot; }
+  &quot;tutor&quot;: { &quot;nombre&quot;: &quot;Marta&quot;, &quot;grupo&quot;: &quot;1º DAM&quot; }
 }</code></pre>
 <h3 id="1-la-sintaxis-en-cinco-reglas">1. La sintaxis, en cinco
 reglas</h3>
@@ -12393,7 +12393,7 @@ Contacto ana = new Contacto
 {
     Nombre = "Ana Puig",
     Telefono = "666111222",
-    Correo = "ana@example.com",
+    Correo = "ana@dominio.com",
     Etiquetas = new List<string> { "clase", "proyecto", "DAM" },
 };
 
@@ -23812,7 +23812,7 @@ Console.WriteLine($"Repeat: {string.Join("", Enumerable.Repeat("-", 20))}");
 ` },
             { titulo: "SelectMany y ToDictionary", explicacion: "SelectMany es el operador que convierte «una lista de listas» en «una lista». Y recuerda el aviso de ToDictionary: con datos reales, las claves repetidas aparecen antes o después.", codigo: r`List<Curso> cursos = new List<Curso>
 {
-    new Curso("1r DAM", new List<string> { "Ana", "Luis", "Marta" }),
+    new Curso("1º DAM", new List<string> { "Ana", "Luis", "Marta" }),
     new Curso("2n DAM", new List<string> { "Pau", "Noa" }),
     new Curso("1r ASIX", new List<string> { "Marc", "Aina", "Pol" }),
 };
@@ -23850,8 +23850,8 @@ foreach (var par in porNombre)
 // Si hay claves repetidas, ToDictionary lanza excepción
 List<Curso> conRepetido = new List<Curso>
 {
-    new Curso("1r DAM", new List<string> { "Ana" }),
-    new Curso("1r DAM", new List<string> { "Luis" }),     // ¡clave repetida!
+    new Curso("1º DAM", new List<string> { "Ana" }),
+    new Curso("1º DAM", new List<string> { "Luis" }),     // ¡clave repetida!
 };
 
 try
@@ -23866,7 +23866,7 @@ catch (ArgumentException)
 // Soluciones: agrupar antes, o DistinctBy
 var agrupado = conRepetido.GroupBy(c => c.Nombre)
                           .ToDictionary(g => g.Key, g => g.SelectMany(c => c.Alumnos).ToList());
-Console.WriteLine($"Agrupando primero: 1r DAM tiene {agrupado["1r DAM"].Count} alumnos");
+Console.WriteLine($"Agrupando primero: 1º DAM tiene {agrupado["1º DAM"].Count} alumnos");
 
 class Curso
 {
@@ -30752,8 +30752,9 @@ cualquier momento del curso, qué te falta exactamente para aprobar.</p>
 <tbody>
 <tr class="odd">
 <td><strong>MP</strong></td>
-<td>Módulo profesional. El nuestro es el <strong>0485 ·
-Programación</strong>, de 165 h en el centro</td>
+<td>Módulo profesional. Aquí, el <strong>0485 · Programación</strong>:
+el mismo en DAM y en DAW, en toda España. Las horas las concreta cada
+comunidad autónoma</td>
 </tr>
 <tr class="even">
 <td><strong>RA</strong></td>
@@ -30794,7 +30795,10 @@ hacer, el CA dice <strong>cómo se comprueba</strong>, y el instrumento
      ├── CA 3.6  probar y depurar             │
      └── CA 3.7  comentar y documentar ───────┘</code></pre>
 <h3 id="2-cómo-se-califica-cada-ra">2. Cómo se califica cada RA</h3>
-<p>La nota de cada RA sale de sus instrumentos, con estos pesos:</p>
+<p>La nota de cada RA sale de los instrumentos con los que se evalúa.
+Qué instrumentos son y cuánto pesa cada uno lo fija la programación del
+módulo de tu centro; este es un reparto de ejemplo para que veas cómo
+funciona el mecanismo:</p>
 <div class="table-wrap"><table>
 <thead>
 <tr class="header">
@@ -30846,10 +30850,10 @@ hacer, el CA dice <strong>cómo se comprueba</strong>, y el instrumento
 <li><strong>Para aprobar el módulo hay que aprobar todos los
 RA.</strong> Un RA está suspendido si su nota es menor que 5. No se
 compensan entre ellos.</li>
-<li><strong>Cada instrumento necesita un 5 como mínimo.</strong> Si
-sacas menos de 5 en una PT o en una E, ese instrumento pondera
-<strong>0</strong> en la fórmula del RA, no la nota que hayas
-sacado.</li>
+<li><strong>Suele exigirse un mínimo por instrumento.</strong> Es muy
+habitual que, si sacas menos de 5 en una PT o en una E, ese instrumento
+pondere <strong>0</strong> en la fórmula del RA en lugar de la nota
+real. Comprueba en tu programación si es así.</li>
 </ol>
 <p>La nota final del módulo es la <strong>media ponderada por las
 horas</strong> de cada RA.</p>
@@ -30865,17 +30869,18 @@ arregla con buenas notas en los demás.</p>
 no superados. Si suspendes una PT o una E, pregunta en cuanto puedas:
 cuanto antes se recupera, menos se acumula.</p>
 <h3 id="4-la-segunda-convocatoria">4. La segunda convocatoria</h3>
-<p>Es <strong>no obligatoria</strong> y se hace al terminar las clases
-lectivas, según el calendario de segundas convocatorias. Tiene dos
-partes:</p>
+<p>Casi todos los centros ofrecen una segunda convocatoria (o
+convocatoria extraordinaria) al terminar las clases lectivas, para
+recuperar lo que haya quedado suspendido. El formato lo fija cada
+centro; uno muy extendido combina dos partes:</p>
 <ul>
-<li><strong>Dosier de actividades</strong> (40 % de la nota). Se entrega
-<strong>antes</strong> de la prueba, en la tarea correspondiente del
-Classroom. Requiere un <strong>4 como mínimo</strong>; por debajo,
-pondera 0.</li>
-<li><strong>Prueba</strong> (60 %).</li>
+<li><strong>Dosier de actividades</strong> (en torno al 40 % de la
+nota). Se entrega <strong>antes</strong> de la prueba y suele pedir una
+nota mínima: por debajo, pondera 0.</li>
+<li><strong>Prueba</strong> sobre los contenidos del módulo (el 60 %
+restante).</li>
 </ul>
-<pre><code>Nota de la segunda convocatoria = 0,4 × dosier + 0,6 × prueba</code></pre>
+<pre><code>Ejemplo de fórmula = 0,4 × dosier + 0,6 × prueba</code></pre>
 <h3 id="5-cómo-usar-esto-mientras-estudias">5. Cómo usar esto mientras
 estudias</h3>
 <p>Cada lección de este curso lleva una <strong>etiqueta con su RA y sus
@@ -30896,8 +30901,11 @@ delante del teclado, ese criterio está superado.</li>
 <p>Los RA y los CA de esta sección son el <strong>texto oficial</strong>
 del Real Decreto 450/2010, que establece el título de Técnico Superior
 en Desarrollo de Aplicaciones Multiplataforma (módulo profesional 0485).
-Los instrumentos, las horas y los pesos son los de la programación del
-módulo para el curso 2026-27.</p>
+El mismo módulo forma parte del título de Desarrollo de Aplicaciones
+Web, así que esta sección sirve igual en DAM y en DAW. Las actividades,
+los instrumentos, las horas y los pesos son una <strong>propuesta de
+reparto</strong>: cada centro concreta los suyos en la programación del
+módulo.</p>
 </div>`,
           ejemplos: [
           ],
@@ -31997,10 +32005,12 @@ RA8 y al RA9, que se evalúan con el proyecto CRUD.</li>
           duracion: "10 min",
           video: { provider: "drive", id: "" },
           objetivos: ["Conocer la planificación del módulo: actividades, horas y RA asociado", "Saber qué práctica o prueba evalúa cada bloque de contenidos"],
-          teoria: r`<p>Esta es la planificación del módulo en el centro: en qué actividades
-se reparten las 165 horas, qué RA trabaja cada una y con qué se evalúa.
-Te sirve para saber <strong>en qué punto del curso estás</strong> y qué
-se evaluará a continuación.</p>
+          teoria: r`<p>Esta es una <strong>propuesta de planificación</strong> del módulo:
+en qué actividades se reparten las horas (aquí, 165), qué RA trabaja
+cada una y con qué se evalúa. Cada centro hace la suya, pero el orden de
+los contenidos se parece mucho en todas partes, así que te sirve para
+situarte: saber <strong>en qué punto del curso estás</strong> y qué
+llega después.</p>
 <h3 id="a1--introducción-a-la-programación">A1 · Introducción a la
 programación</h3>
 <p><strong>20 h</strong> · <strong>RA1</strong> · PT1. CodeQuest · E1.
