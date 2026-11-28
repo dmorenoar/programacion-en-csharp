@@ -383,3 +383,8 @@ body.video-collapsed .lesson-media { padding-bottom: 8px; }
 .ra-chip:hover, .ra-chip:focus-visible { background: rgba(112, 149, 202, .26); }
 .ra-chip.transversal { background: rgba(140, 140, 140, .14); font-weight: 500; }
 .ra-chip.transversal::before { content: "🧰 "; }
+
+/* Fila de botones de descarga (material del curso) */
+.dl-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0 4px; }
+.dl-row .btn { text-decoration: none; }
+.includes a { color: inherit; }

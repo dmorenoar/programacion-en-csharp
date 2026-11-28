@@ -507,6 +507,7 @@ function homeHTML() {
             <li>🎬 ${formatMinutes(totalMin)} de vídeo bajo demanda</li>
             <li>🧩 ${plural(nActs, "actividad", "actividades")} con solución</li>
             <li>📖 Teoría y ejemplos de código comentados</li>
+            <li>📄 <a href="recursos/apuntes-programacion-csharp.pdf" download>Apuntes completos en PDF</a> (521 páginas)</li>
             <li>📱 Instalable como app en el móvil</li>
             <li>📴 Se puede consultar sin conexión</li>
             <li>✅ Progreso guardado en tu dispositivo</li>
@@ -518,6 +519,17 @@ function homeHTML() {
         <section class="learn">
           <h2>Lo que aprenderás</h2>
           <ul>${(COURSE.aprenderas || []).map((t) => `<li>${esc(t)}</li>`).join("")}</ul>
+        </section>
+
+        <section class="block recursos">
+          <h2>Material descargable</h2>
+          <p>Todo el curso en un solo documento, con índice, para estudiar sin conexión o en papel:
+          los ocho bloques de teoría, el anexo de Git y metodologías y el anexo con los resultados
+          de aprendizaje y los criterios de evaluación del módulo.</p>
+          <p class="dl-row">
+            <a class="btn primary" href="recursos/apuntes-programacion-csharp.pdf" download>📄 Apuntes en PDF (1,9 MB)</a>
+            <a class="btn" href="recursos/apuntes-programacion-csharp.docx" download>📝 Versión Word</a>
+          </p>
         </section>
 
         <section class="syllabus">

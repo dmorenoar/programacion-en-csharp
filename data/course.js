@@ -3724,7 +3724,7 @@ cabecera.</p>
 <h4 id="243-return">2.4.3 <code>return</code></h4>
 <p><code>return;</code> termina la ejecución del método en el que está.
 Cuando estamos en las sentencias de nivel superior de un programa,
-<strong>finaliza el programa</strong>. Con las funciones (UF2) veremos
+<strong>finaliza el programa</strong>. Con las funciones veremos
 que además puede devolver un valor.</p>
 <!--ex:2-->
 <div class="callout">
@@ -4692,7 +4692,7 @@ en el tipo de retorno:</p>
 <p>El siguiente ejemplo muestra el contenido de un array con una función
 y lo modifica con otra. Fíjate en el resultado:</p>
 <!--ex:0-->
-<p>Si, como vimos en la UF2, los parámetros se pasan por valor (se copia
+<p>Si, como vimos al hablar de funciones, los parámetros se pasan por valor (se copia
 el valor), ¿por qué ha cambiado el array original?</p>
 <p><strong>Porque un array es un tipo de referencia.</strong> La
 variable no contiene los valores del array, sino la <strong>dirección de
@@ -8021,8 +8021,7 @@ defecto de los miembros de una clase)</td>
 </tr>
 <tr class="even">
 <td><code>protected</code></td>
-<td>La clase que la define y las clases que <strong>heredan</strong> de
-ella (lo veremos en la UF4)</td>
+<td>La clase que la define y las clases que <strong>heredan</strong> de ella (lo veremos en el módulo de POO)</td>
 </tr>
 <tr class="odd">
 <td><code>protected internal</code></td>
@@ -8059,7 +8058,7 @@ instancia.</strong> Un miembro <code>static</code> pertenece a la
 <strong>clase</strong> y se llama con <code>NombreClase.Miembro</code>.
 Un miembro <strong>sin <code>static</code></strong> pertenece a cada
 <strong>objeto</strong> y solo se puede usar tras crear uno con
-<code>new</code>. De los objetos hablaremos en la UF4. Mientras tanto,
+<code>new</code>. De los objetos hablaremos en el módulo de POO. Mientras tanto,
 en las clases «almacén» de funciones, todo es <code>static</code>.</p>
 </div>
 <h4 id="224-bibliotecas">2.2.4 Bibliotecas</h4>
@@ -13579,8 +13578,7 @@ oportuno</strong> (no podemos saber exactamente cuándo).</p>
 <em>finalizador</em> (<code>~Dni() { … }</code>), pero <strong>casi
 nunca hace falta</strong>. Para liberar recursos que no son memoria
 (ficheros, conexiones…) usamos <code>IDisposable</code> y la instrucción
-<strong><code>using</code></strong>, tal como vimos con los ficheros en
-la UF3.</p>
+<strong><code>using</code></strong>, tal como vimos con los ficheros.</p>
 </div>`,
           ejemplos: [
             { titulo: "Clase Jugador", noRun: true, codigo: r`// Jugador.cs
@@ -30288,7 +30286,7 @@ string ClasificarPuntos(int puntos)
           duracion: "10 min",
           video: { provider: "drive", id: "" },
           objetivos: ["Repasar el vocabulario esencial de cada tema"],
-          teoria: r`<h4 id="uf1--tema-1">UF1 · Tema 1</h4>
+          teoria: r`<h4 id="bloque1--tema-1">Bloque 1 · Tema 1</h4>
 <ul>
 <li><strong>Compilar:</strong> transformar el código fuente en un código
 que la máquina (o el runtime) pueda ejecutar.</li>
@@ -30318,7 +30316,7 @@ y <code>||</code> no evalúan la segunda parte si la primera ya decide el
 resultado.</li>
 </ul>
 <hr />
-<h4 id="uf1--tema-2">UF1 · Tema 2</h4>
+<h4 id="bloque1--tema-2">Bloque 1 · Tema 2</h4>
 <ul>
 <li><strong>Flujo de un programa:</strong> orden en el que se van
 ejecutando las líneas.</li>
@@ -30342,7 +30340,7 @@ errores, normalmente ejecutando el programa paso a paso.</li>
 detiene el programa.</li>
 </ul>
 <hr />
-<h4 id="uf2--tema-1">UF2 · Tema 1</h4>
+<h4 id="bloque2--tema-1">Bloque 2 · Tema 1</h4>
 <ul>
 <li><strong>Función (método):</strong> bloque de código con un nombre
 que se ejecuta siempre que lo llamamos.</li>
@@ -30362,7 +30360,7 @@ función (<code>void</code> si no devuelve nada).</li>
 llama a sí misma. Necesita un <strong>caso base</strong>.</li>
 </ul>
 <hr />
-<h4 id="uf2--tema-2">UF2 · Tema 2</h4>
+<h4 id="bloque2--tema-2">Bloque 2 · Tema 2</h4>
 <ul>
 <li><strong>Clase:</strong> bloque de código en el que definimos
 funciones y variables.</li>
@@ -30382,7 +30380,7 @@ otras clases pueden acceder a un miembro (<code>public</code>,
 a un proyecto con <code>dotnet add package</code>.</li>
 </ul>
 <hr />
-<h4 id="uf3--tema-1">UF3 · Tema 1</h4>
+<h4 id="bloque3--tema-1">Bloque 3 · Tema 1</h4>
 <ul>
 <li><strong>Array:</strong> variable que permite almacenar múltiples
 valores de un mismo tipo.</li>
@@ -30402,7 +30400,7 @@ donde están los datos, no los datos.</li>
 en otro array nuevo.</li>
 </ul>
 <hr />
-<h4 id="uf3--tema-2">UF3 · Tema 2</h4>
+<h4 id="bloque3--tema-2">Bloque 3 · Tema 2</h4>
 <ul>
 <li><strong>E/S (I/O):</strong> <em>input / output</em>; hace referencia
 a los periféricos de entrada y salida de datos.</li>
@@ -30427,7 +30425,7 @@ del fichero.</li>
 automáticamente un recurso al terminar de usarlo.</li>
 </ul>
 <hr />
-<h4 id="uf4--tema-1">UF4 · Tema 1</h4>
+<h4 id="bloque4--tema-1">Bloque 4 · Tema 1</h4>
 <ul>
 <li><strong>Declarar:</strong> definir el nombre y el tipo de una
 variable.</li>
@@ -30454,7 +30452,7 @@ clase y no a cada objeto.</li>
 automáticamente la memoria de los objetos que ya no se usan.</li>
 </ul>
 <hr />
-<h4 id="uf4--tema-2">UF4 · Tema 2</h4>
+<h4 id="bloque4--tema-2">Bloque 4 · Tema 2</h4>
 <ul>
 <li><strong>Encapsulamiento:</strong> ocultar los detalles internos de
 una clase y exponer solo lo necesario.</li>
@@ -30483,7 +30481,7 @@ las demás.</li>
 que además admite <code>null</code>.</li>
 </ul>
 <hr />
-<h4 id="uf4--tema-3">UF4 · Tema 3</h4>
+<h4 id="bloque4--tema-3">Bloque 4 · Tema 3</h4>
 <ul>
 <li><strong>Polimorfismo:</strong> capacidad de usar un objeto de una
 clase hija donde se espera la clase madre, ejecutando el comportamiento
@@ -30690,6 +30688,38 @@ escribe los cambios acumulados.</li>
 <li><strong><code>AsNoTracking</code>:</strong> consulta de solo
 lectura, sin seguimiento de cambios.</li>
 </ul>`,
+          ejemplos: [
+          ],
+          actividades: [
+          ],
+        },
+        {
+          id: "apuntes-pdf",
+          titulo: "Apuntes completos en PDF",
+          duracion: "\u2014",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Descargar todo el curso en un único documento para estudiar sin conexión"],
+          teoria: r`<p>Todo el contenido de este curso existe también en <strong>un único documento</strong> de 521 páginas, con índice, para leer sin conexión, imprimir o estudiar en papel.</p>
+<p class="dl-row"><a class="btn primary big" href="recursos/apuntes-programacion-csharp.pdf" download>📄 Descargar los apuntes en PDF (1,9 MB)</a> <a class="btn" href="recursos/apuntes-programacion-csharp.docx" download>📝 Versión Word (editable)</a></p>
+<h3>Qué contiene</h3>
+<table>
+<thead><tr><th>Bloque</th><th>Contenido</th></tr></thead>
+<tbody>
+<tr><td><strong>Bloque 1</strong></td><td>Elementos de un programa y estructuras de control</td></tr>
+<tr><td><strong>Bloque 2</strong></td><td>Diseño modular: funciones, clases, bibliotecas y textos</td></tr>
+<tr><td><strong>Bloque 3</strong></td><td>Arrays y ficheros (texto, CSV, JSON y XML)</td></tr>
+<tr><td><strong>Bloque 4</strong></td><td>Programación orientada a objetos</td></tr>
+<tr><td><strong>Bloque 5</strong></td><td>Código limpio (<em>Clean Code</em>)</td></tr>
+<tr><td><strong>Bloque 6</strong></td><td>Colecciones, genéricos y LINQ</td></tr>
+<tr><td><strong>Bloque 7</strong></td><td>UML y modelado</td></tr>
+<tr><td><strong>Bloque 8</strong></td><td>Interfaz gráfica y persistencia</td></tr>
+<tr><td><strong>Anexo A</strong></td><td>Git, GitHub y metodologías de proyecto</td></tr>
+<tr><td><strong>Anexo B</strong></td><td>Currículo del módulo: los RA y los criterios de evaluación</td></tr>
+</tbody>
+</table>
+<p>Cada bloque trae la teoría con sus ejemplos de código comentados, el test de autoevaluación con la respuesta correcta y su explicación, y las actividades con soluciones de menos a más profesionales.</p>
+<div class="callout"><p><strong>Web o PDF.</strong> El contenido es el mismo, pero no sirven para lo mismo. En la <strong>web</strong> ejecutas el código, haces los tests y se guarda tu progreso. El <strong>PDF</strong> es para estudiar sin pantalla, subrayar y repasar antes de una prueba. Úsalos juntos.</p></div>
+<p>Los apuntes se actualizan cuando se actualiza el curso, así que descarga la versión nueva de vez en cuando.</p>`,
           ejemplos: [
           ],
           actividades: [
