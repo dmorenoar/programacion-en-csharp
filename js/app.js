@@ -404,7 +404,10 @@ function renderLesson(id, tab = "teoria") {
     <nav class="lesson-nav" aria-label="Navegación entre lecciones">
       <a class="btn" ${prev ? `href="#leccion-${esc(prev.id)}"` : 'aria-disabled="true"'}>← ${prev ? esc(prev.titulo) : "Anterior"}</a>
       <a class="btn primary" ${next ? `href="#leccion-${esc(next.id)}"` : 'aria-disabled="true"'}>${next ? esc(next.titulo) : "Siguiente"} →</a>
-    </nav>`;
+    </nav>
+    ${COURSE.buzon ? `<p class="buzon-leccion">🐞 ¿Has visto un error o se te ocurre cómo mejorar esta lección?
+      <a href="${esc(COURSE.buzon)}" target="_blank" rel="noopener">Escríbelo en el buzón de sugerencias</a>
+      e indica la lección: <strong>${esc(lesson.titulo)}</strong>.</p>` : ""}`;
 
   setCompleteButton($("#completeBtn"), id);
   syncVideoFold();
@@ -562,6 +565,15 @@ function homeHTML() {
               <p>${esc(p.bio || "")}</p>
             </div>
           </div>
+        </section>` : ""}
+
+        ${COURSE.buzon ? `
+        <section class="block buzon">
+          <h2>Buzón de sugerencias</h2>
+          <p>Este curso mejora con lo que cuentas. Si encuentras un error en la teoría, en un ejemplo o en
+          un test, si algo de la web no funciona o no te gusta, o si se te ocurre cómo explicarlo mejor,
+          escríbelo en el buzón. Se lee todo.</p>
+          <p class="dl-row"><a class="btn primary" href="${esc(COURSE.buzon)}" target="_blank" rel="noopener">💬 Abrir el buzón de sugerencias</a></p>
         </section>` : ""}
 
         <section class="block elaboracion">

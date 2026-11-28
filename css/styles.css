@@ -388,3 +388,7 @@ body.video-collapsed .lesson-media { padding-bottom: 8px; }
 .dl-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0 4px; }
 .dl-row .btn { text-decoration: none; }
 .includes a { color: inherit; }
+
+/* Buzón de sugerencias al pie de cada lección */
+.buzon-leccion { margin-top: 18px; padding: 12px 14px; border: 1px dashed var(--border); border-radius: 10px; font-size: .92rem; color: var(--muted, inherit); }
+.buzon-leccion a { font-weight: 600; }

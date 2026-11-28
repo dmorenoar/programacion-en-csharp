@@ -59,6 +59,8 @@ const COURSE = {
 <p>Empezamos por las variables y la lectura de datos, avanzamos por las estructuras de control y repetición, trabajamos con colecciones (arrays, matrices y jagged arrays) y terminamos organizando el código en funciones y procedimientos.</p>
 <p>Las soluciones se muestran en varios enfoques, de la más sencilla a la más profesional, para que entiendas <em>por qué</em> se hace cada cosa y no solo cómo.</p>
 <p>El curso irá creciendo con nuevos temas.</p>`,
+  // Buzón de sugerencias (Google Forms). Si se deja vacío, la web no muestra los enlaces.
+  buzon: "https://docs.google.com/forms/d/1MAadwzZ00GCAwjaD3M33fQ71bBpDySD71Ei4u9H-8yI/viewform",
   profesor: {
     nombre: "Daniel Moreno",
     rol: "Profesor de Desarrollo de Aplicaciones Multiplataforma",
