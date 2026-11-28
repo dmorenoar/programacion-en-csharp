@@ -572,7 +572,7 @@ function homeHTML() {
           decidido qué se enseña y cómo, ha dirigido la elaboración y es el responsable del resultado.</p>
           <p>Todo el código se ha compilado y ejecutado con .NET 10 antes de publicarse. Si encuentras
           un error, avísalo: la IA ayuda, pero no sustituye a revisar.</p>
-          <p class="licencia">© 2026 Daniel Moreno Arellano · Contenido publicado con licencia
+          <p class="licencia">© Daniel Moreno Arellano · Contenido publicado con licencia
           <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" rel="license noopener">Creative Commons
           BY-NC-SA 4.0</a>: puedes copiarlo, compartirlo y adaptarlo citando al autor, sin uso comercial y
           compartiendo tus versiones con la misma licencia.</p>
