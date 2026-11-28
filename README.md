@@ -245,3 +245,7 @@ python3 tools/net10/compilar.py --run # los compila y ejecuta; avisa de los que 
 ```
 
 Úsalo antes de cada commit con contenido nuevo. (El servidor público de Judge0 llega a .NET 8; todo el código es compatible con C# 12.)
+
+## Licencia
+
+© 2026 Daniel Moreno Arellano. Contenido publicado con licencia [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es): puedes copiarlo, compartirlo y adaptarlo citando al autor, sin uso comercial y compartiendo las versiones derivadas con la misma licencia. Detalles en [LICENSE.md](LICENSE.md).
