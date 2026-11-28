@@ -83,6 +83,210 @@ const COURSE = {
   },
 
   modulos: [
+    /* >>> nuevo:m0 */
+    {
+      id: "m0",
+      titulo: "Empieza aquí",
+      intro: true,
+      lecciones: [
+        {
+          id: "ruta-de-estudio",
+          titulo: "Ruta de estudio: por dónde empezar",
+          duracion: "6 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Conocer cómo está organizada cada lección y los trucos de la web", "Elegir la ruta que mejor encaja con tu punto de partida"],
+          teoria: r`<p>Este curso es <strong>gratuito, está en español y puedes seguirlo a tu ritmo</strong>. No hace falta hacerlo todo ni en orden estricto: elige la ruta que mejor encaje contigo y vuelve aquí cuando quieras.</p>
+
+<h3>Cómo funciona cada lección</h3>
+<ul>
+<li><strong>🎬 Vídeo</strong> (cuando está disponible): se puede plegar si prefieres solo leer.</li>
+<li><strong>📖 Teoría</strong> con ejemplos de código. Cada bloque tiene un botón <strong>▶ Probar</strong> que lo ejecuta en el editor, sin instalar nada.</li>
+<li><strong>🧩 Actividades</strong>: intenta resolverlas tú antes de abrir las soluciones. Cada una trae varios enfoques, del más sencillo al más profesional.</li>
+<li><strong>✅ Autoevaluación</strong>: un test corto con la explicación de cada respuesta.</li>
+<li><strong>🎯 Entrenamiento</strong> (botón de arriba): todas las actividades con enunciado y editor, en una sola pantalla.</li>
+</ul>
+
+<h3>Trucos de la web</h3>
+<table><thead><tr><th>Para…</th><th>Haz esto</th></tr></thead><tbody><tr><td>Buscar un concepto en todo el curso</td><td>Pulsa <strong>/</strong> (o Ctrl + K) o el botón 🔍</td></tr><tr><td>Ver tus puntos, tu nivel y tus insignias</td><td>Pulsa el indicador ⭐ de la cabecera</td></tr><tr><td>Imprimir una lección o guardarla en PDF</td><td>Botón 🖨 de la cabecera</td></tr><tr><td>Llevarte tu progreso a otro dispositivo</td><td>Menú lateral → «Guardar mi progreso en un archivo» y, en el otro dispositivo, «Cargar mi progreso»</td></tr><tr><td>Usarla sin conexión</td><td>Instálala con «Instalar app» (en iPhone: Compartir → Añadir a pantalla de inicio)</td></tr><tr><td>Avisar de un error o proponer mejoras</td><td>Buzón de sugerencias: <a href="https://docs.google.com/forms/d/1MAadwzZ00GCAwjaD3M33fQ71bBpDySD71Ei4u9H-8yI/viewform" target="_blank" rel="noopener">abrir el formulario</a></td></tr></tbody></table>
+
+<h3>Elige tu ruta</h3>
+<h4>🌱 Empiezo desde cero (unas 19 horas)</h4>
+<ol class="ruta">
+<li><b><a href="#leccion-instalar-herramientas">Instala las herramientas</a></b><small>15 min · en la lección siguiente a esta</small></li>
+<li><b><a href="#leccion-lenguajes-y-net">Módulo 1 · Fundamentos</a></b><small>2 h 02 min · variables, operadores, lectura y escritura</small></li>
+<li><b><a href="#leccion-estructuras-control">Módulo 3 · Control de flujo</a></b><small>1 h 06 min · condiciones, bucles y excepciones</small></li>
+<li><b><a href="#leccion-arrays">Módulo 4 · Arrays y matrices</a></b><small>57 min · guardar muchos datos juntos</small></li>
+<li><b><a href="#leccion-funciones">Módulo 5 · Modularidad</a></b><small>2 h 18 min · dividir el programa en funciones</small></li>
+<li><b><a href="#leccion-clases-estaticas">Módulo 6 · Clases, bibliotecas y textos</a></b><small>2 h 06 min · Math, Random, cadenas y fechas</small></li>
+<li><b><a href="#leccion-ficheros-concepto-gestion">Módulo 7 · Ficheros</a></b><small>1 h 55 min · guardar datos en texto, CSV, JSON y XML</small></li>
+<li><b><a href="#leccion-poo-introduccion">Módulo 8 · Programación orientada a objetos</a></b><small>2 h 30 min · clases, herencia e interfaces</small></li>
+<li><b><a href="#leccion-tipos-genericos">Módulos 10 y 11 · Colecciones y LINQ</a></b><small>4 h 00 min · listas, diccionarios y consultas</small></li>
+<li><b><a href="#leccion-proyecto-final">Proyecto final</a></b><small>2 h 30 min · todo lo anterior en una sola aplicación</small></li>
+</ol>
+<p><small>Opcionales cuando te hagan falta: el <a href="#leccion-git-basico">Módulo 2 (Git)</a> para guardar tus proyectos, el <a href="#leccion-uml-introduccion">Módulo 9 (UML)</a> para dibujar tus diseños, el <a href="#leccion-cc-por-que">Módulo 13 (código limpio)</a> para mejorar tu estilo y el <a href="#leccion-mvc-razor">Módulo 12 (interfaz y persistencia)</a> para dar el salto a aplicaciones web.</small></p>
+
+<h4>🔁 Ya programo en otro lenguaje (unas 16 horas)</h4>
+<ol class="ruta">
+<li><b><a href="#leccion-chuleta-fundamentos">Chuletas de la 1 a la 4</a></b><small>30 min · la sintaxis de C# en tablas de una o dos hojas</small></li>
+<li><b><a href="#leccion-clases-estaticas">Módulo 6 · Clases, bibliotecas y textos</a></b><small>2 h 06 min · lo que cambia respecto a lo que ya conoces</small></li>
+<li><b><a href="#leccion-ficheros-concepto-gestion">Módulo 7 · Ficheros</a></b><small>1 h 55 min</small></li>
+<li><b><a href="#leccion-poo-introduccion">Módulo 8 · Programación orientada a objetos</a></b><small>2 h 30 min · propiedades, records e interfaces en C#</small></li>
+<li><b><a href="#leccion-tipos-genericos">Módulos 10 y 11 · Colecciones y LINQ</a></b><small>4 h 00 min · lo más característico de C#</small></li>
+<li><b><a href="#leccion-cc-por-que">Módulo 13 · Código limpio</a></b><small>2 h 38 min</small></li>
+<li><b><a href="#leccion-proyecto-final">Proyecto final</a></b><small>empieza directamente por el Hito 3 si ya dominas lo básico</small></li>
+</ol>
+
+<h4>⏱️ Repaso rápido antes de un examen o una entrevista (unas 3 horas)</h4>
+<ol class="ruta">
+<li><b><a href="recursos/guia-rapida-csharp.pdf" download>Guía rápida en PDF</a></b><small>46 páginas con lo esencial, para leer de una sentada</small></li>
+<li><b><a href="#leccion-chuleta-fundamentos">Las nueve chuletas</a></b><small>una o dos hojas por tema; imprímelas con el botón 🖨</small></li>
+<li><b><a href="#leccion-test-iniciacion">Test de iniciación y test global</a></b><small>preguntas al azar de todo el curso: repítelos hasta que salgan bien</small></li>
+<li><b><a href="#leccion-glosario">Glosario de conceptos clave</a></b><small>10 min · el vocabulario de cada tema</small></li>
+</ol>
+
+<h3>Un consejo para aprender de verdad</h3>
+<p>Programar se aprende <strong>programando</strong>. Después de cada lección, cierra la pestaña de soluciones y escribe el código tú mismo, aunque te equivoques: los errores de compilación son la mejor parte del entrenamiento. Y si algo no se entiende, cuéntalo en el buzón de sugerencias: así mejora el curso para todo el mundo.`,
+          ejemplos: [
+          ],
+          actividades: [
+          ],
+        },
+        {
+          id: "instalar-herramientas",
+          titulo: "Instala las herramientas: .NET y un editor",
+          duracion: "15 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Instalar el SDK de .NET y comprobar que funciona", "Elegir un editor de código", "Crear y ejecutar tu primer proyecto desde la terminal"],
+          teoria: r`<p>Para programar en C# necesitas dos cosas: el <strong>SDK de .NET</strong> (el compilador y las bibliotecas) y un <strong>editor</strong> donde escribir el código. Las dos son gratuitas.</p>
+<p>¿Quieres empezar ya sin instalar nada? Usa el botón <strong>▶ Probar</strong> de cualquier ejemplo o el panel <strong>&lt;/&gt; Editor</strong>: compilan tu código en un servicio externo (necesitan Internet y no debes escribir datos personales). Para el curso completo, más adelante te conviene tenerlo todo en tu equipo.</p>
+
+<h3>1. Instala el SDK de .NET</h3>
+<ol>
+<li>Entra en <a href="https://dotnet.microsoft.com/download" target="_blank" rel="noopener">dotnet.microsoft.com/download</a> y descarga el <strong>SDK</strong> de la versión LTS más reciente (el <em>runtime</em> solo sirve para ejecutar programas, no para crearlos).</li>
+<li>Ejecuta el instalador con las opciones por defecto.</li>
+<li>Abre una <strong>terminal nueva</strong> (en Windows: «Terminal» o «PowerShell») y comprueba que funciona:</li>
+</ol>
+<pre><code>dotnet --version</code></pre>
+<p>Si sale un número de versión, ya está. Si dice que <code>dotnet</code> no se reconoce, cierra y vuelve a abrir la terminal (el instalador solo avisa al sistema en las terminales nuevas).</p>
+
+<h3>2. Elige un editor</h3>
+<table><thead><tr><th>Editor</th><th>Sistema</th><th>Coste</th><th>Cuándo elegirlo</th></tr></thead><tbody><tr><td><strong>Visual Studio Community</strong></td><td>Windows</td><td>Gratis</td><td>El más completo para C#; incluye depurador y asistentes. Pesa bastante.</td></tr><tr><td><strong>Visual Studio Code</strong> + extensión «C# Dev Kit»</td><td>Windows, macOS, Linux</td><td>Gratis</td><td>Ligero y muy extendido; sirve para otros lenguajes. Recomendado si no sabes cuál elegir.</td></tr><tr><td><strong>JetBrains Rider</strong></td><td>Windows, macOS, Linux</td><td>Gratis para uso no comercial</td><td>Muy potente si ya usas herramientas de JetBrains.</td></tr></tbody></table>
+
+<h3>3. Crea y ejecuta tu primer proyecto</h3>
+<p>Desde la terminal (en la carpeta donde quieras guardar tus programas):</p>
+<pre><code>dotnet new console -n HolaMundo
+cd HolaMundo
+dotnet run</code></pre>
+<p>Debería escribir <code>Hello, World!</code>. Qué ha pasado, paso a paso:</p>
+<ul>
+<li><code>dotnet new console</code> crea una carpeta con un proyecto de consola.</li>
+<li><code>dotnet run</code> compila el programa y lo ejecuta de una vez.</li>
+</ul>
+
+<h3>Qué hay dentro del proyecto</h3>
+<ul>
+<li><code>Program.cs</code>: tu código. En .NET moderno puedes escribir las instrucciones directamente, sin <code>class Program</code> ni <code>Main</code> (se llaman <em>instrucciones de nivel superior</em>).</li>
+<li><code>HolaMundo.csproj</code>: la configuración (versión de .NET, opciones del compilador).</li>
+<li><code>bin/</code> y <code>obj/</code>: archivos que genera el compilador. No se suben a Git (con <code>dotnet new gitignore</code> creas el archivo <code>.gitignore</code> que los excluye).</li>
+</ul>
+
+<h3>Problemas frecuentes</h3>
+<ul>
+<li><strong>«dotnet no se reconoce»</strong>: abre una terminal nueva; si sigue igual, reinicia el equipo.</li>
+<li><strong>Las tildes o la ñ salen mal en la consola de Windows</strong>: añade al principio del programa <code>Console.OutputEncoding = System.Text.Encoding.UTF8;</code>.</li>
+<li><strong>«El proyecto requiere una versión más nueva de .NET»</strong>: instala la versión del SDK que pide el proyecto o cambia <code>TargetFramework</code> en el <code>.csproj</code>.</li>
+<li><strong>Tienes varias versiones instaladas</strong>: <code>dotnet --list-sdks</code> te las enseña todas.</li>
+</ul>`,
+          ejemplos: [
+            { titulo: "Comprueba tu instalación", explicacion: "Copia este código en el Program.cs de tu proyecto y ejecuta «dotnet run»: te dirá con qué versión de .NET se está ejecutando.", codigo: r`using System.Runtime.InteropServices;
+
+// Comprueba con qué versión de .NET se está ejecutando tu programa
+Console.WriteLine($"Versión de .NET: {Environment.Version}");
+Console.WriteLine($"Sistema operativo: {RuntimeInformation.OSDescription}");
+Console.WriteLine($"Arquitectura: {RuntimeInformation.OSArchitecture}");
+` },
+          ],
+          actividades: [
+            {
+              titulo: "Tu primer proyecto en local",
+              nivel: 1,
+              pista: "Console.ReadLine() devuelve null cuando no hay más entrada; el operador ?? permite dar un valor por defecto.",
+              enunciado: r`<p>Crea en tu equipo un proyecto llamado <code>Saludo</code> con <code>dotnet new console</code> y modifica <code>Program.cs</code> para que <strong>pregunte tu nombre y te salude</strong>.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>El nombre no puede quedar vacío: si lo está, vuelve a preguntar (con un máximo de 3 intentos).</li>
+<li>Usa <code>do-while</code> con la condición en la cabecera, sin <code>while (true)</code> ni <code>break</code>.</li>
+<li>Escribe el código en inglés o español, pero con nombres que se entiendan.</li>
+</ul>
+<p>💡 <strong>TIP:</strong> empieza por la versión sencilla (sin validar) y añade la validación después.</p>`,
+              soluciones: [
+                { titulo: "Versión sencilla: sin validar", nota: "Es el programa mínimo: leer, guardar en una variable y mostrar. El «?? \"\"» evita que el nombre sea null.", codigo: r`// Versión sencilla: pide el nombre y saluda
+Console.Write("¿Cómo te llamas? ");
+string nombre = Console.ReadLine() ?? "";
+Console.WriteLine($"¡Hola, {nombre}! Ya tienes C# funcionando.");
+` },
+                { titulo: "Con validación y máximo de intentos", nota: "El do-while garantiza al menos una pregunta. La condición mezcla dos ideas: «sigue vacío» y «quedan intentos», así nunca se queda en un bucle infinito.", codigo: r`// Versión con validación: repite la pregunta si el nombre está vacío, pero con un máximo de 3 intentos
+const int MaxIntentos = 3;
+string nombre;
+int intentos = 0;
+
+do
+{
+    Console.Write("¿Cómo te llamas? ");
+    nombre = (Console.ReadLine() ?? "").Trim();
+    intentos++;
+    if (nombre.Length == 0 && intentos < MaxIntentos) Console.WriteLine("El nombre no puede estar vacío.");
+} while (nombre.Length == 0 && intentos < MaxIntentos);
+
+// IsNullOrEmpty comprueba si al final hay un nombre válido; si no, usamos uno por defecto
+Console.WriteLine(string.IsNullOrEmpty(nombre) ? "Hola, desconocido/a." : $"¡Hola, {nombre}! Ya tienes C# funcionando.");
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "novedades",
+          titulo: "Novedades y sugerencias aplicadas",
+          duracion: "4 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Saber qué se ha añadido al curso", "Conocer cómo proponer mejoras"],
+          teoria: r`<p>Esta página recoge lo que se va añadiendo al curso. Gran parte de las mejoras nacen de las <strong>sugerencias del alumnado</strong>: si echas algo en falta o has encontrado un error, cuéntalo en el <a href="https://docs.google.com/forms/d/1MAadwzZ00GCAwjaD3M33fQ71bBpDySD71Ei4u9H-8yI/viewform" target="_blank" rel="noopener">buzón de sugerencias</a> e indica en qué lección estabas.</p>
+
+<h3>Para aprender con más motivación</h3>
+<ul>
+<li>🏅 <strong>Puntos, niveles, racha e insignias</strong>: ganas XP al completar lecciones, resolver actividades y hacer tests. Hay diez niveles, una racha de días seguidos y una insignia por cada módulo. Tu progreso está en el indicador ⭐ de la cabecera y en la portada.</li>
+<li>🗺️ <strong>Ruta de estudio</strong> con tres itinerarios: desde cero, si ya programas en otro lenguaje y repaso rápido.</li>
+<li>🚀 <strong>Proyecto final</strong>: una aplicación completa en tres hitos, cada uno con soluciones graduadas.</li>
+</ul>
+
+<h3>Para estudiar mejor</h3>
+<ul>
+<li>🔍 <strong>Buscador</strong> en todo el curso (tecla <strong>/</strong>).</li>
+<li>📄 <strong>Nueve chuletas</strong> de una o dos hojas, pensadas para imprimir.</li>
+<li>⚡ <strong>Guía rápida en PDF</strong> (46 páginas) además de los apuntes completos.</li>
+<li>🖨️ <strong>Imprimir o guardar en PDF</strong> cualquier lección, sin menús ni editor.</li>
+<li>💾 <strong>Guardar y cargar tu progreso</strong> en un archivo, para cambiar de móvil a ordenador.</li>
+<li>🛠️ <strong>Instalación paso a paso</strong> de .NET y del editor.</li>
+</ul>
+
+<h3>Para todos</h3>
+<ul>
+<li>♿ Mejoras de accesibilidad: enlace «Saltar al contenido», foco visible con el teclado y respeto a quien pide menos animaciones.</li>
+<li>🔗 Vista previa con imagen al compartir el enlace del curso.</li>
+<li>📜 El curso se publica con licencia <strong>Creative Commons BY-NC-SA 4.0</strong>: puedes usarlo, copiarlo y adaptarlo citando al autor, sin uso comercial y compartiendo igual.</li>
+</ul>
+
+<h3>Cómo se decide qué mejorar</h3>
+<p>Se leen todas las sugerencias. Se corrigen primero los <strong>errores</strong> (teoría, ejemplos o tests incorrectos) y después las ideas que más se repiten. Cuando algo se corrige gracias a un aviso, aparecerá aquí.</p>`,
+          ejemplos: [
+          ],
+          actividades: [
+          ],
+        },
+      ],
+    },
+    /* <<< nuevo:m0 */
     /* ================================================================
        MÓDULO 1 · FUNDAMENTOS
        ================================================================ */
@@ -30734,6 +30938,1079 @@ lectura, sin seguimiento de cambios.</li>
         },
       ],
     },
+    /* >>> nuevo:m16 */
+    {
+      id: "m16",
+      titulo: "Proyecto final y chuletas",
+      lecciones: [
+        {
+          id: "proyecto-final",
+          titulo: "Proyecto final: gestor de tu colección de videojuegos",
+          duracion: "150 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Aplicar en un único proyecto todo lo aprendido en el curso", "Mejorar una solución por etapas, de la más sencilla a la más profesional", "Aprender a separar datos, lógica y persistencia"],
+          teoria: r`<p>Es hora de juntar todo lo aprendido en <strong>una sola aplicación</strong>: un gestor de tu colección de videojuegos (también te sirve para libros, películas o lo que quieras). Es un proyecto real y pequeño: se construye por <strong>tres hitos</strong>, y cada uno es una versión mejor que la anterior.</p>
+
+<h3>Cómo trabajarlo</h3>
+<ol>
+<li><strong>Un hito cada vez.</strong> No pases al siguiente hasta que el anterior funcione sin errores.</li>
+<li><strong>Intenta resolverlo tú antes de mirar la solución.</strong> Cuando la abras, compara: ¿qué hace mejor? ¿qué harías distinto?</li>
+<li><strong>Guarda cada hito con Git</strong> (<code>git commit</code>) y verás cómo evoluciona el proyecto. Si no recuerdas cómo, repasa la <a href="#leccion-git-basico">lección de Git</a>.</li>
+<li><strong>Cada hito tiene dos soluciones</strong>: la primera usa solo lo imprescindible y la segunda es la que escribiría un profesional. Las dos son válidas; lo importante es entender por qué la segunda es mejor.</li>
+</ol>
+
+<h3>Qué conceptos practica cada hito</h3>
+<table><thead><tr><th>Hito</th><th>Conceptos</th><th>Lecciones para repasar</th></tr></thead><tbody><tr><td>1 · Menú y arrays</td><td>Bucle do-while, switch, arrays, TryParse, funciones</td><td><a href="#leccion-estructuras-repeticion">Repetición</a>, <a href="#leccion-arrays">Arrays</a>, <a href="#leccion-funciones">Funciones</a></td></tr><tr><td>2 · Clases y listas</td><td>Clases, propiedades, constructores, List&lt;T&gt;, excepciones, encapsulación</td><td><a href="#leccion-poo-introduccion">POO</a>, <a href="#leccion-coleccion-list">List</a>, <a href="#leccion-excepciones">Excepciones</a></td></tr><tr><td>3 · Guardar y consultar</td><td>Ficheros, JSON, interfaces, LINQ</td><td><a href="#leccion-ficheros-json">JSON</a>, <a href="#leccion-poo-abstractas-interfaces">Interfaces</a>, <a href="#leccion-linq-introduccion">LINQ</a></td></tr></tbody></table>
+
+<h3>Cómo saber si está bien hecho</h3>
+<p>Antes de dar un hito por terminado, comprueba esta lista:</p>
+<ul>
+<li>☐ El programa no se cierra con ninguna entrada: prueba letras donde van números, textos vacíos y números fuera de rango.</li>
+<li>☐ El menú se repite hasta elegir salir, sin <code>while (true)</code> ni <code>break</code> fuera de un <code>switch</code>.</li>
+<li>☐ Cada función hace <strong>una sola cosa</strong> y su nombre dice cuál.</li>
+<li>☐ No hay «números mágicos» sueltos: los límites son constantes con nombre.</li>
+<li>☐ Has probado el programa con la lista vacía, con un solo elemento y con el máximo permitido.</li>
+</ul>
+
+<h3>Ideas para ir más allá 🏅</h3>
+<ul>
+<li>Añade <strong>plataforma</strong> y <strong>género</strong> a cada juego (un <code>enum</code> para el género).</li>
+<li>Permite <strong>editar</strong> un juego existente sin tener que borrarlo y volver a crearlo.</li>
+<li>Cambia el guardado de JSON a CSV <strong>solo cambiando una línea</strong> (¡para eso sirve la interfaz!).</li>
+<li>Escribe una <strong>clase de pruebas</strong> sencilla que compruebe <code>Biblioteca</code> sin usar la consola.</li>
+</ul>`,
+          ejemplos: [
+          ],
+          actividades: [
+            {
+              titulo: "Hito 1 · Menú y datos en arrays",
+              nivel: 1,
+              pista: "Los arrays paralelos comparten la misma posición: titulos[2], anios[2] y notas[2] son el mismo juego. Lleva un contador «total» para saber hasta dónde está lleno.",
+              enunciado: r`<p>Construye un programa de consola con un <strong>menú</strong> que permita gestionar hasta <code>10</code> videojuegos guardados en <strong>arrays</strong>: <code>1</code> añadir, <code>2</code> listar, <code>3</code> buscar por título y <code>0</code> salir.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Cada juego tiene <strong>título</strong>, <strong>año</strong> (1970-2100) y <strong>nota</strong> (0-10).</li>
+<li>El menú se repite hasta salir con <code>do-while</code>, sin <code>while (true)</code> ni <code>break</code> fuera de un <code>switch</code>.</li>
+<li><strong>Control de errores:</strong> valida la opción, el año y la nota con <code>TryParse</code> y vuelve a preguntar si no son válidos.</li>
+<li>Si la colección está llena, avisa en lugar de dar un error. La búsqueda no distingue mayúsculas de minúsculas.</li>
+</ul>
+<p>🥉 <strong>Alternativa más sencilla:</strong> no valides el año ni la nota y quita la búsqueda.</p>
+<p>🏅 <strong>Ampliación:</strong> añade una opción «4. Mostrar el juego mejor valorado».</p>`,
+              soluciones: [
+                { titulo: "Versión sencilla: todo en el programa principal", nota: "Funciona, pero repite casi el mismo bloque para validar el año y la nota. Esa repetición es la señal de que hace falta una función (ver la segunda versión).", codigo: r`// HITO 1 · versión sencilla: todo en el programa principal, con arrays paralelos
+// (titulos[i], anios[i] y notas[i] describen el MISMO videojuego)
+const int Capacidad = 10;
+string[] titulos = new string[Capacidad];
+int[] anios = new int[Capacidad];
+int[] notas = new int[Capacidad];
+int total = 0;      // cuántos juegos hay guardados de verdad
+int opcion;
+
+do
+{
+    Console.WriteLine("\n1. Añadir  2. Listar  3. Buscar por título  0. Salir");
+    Console.Write("Opción: ");
+    string? linea = Console.ReadLine();
+    // TryParse no lanza excepción si el texto no es un número.
+    // Si ya no queda entrada (null) salimos, para no quedarnos en un bucle infinito.
+    if (!int.TryParse(linea, out opcion)) opcion = linea is null ? 0 : -1;
+
+    switch (opcion)
+    {
+        case 1:
+            if (total == Capacidad)
+            {
+                Console.WriteLine("La colección está llena.");
+            }
+            else
+            {
+                Console.Write("Título: ");
+                titulos[total] = (Console.ReadLine() ?? "").Trim();
+
+                bool anioValido;
+                do
+                {
+                    Console.Write("Año de lanzamiento (1970-2100): ");
+                    anioValido = int.TryParse(Console.ReadLine(), out anios[total]) && anios[total] >= 1970 && anios[total] <= 2100;
+                } while (!anioValido);
+
+                bool notaValida;
+                do
+                {
+                    Console.Write("Nota (0-10): ");
+                    notaValida = int.TryParse(Console.ReadLine(), out notas[total]) && notas[total] >= 0 && notas[total] <= 10;
+                } while (!notaValida);
+
+                total++;
+                Console.WriteLine("Añadido.");
+            }
+            break;
+
+        case 2:
+            if (total == 0) Console.WriteLine("Todavía no hay juegos.");
+            for (int i = 0; i < total; i++)
+            {
+                Console.WriteLine($"{i + 1}. {titulos[i]} ({anios[i]}) - nota {notas[i]}");
+            }
+            break;
+
+        case 3:
+            Console.Write("Texto a buscar: ");
+            string texto = (Console.ReadLine() ?? "").Trim();
+            int encontrados = 0;
+            for (int i = 0; i < total; i++)
+            {
+                // OrdinalIgnoreCase: «zelda» encuentra «Zelda» sin pasar nada a minúsculas
+                if (titulos[i].Contains(texto, StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine($"{titulos[i]} ({anios[i]}) - nota {notas[i]}");
+                    encontrados++;
+                }
+            }
+            if (encontrados == 0) Console.WriteLine("Sin resultados.");
+            break;
+
+        case 0:
+            Console.WriteLine("¡Hasta pronto!");
+            break;
+
+        default:
+            Console.WriteLine("Opción no válida.");
+            break;
+    }
+} while (opcion != 0);
+` },
+                { titulo: "Versión profesional: funciones y validación reutilizable", nota: "LeerEntero sustituye a los dos bloques repetidos y además protege al menú de entradas inválidas. Las constantes con nombre explican los límites.", codigo: r`// HITO 1 · versión profesional: funciones pequeñas, validación reutilizable y constantes con nombre
+const int Capacidad = 10;
+const int AnioMinimo = 1970, AnioMaximo = 2100;
+
+string[] titulos = new string[Capacidad];
+int[] anios = new int[Capacidad];
+int[] notas = new int[Capacidad];
+int total = 0;
+int opcion;
+
+do
+{
+    MostrarMenu();
+    opcion = LeerEntero("Opción", 0, 3);
+
+    switch (opcion)
+    {
+        case 1: AnadirJuego(); break;
+        case 2: ListarJuegos(); break;
+        case 3: BuscarJuegos(); break;
+    }
+} while (opcion != 0);
+Console.WriteLine("¡Hasta pronto!");
+
+// ---------- Funciones locales (pueden usar las variables de arriba) ----------
+
+void MostrarMenu() =>
+    Console.WriteLine("\n1. Añadir  2. Listar  3. Buscar por título  0. Salir");
+
+// Pide un entero entre min y max hasta que sea válido.
+// Si se acaba la entrada devuelve min (0 en el menú = salir), así nunca se queda colgado.
+int LeerEntero(string mensaje, int min, int max)
+{
+    int valor;
+    bool valido;
+    do
+    {
+        Console.Write($"{mensaje} ({min}-{max}): ");
+        string? linea = Console.ReadLine();
+        if (linea is null) return min;
+        valido = int.TryParse(linea, out valor) && valor >= min && valor <= max;
+        if (!valido) Console.WriteLine("Valor no válido.");
+    } while (!valido);
+    return valor;
+}
+
+string LeerTexto(string mensaje)
+{
+    Console.Write($"{mensaje}: ");
+    string texto = (Console.ReadLine() ?? "").Trim();
+    return texto.Length == 0 ? "(sin título)" : texto;
+}
+
+void AnadirJuego()
+{
+    if (total == Capacidad)
+    {
+        Console.WriteLine("La colección está llena.");
+        return;
+    }
+    titulos[total] = LeerTexto("Título");
+    anios[total] = LeerEntero("Año de lanzamiento", AnioMinimo, AnioMaximo);
+    notas[total] = LeerEntero("Nota", 0, 10);
+    total++;
+    Console.WriteLine("Añadido.");
+}
+
+void ListarJuegos()
+{
+    if (total == 0) Console.WriteLine("Todavía no hay juegos.");
+    for (int i = 0; i < total; i++) MostrarJuego(i);
+}
+
+void BuscarJuegos()
+{
+    string texto = LeerTexto("Texto a buscar");
+    int encontrados = 0;
+    for (int i = 0; i < total; i++)
+    {
+        if (titulos[i].Contains(texto, StringComparison.OrdinalIgnoreCase))
+        {
+            MostrarJuego(i);
+            encontrados++;
+        }
+    }
+    if (encontrados == 0) Console.WriteLine("Sin resultados.");
+}
+
+void MostrarJuego(int i) =>
+    Console.WriteLine($"{i + 1}. {titulos[i]} ({anios[i]}) - nota {notas[i]}");
+` },
+              ],
+            },
+            {
+              titulo: "Hito 2 · Clases y listas",
+              nivel: 2,
+              pista: "Piensa en el objeto antes que en el menú: ¿qué datos tiene un videojuego y qué datos serían imposibles? Esa comprobación va en el constructor.",
+              enunciado: r`<p>Reescribe el gestor usando una <strong>clase</strong> para los juegos y una <strong>lista</strong> sin límite de tamaño. El menú añade la opción <code>4</code> eliminar un juego.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>Crea la clase <code>Videojuego</code> con <code>Titulo</code>, <code>Anio</code> y <code>Nota</code> como <strong>propiedades de solo lectura</strong>.</li>
+<li>El <strong>constructor valida</strong> los datos: un videojuego con título vacío o nota 15 no debe poder existir.</li>
+<li>Guarda los juegos en una <code>List&lt;Videojuego&gt;</code>.</li>
+<li><strong>Control de errores:</strong> captura la excepción del constructor y enseña un mensaje claro en lugar de cerrar el programa.</li>
+</ul>
+<p>🥉 <strong>Alternativa más sencilla:</strong> deja las propiedades públicas con <code>get; set;</code> y valida en el menú.</p>
+<p>🏅 <strong>Ampliación:</strong> no permitas dos juegos con el mismo título.</p>`,
+              soluciones: [
+                { titulo: "Versión sencilla: una clase y una lista", nota: "El constructor valida y lanza ArgumentException; el menú la captura con try/catch. Así los datos incorrectos no llegan nunca a la lista.", codigo: r`// HITO 2 · versión sencilla: una clase Videojuego y una List<Videojuego> (sin límite de tamaño)
+var juegos = new List<Videojuego>();
+int opcion;
+
+do
+{
+    Console.WriteLine("\n1. Añadir  2. Listar  3. Buscar  4. Eliminar  0. Salir");
+    Console.Write("Opción: ");
+    string? linea = Console.ReadLine();
+    if (!int.TryParse(linea, out opcion)) opcion = linea is null ? 0 : -1;
+
+    switch (opcion)
+    {
+        case 1:
+            Console.Write("Título: ");
+            string titulo = Console.ReadLine() ?? "";
+            Console.Write("Año: ");
+            int.TryParse(Console.ReadLine(), out int anio);    // si falla vale 0 y el constructor lo rechazará
+            Console.Write("Nota (0-10): ");
+            int.TryParse(Console.ReadLine(), out int nota);
+            try
+            {
+                juegos.Add(new Videojuego(titulo, anio, nota));   // el constructor valida los datos
+                Console.WriteLine("Añadido.");
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"No se ha añadido: {ex.Message}");
+            }
+            break;
+
+        case 2:
+            if (juegos.Count == 0) Console.WriteLine("Todavía no hay juegos.");
+            for (int i = 0; i < juegos.Count; i++) Console.WriteLine($"{i + 1}. {juegos[i]}");
+            break;
+
+        case 3:
+            Console.Write("Texto a buscar: ");
+            string texto = Console.ReadLine() ?? "";
+            int encontrados = 0;
+            foreach (Videojuego juego in juegos)
+            {
+                if (juego.Titulo.Contains(texto, StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine(juego);
+                    encontrados++;
+                }
+            }
+            if (encontrados == 0) Console.WriteLine("Sin resultados.");
+            break;
+
+        case 4:
+            Console.Write("Número del juego a eliminar: ");
+            if (int.TryParse(Console.ReadLine(), out int posicion) && posicion >= 1 && posicion <= juegos.Count)
+            {
+                juegos.RemoveAt(posicion - 1);       // la lista usa índices desde 0; el usuario cuenta desde 1
+                Console.WriteLine("Eliminado.");
+            }
+            else
+            {
+                Console.WriteLine("Número no válido.");
+            }
+            break;
+
+        case 0:
+            Console.WriteLine("¡Hasta pronto!");
+            break;
+
+        default:
+            Console.WriteLine("Opción no válida.");
+            break;
+    }
+} while (opcion != 0);
+
+// Las clases se escriben DESPUÉS de las instrucciones del programa principal
+class Videojuego
+{
+    public string Titulo { get; }
+    public int Anio { get; }
+    public int Nota { get; }
+
+    public Videojuego(string titulo, int anio, int nota)
+    {
+        // Un objeto nunca debería existir con datos imposibles: lo comprobamos al crearlo
+        if (string.IsNullOrWhiteSpace(titulo)) throw new ArgumentException("El título no puede estar vacío.");
+        if (anio < 1970 || anio > 2100) throw new ArgumentException("El año debe estar entre 1970 y 2100.");
+        if (nota < 0 || nota > 10) throw new ArgumentException("La nota debe estar entre 0 y 10.");
+        Titulo = titulo.Trim();
+        Anio = anio;
+        Nota = nota;
+    }
+
+    public override string ToString() => $"{Titulo} ({Anio}) - nota {Nota}";
+}
+` },
+                { titulo: "Versión profesional: responsabilidades separadas y record", nota: "Videojuego guarda los datos, Biblioteca la lógica y el menú solo habla con el usuario. TryCrear evita las excepciones por datos del usuario, que no son «excepcionales». LINQ simplifica buscar y ordenar.", codigo: r`// HITO 2 · versión profesional: cada clase tiene UNA responsabilidad
+//   Videojuego  → los datos y su validación
+//   Biblioteca  → la lógica de la colección (añadir, buscar, eliminar)
+//   Programa    → solo habla con el usuario
+var biblioteca = new Biblioteca();
+int opcion;
+
+do
+{
+    Console.WriteLine("\n1. Añadir  2. Listar por nota  3. Buscar  4. Eliminar  0. Salir");
+    opcion = LeerEntero("Opción", 0, 4);
+
+    switch (opcion)
+    {
+        case 1: Anadir(); break;
+        case 2: Mostrar(biblioteca.OrdenadosPorNota()); break;
+        case 3: Mostrar(biblioteca.Buscar(LeerTexto("Texto a buscar"))); break;
+        case 4: Eliminar(); break;
+    }
+} while (opcion != 0);
+Console.WriteLine("¡Hasta pronto!");
+
+void Anadir()
+{
+    string titulo = LeerTexto("Título");
+    int anio = LeerEntero("Año", 1970, 2100);
+    int nota = LeerEntero("Nota", 0, 10);
+
+    if (!Videojuego.TryCrear(titulo, anio, nota, out Videojuego? juego, out string error))
+        Console.WriteLine($"No se ha añadido: {error}");
+    else if (!biblioteca.Anadir(juego!))
+        Console.WriteLine("Ya tienes un juego con ese título.");
+    else
+        Console.WriteLine("Añadido.");
+}
+
+void Eliminar()
+{
+    bool borrado = biblioteca.Eliminar(LeerTexto("Título exacto del juego"));
+    Console.WriteLine(borrado ? "Eliminado." : "No existe ese juego.");
+}
+
+void Mostrar(IEnumerable<Videojuego> juegos)
+{
+    int n = 0;
+    foreach (Videojuego j in juegos)
+    {
+        n++;
+        Console.WriteLine($"{n}. {j}");
+    }
+    if (n == 0) Console.WriteLine("Sin resultados.");
+}
+
+int LeerEntero(string mensaje, int min, int max)
+{
+    int valor;
+    bool valido;
+    do
+    {
+        Console.Write($"{mensaje} ({min}-{max}): ");
+        string? linea = Console.ReadLine();
+        if (linea is null) return min;
+        valido = int.TryParse(linea, out valor) && valor >= min && valor <= max;
+        if (!valido) Console.WriteLine("Valor no válido.");
+    } while (!valido);
+    return valor;
+}
+
+string LeerTexto(string mensaje)
+{
+    Console.Write($"{mensaje}: ");
+    return (Console.ReadLine() ?? "").Trim();
+}
+
+// ---------------------------- Clases ----------------------------
+
+// Un record es ideal para datos inmutables: Equals, ToString y copia (with) vienen gratis
+record Videojuego(string Titulo, int Anio, int Nota)
+{
+    // Patrón «TryCrear»: en vez de lanzar excepciones por datos del usuario, devuelve false y el motivo
+    public static bool TryCrear(string titulo, int anio, int nota, out Videojuego? juego, out string error)
+    {
+        juego = null;
+        error = "";
+        if (string.IsNullOrWhiteSpace(titulo)) error = "El título no puede estar vacío.";
+        else if (anio < 1970 || anio > 2100) error = "El año debe estar entre 1970 y 2100.";
+        else if (nota < 0 || nota > 10) error = "La nota debe estar entre 0 y 10.";
+        else juego = new Videojuego(titulo.Trim(), anio, nota);
+        return juego is not null;
+    }
+
+    public override string ToString() => $"{Titulo} ({Anio}) - nota {Nota}";
+}
+
+class Biblioteca
+{
+    private readonly List<Videojuego> juegos = new();    // privada: nadie de fuera puede saltarse las reglas
+
+    public bool Anadir(Videojuego juego)
+    {
+        if (juegos.Any(j => j.Titulo.Equals(juego.Titulo, StringComparison.OrdinalIgnoreCase))) return false;
+        juegos.Add(juego);
+        return true;
+    }
+
+    public bool Eliminar(string titulo) =>
+        juegos.RemoveAll(j => j.Titulo.Equals(titulo, StringComparison.OrdinalIgnoreCase)) > 0;
+
+    public IEnumerable<Videojuego> Buscar(string texto) =>
+        juegos.Where(j => j.Titulo.Contains(texto, StringComparison.OrdinalIgnoreCase));
+
+    public IEnumerable<Videojuego> OrdenadosPorNota() =>
+        juegos.OrderByDescending(j => j.Nota).ThenBy(j => j.Titulo);
+}
+` },
+              ],
+            },
+            {
+              titulo: "Hito 3 · Guardar los datos y sacar estadísticas",
+              nivel: 3,
+              pista: "Al arrancar carga el archivo (si existe) y al salir lo guarda. Si el archivo no existe la primera vez, no es un error: empieza con la lista vacía.",
+              enunciado: r`<p>Haz que la colección <strong>no se pierda al cerrar el programa</strong>: cárgala al arrancar y guárdala al salir. Añade una opción <code>3</code> de <strong>estadísticas</strong>: nota media, juego mejor valorado y cuántos juegos hay por década.</p>
+<p><strong>Observaciones importantes:</strong></p>
+<ul>
+<li>La primera vez no existe el archivo: el programa debe arrancar con la lista vacía, sin errores.</li>
+<li>Si el archivo está dañado o tiene líneas incorrectas, el programa no debe romperse: avisa y continúa.</li>
+<li><strong>Control de errores:</strong> captura solo las excepciones concretas (<code>IOException</code>, <code>JsonException</code>), no <code>Exception</code> a secas.</li>
+<li>La parte de guardar/cargar debe estar <strong>separada</strong> de la lógica del menú.</li>
+</ul>
+<p>🥉 <strong>Alternativa más sencilla:</strong> guarda en un archivo de texto con un juego por línea y calcula las estadísticas con bucles.</p>
+<p>🏅🏅 <strong>Ampliación avanzada:</strong> crea una segunda clase que guarde en CSV y cambia de una a otra tocando una sola línea.</p>`,
+              soluciones: [
+                { titulo: "Versión sencilla: archivo CSV y estadísticas con bucles", nota: "Una línea por juego separando los campos con «;». Al cargar se valida cada línea: una línea mala se ignora, no rompe el programa. El cast (double) evita la división entera al calcular la media.", codigo: r`// HITO 3 · versión sencilla: guardar en un archivo de texto (CSV) y calcular estadísticas con bucles
+const string Ruta = "videojuegos.csv";
+List<Videojuego> juegos = Cargar();
+Console.WriteLine($"Juegos cargados: {juegos.Count}");
+int opcion;
+
+do
+{
+    Console.WriteLine("\n1. Añadir  2. Listar  3. Estadísticas  0. Salir y guardar");
+    Console.Write("Opción: ");
+    string? linea = Console.ReadLine();
+    if (!int.TryParse(linea, out opcion)) opcion = linea is null ? 0 : -1;
+
+    switch (opcion)
+    {
+        case 1:
+            Console.Write("Título: ");
+            string titulo = Console.ReadLine() ?? "";
+            Console.Write("Año: ");
+            int.TryParse(Console.ReadLine(), out int anio);
+            Console.Write("Nota (0-10): ");
+            int.TryParse(Console.ReadLine(), out int nota);
+            try
+            {
+                juegos.Add(new Videojuego(titulo, anio, nota));
+                Console.WriteLine("Añadido.");
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"No se ha añadido: {ex.Message}");
+            }
+            break;
+
+        case 2:
+            foreach (Videojuego j in juegos) Console.WriteLine(j);
+            break;
+
+        case 3:
+            MostrarEstadisticas();
+            break;
+
+        case 0:
+            Guardar();
+            Console.WriteLine("Guardado. ¡Hasta pronto!");
+            break;
+
+        default:
+            Console.WriteLine("Opción no válida.");
+            break;
+    }
+} while (opcion != 0);
+
+// ---------- Persistencia: una línea por juego, con los campos separados por «;» ----------
+void Guardar()
+{
+    var lineas = new List<string>();
+    foreach (Videojuego j in juegos)
+    {
+        // Si el título tuviera «;» rompería el formato: lo cambiamos por una coma
+        lineas.Add($"{j.Titulo.Replace(';', ',')};{j.Anio};{j.Nota}");
+    }
+    File.WriteAllLines(Ruta, lineas);
+}
+
+List<Videojuego> Cargar()
+{
+    var resultado = new List<Videojuego>();
+    if (!File.Exists(Ruta)) return resultado;           // primera vez: no hay archivo y no pasa nada
+
+    foreach (string linea in File.ReadAllLines(Ruta))
+    {
+        string[] partes = linea.Split(';');
+        if (partes.Length == 3 && int.TryParse(partes[1], out int anio) && int.TryParse(partes[2], out int nota))
+        {
+            try { resultado.Add(new Videojuego(partes[0], anio, nota)); }
+            catch (ArgumentException) { Console.WriteLine($"Línea ignorada (datos no válidos): {linea}"); }
+        }
+        else
+        {
+            Console.WriteLine($"Línea ignorada (formato incorrecto): {linea}");
+        }
+    }
+    return resultado;
+}
+
+void MostrarEstadisticas()
+{
+    if (juegos.Count == 0)
+    {
+        Console.WriteLine("No hay datos todavía.");
+        return;
+    }
+    int suma = 0;
+    Videojuego mejor = juegos[0];
+    foreach (Videojuego j in juegos)
+    {
+        suma += j.Nota;
+        if (j.Nota > mejor.Nota) mejor = j;
+    }
+    Console.WriteLine($"Nota media: {(double)suma / juegos.Count:F2}");   // el cast evita la división entera
+    Console.WriteLine($"Mejor valorado: {mejor}");
+}
+
+class Videojuego
+{
+    public string Titulo { get; }
+    public int Anio { get; }
+    public int Nota { get; }
+
+    public Videojuego(string titulo, int anio, int nota)
+    {
+        if (string.IsNullOrWhiteSpace(titulo)) throw new ArgumentException("El título no puede estar vacío.");
+        if (anio < 1970 || anio > 2100) throw new ArgumentException("El año debe estar entre 1970 y 2100.");
+        if (nota < 0 || nota > 10) throw new ArgumentException("La nota debe estar entre 0 y 10.");
+        Titulo = titulo.Trim();
+        Anio = anio;
+        Nota = nota;
+    }
+
+    public override string ToString() => $"{Titulo} ({Anio}) - nota {Nota}";
+}
+` },
+                { titulo: "Versión profesional: interfaz, JSON y LINQ", nota: "IRepositorio separa QUÉ se guarda de CÓMO. Cambiar de JSON a CSV o a una base de datos solo exige otra clase que la implemente. Cada estadística es una expresión LINQ.", codigo: r`// HITO 3 · versión profesional: interfaz de repositorio, JSON, excepciones controladas y LINQ
+using System.Text.Json;
+
+IRepositorio repositorio = new RepositorioJson("videojuegos.json");   // para cambiar de formato solo cambia esta línea
+List<Videojuego> juegos = repositorio.Cargar();
+Console.WriteLine($"Juegos cargados: {juegos.Count}");
+int opcion;
+
+do
+{
+    Console.WriteLine("\n1. Añadir  2. Listar  3. Estadísticas  0. Salir y guardar");
+    Console.Write("Opción: ");
+    string? linea = Console.ReadLine();
+    if (!int.TryParse(linea, out opcion)) opcion = linea is null ? 0 : -1;
+
+    switch (opcion)
+    {
+        case 1: Anadir(); break;
+        case 2: juegos.ForEach(Console.WriteLine); break;
+        case 3: MostrarEstadisticas(); break;
+        case 0:
+            repositorio.Guardar(juegos);
+            Console.WriteLine("Guardado. ¡Hasta pronto!");
+            break;
+        default: Console.WriteLine("Opción no válida."); break;
+    }
+} while (opcion != 0);
+
+void Anadir()
+{
+    Console.Write("Título: ");
+    string titulo = Console.ReadLine() ?? "";
+    Console.Write("Año: ");
+    int.TryParse(Console.ReadLine(), out int anio);
+    Console.Write("Nota (0-10): ");
+    int.TryParse(Console.ReadLine(), out int nota);
+
+    if (!Videojuego.EsValido(titulo, anio, nota)) Console.WriteLine("Datos no válidos: título, año 1970-2100 y nota 0-10.");
+    else juegos.Add(new Videojuego(titulo.Trim(), anio, nota));
+}
+
+// Con LINQ cada estadística es UNA expresión, sin variables auxiliares ni bucles
+void MostrarEstadisticas()
+{
+    if (juegos.Count == 0)
+    {
+        Console.WriteLine("No hay datos todavía.");
+        return;
+    }
+    Console.WriteLine($"Nota media: {juegos.Average(j => j.Nota):F2}");
+    Console.WriteLine($"Mejor valorado: {juegos.MaxBy(j => j.Nota)}");
+
+    // Agrupamos por década: 2017 / 10 * 10 = 2010 (división entera)
+    foreach (var grupo in juegos.GroupBy(j => j.Anio / 10 * 10).OrderBy(g => g.Key))
+    {
+        Console.WriteLine($"Años {grupo.Key}: {grupo.Count()} juego(s), nota media {grupo.Average(j => j.Nota):F1}");
+    }
+}
+
+// ---------------------------- Modelo ----------------------------
+record Videojuego(string Titulo, int Anio, int Nota)
+{
+    public static bool EsValido(string titulo, int anio, int nota) =>
+        !string.IsNullOrWhiteSpace(titulo) && anio is >= 1970 and <= 2100 && nota is >= 0 and <= 10;
+
+    public override string ToString() => $"{Titulo} ({Anio}) - nota {Nota}";
+}
+
+// ---------------------------- Persistencia ----------------------------
+// La interfaz dice QUÉ se puede hacer; cada clase decide CÓMO. Así el resto del programa
+// no sabe si los datos van a JSON, a CSV o a una base de datos (y se puede probar con uno falso).
+interface IRepositorio
+{
+    List<Videojuego> Cargar();
+    void Guardar(IEnumerable<Videojuego> juegos);
+}
+
+class RepositorioJson : IRepositorio
+{
+    private readonly string ruta;
+    private static readonly JsonSerializerOptions Opciones = new() { WriteIndented = true };
+
+    public RepositorioJson(string ruta) => this.ruta = ruta;
+
+    public List<Videojuego> Cargar()
+    {
+        if (!File.Exists(ruta)) return new List<Videojuego>();
+        try
+        {
+            return JsonSerializer.Deserialize<List<Videojuego>>(File.ReadAllText(ruta)) ?? new List<Videojuego>();
+        }
+        catch (JsonException)
+        {
+            Console.WriteLine("El archivo está dañado: empezamos con la colección vacía.");
+            return new List<Videojuego>();
+        }
+    }
+
+    public void Guardar(IEnumerable<Videojuego> juegos)
+    {
+        try
+        {
+            File.WriteAllText(ruta, JsonSerializer.Serialize(juegos, Opciones));
+        }
+        catch (IOException ex)
+        {
+            Console.WriteLine($"No se ha podido guardar: {ex.Message}");
+        }
+    }
+}
+` },
+              ],
+            },
+          ],
+        },
+        {
+          id: "chuleta-fundamentos",
+          titulo: "Chuleta 1 · Fundamentos: tipos, operadores y entrada/salida",
+          duracion: "8 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Tener a mano los tipos, operadores y conversiones esenciales"],
+          teoria: r`<div class="chuleta"><h3>Tipos básicos</h3><table><thead><tr><th>Tipo</th><th>Qué guarda</th><th>Ejemplo</th></tr></thead><tbody><tr><td><code>int</code></td><td>Enteros (unos ±2 100 millones)</td><td><code>int edad = 17;</code></td></tr><tr><td><code>long</code></td><td>Enteros muy grandes</td><td><code>long total = 5_000_000_000;</code></td></tr><tr><td><code>double</code></td><td>Decimales (aproximados)</td><td><code>double altura = 1.75;</code></td></tr><tr><td><code>decimal</code></td><td>Decimales exactos: dinero</td><td><code>decimal precio = 9.99m;</code></td></tr><tr><td><code>bool</code></td><td>Verdadero o falso</td><td><code>bool activo = true;</code></td></tr><tr><td><code>char</code></td><td>Un carácter (comillas simples)</td><td><code>char letra = 'A';</code></td></tr><tr><td><code>string</code></td><td>Texto (comillas dobles)</td><td><code>string nombre = "Ana";</code></td></tr></tbody></table><h3>Operadores</h3><table><thead><tr><th>Tipo</th><th>Operadores</th><th>Ojo con…</th></tr></thead><tbody><tr><td>Aritméticos</td><td><code>+ - * / %</code></td><td><code>7 / 2</code> vale 3 (entre enteros); <code>7.0 / 2</code> vale 3,5</td></tr><tr><td>Comparación</td><td><code>== != &lt; &gt; &lt;= &gt;=</code></td><td>Para comparar usa <code>==</code>, no <code>=</code></td></tr><tr><td>Lógicos</td><td><code>&amp;&amp; || !</code></td><td><code>&amp;&amp;</code> y <code>||</code> dejan de evaluar en cuanto el resultado está claro</td></tr><tr><td>Asignación</td><td><code>= += -= *= /= ++ --</code></td><td><code>i++</code> suma 1 a <code>i</code></td></tr><tr><td>Condicional</td><td><code>cond ? a : b</code></td><td>Devuelve <code>a</code> si se cumple y <code>b</code> si no</td></tr></tbody></table><h3>Entrada, salida y conversión</h3><table><thead><tr><th>Quiero…</th><th>Código</th></tr></thead><tbody><tr><td>Mostrar con salto de línea</td><td><code>Console.WriteLine($"Hola {nombre}");</code></td></tr><tr><td>Mostrar sin salto</td><td><code>Console.Write("Edad: ");</code></td></tr><tr><td>Leer una línea</td><td><code>string? t = Console.ReadLine();</code></td></tr><tr><td>Convertir sin que falle</td><td><code>if (int.TryParse(t, out int n)) { ... }</code></td></tr><tr><td>Dos decimales</td><td><code>$"{precio:F2}"</code> · moneda <code>:C</code> · porcentaje <code>:P</code></td></tr><tr><td>Dividir con decimales</td><td><code>(double)a / b</code> (el cast antes de dividir)</td></tr><tr><td>Valor que no cambia</td><td><code>const double Pi = 3.1416;</code></td></tr></tbody></table><p><small>Consejo: usa siempre <code>TryParse</code> con lo que escribe el usuario; <code>Parse</code> lanza una excepción si el texto no es un número.</small></p></div>`,
+          ejemplos: [
+            { titulo: "Pruébalo", explicacion: "Observa el cast antes de dividir y cómo TryParse evita la excepción.", codigo: r`// Chuleta · Fundamentos: tipos, conversiones y TryParse
+int a = 7, b = 2;
+Console.WriteLine($"7 / 2 = {a / b}");                    // 3: entre enteros la división es entera
+Console.WriteLine($"7 % 2 = {a % b}");                    // 1: el resto
+Console.WriteLine($"(double)7 / 2 = {(double)a / b}");    // 3,5: el cast ANTES de dividir
+
+decimal precio = 19.99m;                                   // decimal para dinero (sufijo m)
+Console.WriteLine($"Precio: {precio:F2} | con IVA: {precio * 1.21m:F2}");
+
+string texto = "42x";
+if (int.TryParse(texto, out int n)) Console.WriteLine($"Número: {n}");
+else Console.WriteLine($"«{texto}» no es un entero válido");   // TryParse NO lanza excepción
+
+const double Pi = 3.14159;                                 // const: no se puede cambiar
+var radio = 2.0;                                           // var: el compilador deduce double
+Console.WriteLine($"Área: {Pi * radio * radio:F2}");
+` },
+          ],
+          actividades: [
+          ],
+        },
+        {
+          id: "chuleta-control-flujo",
+          titulo: "Chuleta 2 · Control de flujo",
+          duracion: "8 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Elegir la estructura de control adecuada para cada situación"],
+          teoria: r`<div class="chuleta"><h3>Decidir</h3><table><thead><tr><th>Estructura</th><th>Cuándo</th><th>Forma</th></tr></thead><tbody><tr><td><code>if / else if / else</code></td><td>Condiciones distintas</td><td><code>if (nota &gt;= 5) {...} else {...}</code></td></tr><tr><td><code>switch</code></td><td>Muchos valores de una misma variable</td><td><code>switch (op) { case 1: ...; break; default: ...; break; }</code></td></tr><tr><td><code>switch</code> como expresión</td><td>Calcular un valor según rangos</td><td><code>nota switch { &gt;= 9 =&gt; "Sobresaliente", _ =&gt; "Otro" }</code></td></tr></tbody></table><h3>Repetir: ¿qué bucle uso?</h3><table><thead><tr><th>Pregunta</th><th>Bucle</th></tr></thead><tbody><tr><td>¿Sé cuántas vueltas?</td><td><code>for (int i = 0; i &lt; n; i++)</code></td></tr><tr><td>¿Recorro una colección entera?</td><td><code>foreach (var x in coleccion)</code></td></tr><tr><td>¿Debe ejecutarse <strong>al menos una vez</strong> (menús, validar una entrada)?</td><td><code>do { ... } while (condicion);</code></td></tr><tr><td>¿Puede que no se ejecute ninguna vez?</td><td><code>while (condicion) { ... }</code></td></tr></tbody></table><h3>Errores</h3><table><thead><tr><th>Parte</th><th>Función</th></tr></thead><tbody><tr><td><code>try { }</code></td><td>Código que puede fallar</td></tr><tr><td><code>catch (TipoDeError ex) { }</code></td><td>Qué hacer si falla; captura el tipo más concreto posible</td></tr><tr><td><code>finally { }</code></td><td>Se ejecuta siempre (cerrar recursos)</td></tr><tr><td><code>throw new ArgumentException("…")</code></td><td>Lanzar un error propio</td></tr></tbody></table><p><small>En este curso: nada de <code>while (true)</code> y <code>break</code> solo dentro de <code>switch</code>. La condición del bucle debe verse en su cabecera.</small></p></div>`,
+          ejemplos: [
+            { titulo: "Pruébalo", explicacion: "Ejecuta el ejemplo y cambia la nota para ver las ramas del switch.", codigo: r`// Chuleta · Control de flujo: if, switch, bucles y try/catch
+int nota = 7;
+string calificacion = nota switch                          // switch como expresión
+{
+    >= 9 => "Sobresaliente",
+    >= 7 => "Notable",
+    >= 5 => "Aprobado",
+    _ => "Suspenso"
+};
+Console.WriteLine($"Nota {nota}: {calificacion}");
+
+for (int i = 1; i <= 3; i++) Console.Write($"{i} ");     // for: se sabe cuántas vueltas
+Console.WriteLine();
+
+int contador = 3;
+do                                                         // do-while: al menos una vuelta
+{
+    Console.Write($"{contador}... ");
+    contador--;
+} while (contador > 0);
+Console.WriteLine("¡Despegue!");
+
+foreach (char c in "C#") Console.Write($"[{c}]");          // foreach: recorrer una colección
+Console.WriteLine();
+
+try
+{
+    int cero = int.Parse("0");
+    Console.WriteLine(10 / cero);                          // lanza DivideByZeroException
+}
+catch (DivideByZeroException)
+{
+    Console.WriteLine("No se puede dividir entre cero");
+}
+finally
+{
+    Console.WriteLine("finally se ejecuta siempre");
+}
+` },
+          ],
+          actividades: [
+          ],
+        },
+        {
+          id: "chuleta-arrays",
+          titulo: "Chuleta 3 · Arrays y matrices",
+          duracion: "8 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Declarar, recorrer y copiar arrays sin confundir copia con referencia"],
+          teoria: r`<div class="chuleta"><h3>Arrays (una dimensión)</h3><table><thead><tr><th>Quiero…</th><th>Código</th></tr></thead><tbody><tr><td>Crear vacío de 5 posiciones</td><td><code>int[] v = new int[5];</code></td></tr><tr><td>Crear con valores</td><td><code>int[] v = { 4, 8, 15 };</code></td></tr><tr><td>Leer / cambiar una posición</td><td><code>v[0]</code> · <code>v[2] = 9;</code> (empieza en 0)</td></tr><tr><td>Tamaño</td><td><code>v.Length</code></td></tr><tr><td>Último elemento</td><td><code>v[^1]</code></td></tr><tr><td>Un trozo</td><td><code>v[1..3]</code> (posiciones 1 y 2)</td></tr><tr><td>Ordenar · invertir · buscar</td><td><code>Array.Sort(v)</code> · <code>Array.Reverse(v)</code> · <code>Array.IndexOf(v, 8)</code></td></tr><tr><td>Recorrer</td><td><code>foreach (int x in v) { ... }</code></td></tr></tbody></table><h3>Matrices y arrays de arrays</h3><table><thead><tr><th>Tipo</th><th>Crear</th><th>Acceder</th></tr></thead><tbody><tr><td>Matriz rectangular</td><td><code>int[,] m = new int[3, 4];</code></td><td><code>m[fila, columna]</code> · <code>m.GetLength(0)</code> filas · <code>m.GetLength(1)</code> columnas</td></tr><tr><td>Array de arrays (filas distintas)</td><td><code>int[][] j = new int[3][];</code></td><td><code>j[0] = new int[2];</code> · <code>j[0][1]</code></td></tr></tbody></table><h3>Copiar</h3><table><thead><tr><th>Código</th><th>Resultado</th></tr></thead><tbody><tr><td><code>int[] b = a;</code></td><td><strong>No copia</strong>: <code>a</code> y <code>b</code> son el mismo array</td></tr><tr><td><code>int[] b = (int[])a.Clone();</code></td><td>Copia independiente</td></tr><tr><td><code>Array.Copy(a, b, a.Length);</code></td><td>Copia en un array ya creado</td></tr></tbody></table><p><small>Salirte del array (<code>v[5]</code> en uno de 5) lanza <code>IndexOutOfRangeException</code>. Comprueba siempre el índice.</small></p></div>`,
+          ejemplos: [
+            { titulo: "Pruébalo", explicacion: "Comprueba qué pasa al «copiar» con = y al copiar con Clone().", codigo: r`// Chuleta · Arrays, matrices y referencias
+int[] notas = { 8, 5, 9, 3 };
+Console.WriteLine($"Longitud: {notas.Length} | Primero: {notas[0]} | Último: {notas[^1]}");   // ^1 = último
+
+Array.Sort(notas);                                         // ordena el propio array
+Console.WriteLine(string.Join(", ", notas));
+Console.WriteLine($"Posición del 8: {Array.IndexOf(notas, 8)}");
+int[] centro = notas[1..3];                                // rango: posiciones 1 y 2 (el 3 no entra)
+Console.WriteLine($"Rango [1..3]: {string.Join(", ", centro)}");
+
+int[,] tablero = new int[2, 3];                            // matriz de 2 filas x 3 columnas
+tablero[1, 2] = 9;
+Console.WriteLine($"Filas: {tablero.GetLength(0)} | Columnas: {tablero.GetLength(1)}");
+
+int[] copiaFalsa = notas;                                  // ¡NO copia: apunta al MISMO array!
+copiaFalsa[0] = 100;
+Console.WriteLine($"notas[0] ahora vale {notas[0]}");
+int[] copiaReal = (int[])notas.Clone();                    // esta sí es una copia independiente
+copiaReal[0] = 0;
+Console.WriteLine($"notas[0] sigue valiendo {notas[0]}");
+` },
+          ],
+          actividades: [
+          ],
+        },
+        {
+          id: "chuleta-funciones",
+          titulo: "Chuleta 4 · Funciones",
+          duracion: "8 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Recordar la sintaxis de funciones, parámetros y recursividad"],
+          teoria: r`<div class="chuleta"><h3>Formas de escribir una función</h3><table><thead><tr><th>Forma</th><th>Ejemplo</th></tr></thead><tbody><tr><td>Con cuerpo</td><td><code>int Sumar(int a, int b) { return a + b; }</code></td></tr><tr><td>De una línea</td><td><code>int Cuadrado(int n) =&gt; n * n;</code></td></tr><tr><td>Sin devolver nada</td><td><code>void Saludar(string nombre) { ... }</code></td></tr><tr><td>Devolver varios valores</td><td><code>(int min, int max) Extremos(int[] v) =&gt; (v.Min(), v.Max());</code></td></tr></tbody></table><h3>Parámetros</h3><table><thead><tr><th>Tipo</th><th>Cuándo</th><th>Ejemplo</th></tr></thead><tbody><tr><td>Por valor (normal)</td><td>Se trabaja con una copia</td><td><code>void F(int x)</code></td></tr><tr><td><code>ref</code></td><td>Modificar la variable original</td><td><code>void Duplicar(ref int x)</code> → <code>Duplicar(ref n);</code></td></tr><tr><td><code>out</code></td><td>Devolver un valor extra (patrón TryParse)</td><td><code>bool Dividir(int a, int b, out int r)</code></td></tr><tr><td>Opcional</td><td>Valor por defecto</td><td><code>void F(string saludo = "Hola")</code></td></tr><tr><td>Con nombre</td><td>Claridad</td><td><code>F(saludo: "Buenas")</code></td></tr><tr><td><code>params</code></td><td>Cantidad variable</td><td><code>double Media(params int[] v)</code></td></tr></tbody></table><h3>Sobrecarga y recursividad</h3><ul><li><strong>Sobrecarga</strong>: mismo nombre con parámetros distintos (<code>Area(double r)</code> y <code>Area(double b, double h)</code>).</li><li><strong>Recursiva</strong>: se llama a sí misma. Necesita siempre un <strong>caso base</strong> que la detenga y avanzar hacia él: <code>n &lt;= 1 ? 1 : n * Factorial(n - 1)</code>.</li></ul><p><small>Una buena función hace una sola cosa, tiene un nombre que es un verbo y cabe en una pantalla.</small></p></div>`,
+          ejemplos: [
+            { titulo: "Pruébalo", explicacion: "Prueba los distintos tipos de parámetros y la tupla de retorno.", codigo: r`// Chuleta · Funciones: retorno, parámetros, sobrecarga y recursividad
+int Cuadrado(int n) => n * n;                              // función de una línea
+void Saludar(string nombre, string saludo = "Hola") => Console.WriteLine($"{saludo}, {nombre}");
+double Media(params int[] valores) => valores.Average();   // params: admite cualquier cantidad
+(int min, int max) Extremos(int[] v) => (v.Min(), v.Max());   // devuelve DOS valores (tupla)
+int Factorial(int n) => n <= 1 ? 1 : n * Factorial(n - 1);    // recursiva: tiene caso base (n <= 1)
+
+void Duplicar(ref int x) => x *= 2;                        // ref: modifica la variable original
+bool Dividir(int a, int b, out int resultado)              // out: devuelve un valor extra
+{
+    resultado = b == 0 ? 0 : a / b;
+    return b != 0;
+}
+
+Console.WriteLine(Cuadrado(5));
+Saludar("Ana");
+Saludar("Luis", saludo: "Buenas");                         // argumento con nombre
+Console.WriteLine(Media(4, 8, 6));
+var (menor, mayor) = Extremos(new[] { 4, 9, 1 });
+Console.WriteLine($"Menor {menor}, mayor {mayor}");
+Console.WriteLine(Factorial(5));
+int valor = 21;
+Duplicar(ref valor);
+Console.WriteLine(valor);
+Console.WriteLine(Dividir(10, 0, out int r) ? $"Resultado {r}" : "No se puede dividir entre cero");
+` },
+          ],
+          actividades: [
+          ],
+        },
+        {
+          id: "chuleta-textos",
+          titulo: "Chuleta 5 · Textos, Math, Random y fechas",
+          duracion: "8 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Localizar rápido el método de string, Math o DateTime que necesitas"],
+          teoria: r`<div class="chuleta"><h3>Cadenas (<code>string</code>)</h3><table><thead><tr><th>Quiero…</th><th>Código</th></tr></thead><tbody><tr><td>Longitud</td><td><code>s.Length</code></td></tr><tr><td>Quitar espacios de los extremos</td><td><code>s.Trim()</code></td></tr><tr><td>Mayúsculas / minúsculas</td><td><code>s.ToUpper()</code> · <code>s.ToLower()</code></td></tr><tr><td>Trozo de texto</td><td><code>s.Substring(inicio, cuantos)</code></td></tr><tr><td>Buscar posición (−1 si no está)</td><td><code>s.IndexOf("C#")</code></td></tr><tr><td>¿Contiene?</td><td><code>s.Contains("en", StringComparison.OrdinalIgnoreCase)</code></td></tr><tr><td>Reemplazar</td><td><code>s.Replace("a", "o")</code></td></tr><tr><td>Trocear y unir</td><td><code>s.Split(';')</code> · <code>string.Join(", ", lista)</code></td></tr><tr><td>¿Vacío o solo espacios?</td><td><code>string.IsNullOrWhiteSpace(s)</code></td></tr><tr><td>Concatenar mucho</td><td><code>var sb = new StringBuilder(); sb.Append(x);</code></td></tr></tbody></table><h3>Math, Random y fechas</h3><table><thead><tr><th>Quiero…</th><th>Código</th></tr></thead><tbody><tr><td>Redondear · potencia · raíz</td><td><code>Math.Round(x, 2)</code> · <code>Math.Pow(2, 10)</code> · <code>Math.Sqrt(81)</code></td></tr><tr><td>Máximo · mínimo · valor absoluto</td><td><code>Math.Max(a, b)</code> · <code>Math.Min(a, b)</code> · <code>Math.Abs(x)</code></td></tr><tr><td>Número al azar del 1 al 6</td><td><code>Random.Shared.Next(1, 7)</code> (el límite superior <strong>no</strong> entra)</td></tr><tr><td>Fecha y hora actuales</td><td><code>DateTime.Now</code> · solo fecha: <code>DateTime.Today</code></td></tr><tr><td>Crear una fecha</td><td><code>new DateTime(2025, 3, 14)</code></td></tr><tr><td>Sumar días</td><td><code>fecha.AddDays(30)</code></td></tr><tr><td>Dar formato</td><td><code>fecha.ToString("dd/MM/yyyy")</code></td></tr><tr><td>Diferencia entre fechas</td><td><code>(f2 - f1).Days</code></td></tr></tbody></table><p><small>Los strings son <strong>inmutables</strong>: <code>s.Trim()</code> no cambia <code>s</code>, devuelve un string nuevo (hay que guardarlo).</small></p></div>`,
+          ejemplos: [
+            { titulo: "Pruébalo", explicacion: "Cada línea muestra un método distinto de string, Math o DateTime.", codigo: r`// Chuleta · Textos, Math, Random y fechas
+string frase = "  Programar en C# es divertido  ";
+string limpia = frase.Trim();
+Console.WriteLine(limpia.ToUpper());
+Console.WriteLine(limpia.Replace("divertido", "genial"));
+Console.WriteLine(limpia.Substring(0, 9));                 // desde 0, 9 caracteres
+Console.WriteLine(limpia.IndexOf("C#"));                   // posición (o -1 si no está)
+Console.WriteLine(limpia.Contains("en", StringComparison.OrdinalIgnoreCase));
+string[] palabras = limpia.Split(' ');
+Console.WriteLine($"{palabras.Length} palabras → {string.Join("-", palabras)}");
+
+var sb = new StringBuilder();                              // para concatenar MUCHO: más eficiente que +
+for (int i = 1; i <= 3; i++) sb.Append(i).Append(' ');
+Console.WriteLine(sb.ToString().TrimEnd());
+
+Console.WriteLine($"{Math.Round(2.567, 1)} {Math.Pow(2, 10)} {Math.Sqrt(81)} {Math.Max(3, 9)} {Math.Abs(-4)}");
+int dado = Random.Shared.Next(1, 7);                       // 1..6: el límite superior NO entra
+Console.WriteLine(dado >= 1 && dado <= 6 ? "Dado correcto" : "Error");
+
+DateTime fecha = new DateTime(2025, 3, 14);
+Console.WriteLine(fecha.AddDays(30).ToString("dd/MM/yyyy"));
+Console.WriteLine((new DateTime(2025, 12, 25) - fecha).Days + " días de diferencia");
+` },
+          ],
+          actividades: [
+          ],
+        },
+        {
+          id: "chuleta-ficheros",
+          titulo: "Chuleta 6 · Ficheros",
+          duracion: "8 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Leer y escribir ficheros con los métodos más habituales"],
+          teoria: r`<div class="chuleta"><h3>Texto con la clase <code>File</code></h3><table><thead><tr><th>Quiero…</th><th>Código</th></tr></thead><tbody><tr><td>Escribir (sobrescribe)</td><td><code>File.WriteAllText(ruta, texto);</code> · <code>File.WriteAllLines(ruta, lineas);</code></td></tr><tr><td>Añadir al final</td><td><code>File.AppendAllText(ruta, texto);</code></td></tr><tr><td>Leer todo</td><td><code>File.ReadAllText(ruta)</code> · <code>File.ReadAllLines(ruta)</code></td></tr><tr><td>¿Existe?</td><td><code>File.Exists(ruta)</code> · <code>Directory.Exists(ruta)</code></td></tr><tr><td>Borrar · copiar</td><td><code>File.Delete(ruta)</code> · <code>File.Copy(origen, destino)</code></td></tr><tr><td>Unir partes de una ruta</td><td><code>Path.Combine(carpeta, "datos.txt")</code></td></tr><tr><td>Línea a línea (ficheros grandes)</td><td><code>using var lector = new StreamReader(ruta);</code> y <code>lector.ReadLine()</code></td></tr></tbody></table><h3>Formatos</h3><table><thead><tr><th>Formato</th><th>Cómo</th><th>Cuándo</th></tr></thead><tbody><tr><td>CSV</td><td><code>linea.Split(';')</code> + <code>TryParse</code></td><td>Tablas sencillas</td></tr><tr><td>JSON</td><td><code>JsonSerializer.Serialize(obj)</code> · <code>Deserialize&lt;T&gt;(texto)</code></td><td>El más usado hoy; objetos completos</td></tr><tr><td>XML</td><td><code>XDocument.Load(ruta)</code> · <code>.Root.Elements("item")</code></td><td>Configuración y formatos antiguos</td></tr></tbody></table><h3>Errores típicos</h3><table><thead><tr><th>Excepción</th><th>Significa</th></tr></thead><tbody><tr><td><code>FileNotFoundException</code></td><td>El archivo no existe</td></tr><tr><td><code>DirectoryNotFoundException</code></td><td>La carpeta no existe</td></tr><tr><td><code>UnauthorizedAccessException</code></td><td>No tienes permisos</td></tr><tr><td><code>IOException</code></td><td>Error general de lectura/escritura (por ejemplo, archivo en uso)</td></tr><tr><td><code>JsonException</code></td><td>El JSON está mal formado</td></tr></tbody></table><p><small>Rutas en Windows: usa cadenas literales <code>@"C:\datos\notas.txt"</code> o, mejor, <code>Path.Combine</code>, que funciona en cualquier sistema.</small></p></div>`,
+          ejemplos: [
+            { titulo: "Pruébalo", explicacion: "El ejemplo escribe en una carpeta temporal y borra el archivo al terminar.", codigo: r`// Chuleta · Ficheros: texto, rutas y JSON
+using System.Text.Json;
+
+string carpeta = Path.Combine(Path.GetTempPath(), "chuleta-csharp");   // Path.Combine pone bien las barras
+Directory.CreateDirectory(carpeta);
+string ruta = Path.Combine(carpeta, "notas.txt");
+
+File.WriteAllLines(ruta, new[] { "Ana;8", "Luis;5" });     // crea o sobrescribe
+File.AppendAllText(ruta, "Eva;9" + Environment.NewLine);   // añade al final
+foreach (string linea in File.ReadAllLines(ruta))
+{
+    string[] campos = linea.Split(';');
+    Console.WriteLine($"{campos[0]} → {int.Parse(campos[1])}");
+}
+
+try
+{
+    File.ReadAllText(Path.Combine(carpeta, "no-existe.txt"));
+}
+catch (FileNotFoundException)
+{
+    Console.WriteLine("El archivo no existe");
+}
+
+var alumno = new Alumno("Ana", 8);
+string json = JsonSerializer.Serialize(alumno);            // objeto → texto JSON
+Console.WriteLine(json);
+Alumno? leido = JsonSerializer.Deserialize<Alumno>(json);  // texto JSON → objeto
+Console.WriteLine(leido);
+
+File.Delete(ruta);
+
+record Alumno(string Nombre, int Nota);
+` },
+          ],
+          actividades: [
+          ],
+        },
+        {
+          id: "chuleta-poo",
+          titulo: "Chuleta 7 · Programación orientada a objetos",
+          duracion: "8 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Recordar la sintaxis de clases, herencia, interfaces y records"],
+          teoria: r`<div class="chuleta"><h3>Elementos de una clase</h3><table><thead><tr><th>Elemento</th><th>Ejemplo</th></tr></thead><tbody><tr><td>Propiedad de solo lectura</td><td><code>public string Nombre { get; }</code></td></tr><tr><td>Se lee fuera, se cambia dentro</td><td><code>public int Vida { get; private set; }</code></td></tr><tr><td>Constructor</td><td><code>public Personaje(string n) { Nombre = n; }</code></td></tr><tr><td>Método</td><td><code>public void Atacar() { ... }</code></td></tr><tr><td>Miembro de la clase (no del objeto)</td><td><code>public static int Contador;</code></td></tr><tr><td>Sobrescribir cómo se muestra</td><td><code>public override string ToString() =&gt; Nombre;</code></td></tr></tbody></table><h3>Herencia y polimorfismo</h3><table><thead><tr><th>Palabra</th><th>Para qué</th></tr></thead><tbody><tr><td><code>class Mago : Personaje</code></td><td>Mago hereda de Personaje</td></tr><tr><td><code>base(...)</code></td><td>Llamar al constructor del padre</td></tr><tr><td><code>virtual</code> / <code>override</code></td><td>El padre permite cambiar un método / el hijo lo cambia</td></tr><tr><td><code>abstract</code></td><td>Clase que no se puede crear o método que las hijas <strong>deben</strong> implementar</td></tr><tr><td><code>sealed</code></td><td>Clase de la que no se puede heredar</td></tr><tr><td><code>interface IDanyable</code></td><td>Contrato: qué métodos hay que tener (una clase puede implementar varias)</td></tr><tr><td><code>is</code> · <code>as</code></td><td>Comprobar / convertir el tipo real de un objeto</td></tr></tbody></table><h3>Visibilidad</h3><table><thead><tr><th>Modificador</th><th>Se ve desde…</th></tr></thead><tbody><tr><td><code>public</code></td><td>Cualquier sitio</td></tr><tr><td><code>private</code></td><td>Solo dentro de la clase (por defecto)</td></tr><tr><td><code>protected</code></td><td>La clase y sus hijas</td></tr><tr><td><code>internal</code></td><td>El mismo proyecto</td></tr></tbody></table><h3>Otros tipos</h3><ul><li><code>enum Estado { Quieto, Andando }</code>: lista de valores con nombre.</li><li><code>struct</code>: tipo por <strong>valor</strong> (se copia), para datos pequeños.</li><li><code>record Punto(int X, int Y);</code>: datos inmutables con igualdad, <code>ToString</code> y copia (<code>with</code>) ya hechos.</li></ul><p><small>Composición antes que herencia: usa herencia solo cuando «es un», no cuando «tiene un».</small></p></div>`,
+          ejemplos: [
+            { titulo: "Pruébalo", explicacion: "Observa cómo cada personaje responde a Atacar() a su manera: eso es el polimorfismo.", codigo: r`// Chuleta · POO: clase, herencia, polimorfismo e interfaz
+IDanyable[] objetivos = { new Mago("Merlín"), new Guerrero("Conan") };
+foreach (IDanyable o in objetivos)
+{
+    o.RecibirDanyo(30);
+}
+Personaje[] equipo = { new Mago("Gandalf"), new Guerrero("Aragorn") };
+foreach (Personaje p in equipo)
+{
+    Console.WriteLine(p.Atacar());                         // polimorfismo: cada uno responde a su manera
+}
+
+interface IDanyable
+{
+    void RecibirDanyo(int cantidad);
+}
+
+abstract class Personaje : IDanyable
+{
+    public string Nombre { get; }
+    public int Vida { get; private set; } = 100;           // se lee fuera, solo se cambia dentro
+
+    protected Personaje(string nombre) => Nombre = nombre;
+
+    public abstract string Atacar();                       // obliga a las hijas a implementarlo
+
+    public void RecibirDanyo(int cantidad)
+    {
+        Vida = Math.Max(0, Vida - cantidad);
+        Console.WriteLine($"{Nombre} recibe {cantidad} de daño y le quedan {Vida}");
+    }
+}
+
+class Mago : Personaje
+{
+    public Mago(string nombre) : base(nombre) { }          // base(...) llama al constructor del padre
+    public override string Atacar() => $"{Nombre} lanza una bola de fuego";
+}
+
+class Guerrero : Personaje
+{
+    public Guerrero(string nombre) : base(nombre) { }
+    public override string Atacar() => $"{Nombre} golpea con la espada";
+}
+` },
+          ],
+          actividades: [
+          ],
+        },
+        {
+          id: "chuleta-colecciones-linq",
+          titulo: "Chuleta 8 · Colecciones y LINQ",
+          duracion: "8 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Elegir la colección adecuada y encadenar operadores LINQ"],
+          teoria: r`<div class="chuleta"><h3>¿Qué colección uso?</h3><table><thead><tr><th>Colección</th><th>Para…</th><th>Métodos clave</th></tr></thead><tbody><tr><td><code>List&lt;T&gt;</code></td><td>Lista que crece (la más usada)</td><td><code>Add</code> <code>Remove</code> <code>Count</code> <code>Contains</code> <code>Sort</code></td></tr><tr><td><code>Dictionary&lt;K,V&gt;</code></td><td>Buscar por clave muy rápido</td><td><code>d[k] = v</code> <code>TryGetValue</code> <code>ContainsKey</code></td></tr><tr><td><code>Queue&lt;T&gt;</code></td><td>Cola: el primero en entrar sale primero</td><td><code>Enqueue</code> <code>Dequeue</code></td></tr><tr><td><code>Stack&lt;T&gt;</code></td><td>Pila: el último en entrar sale primero</td><td><code>Push</code> <code>Pop</code> <code>Peek</code></td></tr><tr><td><code>HashSet&lt;T&gt;</code></td><td>Sin repetidos</td><td><code>Add</code> (devuelve false si ya estaba)</td></tr></tbody></table><h3>Lambdas y delegados</h3><ul><li><code>x =&gt; x * 2</code> es una función sin nombre.</li><li><code>Func&lt;int, int&gt;</code> devuelve un valor · <code>Action&lt;string&gt;</code> no devuelve nada · <code>Predicate&lt;T&gt;</code> devuelve bool.</li></ul><h3>Operadores LINQ</h3><table><thead><tr><th>Operador</th><th>Hace…</th></tr></thead><tbody><tr><td><code>Where(x =&gt; ...)</code></td><td>Filtra</td></tr><tr><td><code>Select(x =&gt; ...)</code></td><td>Transforma cada elemento</td></tr><tr><td><code>OrderBy</code> · <code>OrderByDescending</code> · <code>ThenBy</code></td><td>Ordena (y desempata)</td></tr><tr><td><code>First</code> · <code>FirstOrDefault</code> · <code>Single</code></td><td>Un elemento (los «OrDefault» no fallan si no hay)</td></tr><tr><td><code>Any</code> · <code>All</code> · <code>Contains</code></td><td>¿Alguno? ¿Todos? ¿Está?</td></tr><tr><td><code>Count</code> · <code>Sum</code> · <code>Average</code> · <code>Min</code> · <code>Max</code></td><td>Cálculos</td></tr><tr><td><code>GroupBy(x =&gt; x.Clave)</code></td><td>Agrupa</td></tr><tr><td><code>Distinct</code> · <code>Take(n)</code> · <code>Skip(n)</code></td><td>Sin repetidos · primeros n · saltar n</td></tr><tr><td><code>ToList()</code> · <code>ToArray()</code> · <code>ToDictionary()</code></td><td>Convierte el resultado en una colección</td></tr></tbody></table><p><small>LINQ es <strong>perezoso</strong>: la consulta no se ejecuta hasta que la recorres o llamas a <code>ToList()</code>, <code>Count()</code>, etc.</small></p></div>`,
+          ejemplos: [
+            { titulo: "Pruébalo", explicacion: "Cambia los números de la lista y mira cómo se recalculan las consultas.", codigo: r`// Chuleta · Colecciones y LINQ
+var numeros = new List<int> { 5, -2, 8, 3, -7, 10 };
+numeros.Add(4);
+Console.WriteLine($"Cuenta: {numeros.Count} | Contiene 8: {numeros.Contains(8)}");
+
+var positivos = numeros.Where(n => n > 0).OrderBy(n => n).ToList();   // filtrar + ordenar
+Console.WriteLine(string.Join(", ", positivos));
+Console.WriteLine($"Suma {numeros.Sum()} | Media {numeros.Average():F2} | Máx {numeros.Max()} | ¿Algún negativo? {numeros.Any(n => n < 0)}");
+Console.WriteLine(string.Join(", ", numeros.Select(n => n * 2)));      // transformar
+
+var edades = new Dictionary<string, int> { ["Ana"] = 20, ["Luis"] = 31 };
+edades["Eva"] = 25;
+if (edades.TryGetValue("Luis", out int edad)) Console.WriteLine($"Luis tiene {edad}");
+
+var cola = new Queue<string>();                            // FIFO: el primero en entrar es el primero en salir
+cola.Enqueue("A"); cola.Enqueue("B");
+Console.WriteLine(cola.Dequeue());
+var pila = new Stack<string>();                            // LIFO: el último en entrar es el primero en salir
+pila.Push("A"); pila.Push("B");
+Console.WriteLine(pila.Pop());
+
+Func<int, int, int> sumar = (a, b) => a + b;               // lambda guardada en un delegado
+Console.WriteLine(sumar(2, 3));
+
+var porParidad = numeros.GroupBy(n => n % 2 == 0 ? "pares" : "impares");
+foreach (var g in porParidad) Console.WriteLine($"{g.Key}: {string.Join(", ", g)}");
+` },
+          ],
+          actividades: [
+          ],
+        },
+        {
+          id: "chuleta-limpio-git",
+          titulo: "Chuleta 9 · Código limpio y Git",
+          duracion: "8 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Aplicar las reglas básicas de código limpio y los comandos esenciales de Git"],
+          teoria: r`<div class="chuleta"><h3>Nombres</h3><table><thead><tr><th>Elemento</th><th>Estilo</th><th>Ejemplo</th></tr></thead><tbody><tr><td>Variables y parámetros</td><td><code>camelCase</code></td><td><code>vidaMaxima</code></td></tr><tr><td>Clases, métodos, propiedades, constantes</td><td><code>PascalCase</code></td><td><code>CalcularDanyo</code>, <code>MaxNivel</code></td></tr><tr><td>Interfaces</td><td><code>I</code> + <code>PascalCase</code></td><td><code>IDanyable</code></td></tr><tr><td>Campos privados</td><td><code>camelCase</code> (a veces con <code>_</code>)</td><td><code>saldo</code>, <code>_saldo</code></td></tr></tbody></table><h3>Reglas de oro</h3><ul><li>El <strong>nombre</strong> explica qué es o qué hace; si necesitas un comentario para entender un nombre, cámbialo.</li><li>Una función hace <strong>una sola cosa</strong> y es corta.</li><li>Nada de <strong>números mágicos</strong>: <code>const int MaxIntentos = 3;</code>.</li><li>Los comentarios explican el <em>porqué</em>, no repiten el <em>qué</em>.</li><li>No repitas código: si lo copias y pegas dos veces, haz una función.</li><li>Captura excepciones <strong>concretas</strong> y no las ignores en silencio.</li></ul><h3>Git: lo esencial</h3><table><thead><tr><th>Quiero…</th><th>Comando</th></tr></thead><tbody><tr><td>Empezar un repositorio</td><td><code>git init</code></td></tr><tr><td>Ver qué ha cambiado</td><td><code>git status</code></td></tr><tr><td>Preparar cambios</td><td><code>git add .</code></td></tr><tr><td>Guardar con un mensaje</td><td><code>git commit -m "Añade el menú"</code></td></tr><tr><td>Ver el historial</td><td><code>git log --oneline</code></td></tr><tr><td>Crear y cambiar de rama</td><td><code>git switch -c mi-rama</code> · <code>git switch main</code></td></tr><tr><td>Unir una rama</td><td><code>git merge mi-rama</code></td></tr><tr><td>Descargar un proyecto</td><td><code>git clone url</code></td></tr><tr><td>Traer · subir cambios</td><td><code>git pull</code> · <code>git push</code></td></tr></tbody></table><p><small>Haz commits pequeños y frecuentes, con mensajes que digan <em>qué</em> cambia. Los archivos <code>bin/</code> y <code>obj/</code> no se suben: <code>dotnet new gitignore</code> crea el <code>.gitignore</code> adecuado.</small></p></div>`,
+          ejemplos: [
+            { titulo: "Pruébalo", explicacion: "El mismo cálculo escrito de dos formas: compara cuál se entiende sin explicaciones.", codigo: r`// Chuleta · Código limpio: el MISMO programa, antes y después
+// ANTES (funciona, pero cuesta entenderlo)
+double f(double a, int b) { if (b > 5) { return a - a * 0.1; } else { return a; } }
+Console.WriteLine(f(50, 6));
+
+// DESPUÉS (nombres que explican, constante con nombre y sin «números mágicos»)
+const int UnidadesParaDescuento = 5;
+const double PorcentajeDescuento = 0.10;
+
+double CalcularPrecioFinal(double precioBase, int unidades)
+{
+    bool aplicaDescuento = unidades > UnidadesParaDescuento;
+    return aplicaDescuento ? precioBase * (1 - PorcentajeDescuento) : precioBase;
+}
+Console.WriteLine(CalcularPrecioFinal(precioBase: 50, unidades: 6));
+` },
+          ],
+          actividades: [
+          ],
+        },
+      ],
+    },
+    /* <<< nuevo:m16 */
     {
       id: "m15",
       titulo: "Currículo del módulo (RA y CA)",

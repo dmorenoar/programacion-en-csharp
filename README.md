@@ -186,6 +186,13 @@ Un navegador no puede compilar C#, así que el código se envía a **Judge0** (e
 - La entrada no es interactiva: lo que se escribe en «Entrada del programa» se entrega a `Console.ReadLine()` línea a línea.
 - **Código:** `js/editor-kit.js` (atajos y envío al compilador), `js/editor-pane.js` (editor + salida reutilizable), `js/training.js` (Entrenamiento), `js/playground.js` (panel Codificar) y `css/editor.css`, `css/training.css`.
 
+## Comodidad y motivación (buscador, imprimir, gamificación)
+
+- **`js/extras.js`** + **`css/extras.css`**: buscador de todo el curso (tecla `/` o Ctrl+K), botón 🖨 para imprimir una lección (las chuletas salen en 1-2 hojas), guardar/cargar el progreso en un archivo `.json` (para cambiar de dispositivo) y enlace «Saltar al contenido».
+- **`js/gamificacion.js`**: puntos (XP), 10 niveles, racha de días e insignias (una por módulo). **Los puntos no se guardan, se calculan** a partir del progreso (`state.done`, actividades resueltas y tests), así que no se pueden falsear marcando y desmarcando. `app.js` llama a `Gamificacion.revisar()` cada vez que ejecuta `saveState()`. Para cambiar los puntos o los niveles, edita las constantes `PTS` y `NIVELES` al principio del archivo.
+- **Módulos `intro: true`** (p. ej. «Empieza aquí»): salen sin número en el índice, así los módulos del temario conservan su numeración.
+- **Vista previa al compartir**: etiquetas Open Graph en `index.html` e imagen `img/og-curso.png` (1200×630). Si cambias la dirección de la web, actualiza las URL absolutas de esas etiquetas.
+
 ## Perfil «arcade» del profesor
 
 Al pulsar el nombre o el avatar del profesor en la portada se abre una ventana de perfil con Mario (salta al pulsarlo), sonido de moneda (`audio/coin.mp3`, con interruptor que se recuerda) y barras de estadísticas que se llenan a bloques. Los textos y porcentajes se editan en `data/course.js` → `profesor` (`insignia`, `estadisticas`, `habilidades`, `lema`…). Con «reducir movimiento» activado en el sistema no hay animaciones. Código: `js/profile.js` y `css/profile.css`.

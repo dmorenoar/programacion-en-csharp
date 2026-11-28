@@ -51,9 +51,18 @@ const lessons = COURSE.modulos.flatMap((modulo) =>
 );
 const lessonById = new Map(lessons.map((l) => [l.id, l]));
 
+// Módulos «de introducción» (intro: true): van al principio y NO llevan número, así los módulos
+// del temario conservan su numeración (Módulo 1 = Fundamentos) aunque se añadan módulos de apoyo.
+const INTRO_MODS = COURSE.modulos.filter((m) => m.intro).length;
+const modLabel = (m, i) => (m.intro ? m.titulo : `Módulo ${i + 1 - INTRO_MODS}: ${m.titulo}`);
+
 const STORAGE_KEY = "curso-csharp:v1";   // si cambias la estructura, sube la versión
 const state = Object.assign({ done: {}, last: null, theme: null, sidebarHidden: false }, store.get(STORAGE_KEY, {}));
-const saveState = () => store.set(STORAGE_KEY, state);
+// Cada vez que se guarda el progreso, la gamificación recalcula puntos, racha e insignias
+const saveState = () => {
+  store.set(STORAGE_KEY, state);
+  if (typeof Gamificacion !== "undefined") Gamificacion.revisar();
+};
 
 let currentId = null;
 let currentTab = "teoria";
@@ -313,7 +322,7 @@ function renderSidebar() {
       const open = (wasOpen.has(String(i)) ? wasOpen.get(String(i)) : containsActive || (!currentId && i === 0)) || containsActive ? "open" : "";
       return `
         <details class="module" data-mod="${i}" ${open}>
-          <summary>Módulo ${i + 1}: ${esc(modulo.titulo)}<span class="count">${done}/${modulo.lecciones.length}</span></summary>
+          <summary>${esc(modLabel(modulo, i))}<span class="count">${done}/${modulo.lecciones.length}</span></summary>
           ${items}
         </details>`;
     })
@@ -340,7 +349,10 @@ function toggleDone(id) {
   if (btn && id === currentId) setCompleteButton(btn, id);
   renderSidebar();
   updateProgress();
-  if (typeof renderHome === "function" && !$("#home").hidden) renderHome();
+  if (!$("#home").hidden) {            // desde la portada: se repinta sin saltar al principio de la página
+    $("#home").innerHTML = homeHTML();
+    if (typeof Gamificacion !== "undefined") Gamificacion.pintarPortada();
+  }
 }
 
 function setCompleteButton(btn, id) {
@@ -471,7 +483,7 @@ function homeHTML() {
         .join("");
       return `
         <details class="syl-sec" ${i === 0 ? "open" : ""}>
-          <summary><span class="n">Módulo ${i + 1}: ${esc(m.titulo)}</span><span class="c">${plural(m.lecciones.length, "clase", "clases")} • ${formatMinutes(min)}</span></summary>
+          <summary><span class="n">${esc(modLabel(m, i))}</span><span class="c">${plural(m.lecciones.length, "clase", "clases")} • ${formatMinutes(min)}</span></summary>
           ${rows}
         </details>`;
     })
@@ -520,6 +532,7 @@ function homeHTML() {
       </aside>
 
       <div class="home-main">
+        <section class="block logros" id="logrosHome"></section>
         <section class="learn">
           <h2>Lo que aprenderás</h2>
           <ul>${(COURSE.aprenderas || []).map((t) => `<li>${esc(t)}</li>`).join("")}</ul>
@@ -602,6 +615,7 @@ function showHome() {
   document.body.classList.remove("menu-open");
   document.title = COURSE.titulo;
   updateProgress();
+  if (typeof Gamificacion !== "undefined") Gamificacion.pintarPortada();
   window.scrollTo({ top: 0 });
   syncMenuButton();
 }
@@ -810,6 +824,7 @@ $("#resetBtn").addEventListener("click", (e) => {
   clearTimeout(resetTimer);
   resetTimer = null;
   state.done = {};
+  state.game = null;     // insignias, racha y nivel vuelven a empezar
   saveState();
   btn.textContent = "Reiniciar mi progreso";
   renderLesson(currentId, currentTab);

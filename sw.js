@@ -20,7 +20,7 @@
    mucho): sin conexión se ve la teoría y las actividades, pero no el vídeo.
    ===================================================================== */
 
-const VERSION = "v38";                     // súbela si cambias la LISTA de archivos de abajo
+const VERSION = "v39";                     // súbela si cambias la LISTA de archivos de abajo
 const CACHE = `curso-csharp-${VERSION}`;
 
 // Archivos imprescindibles: se descargan al instalar para que funcione offline desde la primera visita
@@ -41,6 +41,10 @@ const CORE = [
   "js/profile.js",
   "js/editor-kit.js",
   "js/playground.js",
+  "js/extras.js",
+  "js/gamificacion.js",
+  "css/extras.css",
+  "img/og-curso.png",
   "js/app.js",
   "data/course.js",
   "manifest.webmanifest",

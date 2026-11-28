@@ -1,0 +1,139 @@
+/* =====================================================================
+   css/extras.css · estilos de js/extras.js (buscador, imprimir, accesibilidad)
+   ===================================================================== */
+
+/* ---------- Accesibilidad ---------- */
+/* Anillo de foco visible solo con teclado (el ratón no lo muestra) */
+:focus-visible { outline: 3px solid #a78bfa; outline-offset: 2px; }
+.skip-link { position: fixed; top: -60px; left: 12px; z-index: 100; padding: 10px 16px; background: #fff; color: #1c1d1f; border: 2px solid #7c3aed; border-radius: 6px; font-weight: 700; text-decoration: none; }
+.skip-link:focus { top: 12px; }
+/* Quien pide «reducir movimiento» en su sistema no ve animaciones */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
+/* Pantalla de Windows en «alto contraste»: los bordes no desaparecen */
+@media (forced-colors: active) { .btn, .icon-btn, .tab { border: 1px solid ButtonText; } }
+
+/* ---------- Cabecera: el botón de imprimir solo tiene sentido dentro de una lección ---------- */
+body.view-home #printBtn { display: none; }
+@media (max-width: 600px) { #printBtn { display: none; } }   /* en el móvil el menú del navegador ya imprime */
+
+/* ---------- Buscador ---------- */
+.sr-modal { position: fixed; inset: 0; z-index: 90; background: rgba(0, 0, 0, .55); display: flex; align-items: flex-start; justify-content: center; padding: 8vh 12px 12px; }
+.sr-modal[hidden] { display: none; }
+.sr-box { width: min(680px, 100%); max-height: 80vh; display: flex; flex-direction: column; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 20px 60px rgba(0, 0, 0, .4); overflow: hidden; }
+.sr-head { display: flex; gap: 8px; padding: 12px; border-bottom: 1px solid var(--border); }
+.sr-head input { flex: 1; min-width: 0; font: inherit; font-size: 1.05rem; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--text); }
+.sr-close { color: var(--text); border-color: var(--border); }
+.sr-close:hover { background: var(--surface-2); }
+.sr-help { margin: 0; padding: 8px 14px; font-size: .85rem; color: var(--muted); }
+.sr-list { list-style: none; margin: 0; padding: 0 0 6px; overflow-y: auto; }
+.sr-list a { display: block; padding: 10px 14px; text-decoration: none; color: inherit; border-left: 3px solid transparent; }
+.sr-list li[aria-selected="true"] a, .sr-list a:hover { background: var(--accent-soft); border-left-color: var(--accent); }
+.sr-t { display: block; font-weight: 700; }
+.sr-m { display: block; font-size: .78rem; color: var(--muted); margin-bottom: 2px; }
+.sr-s { display: block; font-size: .88rem; color: var(--muted); line-height: 1.45; }
+.sr-s mark { background: #fde68a; color: #1c1d1f; border-radius: 2px; padding: 0 1px; }
+body.sr-open { overflow: hidden; }
+
+/* ---------- Copia del progreso ---------- */
+.sidebar-foot .link-btn { display: block; margin: 4px 0; }
+.data-msg { margin: 6px 0 0; font-size: .82rem; color: var(--muted); min-height: 1em; }
+
+/* ---------- Novedades / ruta de estudio (componentes de las lecciones nuevas) ---------- */
+.ruta { list-style: none; padding: 0; margin: 1em 0; counter-reset: paso; }
+.ruta li { counter-increment: paso; position: relative; margin: 0 0 12px; padding: 12px 14px 12px 54px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
+.ruta li::before { content: counter(paso); position: absolute; left: 12px; top: 12px; width: 30px; height: 30px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 800; display: grid; place-items: center; }
+.ruta li b { display: block; }
+.ruta li small { color: var(--muted); }
+.chuleta table { width: 100%; border-collapse: collapse; margin: .6em 0 1em; font-size: .93rem; }
+.chuleta th, .chuleta td { border: 1px solid var(--border); padding: 6px 9px; text-align: left; vertical-align: top; }
+.chuleta th { background: var(--surface-2); }
+
+/* ---------- Impresión: solo la lección, sin menús, vídeo ni editor ---------- */
+@media print {
+  .topbar, .sidebar, .sb-grip, .backdrop, .playground, .side-strip, .skip-link, .sr-modal,
+  .lesson-media, .tabs, .lesson-nav, .buzon-leccion, .media-fold, .train-link, .pg-reopen,
+  #completeBtn, .code-bar, .code-btn, .goals, .ra-chip, .panel .empty { display: none !important; }
+  /* Las chuletas se imprimen en una sola hoja: solo las tablas, sin el ejemplo ni las actividades */
+  body.print-chuleta .example, body.print-chuleta #panel-teoria > h2, body.print-chuleta #panel-actividades, body.print-chuleta .theory ~ h2 { display: none !important; }
+  html, body, .layout, .content, .content-inner { display: block !important; height: auto !important; overflow: visible !important; position: static !important; max-width: none !important; margin: 0 !important; padding: 0 !important; background: #fff !important; color: #000 !important; }
+  .panel[hidden] { display: none !important; }
+  .panel { display: block !important; }
+  /* En papel interesa el contenido, no el color de fondo */
+  pre, .code { white-space: pre-wrap; word-break: break-word; border: 1px solid #999; background: #fff !important; color: #000 !important; break-inside: avoid; }
+  .lesson-head h1 { font-size: 22pt; color: #000; }
+  h2, h3, h4 { break-after: avoid; }
+  a { color: #000; text-decoration: none; }
+  details:not([open]) > :not(summary) { display: none; }
+  /* Al final de cada página impresa se indica la licencia (es obligatorio mantener la atribución) */
+  .content-inner::after { content: "Programación en C# · © Daniel Moreno Arellano · CC BY-NC-SA 4.0"; display: block; margin-top: 24pt; font-size: 9pt; color: #555; border-top: 1px solid #aaa; padding-top: 6pt; }
+}
+
+/* =====================================================================
+   Gamificación (js/gamificacion.js): indicador, avisos, confeti, panel y tarjeta de portada
+   ===================================================================== */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Indicador de la cabecera */
+.gm-chip { display: inline-flex; align-items: center; gap: 6px; position: relative; padding: 4px 10px 8px; margin: 0 8px; background: transparent; color: #fff; border: 1px solid #6a6f73; border-radius: 4px; font: inherit; font-size: .85rem; font-weight: 700; cursor: pointer; }
+.gm-chip:hover { background: #3e4143; }
+.gm-chip .gm-xp { color: #d1d7dc; font-weight: 500; }
+.gm-chip .gm-racha { color: #fdba74; }
+.gm-chip .gm-bar { position: absolute; left: 6px; right: 6px; bottom: 3px; height: 3px; background: #3e4143; border-radius: 2px; overflow: hidden; }
+.gm-chip .gm-bar i { display: block; height: 100%; background: #facc15; transition: width .6s; }
+@media (max-width: 760px) { .gm-chip .gm-xp { display: none; } .gm-chip { margin: 0 4px; padding: 4px 6px 8px; } }
+
+/* Avisos */
+.gm-toasts { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 95; display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none; width: min(92vw, 380px); }
+.gm-toast { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 10px; background: #1c1d1f; color: #fff; border: 1px solid #4b4d50; box-shadow: 0 8px 24px rgba(0, 0, 0, .35); animation: gm-entra .35s ease-out; }
+.gm-toast small { display: block; font-size: .72rem; color: #c4b5fd; text-transform: uppercase; letter-spacing: .04em; }
+.gm-toast b { font-size: 1rem; }
+.gm-toast .gm-ico { font-size: 1.7rem; }
+.gm-toast.xp { background: #7c3aed; border-color: #a78bfa; padding: 5px 14px; }
+.gm-toast.nivel { background: linear-gradient(135deg, #4c1d95, #7c3aed); border-color: #facc15; }
+.gm-toast.fuera { opacity: 0; transform: translateY(10px); transition: all .4s; }
+@keyframes gm-entra { from { opacity: 0; transform: translateY(16px) scale(.95); } to { opacity: 1; transform: none; } }
+
+/* Confeti */
+.gm-confeti { position: fixed; top: -14px; width: 9px; height: 14px; z-index: 96; pointer-events: none; border-radius: 2px; animation: gm-cae linear forwards; }
+@keyframes gm-cae { to { top: 105vh; transform: translateX(40px) rotate(720deg); opacity: .8; } }
+
+/* Medidor de nivel (reutilizado en panel y portada) */
+.gm-meter { height: 12px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin: 8px 0 4px; }
+.gm-meter i { display: block; height: 100%; background: linear-gradient(90deg, #7c3aed, #facc15); border-radius: 8px; transition: width .6s; }
+.gm-meter.peq { height: 7px; margin: 0; flex: 0 0 90px; }
+.gm-big { font-size: 1.5rem; font-weight: 800; }
+.gm-nombre { color: var(--muted); font-weight: 600; }
+.gm-meter-txt { font-size: .88rem; color: var(--muted); }
+
+/* Panel */
+.gm-box { width: min(720px, 100%); }
+.gm-h { margin: 0 auto 0 4px; font-size: 1.2rem; align-self: center; }
+.gm-scroll { overflow-y: auto; padding: 14px 16px 16px; }
+.gm-scroll h3 { margin: 18px 0 8px; font-size: 1rem; }
+.gm-stats { list-style: none; display: flex; gap: 10px; margin: 14px 0 0; padding: 0; flex-wrap: wrap; }
+.gm-stats li { flex: 1 1 100px; text-align: center; padding: 10px 6px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-2); }
+.gm-stats b { display: block; font-size: 1.2rem; }
+.gm-stats small { color: var(--muted); }
+.gm-metas { list-style: none; margin: 0; padding: 0; }
+.gm-metas li { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px dashed var(--border); }
+.gm-metas li > span:first-child { flex: 1; min-width: 0; }
+.gm-metas small { color: var(--muted); }
+.gm-badges { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+.gm-badge { text-align: center; padding: 10px 6px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); opacity: .6; }
+.gm-badge.ok { opacity: 1; border-color: #facc15; background: linear-gradient(180deg, var(--surface), var(--accent-soft)); }
+.gm-badge .gm-ico { display: block; font-size: 1.8rem; }
+.gm-badge b { display: block; font-size: .85rem; line-height: 1.25; margin: 2px 0; }
+.gm-badge small { color: var(--muted); }
+.gm-nota { margin-top: 16px; font-size: .8rem; color: var(--muted); }
+
+/* Tarjeta de la portada */
+.gm-home { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+.gm-home-nivel { flex: 2 1 260px; }
+.gm-home .gm-stats { flex: 1 1 200px; margin: 0; }
+.gm-vacio { color: var(--muted); }
+.gm-recientes { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 12px 0; }
+.gm-recientes li { padding: 4px 10px; border: 1px solid #facc15; border-radius: 999px; background: var(--accent-soft); font-size: .85rem; }
+
+@media print { .gm-chip, .gm-toasts, .gm-confeti, .gm-panel { display: none !important; } }

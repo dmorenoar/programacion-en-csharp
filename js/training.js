@@ -209,7 +209,7 @@ const Training = (() => {
             <span class="lv" title="${esc((LEVELS[it.act.nivel] || LEVELS[1]).label)}">${stars(it)}</span>
           </a>`).join("")}`).join("");
       return `<details class="tr-mod" data-mod="${mi}" ${open ? "open" : ""}>
-        <summary><span class="n">Módulo ${mi + 1}: ${esc(m.titulo)}</span><span class="c">${mdone}/${items.length}</span></summary>${lessonsHtml}</details>`;
+        <summary><span class="n">${esc(modLabel(m, mi))}</span><span class="c">${mdone}/${items.length}</span></summary>${lessonsHtml}</details>`;
     }).join("");
 
     ui.Browser.innerHTML = `
