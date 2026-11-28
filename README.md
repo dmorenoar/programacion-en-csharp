@@ -202,7 +202,7 @@ Los programas **sencillos** (sin clases propias ni sintaxis moderna; los decimal
 
 ## Estructura del curso y autoevaluación
 
-El curso tiene **14 módulos** y **83 lecciones**, en este orden:
+El curso tiene **15 módulos** y **87 lecciones**, en este orden:
 
 1. **Fundamentos** — lenguajes y .NET, primer programa, variables, operadores, entrada/salida, conversiones, sistemas de numeración, diseño de algoritmos.
 2. **Herramientas: Git y metodologías** — Git, GitHub (ramas, *pull requests*, *forks*, *projects*), Scrum y Kanban.
@@ -218,8 +218,9 @@ El curso tiene **14 módulos** y **83 lecciones**, en este orden:
 12. **Interfaz gráfica y persistencia** — MVC, Razor Pages paso a paso, patrón DAO, Entity Framework Core.
 13. **Código limpio (Clean Code)** — nombres, funciones, comentarios, formato, errores, clases, pruebas, *code smells*.
 14. **Autoevaluación y repaso** — test de iniciación, test global y dos glosarios.
+15. **Currículo y evaluación (RA y CA)** — cómo se evalúa el módulo, los 9 resultados de aprendizaje con sus criterios de evaluación, el mapa de contenidos (qué RA evalúa cada lección) y las actividades del curso con sus instrumentos.
 
-Cada lección tiene pestañas de **Teoría**, **Ejemplos**, **Actividades** (con soluciones de menos a más profesionales) y **✅ Autoevaluación**.
+Cada lección tiene pestañas de **Teoría**, **Ejemplos**, **Actividades** (con soluciones de menos a más profesionales) y **✅ Autoevaluación**, y lleva junto al título una **etiqueta con el RA y los criterios de evaluación** que trabaja, enlazada con el mapa de contenidos del módulo 15.
 
 - Las preguntas de cada lección viven en `data/tests.js` (`TESTS[idLección] = [{ p, o, c, e }]`: pregunta, opciones, índice de la correcta y explicación). Las opciones se barajan solas.
 - Las lecciones con `testAleatorio: N` (módulo «Autoevaluación y repaso») sacan N preguntas al azar de todo el curso.

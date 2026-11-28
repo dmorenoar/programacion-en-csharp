@@ -364,3 +364,22 @@ body.video-collapsed .lesson-media { padding-bottom: 8px; }
 .theory pre code { background: none; padding: 0; color: inherit; }
 .theory .example { margin: 18px 0; }
 .theory blockquote { margin: 16px 0; }
+
+/* Etiqueta del resultado de aprendizaje de cada lección */
+.ra-chip {
+  display: inline-block;
+  margin: 0 0 14px;
+  padding: 4px 12px;
+  border: 1px solid var(--line, #d8dee9);
+  border-radius: 999px;
+  background: rgba(112, 149, 202, .12);
+  color: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .2px;
+  text-decoration: none;
+}
+.ra-chip::before { content: "🎓 "; }
+.ra-chip:hover, .ra-chip:focus-visible { background: rgba(112, 149, 202, .26); }
+.ra-chip.transversal { background: rgba(140, 140, 140, .14); font-weight: 500; }
+.ra-chip.transversal::before { content: "🧰 "; }

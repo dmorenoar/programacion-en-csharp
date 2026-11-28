@@ -366,6 +366,10 @@ function renderLesson(id, tab = "teoria") {
   const next = lessons[index + 1];
   const nActs = lesson.actividades.length;
   const nTest = lesson.testAleatorio || (TESTS[lesson.id] || []).length;
+  // Etiqueta del resultado de aprendizaje: enlaza con el mapa de contenidos del currículo
+  const raChip = lesson.ra
+    ? `<a class="ra-chip${lesson.ra === "Transversal" ? " transversal" : ""}" href="#leccion-ra-mapa" title="Qué se evalúa en esta lección">${esc(lesson.ra)}</a>`
+    : "";
   const goals = lesson.objetivos && lesson.objetivos.length
     ? `<div class="goals"><h3>🎯 Lo que aprenderás</h3><ul>${lesson.objetivos.map((o) => `<li>${esc(o)}</li>`).join("")}</ul></div>`
     : "";
@@ -382,6 +386,7 @@ function renderLesson(id, tab = "teoria") {
       <h1>${esc(lesson.titulo)}</h1>
       <button id="completeBtn" type="button"></button>
     </div>
+    ${raChip}
     ${goals}
 
     <div class="tabs" role="tablist" aria-label="Contenido de la lección">

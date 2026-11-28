@@ -90,6 +90,7 @@ const COURSE = {
       lecciones: [
         {
           id: "lenguajes-y-net",
+          ra: "RA1 · CA 1.1, 1.2, 1.3",
           titulo: "Lenguajes de programación y la plataforma .NET",
           duracion: "14 min",
           video: { provider: "drive", id: "" },
@@ -276,6 +277,7 @@ de <strong>soporte a largo plazo (LTS)</strong> y las
         },
         {
           id: "sistemas-numeracion",
+          ra: "RA1 · CA 1.4, 1.8",
           titulo: "Sistemas de numeración y representación de datos",
           duracion: "20 min",
           video: { provider: "drive", id: "" },
@@ -957,6 +959,7 @@ void MostrarFicha(int n)
         },
         {
           id: "algoritmos-diseno",
+          ra: "RA1 · CA 1.1 · RA3 · CA 3.6",
           titulo: "Diseño de algoritmos: pseudocódigo, diagramas y juegos de pruebas",
           duracion: "22 min",
           video: { provider: "drive", id: "" },
@@ -1489,6 +1492,7 @@ Console.WriteLine($"Media de {cuantos} números: {suma / cuantos:F2}");
         },
         {
           id: "primer-programa",
+          ra: "RA1 · CA 1.1, 1.2, 1.3, 1.9",
           titulo: "Tu primer programa y el entorno de desarrollo",
           duracion: "14 min",
           video: { provider: "drive", id: "" },
@@ -1704,6 +1708,7 @@ Console.WriteLine($"¡Hola, {companero}!");
         /* ---------------------------- VARIABLES ---------------------------- */
         {
           id: "variables",
+          ra: "RA1 · CA 1.4, 1.5, 1.6",
           titulo: "Variables y tipos de datos",
           duracion: "12 min",
           // provider: "drive" | "youtube"  ·  id: el identificador del vídeo (vacío = marcador)
@@ -1815,6 +1820,7 @@ Console.WriteLine($"a = {a}, b = {b}");`,
         },
         {
           id: "operadores",
+          ra: "RA1 · CA 1.7",
           titulo: "Operadores aritméticos, relacionales y lógicos",
           duracion: "16 min",
           video: { provider: "drive", id: "" },
@@ -2224,6 +2230,7 @@ Console.WriteLine(bisiesto ? $"{anio} es bisiesto" : $"{anio} no es bisiesto");
         /* ------------------------ LECTURA Y ESCRITURA ----------------------- */
         {
           id: "lectura-escritura",
+          ra: "RA5 · CA 5.1, 5.2",
           titulo: "Lectura y escritura por consola",
           duracion: "10 min",
           video: { provider: "drive", id: "" },
@@ -2363,6 +2370,7 @@ Console.WriteLine($"Total: {total:C2}");   // C2 = formato de moneda según la c
         /* ------------------------ CONVERSIÓN DE TIPOS ----------------------- */
         {
           id: "conversion-tipos",
+          ra: "RA1 · CA 1.8",
           titulo: "Conversión de tipos",
           duracion: "14 min",
           video: { provider: "drive", id: "" },
@@ -2491,6 +2499,7 @@ Console.WriteLine($"Redondeado: {(int)Math.Round(dolares)}");`,
       lecciones: [
         {
           id: "git-basico",
+          ra: "Transversal",
           titulo: "Control de versiones con Git",
           duracion: "20 min",
           video: { provider: "drive", id: "" },
@@ -2755,6 +2764,7 @@ else
         },
         {
           id: "github-flujo",
+          ra: "Transversal",
           titulo: "GitHub: ramas, pull requests, forks y projects",
           duracion: "22 min",
           video: { provider: "drive", id: "" },
@@ -3051,6 +3061,7 @@ Console.WriteLine("¡Qué tal!");
         },
         {
           id: "metodologias",
+          ra: "Transversal",
           titulo: "Metodologías de gestión de proyectos",
           duracion: "18 min",
           video: { provider: "drive", id: "" },
@@ -3343,6 +3354,7 @@ qué cambiarás en el próximo proyecto.</p>`,
         /* ------------------------ ESTRUCTURAS DE CONTROL ----------------------- */
         {
           id: "estructuras-control",
+          ra: "RA3 · CA 3.1, 3.5",
           titulo: "Estructuras de control: condicionales",
           duracion: "15 min",
           video: { provider: "drive", id: "" },
@@ -3517,6 +3529,7 @@ Console.WriteLine(resultado is null
         /* ------------------------ ESTRUCTURAS DE REPETICIÓN ----------------------- */
         {
           id: "estructuras-repeticion",
+          ra: "RA3 · CA 3.2, 3.5",
           titulo: "Estructuras de repetición",
           duracion: "16 min",
           video: { provider: "drive", id: "" },
@@ -3683,6 +3696,7 @@ Console.WriteLine($"¡Correcto! Lo has conseguido en {intentos} intentos");`,
         },
         {
           id: "saltos",
+          ra: "RA3 · CA 3.3",
           titulo: "Instrucciones de salto: break, continue y return",
           duracion: "10 min",
           video: { provider: "drive", id: "" },
@@ -3820,6 +3834,7 @@ int PrimerMultiploDe7(int minimo)
         },
         {
           id: "excepciones",
+          ra: "RA3 · CA 3.4",
           titulo: "Control de excepciones: try, catch y finally",
           duracion: "15 min",
           video: { provider: "drive", id: "" },
@@ -4022,6 +4037,7 @@ Console.WriteLine("Fin del programa");
         },
         {
           id: "depuracion",
+          ra: "RA3 · CA 3.6, 3.7",
           titulo: "Depuración de errores",
           duracion: "10 min",
           video: { provider: "drive", id: "" },
@@ -4202,6 +4218,7 @@ Console.WriteLine($"La suma es {suma}");   // 55
         /* ------------------------------ ARRAYS ------------------------------ */
         {
           id: "arrays",
+          ra: "RA6 · CA 6.1",
           titulo: "Arrays (vectores)",
           duracion: "15 min",
           video: { provider: "drive", id: "" },
@@ -4353,6 +4370,7 @@ Console.WriteLine(string.Join(" ", datos));`,
         /* ------------------------------ MATRICES ------------------------------ */
         {
           id: "matrices",
+          ra: "RA6 · CA 6.1",
           titulo: "Matrices (arrays bidimensionales)",
           duracion: "14 min",
           video: { provider: "drive", id: "" },
@@ -4516,6 +4534,7 @@ for (int f = 0; f < transpuesta.GetLength(0); f++)
         /* ------------------------------ JAGGED ARRAYS ------------------------------ */
         {
           id: "jagged-arrays",
+          ra: "RA6 · CA 6.1",
           titulo: "Jagged arrays (arrays escalonados)",
           duracion: "12 min",
           video: { provider: "drive", id: "" },
@@ -4659,6 +4678,7 @@ foreach (int[] fila in pascal)
         },
         {
           id: "arrays-referencias",
+          ra: "RA6 · CA 6.1",
           titulo: "Arrays en funciones: referencias, copias y comparación",
           duracion: "16 min",
           video: { provider: "drive", id: "" },
@@ -4900,6 +4920,7 @@ static bool BuscaSospechosoApellido(string[] sospechoso, string[,] habitantes)
         /* ------------------------------ FUNCIONES ------------------------------ */
         {
           id: "funciones",
+          ra: "RA2 · CA 2.2, 2.6",
           titulo: "Funciones",
           duracion: "16 min",
           video: { provider: "drive", id: "" },
@@ -5080,6 +5101,7 @@ long Factorial(int numero) => numero <= 1 ? 1 : numero * Factorial(numero - 1);`
         /* ------------------------------ PROCEDIMIENTOS ------------------------------ */
         {
           id: "procedimientos",
+          ra: "RA2 · CA 2.2, 2.6",
           titulo: "Procedimientos",
           duracion: "14 min",
           video: { provider: "drive", id: "" },
@@ -5313,6 +5335,7 @@ int LeerEntero(string mensaje)
         },
         {
           id: "parametros",
+          ra: "RA2 · CA 2.6",
           titulo: "Parámetros: por valor, ref, out, opcionales y con nombre",
           duracion: "16 min",
           video: { provider: "drive", id: "" },
@@ -5520,6 +5543,7 @@ bool TryDividir(int a, int b, out int resultado)
         },
         {
           id: "retorno-valores",
+          ra: "RA2 · CA 2.2, 2.6",
           titulo: "Retorno de valores y tuplas",
           duracion: "14 min",
           video: { provider: "drive", id: "" },
@@ -5744,6 +5768,7 @@ Console.WriteLine($"Menor: {menor}, mayor: {mayor}");   // Menor: 1, mayor: 9
         },
         {
           id: "recursividad",
+          ra: "RA2 · CA 2.2",
           titulo: "Recursividad",
           duracion: "14 min",
           video: { provider: "drive", id: "" },
@@ -5972,6 +5997,7 @@ int Fibonacci(int n)
         },
         {
           id: "recursividad-clasica",
+          ra: "RA2 · CA 2.2",
           titulo: "Recursividad clásica y complejidad",
           duracion: "20 min",
           video: { provider: "drive", id: "" },
@@ -6289,6 +6315,7 @@ int ContarMovimientos(int discos)
         },
         {
           id: "algoritmos-ordenacion",
+          ra: "RA2 · CA 2.2, 2.7",
           titulo: "Algoritmos de ordenación",
           duracion: "24 min",
           video: { provider: "drive", id: "" },
@@ -6987,6 +7014,7 @@ long MergeSortContado(int[] v)
         },
         {
           id: "backtracking",
+          ra: "RA2 · CA 2.2",
           titulo: "Backtracking: el problema de las ocho reinas",
           duracion: "20 min",
           video: { provider: "drive", id: "" },
@@ -7485,6 +7513,7 @@ string Clave(int[] s) => string.Join(",", s);
       lecciones: [
         {
           id: "clases-estaticas",
+          ra: "RA2 · CA 2.5, 2.7 · RA4 · CA 4.8",
           titulo: "Las clases como almacén de funciones",
           duracion: "12 min",
           video: { provider: "drive", id: "" },
@@ -7638,6 +7667,7 @@ static class Conversor
         },
         {
           id: "namespaces",
+          ra: "RA2 · CA 2.7 · RA4 · CA 4.10",
           titulo: "Espacios de nombres y la directiva using",
           duracion: "14 min",
           video: { provider: "drive", id: "" },
@@ -7956,6 +7986,7 @@ public static class PideValores
         },
         {
           id: "acceso-bibliotecas",
+          ra: "RA2 · CA 2.7 · RA4 · CA 4.6, 4.10",
           titulo: "Modificadores de acceso y bibliotecas",
           duracion: "12 min",
           video: { provider: "drive", id: "" },
@@ -8254,6 +8285,7 @@ class Contador
         },
         {
           id: "math-random",
+          ra: "RA2 · CA 2.3, 2.4, 2.5, 2.7",
           titulo: "Las clases Math y Random",
           duracion: "12 min",
           video: { provider: "drive", id: "" },
@@ -8488,6 +8520,7 @@ double LeerDouble(string mensaje)
         },
         {
           id: "cadenas",
+          ra: "RA2 · CA 2.3, 2.4 · RA6 · CA 6.2",
           titulo: "Funciones de los textos (string)",
           duracion: "14 min",
           video: { provider: "drive", id: "" },
@@ -8730,6 +8763,7 @@ Console.WriteLine(esPalindromo ? "Es un palíndromo" : "No es un palíndromo");
         },
         {
           id: "stringbuilder",
+          ra: "RA6 · CA 6.2",
           titulo: "StringBuilder: construir textos sin arruinar el rendimiento",
           duracion: "16 min",
           video: { provider: "drive", id: "" },
@@ -9076,6 +9110,7 @@ int LeerEntero(string mensaje)
         },
         {
           id: "expresiones-regulares",
+          ra: "RA6 · CA 6.7",
           titulo: "Expresiones regulares",
           duracion: "24 min",
           video: { provider: "drive", id: "" },
@@ -9673,6 +9708,7 @@ Console.WriteLine("\nPrueba con (a+)+$ para ver el límite de tiempo en acción.
         },
         {
           id: "fechas-horas",
+          ra: "RA2 · CA 2.3, 2.4 · RA6 · CA 6.2",
           titulo: "Fechas y horas: DateTime, DateOnly y TimeSpan",
           duracion: "22 min",
           video: { provider: "drive", id: "" },
@@ -10173,6 +10209,7 @@ Console.WriteLine($"  Comprobación (sin recorrer todo): {laborablesRapido}");
       lecciones: [
         {
           id: "ficheros-concepto-gestion",
+          ra: "RA5 · CA 5.3, 5.4",
           titulo: "Ficheros: conceptos, archivos y carpetas",
           duracion: "15 min",
           video: { provider: "drive", id: "" },
@@ -10455,6 +10492,7 @@ catch (UnauthorizedAccessException)
         },
         {
           id: "ficheros-secuencial",
+          ra: "RA5 · CA 5.4, 5.5",
           titulo: "Escritura y lectura secuencial",
           duracion: "16 min",
           video: { provider: "drive", id: "" },
@@ -10773,6 +10811,7 @@ Console.WriteLine($"Récord: {mejor} con {maximo} puntos");
         },
         {
           id: "ficheros-rutas-directo",
+          ra: "RA5 · CA 5.5",
           titulo: "Rutas, valores del sistema y acceso directo",
           duracion: "16 min",
           video: { provider: "drive", id: "" },
@@ -11017,6 +11056,7 @@ Console.WriteLine(File.ReadAllText(ruta));                 // AAABBBAAAACCC
         },
         {
           id: "ficheros-csv",
+          ra: "RA5 · CA 5.4, 5.5",
           titulo: "Ficheros CSV",
           duracion: "22 min",
           video: { provider: "drive", id: "" },
@@ -11648,6 +11688,7 @@ void ExportarInforme(string ruta, List<(string nombre, double nota)> datos)
         },
         {
           id: "ficheros-json",
+          ra: "RA5 · CA 5.4, 5.5",
           titulo: "Ficheros JSON con System.Text.Json",
           duracion: "24 min",
           video: { provider: "drive", id: "" },
@@ -12391,6 +12432,7 @@ class Contacto
         },
         {
           id: "ficheros-xml",
+          ra: "RA6 · CA 6.8, 6.9 · RA5 · CA 5.4",
           titulo: "Ficheros XML y LINQ to XML",
           duracion: "22 min",
           video: { provider: "drive", id: "" },
@@ -13149,6 +13191,7 @@ class Juego
       lecciones: [
         {
           id: "poo-introduccion",
+          ra: "RA4 · CA 4.1, 4.2",
           titulo: "Introducción a la POO: clases y objetos",
           duracion: "16 min",
           video: { provider: "drive", id: "" },
@@ -13443,6 +13486,7 @@ class Jugador
         },
         {
           id: "poo-this-constructores",
+          ra: "RA4 · CA 4.3, 4.4, 4.5",
           titulo: "this, constructores y ciclo de vida",
           duracion: "16 min",
           video: { provider: "drive", id: "" },
@@ -13686,6 +13730,7 @@ class Arma
         },
         {
           id: "poo-composicion-referencias",
+          ra: "RA4 · CA 4.5",
           titulo: "Composición, referencias y static",
           duracion: "18 min",
           video: { provider: "drive", id: "" },
@@ -14124,6 +14169,7 @@ class Mochila
         },
         {
           id: "poo-encapsulacion",
+          ra: "RA4 · CA 4.6",
           titulo: "Encapsulamiento, modificadores de acceso y propiedades",
           duracion: "18 min",
           video: { provider: "drive", id: "" },
@@ -14555,6 +14601,7 @@ class CuentaBancaria
         },
         {
           id: "poo-herencia",
+          ra: "RA4 · CA 4.7 · RA7 · CA 7.1, 7.2, 7.3",
           titulo: "Herencia y sobrescritura de métodos",
           duracion: "18 min",
           video: { provider: "drive", id: "" },
@@ -14965,6 +15012,7 @@ public class Cabezon : Extraterrestre
         },
         {
           id: "poo-object-tipos",
+          ra: "RA7 · CA 7.4",
           titulo: "La clase Object y los tipos básicos",
           duracion: "12 min",
           video: { provider: "drive", id: "" },
@@ -15211,6 +15259,7 @@ class Punto
         },
         {
           id: "poo-enum-struct-record",
+          ra: "RA4 · CA 4.1, 4.2",
           titulo: "Enumeraciones, estructuras, records y null",
           duracion: "20 min",
           video: { provider: "drive", id: "" },
@@ -15504,6 +15553,7 @@ record Producto(string Nombre, decimal Precio);
         },
         {
           id: "poo-polimorfismo",
+          ra: "RA7 · CA 7.4, 7.5, 7.7",
           titulo: "Polimorfismo",
           duracion: "14 min",
           video: { provider: "drive", id: "" },
@@ -15846,6 +15896,7 @@ class Mago : Enemigo
         },
         {
           id: "poo-abstractas-interfaces",
+          ra: "RA4 · CA 4.9 · RA7 · CA 7.5, 7.6, 7.7",
           titulo: "Clases abstractas e interfaces",
           duracion: "18 min",
           video: { provider: "drive", id: "" },
@@ -16542,6 +16593,7 @@ class Avion : IVolador
       lecciones: [
         {
           id: "uml-introduccion",
+          ra: "RA4 · CA 4.1",
           titulo: "¿Qué es UML y para qué sirve?",
           duracion: "16 min",
           video: { provider: "drive", id: "" },
@@ -16994,6 +17046,7 @@ conoce su aforo maximo. Asi cada clase usa unicamente los datos que posee
         },
         {
           id: "uml-clases",
+          ra: "RA4 · CA 4.1, 4.2, 4.7",
           titulo: "Diagramas de clases: relaciones y multiplicidad",
           duracion: "24 min",
           video: { provider: "drive", id: "" },
@@ -17659,6 +17712,7 @@ class Flota
         },
         {
           id: "uml-casos-uso",
+          ra: "Transversal",
           titulo: "Diagramas de casos de uso",
           duracion: "20 min",
           video: { provider: "drive", id: "" },
@@ -18017,6 +18071,7 @@ ponlas como <em>issues</em> en tu repositorio.</p>`,
         },
         {
           id: "uml-dinamicos",
+          ra: "RA7 · CA 7.5",
           titulo: "Diagramas dinámicos: secuencia, estados y actividades",
           duracion: "22 min",
           video: { provider: "drive", id: "" },
@@ -18480,6 +18535,7 @@ class Personaje
       lecciones: [
         {
           id: "tipos-genericos",
+          ra: "RA6 · CA 6.6",
           titulo: "Tipos genéricos",
           duracion: "22 min",
           video: { provider: "drive", id: "" },
@@ -19022,6 +19078,7 @@ lista.Remove("C#");
         },
         {
           id: "colecciones-panorama",
+          ra: "RA6 · CA 6.2, 6.5",
           titulo: "Panorama de las colecciones",
           duracion: "20 min",
           video: { provider: "drive", id: "" },
@@ -19499,6 +19556,7 @@ Console.WriteLine($"Ahora la agenda tiene {agenda.Count} contactos");
         },
         {
           id: "coleccion-list",
+          ra: "RA6 · CA 6.3, 6.4, 6.5",
           titulo: "List<T>: la colección de uso diario",
           duracion: "22 min",
           video: { provider: "drive", id: "" },
@@ -20181,6 +20239,7 @@ Console.WriteLine($"  Ordenadas: {string.Join(", ", notas.OrderByDescending(n =>
         },
         {
           id: "coleccion-dictionary",
+          ra: "RA6 · CA 6.2, 6.5",
           titulo: "Dictionary, HashSet y colecciones ordenadas",
           duracion: "24 min",
           video: { provider: "drive", id: "" },
@@ -20953,6 +21012,7 @@ for (int i = 0; i < Math.Min(3, significativas.Count); i++)
         },
         {
           id: "coleccion-pilas-colas",
+          ra: "RA6 · CA 6.2, 6.5",
           titulo: "Queue y Stack: colas y pilas",
           duracion: "18 min",
           video: { provider: "drive", id: "" },
@@ -21402,6 +21462,7 @@ Console.WriteLine("si hiciera falta respetar la llegada, habría que añadir un 
         },
         {
           id: "ordenacion-colecciones",
+          ra: "RA6 · CA 6.5 · RA4 · CA 4.9",
           titulo: "Ordenar colecciones: IComparable e IComparer",
           duracion: "20 min",
           video: { provider: "drive", id: "" },
@@ -21982,6 +22043,7 @@ Console.WriteLine("(añadiendo un criterio de desempate, como el título).");
       lecciones: [
         {
           id: "delegados",
+          ra: "RA6 · CA 6.2",
           titulo: "Delegados: variables que guardan métodos",
           duracion: "22 min",
           video: { provider: "drive", id: "" },
@@ -22390,6 +22452,7 @@ foreach (string clave in pruebas)
         },
         {
           id: "lambdas",
+          ra: "RA6 · CA 6.2",
           titulo: "Métodos anónimos y expresiones lambda",
           duracion: "20 min",
           video: { provider: "drive", id: "" },
@@ -22787,6 +22850,7 @@ Console.WriteLine($"Con Aggregate: «{resultado}»");
         },
         {
           id: "linq-introduccion",
+          ra: "RA6 · CA 6.3, 6.4",
           titulo: "LINQ: consultar colecciones",
           duracion: "24 min",
           video: { provider: "drive", id: "" },
@@ -23305,6 +23369,7 @@ class Venta
         },
         {
           id: "linq-operadores",
+          ra: "RA6 · CA 6.3, 6.4, 6.5",
           titulo: "Operadores estándar de consulta",
           duracion: "24 min",
           video: { provider: "drive", id: "" },
@@ -24035,6 +24100,7 @@ class Juego
         },
         {
           id: "linq-agrupacion",
+          ra: "RA6 · CA 6.3, 6.5",
           titulo: "Agrupación, combinación y MapReduce",
           duracion: "24 min",
           video: { provider: "drive", id: "" },
@@ -24681,6 +24747,7 @@ class Nota
       lecciones: [
         {
           id: "mvc-razor",
+          ra: "RA5 · CA 5.6, 5.8",
           titulo: "Interfaces de usuario: el patrón MVC",
           duracion: "20 min",
           video: { provider: "drive", id: "" },
@@ -25405,6 +25472,7 @@ class AgendaAulas
         },
         {
           id: "razor-ejemplo",
+          ra: "RA5 · CA 5.6, 5.7, 5.8",
           titulo: "Una aplicación Razor Pages paso a paso",
           duracion: "26 min",
           video: { provider: "drive", id: "" },
@@ -26148,6 +26216,7 @@ public class ElementoService
         },
         {
           id: "persistencia-dao",
+          ra: "RA8 · CA 8.1, 8.2",
           titulo: "La capa de persistencia: el patrón DAO",
           duracion: "22 min",
           video: { provider: "drive", id: "" },
@@ -26762,6 +26831,7 @@ Console.WriteLine("La escritura invalida la caché: si no, se devolverían datos
         },
         {
           id: "entity-framework",
+          ra: "RA9 · CA 9.1 a 9.7 · RA8 · CA 8.5 a 8.8",
           titulo: "Entity Framework Core",
           duracion: "26 min",
           video: { provider: "drive", id: "" },
@@ -27495,6 +27565,7 @@ void Anadir(string titulo, int anio, int paginas, int autorId)
       lecciones: [
         {
           id: "cc-por-que",
+          ra: "RA3 · CA 3.7",
           titulo: "¿Por qué importa el código limpio?",
           duracion: "14 min",
           video: { provider: "drive", id: "" },
@@ -27715,6 +27786,7 @@ decimal LeerPrecio(string mensaje)
         },
         {
           id: "cc-nombres",
+          ra: "RA3 · CA 3.7",
           titulo: "Nombres con significado",
           duracion: "16 min",
           video: { provider: "drive", id: "" },
@@ -27982,6 +28054,7 @@ int LeerHoras(string mensaje)
         },
         {
           id: "cc-funciones",
+          ra: "RA2 · CA 2.2 · RA3 · CA 3.7",
           titulo: "Funciones pequeñas que hacen una sola cosa",
           duracion: "20 min",
           video: { provider: "drive", id: "" },
@@ -28356,6 +28429,7 @@ string Clasificar(int edad) => edad switch
         },
         {
           id: "cc-comentarios",
+          ra: "RA1 · CA 1.9 · RA3 · CA 3.7",
           titulo: "Comentarios: los justos y necesarios",
           duracion: "14 min",
           video: { provider: "drive", id: "" },
@@ -28584,6 +28658,7 @@ int LeerEdad(string mensaje)
         },
         {
           id: "cc-formato",
+          ra: "RA3 · CA 3.7",
           titulo: "Formato y estilo del código",
           duracion: "12 min",
           video: { provider: "drive", id: "" },
@@ -28751,6 +28826,7 @@ int Mayor(int a, int b)
         },
         {
           id: "cc-errores",
+          ra: "RA3 · CA 3.4",
           titulo: "Manejo limpio de errores",
           duracion: "18 min",
           video: { provider: "drive", id: "" },
@@ -29096,6 +29172,7 @@ finally
         },
         {
           id: "cc-clases",
+          ra: "RA4 · CA 4.1, 4.6",
           titulo: "Clases limpias y objetos",
           duracion: "20 min",
           video: { provider: "drive", id: "" },
@@ -29528,6 +29605,7 @@ class Jugador
         },
         {
           id: "cc-pruebas",
+          ra: "RA3 · CA 3.6",
           titulo: "Pruebas: cómo saber que no hemos roto nada",
           duracion: "20 min",
           video: { provider: "drive", id: "" },
@@ -29834,6 +29912,7 @@ bool EsContrasenaSegura(string? contrasena)
         },
         {
           id: "cc-olores",
+          ra: "RA3 · CA 3.6, 3.7",
           titulo: "Olores del código y refactorización paso a paso",
           duracion: "24 min",
           video: { provider: "drive", id: "" },
@@ -30611,6 +30690,1484 @@ escribe los cambios acumulados.</li>
 <li><strong><code>AsNoTracking</code>:</strong> consulta de solo
 lectura, sin seguimiento de cambios.</li>
 </ul>`,
+          ejemplos: [
+          ],
+          actividades: [
+          ],
+        },
+      ],
+    },
+    {
+      id: "m15",
+      titulo: "Currículo y evaluación (RA y CA)",
+      lecciones: [
+        {
+          id: "ra-como-se-evalua",
+          titulo: "Cómo se evalúa el módulo: RA, CA e instrumentos",
+          duracion: "12 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Entender qué es un resultado de aprendizaje y qué es un criterio de evaluación", "Saber con qué instrumentos se califica cada RA y cuánto pesa cada uno", "Conocer las condiciones para aprobar el módulo y la segunda convocatoria"],
+          teoria: r`<p>En Formación Profesional no apruebas «el examen del segundo
+trimestre»: apruebas <strong>resultados de aprendizaje</strong>.
+Entender cómo funciona esto te ahorra sorpresas y te permite saber, en
+cualquier momento del curso, qué te falta exactamente para aprobar.</p>
+<h3 id="1-el-vocabulario">1. El vocabulario</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Término</th>
+<th>Qué es</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>MP</strong></td>
+<td>Módulo profesional. El nuestro es el <strong>0485 ·
+Programación</strong>, de 165 h en el centro</td>
+</tr>
+<tr class="even">
+<td><strong>RA</strong></td>
+<td><strong>Resultado de aprendizaje</strong>: lo que debes ser capaz de
+hacer al terminar. Son 9</td>
+</tr>
+<tr class="odd">
+<td><strong>CA</strong></td>
+<td><strong>Criterio de evaluación</strong>: la comprobación concreta de
+un RA. Se numeran RA.n (3.1, 3.2…)</td>
+</tr>
+<tr class="even">
+<td><strong>AEA</strong></td>
+<td>Actividad de enseñanza-aprendizaje: cada bloque de clases (A1,
+A2…)</td>
+</tr>
+<tr class="odd">
+<td><strong>PT</strong></td>
+<td>Práctica o actividad evaluativa (una entrega)</td>
+</tr>
+<tr class="even">
+<td><strong>E</strong></td>
+<td>Prueba evaluativa (un examen)</td>
+</tr>
+</tbody>
+</table></div>
+<p>La idea de fondo: el RA dice <strong>qué</strong> tienes que saber
+hacer, el CA dice <strong>cómo se comprueba</strong>, y el instrumento
+(PT o E) es <strong>dónde</strong> se comprueba.</p>
+<pre><code>   RA3  Escribe y depura código, analizando y utilizando
+        las estructuras de control del lenguaje
+     │
+     ├── CA 3.1  estructuras de selección ────┐
+     ├── CA 3.2  estructuras de repetición    │→ se comprueban en PT2 y E2
+     ├── CA 3.3  sentencias de salto ─────────┘
+     ├── CA 3.4  control de excepciones ──────┐
+     ├── CA 3.5  programas ejecutables        │→ se comprueban en PT3 y E2
+     ├── CA 3.6  probar y depurar             │
+     └── CA 3.7  comentar y documentar ───────┘</code></pre>
+<h3 id="2-cómo-se-califica-cada-ra">2. Cómo se califica cada RA</h3>
+<p>La nota de cada RA sale de sus instrumentos, con estos pesos:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>RA</th>
+<th>Cálculo de la nota</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>RA1</strong></td>
+<td>20 % PT1 + 80 % E1</td>
+</tr>
+<tr class="even">
+<td><strong>RA2</strong></td>
+<td>20 % PT4 + 80 % E3</td>
+</tr>
+<tr class="odd">
+<td><strong>RA3</strong></td>
+<td>10 % PT2 + 10 % PT3 + 80 % E2</td>
+</tr>
+<tr class="even">
+<td><strong>RA4</strong></td>
+<td>20 % PT5 + 80 % E4</td>
+</tr>
+<tr class="odd">
+<td><strong>RA5</strong></td>
+<td>20 % PT7 + 80 % E6</td>
+</tr>
+<tr class="even">
+<td><strong>RA6</strong></td>
+<td>20 % PT8 + 80 % E7</td>
+</tr>
+<tr class="odd">
+<td><strong>RA7</strong></td>
+<td>20 % PT6 + 80 % E5</td>
+</tr>
+<tr class="even">
+<td><strong>RA8</strong></td>
+<td>100 % E8</td>
+</tr>
+<tr class="odd">
+<td><strong>RA9</strong></td>
+<td>100 % E8</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Las dos reglas que hay que tener presentes:</strong></p>
+<ol type="1">
+<li><strong>Para aprobar el módulo hay que aprobar todos los
+RA.</strong> Un RA está suspendido si su nota es menor que 5. No se
+compensan entre ellos.</li>
+<li><strong>Cada instrumento necesita un 5 como mínimo.</strong> Si
+sacas menos de 5 en una PT o en una E, ese instrumento pondera
+<strong>0</strong> en la fórmula del RA, no la nota que hayas
+sacado.</li>
+</ol>
+<p>La nota final del módulo es la <strong>media ponderada por las
+horas</strong> de cada RA.</p>
+<div class="callout">
+<p><strong>Lo que esto significa en la práctica.</strong> No sirve
+compensar un examen flojo con una práctica brillante dentro del mismo
+RA: si el examen baja de 5, entra como 0. Y como cada RA se aprueba por
+separado, descuidar un bloque entero (por ejemplo, ficheros) no se
+arregla con buenas notas en los demás.</p>
+</div>
+<h3 id="3-durante-el-curso">3. Durante el curso</h3>
+<p>Se ofrecen <strong>medidas para recuperar</strong> los instrumentos
+no superados. Si suspendes una PT o una E, pregunta en cuanto puedas:
+cuanto antes se recupera, menos se acumula.</p>
+<h3 id="4-la-segunda-convocatoria">4. La segunda convocatoria</h3>
+<p>Es <strong>no obligatoria</strong> y se hace al terminar las clases
+lectivas, según el calendario de segundas convocatorias. Tiene dos
+partes:</p>
+<ul>
+<li><strong>Dosier de actividades</strong> (40 % de la nota). Se entrega
+<strong>antes</strong> de la prueba, en la tarea correspondiente del
+Classroom. Requiere un <strong>4 como mínimo</strong>; por debajo,
+pondera 0.</li>
+<li><strong>Prueba</strong> (60 %).</li>
+</ul>
+<pre><code>Nota de la segunda convocatoria = 0,4 × dosier + 0,6 × prueba</code></pre>
+<h3 id="5-cómo-usar-esto-mientras-estudias">5. Cómo usar esto mientras
+estudias</h3>
+<p>Cada lección de este curso lleva una <strong>etiqueta con su RA y sus
+CA</strong> junto al título. Úsala así:</p>
+<ul>
+<li><strong>Antes de un examen:</strong> mira qué RA se evalúa, abre la
+lección «Los 9 RA y sus criterios» y comprueba que sabes hacer cada CA
+de ese RA.</li>
+<li><strong>Si suspendes un instrumento:</strong> identifica los CA que
+fallaron y repasa solo las lecciones etiquetadas con esos CA; en «Mapa
+de contenidos» las tienes agrupadas.</li>
+<li><strong>Para estudiar con sentido:</strong> un CA empieza siempre
+por «Se han…» o «Se ha…», es decir, describe <strong>algo que tienes que
+saber hacer</strong>, no algo que tengas que recitar. Si puedes hacerlo
+delante del teclado, ese criterio está superado.</li>
+</ul>
+<div class="callout">
+<p>Los RA y los CA de esta sección son el <strong>texto oficial</strong>
+del Real Decreto 450/2010, que establece el título de Técnico Superior
+en Desarrollo de Aplicaciones Multiplataforma (módulo profesional 0485).
+Los instrumentos, las horas y los pesos son los de la programación del
+módulo del ITB para el curso 2026-27.</p>
+</div>`,
+          ejemplos: [
+          ],
+          actividades: [
+          ],
+        },
+        {
+          id: "ra-listado",
+          titulo: "Los 9 RA y sus criterios de evaluación",
+          duracion: "15 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Consultar el texto oficial de los nueve resultados de aprendizaje", "Localizar el criterio de evaluación concreto que corresponde a cada contenido"],
+          teoria: r`<p>Esta es la lista <strong>completa y oficial</strong> de los nueve
+resultados de aprendizaje del módulo 0485 y de sus criterios de
+evaluación. Es la referencia para saber qué se te va a pedir
+exactamente.</p>
+<p>Los criterios están numerados <strong>RA.n</strong> siguiendo el
+orden del currículo, que es la numeración que usa la programación del
+módulo: el CA 4.6, por ejemplo, es el sexto criterio del RA4.</p>
+<div class="callout">
+<p><strong>Cómo leerlos.</strong> Todos los criterios empiezan por «Se
+ha…» o «Se han…». No describen temas, describen <strong>acciones
+comprobables</strong>. Léelos como una lista de «cosas que debo saber
+hacer delante del teclado».</p>
+</div>
+<h3
+id="1-ra1--reconoce-la-estructura-de-un-programa-informático-identificando-y-relacionando-los-elementos-propios-del-lenguaje-de-programación-utilizado">1.
+RA1 · Reconoce la estructura de un programa informático, identificando y
+relacionando los elementos propios del lenguaje de programación
+utilizado.</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>CA</th>
+<th>Criterio de evaluación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>1.1</strong></td>
+<td>Se han identificado los bloques que componen la estructura de un
+programa informático.</td>
+</tr>
+<tr class="even">
+<td><strong>1.2</strong></td>
+<td>Se han creado proyectos de desarrollo de aplicaciones.</td>
+</tr>
+<tr class="odd">
+<td><strong>1.3</strong></td>
+<td>Se han utilizado entornos integrados de desarrollo.</td>
+</tr>
+<tr class="even">
+<td><strong>1.4</strong></td>
+<td>Se han identificado los distintos tipos de variables y la utilidad
+específica de cada uno.</td>
+</tr>
+<tr class="odd">
+<td><strong>1.5</strong></td>
+<td>Se ha modificado el código de un programa para crear y utilizar
+variables.</td>
+</tr>
+<tr class="even">
+<td><strong>1.6</strong></td>
+<td>Se han creado y utilizado constantes y literales.</td>
+</tr>
+<tr class="odd">
+<td><strong>1.7</strong></td>
+<td>Se han clasificado, reconocido y utilizado en expresiones los
+operadores del lenguaje.</td>
+</tr>
+<tr class="even">
+<td><strong>1.8</strong></td>
+<td>Se ha comprobado el funcionamiento de las conversiones de tipos
+explícitos e implícitos.</td>
+</tr>
+<tr class="odd">
+<td><strong>1.9</strong></td>
+<td>Se han introducido comentarios en el código.</td>
+</tr>
+</tbody>
+</table></div>
+<h3
+id="2-ra2--escribe-y-prueba-programas-sencillos-reconociendo-y-aplicando-los-fundamentos-de-la-programación-orientada-a-objetos">2.
+RA2 · Escribe y prueba programas sencillos, reconociendo y aplicando los
+fundamentos de la programación orientada a objetos.</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>CA</th>
+<th>Criterio de evaluación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>2.1</strong></td>
+<td>Se han identificado los fundamentos de la programación orientada a
+objetos.</td>
+</tr>
+<tr class="even">
+<td><strong>2.2</strong></td>
+<td>Se han escrito programas simples.</td>
+</tr>
+<tr class="odd">
+<td><strong>2.3</strong></td>
+<td>Se han instanciado objetos a partir de clases predefinidas.</td>
+</tr>
+<tr class="even">
+<td><strong>2.4</strong></td>
+<td>Se han utilizado métodos y propiedades de los objetos.</td>
+</tr>
+<tr class="odd">
+<td><strong>2.5</strong></td>
+<td>Se han escrito llamadas a métodos estáticos.</td>
+</tr>
+<tr class="even">
+<td><strong>2.6</strong></td>
+<td>Se han utilizado parámetros en la llamada a métodos.</td>
+</tr>
+<tr class="odd">
+<td><strong>2.7</strong></td>
+<td>Se han incorporado y utilizado librerías de objetos.</td>
+</tr>
+<tr class="even">
+<td><strong>2.8</strong></td>
+<td>Se han utilizado constructores.</td>
+</tr>
+<tr class="odd">
+<td><strong>2.9</strong></td>
+<td>Se ha utilizado el entorno integrado de desarrollo en la creación y
+compilación de programas simples.</td>
+</tr>
+</tbody>
+</table></div>
+<h3
+id="3-ra3--escribe-y-depura-código-analizando-y-utilizando-las-estructuras-de-control-del-lenguaje">3.
+RA3 · Escribe y depura código, analizando y utilizando las estructuras
+de control del lenguaje.</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>CA</th>
+<th>Criterio de evaluación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>3.1</strong></td>
+<td>Se ha escrito y probado código que haga uso de estructuras de
+selección.</td>
+</tr>
+<tr class="even">
+<td><strong>3.2</strong></td>
+<td>Se han utilizado estructuras de repetición.</td>
+</tr>
+<tr class="odd">
+<td><strong>3.3</strong></td>
+<td>Se han reconocido las posibilidades de las sentencias de salto.</td>
+</tr>
+<tr class="even">
+<td><strong>3.4</strong></td>
+<td>Se ha escrito código utilizando control de excepciones.</td>
+</tr>
+<tr class="odd">
+<td><strong>3.5</strong></td>
+<td>Se han creado programas ejecutables utilizando diferentes
+estructuras de control.</td>
+</tr>
+<tr class="even">
+<td><strong>3.6</strong></td>
+<td>Se han probado y depurado los programas.</td>
+</tr>
+<tr class="odd">
+<td><strong>3.7</strong></td>
+<td>Se ha comentado y documentado el código.</td>
+</tr>
+</tbody>
+</table></div>
+<h3
+id="4-ra4--desarrolla-programas-organizados-en-clases-analizando-y-aplicando-los-principios-de-la-programación-orientada-a-objetos">4.
+RA4 · Desarrolla programas organizados en clases analizando y aplicando
+los principios de la programación orientada a objetos.</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>CA</th>
+<th>Criterio de evaluación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>4.1</strong></td>
+<td>Se ha reconocido la sintaxis, estructura y componentes típicos de
+una clase.</td>
+</tr>
+<tr class="even">
+<td><strong>4.2</strong></td>
+<td>Se han definido clases.</td>
+</tr>
+<tr class="odd">
+<td><strong>4.3</strong></td>
+<td>Se han definido propiedades y métodos.</td>
+</tr>
+<tr class="even">
+<td><strong>4.4</strong></td>
+<td>Se han creado constructores.</td>
+</tr>
+<tr class="odd">
+<td><strong>4.5</strong></td>
+<td>Se han desarrollado programas que instancien y utilicen objetos de
+las clases creadas anteriormente.</td>
+</tr>
+<tr class="even">
+<td><strong>4.6</strong></td>
+<td>Se han utilizado mecanismos para controlar la visibilidad de las
+clases y de sus miembros.</td>
+</tr>
+<tr class="odd">
+<td><strong>4.7</strong></td>
+<td>Se han definido y utilizado clases heredadas.</td>
+</tr>
+<tr class="even">
+<td><strong>4.8</strong></td>
+<td>Se han creado y utilizado métodos estáticos.</td>
+</tr>
+<tr class="odd">
+<td><strong>4.9</strong></td>
+<td>Se han definido y utilizado interfaces.</td>
+</tr>
+<tr class="even">
+<td><strong>4.10</strong></td>
+<td>Se han creado y utilizado conjuntos y librerías de clases.</td>
+</tr>
+</tbody>
+</table></div>
+<h3
+id="5-ra5--realiza-operaciones-de-entrada-y-salida-de-información-utilizando-procedimientos-específicos-del-lenguaje-y-librerías-de-clases">5.
+RA5 · Realiza operaciones de entrada y salida de información, utilizando
+procedimientos específicos del lenguaje y librerías de clases.</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>CA</th>
+<th>Criterio de evaluación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>5.1</strong></td>
+<td>Se ha utilizado la consola para realizar operaciones de entrada y
+salida de información.</td>
+</tr>
+<tr class="even">
+<td><strong>5.2</strong></td>
+<td>Se han aplicado formatos en la visualización de la información.</td>
+</tr>
+<tr class="odd">
+<td><strong>5.3</strong></td>
+<td>Se han reconocido las posibilidades de entrada / salida del lenguaje
+y las librerías asociadas.</td>
+</tr>
+<tr class="even">
+<td><strong>5.4</strong></td>
+<td>Se han utilizado ficheros para almacenar y recuperar
+información.</td>
+</tr>
+<tr class="odd">
+<td><strong>5.5</strong></td>
+<td>Se han creado programas que utilicen diversos métodos de acceso al
+contenido de los ficheros.</td>
+</tr>
+<tr class="even">
+<td><strong>5.6</strong></td>
+<td>Se han utilizado las herramientas del entorno de desarrollo para
+crear interfaces gráficos de usuario simples.</td>
+</tr>
+<tr class="odd">
+<td><strong>5.7</strong></td>
+<td>Se han programado controladores de eventos.</td>
+</tr>
+<tr class="even">
+<td><strong>5.8</strong></td>
+<td>Se han escrito programas que utilicen interfaces gráficos para la
+entrada y salida de información.</td>
+</tr>
+</tbody>
+</table></div>
+<h3
+id="6-ra6--escribe-programas-que-manipulen-información-seleccionando-y-utilizando-tipos-avanzados-de-datos">6.
+RA6 · Escribe programas que manipulen información, seleccionando y
+utilizando tipos avanzados de datos.</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>CA</th>
+<th>Criterio de evaluación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>6.1</strong></td>
+<td>Se han escrito programas que utilicen arrays.</td>
+</tr>
+<tr class="even">
+<td><strong>6.2</strong></td>
+<td>Se han reconocido las librerías de clases relacionadas con tipos de
+datos avanzados.</td>
+</tr>
+<tr class="odd">
+<td><strong>6.3</strong></td>
+<td>Se han utilizado listas para almacenar y procesar información.</td>
+</tr>
+<tr class="even">
+<td><strong>6.4</strong></td>
+<td>Se han utilizado iteradores para recorrer los elementos de las
+listas.</td>
+</tr>
+<tr class="odd">
+<td><strong>6.5</strong></td>
+<td>Se han reconocido las características y ventajas de cada una de las
+colecciones de datos disponibles.</td>
+</tr>
+<tr class="even">
+<td><strong>6.6</strong></td>
+<td>Se han creado clases y métodos genéricos.</td>
+</tr>
+<tr class="odd">
+<td><strong>6.7</strong></td>
+<td>Se han utilizado expresiones regulares en la búsqueda de patrones en
+cadenas de texto.</td>
+</tr>
+<tr class="even">
+<td><strong>6.8</strong></td>
+<td>Se han identificado las clases relacionadas con el tratamiento de
+documentos XML.</td>
+</tr>
+<tr class="odd">
+<td><strong>6.9</strong></td>
+<td>Se han realizado programas que realicen manipulaciones sobre
+documentos XML.</td>
+</tr>
+</tbody>
+</table></div>
+<h3
+id="7-ra7--desarrolla-programas-aplicando-características-avanzadas-de-los-lenguajes-orientados-a-objetos-y-del-entorno-de-programación">7.
+RA7 · Desarrolla programas aplicando características avanzadas de los
+lenguajes orientados a objetos y del entorno de programación.</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>CA</th>
+<th>Criterio de evaluación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>7.1</strong></td>
+<td>Se han identificado los conceptos de herencia, superclase y
+subclase.</td>
+</tr>
+<tr class="even">
+<td><strong>7.2</strong></td>
+<td>Se han utilizado modificadores para bloquear y forzar la herencia de
+clases y métodos.</td>
+</tr>
+<tr class="odd">
+<td><strong>7.3</strong></td>
+<td>Se ha reconocido la incidencia de los constructores en la
+herencia.</td>
+</tr>
+<tr class="even">
+<td><strong>7.4</strong></td>
+<td>Se han creado clases heredadas que sobrescriban la implementación de
+métodos de la superclase.</td>
+</tr>
+<tr class="odd">
+<td><strong>7.5</strong></td>
+<td>Se han diseñado y aplicado jerarquías de clases.</td>
+</tr>
+<tr class="even">
+<td><strong>7.6</strong></td>
+<td>Se han probado y depurado las jerarquías de clases.</td>
+</tr>
+<tr class="odd">
+<td><strong>7.7</strong></td>
+<td>Se han realizado programas que implementen y utilicen jerarquías de
+clases.</td>
+</tr>
+<tr class="even">
+<td><strong>7.8</strong></td>
+<td>Se ha comentado y documentado el código.</td>
+</tr>
+</tbody>
+</table></div>
+<h3
+id="8-ra8--utiliza-bases-de-datos-orientadas-a-objetos-analizando-sus-características-y-aplicando-técnicas-para-mantener-la-persistencia-de-la-información">8.
+RA8 · Utiliza bases de datos orientadas a objetos, analizando sus
+características y aplicando técnicas para mantener la persistencia de la
+información.</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>CA</th>
+<th>Criterio de evaluación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>8.1</strong></td>
+<td>Se han identificado las características de las bases de datos
+orientadas a objetos.</td>
+</tr>
+<tr class="even">
+<td><strong>8.2</strong></td>
+<td>Se ha analizado su aplicación en el desarrollo de aplicaciones
+mediante lenguajes orientados a objetos.</td>
+</tr>
+<tr class="odd">
+<td><strong>8.3</strong></td>
+<td>Se han instalado sistemas gestores de bases de datos orientados a
+objetos.</td>
+</tr>
+<tr class="even">
+<td><strong>8.4</strong></td>
+<td>Se han clasificado y analizado los distintos métodos soportados por
+los sistemas gestores para la gestión de la información almacenada.</td>
+</tr>
+<tr class="odd">
+<td><strong>8.5</strong></td>
+<td>Se han creado bases de datos y las estructuras necesarias para el
+almacenamiento de objetos.</td>
+</tr>
+<tr class="even">
+<td><strong>8.6</strong></td>
+<td>Se han programado aplicaciones que almacenen objetos en las bases de
+datos creadas.</td>
+</tr>
+<tr class="odd">
+<td><strong>8.7</strong></td>
+<td>Se han realizado programas para recuperar, actualizar y eliminar
+objetos de las bases de datos.</td>
+</tr>
+<tr class="even">
+<td><strong>8.8</strong></td>
+<td>Se han realizado programas para almacenar y gestionar tipos de datos
+estructurados, compuestos y relacionados.</td>
+</tr>
+</tbody>
+</table></div>
+<h3
+id="9-ra9--gestiona-información-almacenada-en-bases-de-datos-relacionales-manteniendo-la-integridad-y-consistencia-de-los-datos">9.
+RA9 · Gestiona información almacenada en bases de datos relacionales
+manteniendo la integridad y consistencia de los datos.</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>CA</th>
+<th>Criterio de evaluación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>9.1</strong></td>
+<td>Se han identificado las características y métodos de acceso a
+sistemas gestores de bases de datos relacionales.</td>
+</tr>
+<tr class="even">
+<td><strong>9.2</strong></td>
+<td>Se han programado conexiones con bases de datos.</td>
+</tr>
+<tr class="odd">
+<td><strong>9.3</strong></td>
+<td>Se ha escrito código para almacenar información en bases de
+datos.</td>
+</tr>
+<tr class="even">
+<td><strong>9.4</strong></td>
+<td>Se han creado programas para recuperar y mostrar información
+almacenada en bases de datos.</td>
+</tr>
+<tr class="odd">
+<td><strong>9.5</strong></td>
+<td>Se han efectuado borrados y modificaciones sobre la información
+almacenada.</td>
+</tr>
+<tr class="even">
+<td><strong>9.6</strong></td>
+<td>Se han creado aplicaciones que ejecuten consultas sobre bases de
+datos.</td>
+</tr>
+<tr class="odd">
+<td><strong>9.7</strong></td>
+<td>Se han creado aplicaciones para posibilitar la gestión de
+información presente en bases de datos relacionales.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<p><strong>Fuente.</strong> Real Decreto 450/2010, de 16 de abril, por
+el que se establece el título de Técnico Superior en Desarrollo de
+Aplicaciones Multiplataforma y se fijan sus enseñanzas mínimas (módulo
+profesional 0485, Programación). La numeración RA.n corresponde al orden
+de los criterios en la norma.</p>`,
+          ejemplos: [
+          ],
+          actividades: [
+          ],
+        },
+        {
+          id: "ra-mapa",
+          titulo: "Mapa de contenidos: qué RA evalúa cada lección",
+          duracion: "8 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Saber qué RA y qué CA se evalúan en cada lección del curso", "Localizar rápidamente qué repasar para recuperar un RA concreto"],
+          teoria: r`<p>Esta tabla relaciona <strong>cada lección de este curso</strong> con
+el resultado de aprendizaje y los criterios de evaluación que trabaja.
+La misma etiqueta aparece junto al título de cada lección.</p>
+<p>Úsala en los dos sentidos: para saber <strong>qué se evalúa</strong>
+de lo que estás estudiando, y para saber <strong>qué repasar</strong>
+cuando te dicen que te falta un RA concreto.</p>
+<h3 id="de-cada-lección-a-su-ra">De cada lección a su RA</h3>
+<h4 id="1-fundamentos">1. Fundamentos</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Lección</th>
+<th>Se evalúa en</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Lenguajes de programación y la plataforma .NET</td>
+<td>RA1 · CA 1.1, 1.2, 1.3</td>
+</tr>
+<tr class="even">
+<td>Sistemas de numeración y representación de datos</td>
+<td>RA1 · CA 1.4, 1.8</td>
+</tr>
+<tr class="odd">
+<td>Diseño de algoritmos: pseudocódigo, diagramas y juegos de
+pruebas</td>
+<td>RA1 · CA 1.1 · RA3 · CA 3.6</td>
+</tr>
+<tr class="even">
+<td>Tu primer programa y el entorno de desarrollo</td>
+<td>RA1 · CA 1.1, 1.2, 1.3, 1.9</td>
+</tr>
+<tr class="odd">
+<td>Variables y tipos de datos</td>
+<td>RA1 · CA 1.4, 1.5, 1.6</td>
+</tr>
+<tr class="even">
+<td>Operadores aritméticos, relacionales y lógicos</td>
+<td>RA1 · CA 1.7</td>
+</tr>
+<tr class="odd">
+<td>Lectura y escritura por consola</td>
+<td>RA5 · CA 5.1, 5.2</td>
+</tr>
+<tr class="even">
+<td>Conversión de tipos</td>
+<td>RA1 · CA 1.8</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="2-herramientas-git-y-metodologías">2. Herramientas: Git y
+metodologías</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Lección</th>
+<th>Se evalúa en</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Control de versiones con Git</td>
+<td>Transversal</td>
+</tr>
+<tr class="even">
+<td>GitHub: ramas, pull requests, forks y projects</td>
+<td>Transversal</td>
+</tr>
+<tr class="odd">
+<td>Metodologías de gestión de proyectos</td>
+<td>Transversal</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="3-control-de-flujo">3. Control de flujo</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Lección</th>
+<th>Se evalúa en</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Estructuras de control: condicionales</td>
+<td>RA3 · CA 3.1, 3.5</td>
+</tr>
+<tr class="even">
+<td>Estructuras de repetición</td>
+<td>RA3 · CA 3.2, 3.5</td>
+</tr>
+<tr class="odd">
+<td>Instrucciones de salto: break, continue y return</td>
+<td>RA3 · CA 3.3</td>
+</tr>
+<tr class="even">
+<td>Control de excepciones: try, catch y finally</td>
+<td>RA3 · CA 3.4</td>
+</tr>
+<tr class="odd">
+<td>Depuración de errores</td>
+<td>RA3 · CA 3.6, 3.7</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="4-arrays-y-matrices">4. Arrays y matrices</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Lección</th>
+<th>Se evalúa en</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Arrays (vectores)</td>
+<td>RA6 · CA 6.1</td>
+</tr>
+<tr class="even">
+<td>Matrices (arrays bidimensionales)</td>
+<td>RA6 · CA 6.1</td>
+</tr>
+<tr class="odd">
+<td>Jagged arrays (arrays escalonados)</td>
+<td>RA6 · CA 6.1</td>
+</tr>
+<tr class="even">
+<td>Arrays en funciones: referencias, copias y comparación</td>
+<td>RA6 · CA 6.1</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="5-modularidad">5. Modularidad</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Lección</th>
+<th>Se evalúa en</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Funciones</td>
+<td>RA2 · CA 2.2, 2.6</td>
+</tr>
+<tr class="even">
+<td>Procedimientos</td>
+<td>RA2 · CA 2.2, 2.6</td>
+</tr>
+<tr class="odd">
+<td>Parámetros: por valor, ref, out, opcionales y con nombre</td>
+<td>RA2 · CA 2.6</td>
+</tr>
+<tr class="even">
+<td>Retorno de valores y tuplas</td>
+<td>RA2 · CA 2.2, 2.6</td>
+</tr>
+<tr class="odd">
+<td>Recursividad</td>
+<td>RA2 · CA 2.2</td>
+</tr>
+<tr class="even">
+<td>Recursividad clásica y complejidad</td>
+<td>RA2 · CA 2.2</td>
+</tr>
+<tr class="odd">
+<td>Algoritmos de ordenación</td>
+<td>RA2 · CA 2.2, 2.7</td>
+</tr>
+<tr class="even">
+<td>Backtracking: el problema de las ocho reinas</td>
+<td>RA2 · CA 2.2</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-clases-bibliotecas-y-textos">6. Clases, bibliotecas y
+textos</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Lección</th>
+<th>Se evalúa en</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Las clases como almacén de funciones</td>
+<td>RA2 · CA 2.5, 2.7 · RA4 · CA 4.8</td>
+</tr>
+<tr class="even">
+<td>Espacios de nombres y la directiva using</td>
+<td>RA2 · CA 2.7 · RA4 · CA 4.10</td>
+</tr>
+<tr class="odd">
+<td>Modificadores de acceso y bibliotecas</td>
+<td>RA2 · CA 2.7 · RA4 · CA 4.6, 4.10</td>
+</tr>
+<tr class="even">
+<td>Las clases Math y Random</td>
+<td>RA2 · CA 2.3, 2.4, 2.5, 2.7</td>
+</tr>
+<tr class="odd">
+<td>Funciones de los textos (string)</td>
+<td>RA2 · CA 2.3, 2.4 · RA6 · CA 6.2</td>
+</tr>
+<tr class="even">
+<td>StringBuilder: construir textos sin arruinar el rendimiento</td>
+<td>RA6 · CA 6.2</td>
+</tr>
+<tr class="odd">
+<td>Expresiones regulares</td>
+<td>RA6 · CA 6.7</td>
+</tr>
+<tr class="even">
+<td>Fechas y horas: DateTime, DateOnly y TimeSpan</td>
+<td>RA2 · CA 2.3, 2.4 · RA6 · CA 6.2</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="7-ficheros">7. Ficheros</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Lección</th>
+<th>Se evalúa en</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Ficheros: conceptos, archivos y carpetas</td>
+<td>RA5 · CA 5.3, 5.4</td>
+</tr>
+<tr class="even">
+<td>Escritura y lectura secuencial</td>
+<td>RA5 · CA 5.4, 5.5</td>
+</tr>
+<tr class="odd">
+<td>Rutas, valores del sistema y acceso directo</td>
+<td>RA5 · CA 5.5</td>
+</tr>
+<tr class="even">
+<td>Ficheros CSV</td>
+<td>RA5 · CA 5.4, 5.5</td>
+</tr>
+<tr class="odd">
+<td>Ficheros JSON con System.Text.Json</td>
+<td>RA5 · CA 5.4, 5.5</td>
+</tr>
+<tr class="even">
+<td>Ficheros XML y LINQ to XML</td>
+<td>RA6 · CA 6.8, 6.9 · RA5 · CA 5.4</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="8-programación-orientada-a-objetos">8. Programación orientada a
+objetos</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Lección</th>
+<th>Se evalúa en</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Introducción a la POO: clases y objetos</td>
+<td>RA4 · CA 4.1, 4.2</td>
+</tr>
+<tr class="even">
+<td>this, constructores y ciclo de vida</td>
+<td>RA4 · CA 4.3, 4.4, 4.5</td>
+</tr>
+<tr class="odd">
+<td>Composición, referencias y static</td>
+<td>RA4 · CA 4.5</td>
+</tr>
+<tr class="even">
+<td>Encapsulamiento, modificadores de acceso y propiedades</td>
+<td>RA4 · CA 4.6</td>
+</tr>
+<tr class="odd">
+<td>Herencia y sobrescritura de métodos</td>
+<td>RA4 · CA 4.7 · RA7 · CA 7.1, 7.2, 7.3</td>
+</tr>
+<tr class="even">
+<td>La clase Object y los tipos básicos</td>
+<td>RA7 · CA 7.4</td>
+</tr>
+<tr class="odd">
+<td>Enumeraciones, estructuras, records y null</td>
+<td>RA4 · CA 4.1, 4.2</td>
+</tr>
+<tr class="even">
+<td>Polimorfismo</td>
+<td>RA7 · CA 7.4, 7.5, 7.7</td>
+</tr>
+<tr class="odd">
+<td>Clases abstractas e interfaces</td>
+<td>RA4 · CA 4.9 · RA7 · CA 7.5, 7.6, 7.7</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="9-uml-y-modelado">9. UML y modelado</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Lección</th>
+<th>Se evalúa en</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>¿Qué es UML y para qué sirve?</td>
+<td>RA4 · CA 4.1</td>
+</tr>
+<tr class="even">
+<td>Diagramas de clases: relaciones y multiplicidad</td>
+<td>RA4 · CA 4.1, 4.2, 4.7</td>
+</tr>
+<tr class="odd">
+<td>Diagramas de casos de uso</td>
+<td>Transversal</td>
+</tr>
+<tr class="even">
+<td>Diagramas dinámicos: secuencia, estados y actividades</td>
+<td>RA7 · CA 7.5</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="10-genéricos-y-colecciones">10. Genéricos y colecciones</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Lección</th>
+<th>Se evalúa en</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Tipos genéricos</td>
+<td>RA6 · CA 6.6</td>
+</tr>
+<tr class="even">
+<td>Panorama de las colecciones</td>
+<td>RA6 · CA 6.2, 6.5</td>
+</tr>
+<tr class="odd">
+<td>List<T>: la colección de uso diario</td>
+<td>RA6 · CA 6.3, 6.4, 6.5</td>
+</tr>
+<tr class="even">
+<td>Dictionary, HashSet y colecciones ordenadas</td>
+<td>RA6 · CA 6.2, 6.5</td>
+</tr>
+<tr class="odd">
+<td>Queue y Stack: colas y pilas</td>
+<td>RA6 · CA 6.2, 6.5</td>
+</tr>
+<tr class="even">
+<td>Ordenar colecciones: IComparable e IComparer</td>
+<td>RA6 · CA 6.5 · RA4 · CA 4.9</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="11-delegados-lambdas-y-linq">11. Delegados, lambdas y LINQ</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Lección</th>
+<th>Se evalúa en</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Delegados: variables que guardan métodos</td>
+<td>RA6 · CA 6.2</td>
+</tr>
+<tr class="even">
+<td>Métodos anónimos y expresiones lambda</td>
+<td>RA6 · CA 6.2</td>
+</tr>
+<tr class="odd">
+<td>LINQ: consultar colecciones</td>
+<td>RA6 · CA 6.3, 6.4</td>
+</tr>
+<tr class="even">
+<td>Operadores estándar de consulta</td>
+<td>RA6 · CA 6.3, 6.4, 6.5</td>
+</tr>
+<tr class="odd">
+<td>Agrupación, combinación y MapReduce</td>
+<td>RA6 · CA 6.3, 6.5</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="12-interfaz-gráfica-y-persistencia">12. Interfaz gráfica y
+persistencia</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Lección</th>
+<th>Se evalúa en</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Interfaces de usuario: el patrón MVC</td>
+<td>RA5 · CA 5.6, 5.8</td>
+</tr>
+<tr class="even">
+<td>Una aplicación Razor Pages paso a paso</td>
+<td>RA5 · CA 5.6, 5.7, 5.8</td>
+</tr>
+<tr class="odd">
+<td>La capa de persistencia: el patrón DAO</td>
+<td>RA8 · CA 8.1, 8.2</td>
+</tr>
+<tr class="even">
+<td>Entity Framework Core</td>
+<td>RA9 · CA 9.1 a 9.7 · RA8 · CA 8.5 a 8.8</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="13-código-limpio-clean-code">13. Código limpio (Clean Code)</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Lección</th>
+<th>Se evalúa en</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>¿Por qué importa el código limpio?</td>
+<td>RA3 · CA 3.7</td>
+</tr>
+<tr class="even">
+<td>Nombres con significado</td>
+<td>RA3 · CA 3.7</td>
+</tr>
+<tr class="odd">
+<td>Funciones pequeñas que hacen una sola cosa</td>
+<td>RA2 · CA 2.2 · RA3 · CA 3.7</td>
+</tr>
+<tr class="even">
+<td>Comentarios: los justos y necesarios</td>
+<td>RA1 · CA 1.9 · RA3 · CA 3.7</td>
+</tr>
+<tr class="odd">
+<td>Formato y estilo del código</td>
+<td>RA3 · CA 3.7</td>
+</tr>
+<tr class="even">
+<td>Manejo limpio de errores</td>
+<td>RA3 · CA 3.4</td>
+</tr>
+<tr class="odd">
+<td>Clases limpias y objetos</td>
+<td>RA4 · CA 4.1, 4.6</td>
+</tr>
+<tr class="even">
+<td>Pruebas: cómo saber que no hemos roto nada</td>
+<td>RA3 · CA 3.6</td>
+</tr>
+<tr class="odd">
+<td>Olores del código y refactorización paso a paso</td>
+<td>RA3 · CA 3.6, 3.7</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="de-cada-ra-a-sus-lecciones">De cada RA a sus lecciones</h3>
+<p><strong>RA1 · Reconoce la estructura de un programa informático,
+identificando y relacionando los elementos propios del lenguaje de
+programación utilizado.</strong></p>
+<p>Lenguajes de programación y la plataforma .NET, Sistemas de
+numeración y representación de datos, Diseño de algoritmos:
+pseudocódigo, diagramas y juegos de pruebas, Tu primer programa y el
+entorno de desarrollo, Variables y tipos de datos, Operadores
+aritméticos, relacionales y lógicos, Conversión de tipos, Comentarios:
+los justos y necesarios</p>
+<p><strong>RA2 · Escribe y prueba programas sencillos, reconociendo y
+aplicando los fundamentos de la programación orientada a
+objetos.</strong></p>
+<p>Funciones, Procedimientos, Parámetros: por valor, ref, out,
+opcionales y con nombre, Retorno de valores y tuplas, Recursividad,
+Recursividad clásica y complejidad, Algoritmos de ordenación,
+Backtracking: el problema de las ocho reinas, Las clases como almacén de
+funciones, Espacios de nombres y la directiva using, Modificadores de
+acceso y bibliotecas, Las clases Math y Random, Funciones de los textos
+(string), Fechas y horas: DateTime, DateOnly y TimeSpan, Funciones
+pequeñas que hacen una sola cosa</p>
+<p><strong>RA3 · Escribe y depura código, analizando y utilizando las
+estructuras de control del lenguaje.</strong></p>
+<p>Diseño de algoritmos: pseudocódigo, diagramas y juegos de pruebas,
+Estructuras de control: condicionales, Estructuras de repetición,
+Instrucciones de salto: break, continue y return, Control de
+excepciones: try, catch y finally, Depuración de errores, ¿Por qué
+importa el código limpio?, Nombres con significado, Funciones pequeñas
+que hacen una sola cosa, Comentarios: los justos y necesarios, Formato y
+estilo del código, Manejo limpio de errores, Pruebas: cómo saber que no
+hemos roto nada, Olores del código y refactorización paso a paso</p>
+<p><strong>RA4 · Desarrolla programas organizados en clases analizando y
+aplicando los principios de la programación orientada a
+objetos.</strong></p>
+<p>Las clases como almacén de funciones, Espacios de nombres y la
+directiva using, Modificadores de acceso y bibliotecas, Introducción a
+la POO: clases y objetos, this, constructores y ciclo de vida,
+Composición, referencias y static, Encapsulamiento, modificadores de
+acceso y propiedades, Herencia y sobrescritura de métodos,
+Enumeraciones, estructuras, records y null, Clases abstractas e
+interfaces, ¿Qué es UML y para qué sirve?, Diagramas de clases:
+relaciones y multiplicidad, Ordenar colecciones: IComparable e
+IComparer, Clases limpias y objetos</p>
+<p><strong>RA5 · Realiza operaciones de entrada y salida de información,
+utilizando procedimientos específicos del lenguaje y librerías de
+clases.</strong></p>
+<p>Lectura y escritura por consola, Ficheros: conceptos, archivos y
+carpetas, Escritura y lectura secuencial, Rutas, valores del sistema y
+acceso directo, Ficheros CSV, Ficheros JSON con System.Text.Json,
+Ficheros XML y LINQ to XML, Interfaces de usuario: el patrón MVC, Una
+aplicación Razor Pages paso a paso</p>
+<p><strong>RA6 · Escribe programas que manipulen información,
+seleccionando y utilizando tipos avanzados de datos.</strong></p>
+<p>Arrays (vectores), Matrices (arrays bidimensionales), Jagged arrays
+(arrays escalonados), Arrays en funciones: referencias, copias y
+comparación, Funciones de los textos (string), StringBuilder: construir
+textos sin arruinar el rendimiento, Expresiones regulares, Fechas y
+horas: DateTime, DateOnly y TimeSpan, Ficheros XML y LINQ to XML, Tipos
+genéricos, Panorama de las colecciones, List<T>: la colección de uso
+diario, Dictionary, HashSet y colecciones ordenadas, Queue y Stack:
+colas y pilas, Ordenar colecciones: IComparable e IComparer, Delegados:
+variables que guardan métodos, Métodos anónimos y expresiones lambda,
+LINQ: consultar colecciones, Operadores estándar de consulta,
+Agrupación, combinación y MapReduce</p>
+<p><strong>RA7 · Desarrolla programas aplicando características
+avanzadas de los lenguajes orientados a objetos y del entorno de
+programación.</strong></p>
+<p>Herencia y sobrescritura de métodos, La clase Object y los tipos
+básicos, Polimorfismo, Clases abstractas e interfaces, Diagramas
+dinámicos: secuencia, estados y actividades</p>
+<p><strong>RA8 · Utiliza bases de datos orientadas a objetos, analizando
+sus características y aplicando técnicas para mantener la persistencia
+de la información.</strong></p>
+<p>La capa de persistencia: el patrón DAO, Entity Framework Core</p>
+<p><strong>RA9 · Gestiona información almacenada en bases de datos
+relacionales manteniendo la integridad y consistencia de los
+datos.</strong></p>
+<p>Entity Framework Core</p>
+<hr />
+<h3 id="contenido-transversal">Contenido transversal</h3>
+<p>Estas lecciones no se evalúan como un RA concreto, pero <strong>se
+exigen en todas las entregas</strong>: Control de versiones con Git,
+GitHub: ramas, pull requests, forks y projects, Metodologías de gestión
+de proyectos, Diagramas de casos de uso, y todo el módulo de
+<strong>Código limpio</strong>, cuyas convenciones se piden en cada
+práctica y en cada prueba.</p>
+<h3 id="lo-que-este-curso-añade-al-temario">Lo que este curso añade al
+temario</h3>
+<p>Algunos contenidos de este curso van <strong>más allá del
+mínimo</strong> del currículo. No te los van a preguntar como criterio
+de evaluación, pero te preparan para los módulos de segundo y para el
+proyecto:</p>
+<ul>
+<li><strong>Git y metodologías</strong>: imprescindible para entregar, y
+lo usarás toda la carrera.</li>
+<li><strong>UML</strong>: la programación del módulo pide generar código
+a partir de un diagrama UML (PT5 y PT6), así que el diagrama es la
+herramienta, no el contenido evaluable.</li>
+<li><strong>LINQ, delegados y lambdas</strong>: amplían el CA 6.3 y el
+6.4 (listas e iteradores) con la forma moderna de consultar colecciones
+en C#.</li>
+<li><strong>Entity Framework Core</strong>: es la puerta de entrada al
+RA8 y al RA9, que se evalúan con el proyecto CRUD.</li>
+</ul>`,
+          ejemplos: [
+          ],
+          actividades: [
+          ],
+        },
+        {
+          id: "ra-actividades",
+          titulo: "Las actividades del curso y sus instrumentos",
+          duracion: "10 min",
+          video: { provider: "drive", id: "" },
+          objetivos: ["Conocer la planificación del módulo: actividades, horas y RA asociado", "Saber qué práctica o prueba evalúa cada bloque de contenidos"],
+          teoria: r`<p>Esta es la planificación del módulo en el centro: en qué actividades
+se reparten las 165 horas, qué RA trabaja cada una y con qué se evalúa.
+Te sirve para saber <strong>en qué punto del curso estás</strong> y qué
+se evaluará a continuación.</p>
+<h3 id="a1--introducción-a-la-programación">A1 · Introducción a la
+programación</h3>
+<p><strong>20 h</strong> · <strong>RA1</strong> · PT1. CodeQuest · E1.
+Prueba evaluativa</p>
+<p>Presentación del módulo. Introducción a la programación en C#:
+algoritmos simples, tipos y tratamiento de datos, conversiones entre
+tipos, estructuras condicionales e iterativas.</p>
+<h3 id="a2--diseño-de-algoritmos">A2 · Diseño de algoritmos</h3>
+<p><strong>24 h</strong> · <strong>RA3</strong> · PT2. Análisis, diseño
+e implementación · E2. Prueba evaluativa</p>
+<p>Análisis, diseño e implementación: algoritmos complejos, tipos de
+datos estructurados internos (arrays y matrices) y tratamiento de
+cadenas.</p>
+<h3 id="a3--gestión-de-excepciones">A3 · Gestión de excepciones</h3>
+<p><strong>6 h</strong> · <strong>RA3</strong> · PT3. Gestión de
+excepciones</p>
+<p>Mecanismos de gestión de excepciones: try / catch / finally y la
+clase Exception.</p>
+<h3 id="a4--programación-modular">A4 · Programación modular</h3>
+<p><strong>20 h</strong> · <strong>RA2</strong> · PT4. Diseño modular y
+optimización · E3. Prueba evaluativa</p>
+<p>Diseño modular y recursividad: análisis descendente, funciones,
+parametrización y ámbito de las variables, definición y uso de
+bibliotecas, algoritmos de ordenación (burbuja, QuickSort y MergeSort),
+búsqueda y recursividad clásica (Fibonacci, Torres de Hanói, N
+reinas).</p>
+<h3 id="a5--programación-orientada-a-objetos">A5 · Programación
+orientada a objetos</h3>
+<p><strong>23 h</strong> · <strong>RA4</strong> · PT5. Clases y objetos
+· E4. Prueba evaluativa</p>
+<p>Objeto, clase e instancia. Constructores y métodos. Modificadores de
+acceso. Datos estáticos frente a dinámicos. Métodos estáticos.
+Destrucción de objetos y liberación de memoria. Clases heredadas y
+bibliotecas de clases. Refactorización con el entorno de desarrollo.</p>
+<h3 id="a6--programación-orientada-a-objetos-ii">A6 · Programación
+orientada a objetos II</h3>
+<p><strong>13 h</strong> · <strong>RA7</strong> · PT6. POO avanzada ·
+E5. Prueba evaluativa</p>
+<p>Herencia, superclase y subclase. Modificadores, constructores y
+destructores. Polimorfismo. Diseño, prueba y depuración de jerarquías de
+clases. Herencia múltiple. Diseño e implementación de interfaces.
+Sobrescritura de métodos.</p>
+<h3 id="a7--operaciones-de-es-e-interfaces-gráficas">A7 · Operaciones de
+E/S e interfaces gráficas</h3>
+<p><strong>20 h</strong> · <strong>RA5</strong> · PT7. Operaciones de
+entrada y salida · E6. Prueba evaluativa</p>
+<p>Tratamiento de ficheros: expresiones regulares, lectura y escritura,
+manipulación de documentos de texto, XML, CSV y JSON, control de
+excepciones y formatos de visualización. Interfaces gráficas de usuario
+y controladores de eventos. Documentación del código.</p>
+<h3 id="a8--colecciones-y-clases-genéricas">A8 · Colecciones y clases
+genéricas</h3>
+<p><strong>22 h</strong> · <strong>RA6</strong> · PT8. Tipos avanzados
+de datos · E7. Prueba evaluativa</p>
+<p>Tipos avanzados de datos: colecciones básicas de C# (listas,
+diccionarios, pilas, colas y tablas hash), clases relacionadas con la
+representación y manipulación de colecciones, iteradores, y clases y
+métodos genéricos.</p>
+<h3
+id="a9--bases-de-datos-objeto-relacionales-y-orientadas-a-objetos">A9 ·
+Bases de datos objeto-relacionales y orientadas a objetos</h3>
+<p><strong>17 h</strong> · <strong>RA8 y RA9</strong> · E8. Proyecto
+CRUD</p>
+<p>SGBD relacionales: características, conexión y operaciones CRUD.
+Bases de datos objeto-relacionales y orientadas a objetos:
+características, estructuras y persistencia. Diseño de aplicaciones para
+almacenar, recuperar, actualizar y eliminar objetos.</p>
+<hr />
+<h3 id="resumen">Resumen</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Actividad</th>
+<th>Horas</th>
+<th>RA</th>
+<th>Instrumentos</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>A1</strong> Introducción a la programación</td>
+<td>20 h</td>
+<td>RA1</td>
+<td>PT1. CodeQuest · E1. Prueba evaluativa</td>
+</tr>
+<tr class="even">
+<td><strong>A2</strong> Diseño de algoritmos</td>
+<td>24 h</td>
+<td>RA3</td>
+<td>PT2. Análisis, diseño e implementación · E2. Prueba evaluativa</td>
+</tr>
+<tr class="odd">
+<td><strong>A3</strong> Gestión de excepciones</td>
+<td>6 h</td>
+<td>RA3</td>
+<td>PT3. Gestión de excepciones</td>
+</tr>
+<tr class="even">
+<td><strong>A4</strong> Programación modular</td>
+<td>20 h</td>
+<td>RA2</td>
+<td>PT4. Diseño modular y optimización · E3. Prueba evaluativa</td>
+</tr>
+<tr class="odd">
+<td><strong>A5</strong> Programación orientada a objetos</td>
+<td>23 h</td>
+<td>RA4</td>
+<td>PT5. Clases y objetos · E4. Prueba evaluativa</td>
+</tr>
+<tr class="even">
+<td><strong>A6</strong> Programación orientada a objetos II</td>
+<td>13 h</td>
+<td>RA7</td>
+<td>PT6. POO avanzada · E5. Prueba evaluativa</td>
+</tr>
+<tr class="odd">
+<td><strong>A7</strong> Operaciones de E/S e interfaces gráficas</td>
+<td>20 h</td>
+<td>RA5</td>
+<td>PT7. Operaciones de entrada y salida · E6. Prueba evaluativa</td>
+</tr>
+<tr class="even">
+<td><strong>A8</strong> Colecciones y clases genéricas</td>
+<td>22 h</td>
+<td>RA6</td>
+<td>PT8. Tipos avanzados de datos · E7. Prueba evaluativa</td>
+</tr>
+<tr class="odd">
+<td><strong>A9</strong> Bases de datos objeto-relacionales y orientadas
+a objetos</td>
+<td>17 h</td>
+<td>RA8 y RA9</td>
+<td>E8. Proyecto CRUD</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="dónde-está-cada-actividad-en-este-curso">Dónde está cada
+actividad en este curso</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Actividad del aula</th>
+<th>Módulos de esta web</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>A1</strong> Introducción a la programación</td>
+<td>1 · Fundamentos</td>
+</tr>
+<tr class="even">
+<td><strong>A2</strong> Diseño de algoritmos</td>
+<td>2 · Control de flujo · 3 · Arrays y matrices · parte de 5
+(cadenas)</td>
+</tr>
+<tr class="odd">
+<td><strong>A3</strong> Gestión de excepciones</td>
+<td>Lección «Excepciones» del módulo 2 y «Gestión de errores» del módulo
+13</td>
+</tr>
+<tr class="even">
+<td><strong>A4</strong> Programación modular</td>
+<td>4 · Modularidad · parte de 5 (clases estáticas, espacios de nombres,
+bibliotecas)</td>
+</tr>
+<tr class="odd">
+<td><strong>A5</strong> Programación orientada a objetos</td>
+<td>8 · POO (lecciones 1 a 4) · 9 · UML y modelado</td>
+</tr>
+<tr class="even">
+<td><strong>A6</strong> POO II</td>
+<td>8 · POO (herencia, polimorfismo, abstractas e interfaces)</td>
+</tr>
+<tr class="odd">
+<td><strong>A7</strong> Operaciones de E/S e interfaces gráficas</td>
+<td>7 · Ficheros · expresiones regulares (módulo 6) · 12 · Interfaz
+gráfica</td>
+</tr>
+<tr class="even">
+<td><strong>A8</strong> Colecciones y clases genéricas</td>
+<td>10 · Genéricos y colecciones · 11 · Delegados, lambdas y LINQ</td>
+</tr>
+<tr class="odd">
+<td><strong>A9</strong> Bases de datos</td>
+<td>12 · Interfaz gráfica y persistencia (DAO y Entity Framework
+Core)</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p><strong>Nota.</strong> Los módulos de <strong>Herramientas (Git y
+metodologías)</strong> y <strong>Código limpio</strong> no son una
+actividad evaluativa por sí mismos: son transversales. Git lo necesitas
+desde la primera entrega, y las convenciones de código limpio se exigen
+en <strong>todas</strong> las prácticas y pruebas («las soluciones deben
+seguir las convenciones trabajadas en el aula»).</p>
+</div>`,
           ejemplos: [
           ],
           actividades: [

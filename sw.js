@@ -20,7 +20,7 @@
    mucho): sin conexión se ve la teoría y las actividades, pero no el vídeo.
    ===================================================================== */
 
-const VERSION = "v30";                     // súbela si cambias la LISTA de archivos de abajo
+const VERSION = "v31";                     // súbela si cambias la LISTA de archivos de abajo
 const CACHE = `curso-csharp-${VERSION}`;
 
 // Archivos imprescindibles: se descargan al instalar para que funcione offline desde la primera visita
