@@ -61,7 +61,7 @@ const COURSE = {
 <p>El curso irá creciendo con nuevos temas.</p>`,
   profesor: {
     nombre: "Daniel Moreno",
-    rol: "Profesor de Desarrollo de Aplicaciones Multiplataforma · Institut Tecnològic de Barcelona",
+    rol: "Profesor de Desarrollo de Aplicaciones Multiplataforma",
     bio: "Docente de programación en ciclos formativos de grado superior, con orientación a videojuegos y ocio digital.",
 
     // ---- Ventana de perfil «arcade» (js/profile.js). Todo editable ----
@@ -2673,7 +2673,7 @@ una operación «hacia delante» y no rompe el trabajo de los demás.</p>
 <h3 id="6-configuración-inicial-una-sola-vez-por-ordenador">6.
 Configuración inicial (una sola vez por ordenador)</h3>
 <pre><code>git config --global user.name &quot;Tu Nombre&quot;
-git config --global user.email &quot;tu.correo@itb.cat&quot;
+git config --global user.email &quot;tu.correo@example.com&quot;
 git config --global init.defaultBranch main</code></pre>
 <p>Sin esto, tus commits aparecerán con el autor equivocado y en la
 corrección no constará que son tuyos.</p>`,
@@ -2831,7 +2831,7 @@ git merge feature/menu         # fusionar la rama en la actual
 git branch -d feature/menu     # borrar la rama ya fusionada</code></pre>
 <div class="callout">
 <p><strong>Por qué importa en tus prácticas.</strong> En las actividades
-de ITB una de las opciones de entrega es <strong>una rama por
+de clase una de las opciones de entrega es <strong>una rama por
 ejercicio</strong>. Así el profesor ve cada ejercicio por separado y tú
 no mezclas el código de dos problemas distintos.</p>
 </div>
@@ -9455,7 +9455,7 @@ Regex clave = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$", RegexOptions.C
 Comprobar("Código postal", codigoPostal, new[] { "08001", "0800", "08A01" });
 Comprobar("DNI", dni, new[] { "12345678Z", "1234567Z", "12345678" });
 Comprobar("Hora", hora, new[] { "09:30", "23:59", "24:00", "9:30" });
-Comprobar("Correo", correo, new[] { "ana@itb.cat", "ana@itb", "a@@b.cat" });
+Comprobar("Correo", correo, new[] { "ana@example.com", "ana@example", "a@@b.cat" });
 Comprobar("Contraseña", clave, new[] { "Secreta1", "secreta1", "Corta1" });
 
 void Comprobar(string nombre, Regex patron, string[] valores)
@@ -11704,7 +11704,7 @@ dentro de objetos y listas dentro de objetos.</p>
   &quot;nombre&quot;: &quot;Ana Puig&quot;,
   &quot;activo&quot;: true,
   &quot;notas&quot;: [9.0, 8.5, 7.25],
-  &quot;tutor&quot;: { &quot;nombre&quot;: &quot;Dani&quot;, &quot;correo&quot;: &quot;dani@itb.cat&quot; }
+  &quot;tutor&quot;: { &quot;nombre&quot;: &quot;Dani&quot;, &quot;correo&quot;: &quot;dani@example.com&quot; }
 }</code></pre>
 <h3 id="1-la-sintaxis-en-cinco-reglas">1. La sintaxis, en cinco
 reglas</h3>
@@ -12393,7 +12393,7 @@ Contacto ana = new Contacto
 {
     Nombre = "Ana Puig",
     Telefono = "666111222",
-    Correo = "ana@itb.cat",
+    Correo = "ana@example.com",
     Etiquetas = new List<string> { "clase", "proyecto", "DAM" },
 };
 
@@ -12700,7 +12700,7 @@ XDocument documento = new XDocument(
     new XDeclaration("1.0", "utf-8", null),
     new XComment("Catálogo de la biblioteca del centro"),
     new XElement("biblioteca",
-        new XAttribute("centro", "ITB"),
+        new XAttribute("centro", "Central"),
         new XAttribute("actualizado", DateTime.Today.ToString("yyyy-MM-dd")),
         libros.Select(l => new XElement("libro",
             new XAttribute("id", l.id),
@@ -12723,7 +12723,7 @@ string ruta = "catalogo.xml";
 
 // Preparamos un fichero de ejemplo (con un libro al que le falta el año, a propósito)
 string contenido = @"<?xml version=""1.0"" encoding=""utf-8""?>
-<biblioteca centro=""ITB"">
+<biblioteca centro=""Central"">
   <libro id=""1"" prestado=""false"">
     <titulo>El Quijote</titulo>
     <autor>Cervantes</autor>
@@ -12856,7 +12856,7 @@ string ruta = "equipo.xml";
 
 Equipo equipo = new Equipo
 {
-    Nombre = "Dracs ITB",
+    Nombre = "Dracs Blaus",
     Ciudad = "Barcelona",
     Jugadores = new List<Jugador>
     {
@@ -30897,7 +30897,7 @@ delante del teclado, ese criterio está superado.</li>
 del Real Decreto 450/2010, que establece el título de Técnico Superior
 en Desarrollo de Aplicaciones Multiplataforma (módulo profesional 0485).
 Los instrumentos, las horas y los pesos son los de la programación del
-módulo del ITB para el curso 2026-27.</p>
+módulo para el curso 2026-27.</p>
 </div>`,
           ejemplos: [
           ],
