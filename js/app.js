@@ -368,7 +368,7 @@ function renderLesson(id, tab = "teoria") {
   const nTest = lesson.testAleatorio || (TESTS[lesson.id] || []).length;
   // Etiqueta del resultado de aprendizaje: enlaza con el mapa de contenidos del currículo
   const raChip = lesson.ra
-    ? `<a class="ra-chip${lesson.ra === "Transversal" ? " transversal" : ""}" href="#leccion-ra-mapa" title="Qué se evalúa en esta lección">${esc(lesson.ra)}</a>`
+    ? `<a class="ra-chip${lesson.ra === "Transversal" ? " transversal" : ""}" href="#leccion-ra-mapa" title="Qué parte del currículo trabaja esta lección">${esc(lesson.ra)}</a>`
     : "";
   const goals = lesson.objetivos && lesson.objetivos.length
     ? `<div class="goals"><h3>🎯 Lo que aprenderás</h3><ul>${lesson.objetivos.map((o) => `<li>${esc(o)}</li>`).join("")}</ul></div>`
@@ -507,7 +507,8 @@ function homeHTML() {
             <li>🎬 ${formatMinutes(totalMin)} de vídeo bajo demanda</li>
             <li>🧩 ${plural(nActs, "actividad", "actividades")} con solución</li>
             <li>📖 Teoría y ejemplos de código comentados</li>
-            <li>📄 <a href="recursos/apuntes-programacion-csharp.pdf" download>Apuntes completos en PDF</a> (521 páginas)</li>
+            <li>⚡ <a href="recursos/guia-rapida-csharp.pdf" download>Guía rápida en PDF</a> (46 páginas)</li>
+            <li>📄 <a href="recursos/apuntes-programacion-csharp.pdf" download>Apuntes completos en PDF</a> (517 páginas)</li>
             <li>📱 Instalable como app en el móvil</li>
             <li>📴 Se puede consultar sin conexión</li>
             <li>✅ Progreso guardado en tu dispositivo</li>
@@ -523,11 +524,16 @@ function homeHTML() {
 
         <section class="block recursos">
           <h2>Material descargable</h2>
-          <p>Todo el curso en un solo documento, con índice, para estudiar sin conexión o en papel:
-          los ocho bloques de teoría, el anexo de Git y metodologías y el anexo con los resultados
-          de aprendizaje y los criterios de evaluación del módulo.</p>
+          <p><strong>Guía rápida</strong> (46 páginas): lo esencial de cada tema, con un ejemplo comentado
+          por concepto y una chuleta de sintaxis al final. Para aprender rápido y repasar.</p>
           <p class="dl-row">
-            <a class="btn primary" href="recursos/apuntes-programacion-csharp.pdf" download>📄 Apuntes en PDF (1,9 MB)</a>
+            <a class="btn primary" href="recursos/guia-rapida-csharp.pdf" download>⚡ Guía rápida en PDF</a>
+            <a class="btn" href="recursos/guia-rapida-csharp.docx" download>📝 Versión Word</a>
+          </p>
+          <p><strong>Apuntes completos</strong> (517 páginas): todo el curso desarrollado, con tests de
+          autoevaluación, actividades con soluciones graduadas y el currículo del módulo.</p>
+          <p class="dl-row">
+            <a class="btn primary" href="recursos/apuntes-programacion-csharp.pdf" download>📄 Apuntes completos en PDF (1,9 MB)</a>
             <a class="btn" href="recursos/apuntes-programacion-csharp.docx" download>📝 Versión Word</a>
           </p>
         </section>
@@ -557,6 +563,16 @@ function homeHTML() {
             </div>
           </div>
         </section>` : ""}
+
+        <section class="block elaboracion">
+          <h2>Cómo se ha elaborado este curso</h2>
+          <p>Este curso y sus apuntes son obra de <strong>Daniel Moreno Arellano</strong>, elaborados
+          con la ayuda de herramientas de <strong>inteligencia artificial generativa</strong> (Claude,
+          de Anthropic) para redactar, ordenar y revisar textos, ejemplos y actividades. El autor ha
+          decidido qué se enseña y cómo, ha dirigido la elaboración y es el responsable del resultado.</p>
+          <p>Todo el código se ha compilado y ejecutado con .NET 10 antes de publicarse. Si encuentras
+          un error, avísalo: la IA ayuda, pero no sustituye a revisar.</p>
+        </section>
       </div>
     </div>`;
 }

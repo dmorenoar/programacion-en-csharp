@@ -30695,13 +30695,18 @@ lectura, sin seguimiento de cambios.</li>
         },
         {
           id: "apuntes-pdf",
-          titulo: "Apuntes completos en PDF",
+          titulo: "Guía rápida y apuntes completos en PDF",
           duracion: "\u2014",
           video: { provider: "drive", id: "" },
-          objetivos: ["Descargar todo el curso en un único documento para estudiar sin conexión"],
-          teoria: r`<p>Todo el contenido de este curso existe también en <strong>un único documento</strong> de 521 páginas, con índice, para leer sin conexión, imprimir o estudiar en papel.</p>
-<p class="dl-row"><a class="btn primary big" href="recursos/apuntes-programacion-csharp.pdf" download>📄 Descargar los apuntes en PDF (1,9 MB)</a> <a class="btn" href="recursos/apuntes-programacion-csharp.docx" download>📝 Versión Word (editable)</a></p>
-<h3>Qué contiene</h3>
+          objetivos: ["Descargar la guía rápida o los apuntes completos para estudiar sin conexión"],
+          teoria: r`<p>El curso se puede descargar en dos versiones, para leer sin conexión, imprimir o estudiar en papel.</p>
+<h3>Guía rápida (46 páginas)</h3>
+<p>Lo esencial de cada tema: los conceptos clave explicados en pocas líneas, un ejemplo comentado por concepto y una chuleta de sintaxis al final. Para aprender rápido, repasar antes de programar o tener a mano.</p>
+<p class="dl-row"><a class="btn primary big" href="recursos/guia-rapida-csharp.pdf" download>⚡ Descargar la guía rápida en PDF</a> <a class="btn" href="recursos/guia-rapida-csharp.docx" download>📝 Versión Word</a></p>
+<h3>Apuntes completos (517 páginas)</h3>
+<p>Todo el curso desarrollado en profundidad, con tests de autoevaluación y actividades con soluciones graduadas.</p>
+<p class="dl-row"><a class="btn primary big" href="recursos/apuntes-programacion-csharp.pdf" download>📄 Descargar los apuntes completos en PDF (1,9 MB)</a> <a class="btn" href="recursos/apuntes-programacion-csharp.docx" download>📝 Versión Word (editable)</a></p>
+<h3>Qué contienen los apuntes completos</h3>
 <table>
 <thead><tr><th>Bloque</th><th>Contenido</th></tr></thead>
 <tbody>
@@ -30729,18 +30734,20 @@ lectura, sin seguimiento de cambios.</li>
     },
     {
       id: "m15",
-      titulo: "Currículo y evaluación (RA y CA)",
+      titulo: "Currículo del módulo (RA y CA)",
       lecciones: [
         {
           id: "ra-como-se-evalua",
-          titulo: "Cómo se evalúa el módulo: RA, CA e instrumentos",
-          duracion: "12 min",
+          titulo: "Qué son los RA y los CA, y cómo usarlos para estudiar",
+          duracion: "8 min",
           video: { provider: "drive", id: "" },
-          objetivos: ["Entender qué es un resultado de aprendizaje y qué es un criterio de evaluación", "Saber con qué instrumentos se califica cada RA y cuánto pesa cada uno", "Conocer las condiciones para aprobar el módulo y la segunda convocatoria"],
-          teoria: r`<p>En Formación Profesional no apruebas «el examen del segundo
-trimestre»: apruebas <strong>resultados de aprendizaje</strong>.
-Entender cómo funciona esto te ahorra sorpresas y te permite saber, en
-cualquier momento del curso, qué te falta exactamente para aprobar.</p>
+          objetivos: ["Entender qué es un resultado de aprendizaje y qué es un criterio de evaluación", "Usar las etiquetas de RA de cada lección para orientar el estudio"],
+          teoria: r`<p>El módulo <strong>0485 Programación</strong> es el mismo en toda
+España y es común a los ciclos de grado superior <strong>DAM</strong> y
+<strong>DAW</strong>. Su contenido lo fija el currículo oficial, y el
+currículo no habla de temas: habla de <strong>resultados de
+aprendizaje</strong>. Conocerlos te dice, con precisión, qué tienes que
+saber hacer al terminar.</p>
 <h3 id="1-el-vocabulario">1. El vocabulario</h3>
 <div class="table-wrap"><table>
 <thead>
@@ -30752,160 +30759,114 @@ cualquier momento del curso, qué te falta exactamente para aprobar.</p>
 <tbody>
 <tr class="odd">
 <td><strong>MP</strong></td>
-<td>Módulo profesional. Aquí, el <strong>0485 · Programación</strong>:
-el mismo en DAM y en DAW, en toda España. Las horas las concreta cada
-comunidad autónoma</td>
+<td>Módulo profesional. Aquí, el <strong>0485 ·
+Programación</strong></td>
 </tr>
 <tr class="even">
 <td><strong>RA</strong></td>
 <td><strong>Resultado de aprendizaje</strong>: lo que debes ser capaz de
-hacer al terminar. Son 9</td>
+hacer al terminar el módulo. Son 9</td>
 </tr>
 <tr class="odd">
 <td><strong>CA</strong></td>
 <td><strong>Criterio de evaluación</strong>: la comprobación concreta de
-un RA. Se numeran RA.n (3.1, 3.2…)</td>
-</tr>
-<tr class="even">
-<td><strong>AEA</strong></td>
-<td>Actividad de enseñanza-aprendizaje: cada bloque de clases (A1,
-A2…)</td>
-</tr>
-<tr class="odd">
-<td><strong>PT</strong></td>
-<td>Práctica o actividad evaluativa (una entrega)</td>
-</tr>
-<tr class="even">
-<td><strong>E</strong></td>
-<td>Prueba evaluativa (un examen)</td>
+una parte de un RA. Se numeran RA.n (3.1, 3.2…)</td>
 </tr>
 </tbody>
 </table></div>
 <p>La idea de fondo: el RA dice <strong>qué</strong> tienes que saber
-hacer, el CA dice <strong>cómo se comprueba</strong>, y el instrumento
-(PT o E) es <strong>dónde</strong> se comprueba.</p>
+hacer y cada CA lo concreta en una acción que se puede comprobar.</p>
 <pre><code>   RA3  Escribe y depura código, analizando y utilizando
         las estructuras de control del lenguaje
      │
-     ├── CA 3.1  estructuras de selección ────┐
-     ├── CA 3.2  estructuras de repetición    │→ se comprueban en PT2 y E2
-     ├── CA 3.3  sentencias de salto ─────────┘
-     ├── CA 3.4  control de excepciones ──────┐
-     ├── CA 3.5  programas ejecutables        │→ se comprueban en PT3 y E2
-     ├── CA 3.6  probar y depurar             │
-     └── CA 3.7  comentar y documentar ───────┘</code></pre>
-<h3 id="2-cómo-se-califica-cada-ra">2. Cómo se califica cada RA</h3>
-<p>La nota de cada RA sale de los instrumentos con los que se evalúa.
-Qué instrumentos son y cuánto pesa cada uno lo fija la programación del
-módulo de tu centro; este es un reparto de ejemplo para que veas cómo
-funciona el mecanismo:</p>
+     ├── CA 3.1  estructuras de selección
+     ├── CA 3.2  estructuras de repetición
+     ├── CA 3.3  sentencias de salto
+     ├── CA 3.4  control de excepciones
+     ├── CA 3.5  programas ejecutables
+     ├── CA 3.6  probar y depurar
+     └── CA 3.7  comentar y documentar</code></pre>
+<h3 id="2-los-nueve-ra-de-un-vistazo">2. Los nueve RA de un vistazo</h3>
 <div class="table-wrap"><table>
 <thead>
 <tr class="header">
 <th>RA</th>
-<th>Cálculo de la nota</th>
+<th>Qué tienes que saber hacer</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td><strong>RA1</strong></td>
-<td>20 % PT1 + 80 % E1</td>
+<td>Reconoce la estructura de un programa informático, identificando y
+relacionando los elementos propios del lenguaje de programación
+utilizado.</td>
 </tr>
 <tr class="even">
 <td><strong>RA2</strong></td>
-<td>20 % PT4 + 80 % E3</td>
+<td>Escribe y prueba programas sencillos, reconociendo y aplicando los
+fundamentos de la programación orientada a objetos.</td>
 </tr>
 <tr class="odd">
 <td><strong>RA3</strong></td>
-<td>10 % PT2 + 10 % PT3 + 80 % E2</td>
+<td>Escribe y depura código, analizando y utilizando las estructuras de
+control del lenguaje.</td>
 </tr>
 <tr class="even">
 <td><strong>RA4</strong></td>
-<td>20 % PT5 + 80 % E4</td>
+<td>Desarrolla programas organizados en clases analizando y aplicando
+los principios de la programación orientada a objetos.</td>
 </tr>
 <tr class="odd">
 <td><strong>RA5</strong></td>
-<td>20 % PT7 + 80 % E6</td>
+<td>Realiza operaciones de entrada y salida de información, utilizando
+procedimientos específicos del lenguaje y librerías de clases.</td>
 </tr>
 <tr class="even">
 <td><strong>RA6</strong></td>
-<td>20 % PT8 + 80 % E7</td>
+<td>Escribe programas que manipulen información, seleccionando y
+utilizando tipos avanzados de datos.</td>
 </tr>
 <tr class="odd">
 <td><strong>RA7</strong></td>
-<td>20 % PT6 + 80 % E5</td>
+<td>Desarrolla programas aplicando características avanzadas de los
+lenguajes orientados a objetos y del entorno de programación.</td>
 </tr>
 <tr class="even">
 <td><strong>RA8</strong></td>
-<td>100 % E8</td>
+<td>Utiliza bases de datos orientadas a objetos, analizando sus
+características y aplicando técnicas para mantener la persistencia de la
+información.</td>
 </tr>
 <tr class="odd">
 <td><strong>RA9</strong></td>
-<td>100 % E8</td>
+<td>Gestiona información almacenada en bases de datos relacionales
+manteniendo la integridad y consistencia de los datos.</td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>Las dos reglas que hay que tener presentes:</strong></p>
-<ol type="1">
-<li><strong>Para aprobar el módulo hay que aprobar todos los
-RA.</strong> Un RA está suspendido si su nota es menor que 5. No se
-compensan entre ellos.</li>
-<li><strong>Suele exigirse un mínimo por instrumento.</strong> Es muy
-habitual que, si sacas menos de 5 en una PT o en una E, ese instrumento
-pondere <strong>0</strong> en la fórmula del RA en lugar de la nota
-real. Comprueba en tu programación si es así.</li>
-</ol>
-<p>La nota final del módulo es la <strong>media ponderada por las
-horas</strong> de cada RA.</p>
-<div class="callout">
-<p><strong>Lo que esto significa en la práctica.</strong> No sirve
-compensar un examen flojo con una práctica brillante dentro del mismo
-RA: si el examen baja de 5, entra como 0. Y como cada RA se aprueba por
-separado, descuidar un bloque entero (por ejemplo, ficheros) no se
-arregla con buenas notas en los demás.</p>
-</div>
-<h3 id="3-durante-el-curso">3. Durante el curso</h3>
-<p>Se ofrecen <strong>medidas para recuperar</strong> los instrumentos
-no superados. Si suspendes una PT o una E, pregunta en cuanto puedas:
-cuanto antes se recupera, menos se acumula.</p>
-<h3 id="4-la-segunda-convocatoria">4. La segunda convocatoria</h3>
-<p>Casi todos los centros ofrecen una segunda convocatoria (o
-convocatoria extraordinaria) al terminar las clases lectivas, para
-recuperar lo que haya quedado suspendido. El formato lo fija cada
-centro; uno muy extendido combina dos partes:</p>
-<ul>
-<li><strong>Dosier de actividades</strong> (en torno al 40 % de la
-nota). Se entrega <strong>antes</strong> de la prueba y suele pedir una
-nota mínima: por debajo, pondera 0.</li>
-<li><strong>Prueba</strong> sobre los contenidos del módulo (el 60 %
-restante).</li>
-</ul>
-<pre><code>Ejemplo de fórmula = 0,4 × dosier + 0,6 × prueba</code></pre>
-<h3 id="5-cómo-usar-esto-mientras-estudias">5. Cómo usar esto mientras
+<p>El texto completo, con todos los criterios, está en la lección «Los 9
+RA y sus criterios de evaluación».</p>
+<h3 id="3-cómo-usar-esto-mientras-estudias">3. Cómo usar esto mientras
 estudias</h3>
-<p>Cada lección de este curso lleva una <strong>etiqueta con su RA y sus
-CA</strong> junto al título. Úsala así:</p>
+<p>Cada lección de este curso lleva junto al título una <strong>etiqueta
+con su RA y sus CA</strong>. Úsala así:</p>
 <ul>
-<li><strong>Antes de un examen:</strong> mira qué RA se evalúa, abre la
-lección «Los 9 RA y sus criterios» y comprueba que sabes hacer cada CA
-de ese RA.</li>
-<li><strong>Si suspendes un instrumento:</strong> identifica los CA que
-fallaron y repasa solo las lecciones etiquetadas con esos CA; en «Mapa
-de contenidos» las tienes agrupadas.</li>
-<li><strong>Para estudiar con sentido:</strong> un CA empieza siempre
+<li><strong>Para saber dónde estás:</strong> la etiqueta te dice qué
+parte del currículo cubre lo que estás leyendo.</li>
+<li><strong>Para repasar con sentido:</strong> si quieres dominar un RA
+concreto, abre «Mapa de contenidos» y tendrás agrupadas todas las
+lecciones que lo trabajan.</li>
+<li><strong>Para comprobar que lo sabes:</strong> un CA empieza siempre
 por «Se han…» o «Se ha…», es decir, describe <strong>algo que tienes que
 saber hacer</strong>, no algo que tengas que recitar. Si puedes hacerlo
-delante del teclado, ese criterio está superado.</li>
+delante del teclado, ese criterio lo tienes.</li>
 </ul>
 <div class="callout">
 <p>Los RA y los CA de esta sección son el <strong>texto oficial</strong>
 del Real Decreto 450/2010, que establece el título de Técnico Superior
 en Desarrollo de Aplicaciones Multiplataforma (módulo profesional 0485).
 El mismo módulo forma parte del título de Desarrollo de Aplicaciones
-Web, así que esta sección sirve igual en DAM y en DAW. Las actividades,
-los instrumentos, las horas y los pesos son una <strong>propuesta de
-reparto</strong>: cada centro concreta los suyos en la programación del
-módulo.</p>
+Web, así que sirve igual en DAM y en DAW.</p>
 </div>`,
           ejemplos: [
           ],
@@ -31415,23 +31376,23 @@ de los criterios en la norma.</p>`,
         },
         {
           id: "ra-mapa",
-          titulo: "Mapa de contenidos: qué RA evalúa cada lección",
+          titulo: "Mapa de contenidos: qué RA trabaja cada lección",
           duracion: "8 min",
           video: { provider: "drive", id: "" },
-          objetivos: ["Saber qué RA y qué CA se evalúan en cada lección del curso", "Localizar rápidamente qué repasar para recuperar un RA concreto"],
+          objetivos: ["Saber qué RA y qué CA trabaja cada lección del curso", "Localizar rápidamente qué repasar para afianzar un RA concreto"],
           teoria: r`<p>Esta tabla relaciona <strong>cada lección de este curso</strong> con
 el resultado de aprendizaje y los criterios de evaluación que trabaja.
 La misma etiqueta aparece junto al título de cada lección.</p>
-<p>Úsala en los dos sentidos: para saber <strong>qué se evalúa</strong>
-de lo que estás estudiando, y para saber <strong>qué repasar</strong>
-cuando te dicen que te falta un RA concreto.</p>
+<p>Úsala en los dos sentidos: para saber <strong>qué parte del
+currículo</strong> cubre lo que estás estudiando, y para saber
+<strong>qué repasar</strong> si quieres afianzar un RA concreto.</p>
 <h3 id="de-cada-lección-a-su-ra">De cada lección a su RA</h3>
 <h4 id="1-fundamentos">1. Fundamentos</h4>
 <div class="table-wrap"><table>
 <thead>
 <tr class="header">
 <th>Lección</th>
-<th>Se evalúa en</th>
+<th>RA y CA que trabaja</th>
 </tr>
 </thead>
 <tbody>
@@ -31476,7 +31437,7 @@ metodologías</h4>
 <thead>
 <tr class="header">
 <th>Lección</th>
-<th>Se evalúa en</th>
+<th>RA y CA que trabaja</th>
 </tr>
 </thead>
 <tbody>
@@ -31499,7 +31460,7 @@ metodologías</h4>
 <thead>
 <tr class="header">
 <th>Lección</th>
-<th>Se evalúa en</th>
+<th>RA y CA que trabaja</th>
 </tr>
 </thead>
 <tbody>
@@ -31530,7 +31491,7 @@ metodologías</h4>
 <thead>
 <tr class="header">
 <th>Lección</th>
-<th>Se evalúa en</th>
+<th>RA y CA que trabaja</th>
 </tr>
 </thead>
 <tbody>
@@ -31557,7 +31518,7 @@ metodologías</h4>
 <thead>
 <tr class="header">
 <th>Lección</th>
-<th>Se evalúa en</th>
+<th>RA y CA que trabaja</th>
 </tr>
 </thead>
 <tbody>
@@ -31601,7 +31562,7 @@ textos</h4>
 <thead>
 <tr class="header">
 <th>Lección</th>
-<th>Se evalúa en</th>
+<th>RA y CA que trabaja</th>
 </tr>
 </thead>
 <tbody>
@@ -31644,7 +31605,7 @@ textos</h4>
 <thead>
 <tr class="header">
 <th>Lección</th>
-<th>Se evalúa en</th>
+<th>RA y CA que trabaja</th>
 </tr>
 </thead>
 <tbody>
@@ -31680,7 +31641,7 @@ objetos</h4>
 <thead>
 <tr class="header">
 <th>Lección</th>
-<th>Se evalúa en</th>
+<th>RA y CA que trabaja</th>
 </tr>
 </thead>
 <tbody>
@@ -31727,7 +31688,7 @@ objetos</h4>
 <thead>
 <tr class="header">
 <th>Lección</th>
-<th>Se evalúa en</th>
+<th>RA y CA que trabaja</th>
 </tr>
 </thead>
 <tbody>
@@ -31754,7 +31715,7 @@ objetos</h4>
 <thead>
 <tr class="header">
 <th>Lección</th>
-<th>Se evalúa en</th>
+<th>RA y CA que trabaja</th>
 </tr>
 </thead>
 <tbody>
@@ -31789,7 +31750,7 @@ objetos</h4>
 <thead>
 <tr class="header">
 <th>Lección</th>
-<th>Se evalúa en</th>
+<th>RA y CA que trabaja</th>
 </tr>
 </thead>
 <tbody>
@@ -31821,7 +31782,7 @@ persistencia</h4>
 <thead>
 <tr class="header">
 <th>Lección</th>
-<th>Se evalúa en</th>
+<th>RA y CA que trabaja</th>
 </tr>
 </thead>
 <tbody>
@@ -31848,7 +31809,7 @@ persistencia</h4>
 <thead>
 <tr class="header">
 <th>Lección</th>
-<th>Se evalúa en</th>
+<th>RA y CA que trabaja</th>
 </tr>
 </thead>
 <tbody>
@@ -31970,244 +31931,30 @@ datos.</strong></p>
 <p>Entity Framework Core</p>
 <hr />
 <h3 id="contenido-transversal">Contenido transversal</h3>
-<p>Estas lecciones no se evalúan como un RA concreto, pero <strong>se
-exigen en todas las entregas</strong>: Control de versiones con Git,
-GitHub: ramas, pull requests, forks y projects, Metodologías de gestión
-de proyectos, Diagramas de casos de uso, y todo el módulo de
-<strong>Código limpio</strong>, cuyas convenciones se piden en cada
-práctica y en cada prueba.</p>
+<p>Estas lecciones no corresponden a un RA concreto, pero las usarás en
+todo lo que programes: Control de versiones con Git, GitHub: ramas, pull
+requests, forks y projects, Metodologías de gestión de proyectos,
+Diagramas de casos de uso, y todo el módulo de <strong>Código
+limpio</strong>, cuyas convenciones conviene aplicar en cada programa
+que escribas.</p>
 <h3 id="lo-que-este-curso-añade-al-temario">Lo que este curso añade al
 temario</h3>
 <p>Algunos contenidos de este curso van <strong>más allá del
-mínimo</strong> del currículo. No te los van a preguntar como criterio
-de evaluación, pero te preparan para los módulos de segundo y para el
-proyecto:</p>
+mínimo</strong> del currículo. No aparecen como criterio de evaluación,
+pero te preparan para los módulos de segundo y para el proyecto:</p>
 <ul>
-<li><strong>Git y metodologías</strong>: imprescindible para entregar, y
-lo usarás toda la carrera.</li>
-<li><strong>UML</strong>: la programación del módulo pide generar código
-a partir de un diagrama UML (PT5 y PT6), así que el diagrama es la
-herramienta, no el contenido evaluable.</li>
+<li><strong>Git y metodologías</strong>: imprescindible para trabajar en
+cualquier proyecto, y lo usarás durante toda tu carrera.</li>
+<li><strong>UML</strong>: sirve para pasar de un diseño a código
+orientado a objetos; el diagrama es la herramienta, y las clases que
+salen de él son lo que trabajan el RA4 y el RA7.</li>
 <li><strong>LINQ, delegados y lambdas</strong>: amplían el CA 6.3 y el
 6.4 (listas e iteradores) con la forma moderna de consultar colecciones
 en C#.</li>
 <li><strong>Entity Framework Core</strong>: es la puerta de entrada al
-RA8 y al RA9, que se evalúan con el proyecto CRUD.</li>
+RA8 y al RA9, sobre bases de datos objeto-relacionales y orientadas a
+objetos.</li>
 </ul>`,
-          ejemplos: [
-          ],
-          actividades: [
-          ],
-        },
-        {
-          id: "ra-actividades",
-          titulo: "Las actividades del curso y sus instrumentos",
-          duracion: "10 min",
-          video: { provider: "drive", id: "" },
-          objetivos: ["Conocer la planificación del módulo: actividades, horas y RA asociado", "Saber qué práctica o prueba evalúa cada bloque de contenidos"],
-          teoria: r`<p>Esta es una <strong>propuesta de planificación</strong> del módulo:
-en qué actividades se reparten las horas (aquí, 165), qué RA trabaja
-cada una y con qué se evalúa. Cada centro hace la suya, pero el orden de
-los contenidos se parece mucho en todas partes, así que te sirve para
-situarte: saber <strong>en qué punto del curso estás</strong> y qué
-llega después.</p>
-<h3 id="a1--introducción-a-la-programación">A1 · Introducción a la
-programación</h3>
-<p><strong>20 h</strong> · <strong>RA1</strong> · PT1. CodeQuest · E1.
-Prueba evaluativa</p>
-<p>Presentación del módulo. Introducción a la programación en C#:
-algoritmos simples, tipos y tratamiento de datos, conversiones entre
-tipos, estructuras condicionales e iterativas.</p>
-<h3 id="a2--diseño-de-algoritmos">A2 · Diseño de algoritmos</h3>
-<p><strong>24 h</strong> · <strong>RA3</strong> · PT2. Análisis, diseño
-e implementación · E2. Prueba evaluativa</p>
-<p>Análisis, diseño e implementación: algoritmos complejos, tipos de
-datos estructurados internos (arrays y matrices) y tratamiento de
-cadenas.</p>
-<h3 id="a3--gestión-de-excepciones">A3 · Gestión de excepciones</h3>
-<p><strong>6 h</strong> · <strong>RA3</strong> · PT3. Gestión de
-excepciones</p>
-<p>Mecanismos de gestión de excepciones: try / catch / finally y la
-clase Exception.</p>
-<h3 id="a4--programación-modular">A4 · Programación modular</h3>
-<p><strong>20 h</strong> · <strong>RA2</strong> · PT4. Diseño modular y
-optimización · E3. Prueba evaluativa</p>
-<p>Diseño modular y recursividad: análisis descendente, funciones,
-parametrización y ámbito de las variables, definición y uso de
-bibliotecas, algoritmos de ordenación (burbuja, QuickSort y MergeSort),
-búsqueda y recursividad clásica (Fibonacci, Torres de Hanói, N
-reinas).</p>
-<h3 id="a5--programación-orientada-a-objetos">A5 · Programación
-orientada a objetos</h3>
-<p><strong>23 h</strong> · <strong>RA4</strong> · PT5. Clases y objetos
-· E4. Prueba evaluativa</p>
-<p>Objeto, clase e instancia. Constructores y métodos. Modificadores de
-acceso. Datos estáticos frente a dinámicos. Métodos estáticos.
-Destrucción de objetos y liberación de memoria. Clases heredadas y
-bibliotecas de clases. Refactorización con el entorno de desarrollo.</p>
-<h3 id="a6--programación-orientada-a-objetos-ii">A6 · Programación
-orientada a objetos II</h3>
-<p><strong>13 h</strong> · <strong>RA7</strong> · PT6. POO avanzada ·
-E5. Prueba evaluativa</p>
-<p>Herencia, superclase y subclase. Modificadores, constructores y
-destructores. Polimorfismo. Diseño, prueba y depuración de jerarquías de
-clases. Herencia múltiple. Diseño e implementación de interfaces.
-Sobrescritura de métodos.</p>
-<h3 id="a7--operaciones-de-es-e-interfaces-gráficas">A7 · Operaciones de
-E/S e interfaces gráficas</h3>
-<p><strong>20 h</strong> · <strong>RA5</strong> · PT7. Operaciones de
-entrada y salida · E6. Prueba evaluativa</p>
-<p>Tratamiento de ficheros: expresiones regulares, lectura y escritura,
-manipulación de documentos de texto, XML, CSV y JSON, control de
-excepciones y formatos de visualización. Interfaces gráficas de usuario
-y controladores de eventos. Documentación del código.</p>
-<h3 id="a8--colecciones-y-clases-genéricas">A8 · Colecciones y clases
-genéricas</h3>
-<p><strong>22 h</strong> · <strong>RA6</strong> · PT8. Tipos avanzados
-de datos · E7. Prueba evaluativa</p>
-<p>Tipos avanzados de datos: colecciones básicas de C# (listas,
-diccionarios, pilas, colas y tablas hash), clases relacionadas con la
-representación y manipulación de colecciones, iteradores, y clases y
-métodos genéricos.</p>
-<h3
-id="a9--bases-de-datos-objeto-relacionales-y-orientadas-a-objetos">A9 ·
-Bases de datos objeto-relacionales y orientadas a objetos</h3>
-<p><strong>17 h</strong> · <strong>RA8 y RA9</strong> · E8. Proyecto
-CRUD</p>
-<p>SGBD relacionales: características, conexión y operaciones CRUD.
-Bases de datos objeto-relacionales y orientadas a objetos:
-características, estructuras y persistencia. Diseño de aplicaciones para
-almacenar, recuperar, actualizar y eliminar objetos.</p>
-<hr />
-<h3 id="resumen">Resumen</h3>
-<div class="table-wrap"><table>
-<thead>
-<tr class="header">
-<th>Actividad</th>
-<th>Horas</th>
-<th>RA</th>
-<th>Instrumentos</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>A1</strong> Introducción a la programación</td>
-<td>20 h</td>
-<td>RA1</td>
-<td>PT1. CodeQuest · E1. Prueba evaluativa</td>
-</tr>
-<tr class="even">
-<td><strong>A2</strong> Diseño de algoritmos</td>
-<td>24 h</td>
-<td>RA3</td>
-<td>PT2. Análisis, diseño e implementación · E2. Prueba evaluativa</td>
-</tr>
-<tr class="odd">
-<td><strong>A3</strong> Gestión de excepciones</td>
-<td>6 h</td>
-<td>RA3</td>
-<td>PT3. Gestión de excepciones</td>
-</tr>
-<tr class="even">
-<td><strong>A4</strong> Programación modular</td>
-<td>20 h</td>
-<td>RA2</td>
-<td>PT4. Diseño modular y optimización · E3. Prueba evaluativa</td>
-</tr>
-<tr class="odd">
-<td><strong>A5</strong> Programación orientada a objetos</td>
-<td>23 h</td>
-<td>RA4</td>
-<td>PT5. Clases y objetos · E4. Prueba evaluativa</td>
-</tr>
-<tr class="even">
-<td><strong>A6</strong> Programación orientada a objetos II</td>
-<td>13 h</td>
-<td>RA7</td>
-<td>PT6. POO avanzada · E5. Prueba evaluativa</td>
-</tr>
-<tr class="odd">
-<td><strong>A7</strong> Operaciones de E/S e interfaces gráficas</td>
-<td>20 h</td>
-<td>RA5</td>
-<td>PT7. Operaciones de entrada y salida · E6. Prueba evaluativa</td>
-</tr>
-<tr class="even">
-<td><strong>A8</strong> Colecciones y clases genéricas</td>
-<td>22 h</td>
-<td>RA6</td>
-<td>PT8. Tipos avanzados de datos · E7. Prueba evaluativa</td>
-</tr>
-<tr class="odd">
-<td><strong>A9</strong> Bases de datos objeto-relacionales y orientadas
-a objetos</td>
-<td>17 h</td>
-<td>RA8 y RA9</td>
-<td>E8. Proyecto CRUD</td>
-</tr>
-</tbody>
-</table></div>
-<h3 id="dónde-está-cada-actividad-en-este-curso">Dónde está cada
-actividad en este curso</h3>
-<div class="table-wrap"><table>
-<thead>
-<tr class="header">
-<th>Actividad del aula</th>
-<th>Módulos de esta web</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>A1</strong> Introducción a la programación</td>
-<td>1 · Fundamentos</td>
-</tr>
-<tr class="even">
-<td><strong>A2</strong> Diseño de algoritmos</td>
-<td>2 · Control de flujo · 3 · Arrays y matrices · parte de 5
-(cadenas)</td>
-</tr>
-<tr class="odd">
-<td><strong>A3</strong> Gestión de excepciones</td>
-<td>Lección «Excepciones» del módulo 2 y «Gestión de errores» del módulo
-13</td>
-</tr>
-<tr class="even">
-<td><strong>A4</strong> Programación modular</td>
-<td>4 · Modularidad · parte de 5 (clases estáticas, espacios de nombres,
-bibliotecas)</td>
-</tr>
-<tr class="odd">
-<td><strong>A5</strong> Programación orientada a objetos</td>
-<td>8 · POO (lecciones 1 a 4) · 9 · UML y modelado</td>
-</tr>
-<tr class="even">
-<td><strong>A6</strong> POO II</td>
-<td>8 · POO (herencia, polimorfismo, abstractas e interfaces)</td>
-</tr>
-<tr class="odd">
-<td><strong>A7</strong> Operaciones de E/S e interfaces gráficas</td>
-<td>7 · Ficheros · expresiones regulares (módulo 6) · 12 · Interfaz
-gráfica</td>
-</tr>
-<tr class="even">
-<td><strong>A8</strong> Colecciones y clases genéricas</td>
-<td>10 · Genéricos y colecciones · 11 · Delegados, lambdas y LINQ</td>
-</tr>
-<tr class="odd">
-<td><strong>A9</strong> Bases de datos</td>
-<td>12 · Interfaz gráfica y persistencia (DAO y Entity Framework
-Core)</td>
-</tr>
-</tbody>
-</table></div>
-<div class="callout">
-<p><strong>Nota.</strong> Los módulos de <strong>Herramientas (Git y
-metodologías)</strong> y <strong>Código limpio</strong> no son una
-actividad evaluativa por sí mismos: son transversales. Git lo necesitas
-desde la primera entrega, y las convenciones de código limpio se exigen
-en <strong>todas</strong> las prácticas y pruebas («las soluciones deben
-seguir las convenciones trabajadas en el aula»).</p>
-</div>`,
           ejemplos: [
           ],
           actividades: [
